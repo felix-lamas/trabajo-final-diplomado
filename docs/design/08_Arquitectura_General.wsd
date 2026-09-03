@@ -1,0 +1,41 @@
+@startuml
+title Arquitectura General del Sistema (Monolito Modular)
+
+node "Cliente (Web Browser)" {
+    component "Angular 21 SPA" <<Frontend>> as Angular
+}
+
+node "Servidor de Aplicaciones (Linux/Docker)" {
+    package "Spring Boot 3.x (Java 21)" {
+        [API Gateway / Security] as Security
+        
+        package "Módulos de Negocio" {
+            [Security Module] as AuthMod
+            [Event Module] as EventMod
+            [Billing Module] as BillingMod
+            [Attendance Module] as AttendanceMod
+            [Certificate Module] as CertMod
+        }
+        
+        [Spring Data JPA] as Persistence
+    }
+}
+
+database "PostgreSQL" as DB
+
+Angular --> Security : REST / HTTPS (JWT)
+Security --> AuthMod
+Security --> EventMod
+Security --> BillingMod
+Security --> AttendanceMod
+Security --> CertMod
+
+AuthMod ..> Persistence
+EventMod ..> Persistence
+BillingMod ..> Persistence
+AttendanceMod ..> Persistence
+CertMod ..> Persistence
+
+Persistence --> DB : SQL (TCP/5432)
+
+@enduml

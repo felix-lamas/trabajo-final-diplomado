@@ -1,0 +1,78 @@
+<main class="app-page public-portal">
+  <section class="public-section">
+    <div class="app-toolbar">
+      <div class="app-toolbar__title">
+        <h1 class="app-section-title">Catalogo de eventos</h1>
+        <p>Encuentre propuestas academicas, culturales y de extension universitaria.</p>
+      </div>
+      <a mat-stroked-button routerLink="/">Volver al inicio</a>
+    </div>
+
+    <mat-card class="public-filters">
+      <div class="public-filters__grid" [formGroup]="filtros">
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar evento</mat-label>
+          <input matInput formControlName="buscar" placeholder="Titulo, descripcion o categoria">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="categoria">
+            <mat-option value="TODAS">Todas</mat-option>
+            <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-stroked-button type="button" (click)="limpiarFiltros()">
+          Limpiar
+        </button>
+      </div>
+      <div class="public-filters__meta">
+        <span class="app-badge app-badge--info">{{ totalResultados }} resultados</span>
+        <span class="app-badge">{{ pageSize }} por pagina</span>
+      </div>
+    </mat-card>
+
+    <app-skeleton *ngIf="loading" variant="card" [count]="6"></app-skeleton>
+
+    <app-empty-state
+      *ngIf="!loading && paginados.length === 0"
+      icon="search_off"
+      title="No se encontraron eventos"
+      message="Pruebe con otros filtros o vuelva mas tarde."
+      actionLabel="Limpiar filtros"
+      (action)="limpiarFiltros()">
+    </app-empty-state>
+
+    <div class="public-grid public-grid--catalog" *ngIf="!loading && paginados.length > 0">
+      <mat-card *ngFor="let evento of paginados" class="public-event-card">
+        <div class="public-event-card__image">
+          <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?auto=format&fit=crop&w=1200&q=80'" [alt]="evento.titulo">
+          <span class="app-badge app-badge--info">{{ evento.categoriaNombre }}</span>
+        </div>
+        <div class="public-event-card__body">
+          <div class="public-event-card__meta">
+            <span>{{ evento.modalidad }}</span>
+            <span>{{ evento.estado }}</span>
+          </div>
+          <h3>{{ evento.titulo }}</h3>
+          <p>{{ evento.descripcion | slice:0:145 }}...</p>
+          <div class="public-event-card__footer">
+            <span>{{ evento.tipoInscripcion === 'GRATUITO' ? 'Gratis' : (evento.costo | currency:'Bs. ') }}</span>
+            <a mat-flat-button color="primary" [routerLink]="['/eventos', evento.id]">Ver detalle</a>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <mat-paginator
+      *ngIf="!loading && totalResultados > pageSize"
+      [length]="totalResultados"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[6, 9, 12]"
+      (page)="cambiarPagina($event)">
+    </mat-paginator>
+  </section>
+</main>

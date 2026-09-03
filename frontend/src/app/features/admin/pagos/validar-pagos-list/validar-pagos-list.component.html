@@ -1,0 +1,129 @@
+<main class="app-page admin-portal">
+  <section class="admin-module-header">
+    <div class="app-toolbar__title">
+      <span class="app-chip">
+        <mat-icon>fact_check</mat-icon>
+        Bandeja financiera
+      </span>
+      <h1>Validacion de pagos</h1>
+      <p>Revision rapida de comprobantes con trazabilidad operativa.</p>
+    </div>
+  </section>
+
+  <app-skeleton *ngIf="loading" variant="dashboard" [count]="3"></app-skeleton>
+
+  <section class="admin-kanban" *ngIf="!loading">
+    <article class="admin-kanban__column admin-kanban__column--active">
+      <header>
+        <span>Pendientes</span>
+        <strong>{{ pagos.length }}</strong>
+      </header>
+      <div class="admin-payment-stack">
+        <article class="admin-payment-card" *ngFor="let pago of pagos | slice:0:4">
+          <div>
+            <strong>{{ pago.usuarioNombre }}</strong>
+            <span>{{ pago.eventoTitulo }}</span>
+          </div>
+          <div class="admin-payment-card__footer">
+            <span>{{ pago.monto | currency:'Bs. ' }}</span>
+            <button mat-icon-button color="primary" *ngIf="pago.comprobante" (click)="verComprobante(pago)" matTooltip="Ver comprobante">
+              <mat-icon>file_present</mat-icon>
+            </button>
+          </div>
+        </article>
+        <app-empty-state
+          *ngIf="pagos.length === 0"
+          [compact]="true"
+          icon="payments"
+          title="Sin comprobantes"
+          message="No hay pagos esperando revision.">
+        </app-empty-state>
+      </div>
+    </article>
+
+    <article class="admin-kanban__column">
+      <header>
+        <span>En revision</span>
+        <strong>Manual</strong>
+      </header>
+      <div class="admin-kanban__empty">Seleccione un comprobante para validar identidad, monto y evento.</div>
+    </article>
+
+    <article class="admin-kanban__column">
+      <header>
+        <span>Resultado</span>
+        <strong>Accion</strong>
+      </header>
+      <div class="admin-kanban__empty">Use aprobar o rechazar para cerrar la solicitud.</div>
+    </article>
+  </section>
+
+  <mat-card class="admin-surface admin-table-wrap admin-data-center" *ngIf="!loading">
+    <div class="admin-toolbar">
+      <div class="app-toolbar__title">
+        <h2 class="app-section-title">Comprobantes pendientes</h2>
+        <p>Validacion financiera y soporte documental.</p>
+      </div>
+      <span class="app-badge app-badge--warning">{{ pagos.length }} pendientes</span>
+    </div>
+
+    <div class="admin-table-scroll" *ngIf="pagos.length > 0">
+      <table mat-table [dataSource]="pagos" class="w-full">
+        <ng-container matColumnDef="usuario">
+          <th mat-header-cell *matHeaderCellDef>Participante</th>
+          <td mat-cell *matCellDef="let pago">
+            <div class="admin-entity-cell">
+              <div class="admin-entity-cell__avatar"><mat-icon>person</mat-icon></div>
+              <div>
+                <strong>{{ pago.usuarioNombre }}</strong>
+                <span>Solicitud de validacion</span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="evento">
+          <th mat-header-cell *matHeaderCellDef>Evento</th>
+          <td mat-cell *matCellDef="let pago">{{ pago.eventoTitulo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="monto">
+          <th mat-header-cell *matHeaderCellDef>Monto</th>
+          <td mat-cell *matCellDef="let pago"><strong>{{ pago.monto | currency:'Bs. ' }}</strong></td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef>Fecha</th>
+          <td mat-cell *matCellDef="let pago">{{ pago.fechaPago | date:'dd MMM yyyy HH:mm' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let pago">
+            <div class="student-card__meta">
+              <button mat-icon-button color="primary" *ngIf="pago.comprobante" (click)="verComprobante(pago)" matTooltip="Ver comprobante">
+                <mat-icon>file_present</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" (click)="validar(pago)" matTooltip="Validar pago">
+                <mat-icon>check_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="rechazar(pago)" matTooltip="Rechazar pago">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <app-empty-state
+      *ngIf="pagos.length === 0"
+      icon="payments"
+      title="No hay pagos pendientes"
+      message="La bandeja de validacion se encuentra vacia.">
+    </app-empty-state>
+  </mat-card>
+</main>

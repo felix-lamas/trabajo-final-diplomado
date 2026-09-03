@@ -1,0 +1,118 @@
+<div class="min-h-screen bg-gray-100 flex flex-col justify-between p-6">
+  
+  <div class="w-full max-w-4xl mx-auto space-y-6 flex-grow pt-10">
+    <div class="text-center space-y-2 mb-8">
+      <div class="text-3xl font-extrabold text-blue-950 uppercase tracking-wider font-serif">Universidad Autónoma Juan Misael Saracho</div>
+      <h1 class="text-xl font-bold text-gray-600 uppercase tracking-widest">Portal Público de Validación de Certificados Digitales</h1>
+      <p class="text-sm text-gray-500 max-w-xl mx-auto">Ingrese el código de verificación seguro impreso al pie de su diploma para corroborar la autenticidad del mismo en nuestros servidores centrales.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+      <!-- Formulario de Validación -->
+      <mat-card class="p-6 shadow md:col-span-1 border-t-4 border-blue-900">
+        <mat-card-header class="pb-2 border-b mb-4">
+          <mat-card-title class="text-lg font-bold text-gray-800 flex items-center gap-2">
+            <mat-icon>verified_user</mat-icon> Consulta Segura
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="valForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Código de Certificado</mat-label>
+              <input matInput formControlName="codigo" placeholder="Ej: UAJMS-CERT-2026-A1B2C3D4" autocomplete="off" class="uppercase font-mono">
+            </mat-form-field>
+            
+            <div class="space-y-2">
+              <button mat-raised-button color="primary" type="submit" class="w-full h-12 text-base font-bold uppercase" [disabled]="valForm.invalid || loading">
+                Verificar Autenticidad
+              </button>
+              <button mat-button type="button" class="w-full h-10 text-gray-500 font-medium" (click)="limpiar()" *ngIf="resultado">
+                Nueva Consulta
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Panel de Respuestas del Servidor -->
+      <div class="md:col-span-2">
+        <div *ngIf="loading" class="flex justify-center items-center h-48 bg-white rounded shadow border p-6">
+          <mat-spinner duration="3000"></mat-spinner>
+        </div>
+
+        <!-- Sin Consultas -->
+        <div *ngIf="!resultado && !loading" class="bg-gray-50 border-2 border-dashed border-gray-300 p-12 text-center rounded-lg text-gray-400 h-full shadow-inner flex flex-col justify-center items-center min-h-[250px]">
+          <mat-icon class="text-6xl h-auto w-auto opacity-40 mb-2">policy</mat-icon>
+          <p class="text-base font-medium">A la espera de un código de certificación...</p>
+        </div>
+
+        <!-- Ficha de Verificación Exitosa / Válida -->
+        <mat-card *ngIf="resultado && resultado.valido && !loading" class="shadow border-2 border-green-500 overflow-hidden">
+          <div class="bg-green-600 text-white font-bold p-4 text-center text-lg uppercase flex items-center justify-center gap-2 tracking-wider">
+            <mat-icon>check_circle</mat-icon> DIPLOMA AUTÉNTICO Y VERIFICADO
+          </div>
+          <mat-card-content class="p-6 space-y-4">
+            <p class="text-sm font-semibold text-green-700 bg-green-50 p-3 rounded border-l-4 border-green-600">
+              {{ resultado.mensaje }}
+            </p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label class="text-xs font-bold text-gray-400 block uppercase">Titular del Certificado</label>
+                <div class="text-xl font-bold text-gray-800">{{ resultado.nombreCompleto }}</div>
+              </div>
+              <div>
+                <label class="text-xs font-bold text-gray-400 block uppercase">Cédula de Identidad (CI)</label>
+                <div class="text-base font-semibold text-gray-700 font-mono">{{ resultado.ci }}</div>
+              </div>
+            </div>
+
+            <div class="border-t pt-3">
+              <label class="text-xs font-bold text-gray-400 block uppercase">Evento Académico Vinculado</label>
+              <div class="text-base font-bold text-blue-950">{{ resultado.evento }}</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border-t pt-3">
+              <div>
+                <label class="text-xs font-bold text-gray-400 block uppercase">Carga Horaria</label>
+                <div class="text-sm font-bold text-gray-700">{{ resultado.cargaHoraria }} horas académicas</div>
+              </div>
+              <div>
+                <label class="text-xs font-bold text-gray-400 block uppercase">Fecha de Emisión</label>
+                <div class="text-sm font-medium text-gray-600 font-mono">{{ resultado.fechaEmision | date:'dd/MM/yyyy HH:mm' }}</div>
+              </div>
+            </div>
+
+            <div class="border-t pt-3 flex justify-between items-center text-xs text-gray-400">
+              <span>Estado en Servidor: <strong class="text-blue-700 font-mono">{{ resultado.estado }}</strong></span>
+              <span>Código: <strong class="font-mono text-gray-700">{{ resultado.codigoCertificado }}</strong></span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Ficha de Validación RECHAZADA / ANULADA -->
+        <mat-card *ngIf="resultado && !resultado.valido && !loading" class="shadow border-2 border-red-500 overflow-hidden">
+          <div class="bg-red-600 text-white font-bold p-4 text-center text-lg uppercase flex items-center justify-center gap-2 tracking-wider">
+            <mat-icon>gpp_bad</mat-icon> CERTIFICACIÓN INVÁLIDA
+          </div>
+          <mat-card-content class="p-6 space-y-4">
+            <div class="p-4 bg-red-50 text-red-800 rounded border-l-4 border-red-600 text-sm font-semibold flex items-start gap-2">
+              <mat-icon class="text-red-600">warning</mat-icon>
+              <span>{{ resultado.mensaje }}</span>
+            </div>
+            
+            <div class="text-center py-4 space-y-2 text-gray-500">
+              <p class="text-xs">Código consultado: <strong class="font-mono text-red-700 bg-red-50 px-2 py-0.5 border rounded">{{ resultado.codigoCertificado }}</strong></p>
+              <p class="text-[11px]">Si cree que esto es un error técnico, por favor tome contacto inmediato con el Administrador o Coordinador de la Facultad organizadora provisto de su comprobante de asistencia físico.</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie Institucional -->
+  <footer class="w-full text-center py-4 border-t text-[11px] text-gray-400 mt-12">
+    © 2026 Universidad Autónoma Juan Misael Saracho - Departamento de Títulos y Certificaciones Académicas. All Rights Reserved.
+  </footer>
+</div>

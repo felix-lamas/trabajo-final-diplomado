@@ -1,0 +1,236 @@
+<main class="auth-page">
+  <section class="auth-shell auth-shell--split">
+    <aside class="auth-visual app-surface">
+      <div class="auth-visual__badge">
+        <mat-icon>school</mat-icon>
+        UAJMS
+      </div>
+
+      <div class="auth-visual__content">
+        <p class="auth-visual__eyebrow">Registro institucional</p>
+        <h1 class="auth-visual__title">Acceso academico para la comunidad universitaria</h1>
+        <p class="auth-visual__text">
+          Cree su cuenta en una experiencia guiada, clara y segura para participar en eventos,
+          inscripciones, certificados y seguimiento institucional.
+        </p>
+
+        <div class="auth-visual__image" aria-hidden="true">
+          <div class="auth-visual__image-copy">
+            <mat-icon style="font-size: 3.5rem; width: 3.5rem; height: 3.5rem;">account_balance</mat-icon>
+            <strong>Gestión académica</strong>
+            <span>Datos personales, información académica y credenciales en un mismo flujo.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-visual__stats">
+        <div class="auth-visual__stat">
+          <strong>3 pasos</strong>
+          <span>Proceso guiado y progresivo</span>
+        </div>
+        <div class="auth-visual__stat">
+          <strong>JWT</strong>
+          <span>Acceso seguro al finalizar</span>
+        </div>
+        <div class="auth-visual__stat">
+          <strong>UAJMS</strong>
+          <span>Identidad institucional unificada</span>
+        </div>
+      </div>
+    </aside>
+
+    <mat-card class="auth-card auth-card--auth">
+      <div class="auth-card__header--auth">
+        <div class="auth-card__meta">
+          <div class="app-chip">
+            <mat-icon>person_add</mat-icon>
+            Registro
+          </div>
+          <div class="app-chip">
+            <mat-icon>verified_user</mat-icon>
+            Cuenta segura
+          </div>
+        </div>
+        <h1>Crear cuenta institucional</h1>
+        <p>Complete los datos personales, academicos y de acceso. El flujo esta pensado para desktop y mobile.</p>
+      </div>
+
+      <div class="auth-progress">
+        <div class="auth-progress__labels">
+          <span>Paso {{ currentStep }} de 3</span>
+          <span>{{ progressPercent | number:'1.0-0' }}%</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="progressPercent"></mat-progress-bar>
+      </div>
+
+      <div class="auth-step-indicator">
+        <button type="button" class="auth-step-indicator__item" [class.auth-step-indicator__item--active]="currentStep === 1" (click)="goToStep(1)">
+          1. Datos personales
+        </button>
+        <button type="button" class="auth-step-indicator__item" [class.auth-step-indicator__item--active]="currentStep === 2" (click)="goToStep(2)">
+          2. Datos academicos
+        </button>
+        <button type="button" class="auth-step-indicator__item" [class.auth-step-indicator__item--active]="currentStep === 3" (click)="goToStep(3)">
+          3. Credenciales
+        </button>
+      </div>
+
+      <form class="auth-form--auth" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <ng-container *ngIf="currentStep === 1">
+          <div class="auth-inline-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombres</mat-label>
+              <input matInput formControlName="nombres" autocomplete="given-name" />
+              <mat-error *ngIf="form.get('nombres')?.hasError('required')">El nombre es obligatorio</mat-error>
+              <mat-error *ngIf="form.get('nombres')?.hasError('minlength')">Ingrese al menos 2 caracteres</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="apellidos" autocomplete="family-name" />
+              <mat-error *ngIf="form.get('apellidos')?.hasError('required')">El apellido es obligatorio</mat-error>
+              <mat-error *ngIf="form.get('apellidos')?.hasError('minlength')">Ingrese al menos 2 caracteres</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="auth-inline-group">
+            <mat-form-field appearance="outline">
+              <mat-label>CI / Documento</mat-label>
+              <input matInput formControlName="ci" autocomplete="off" />
+              <mat-error *ngIf="form.get('ci')?.hasError('required')">El documento es obligatorio</mat-error>
+              <mat-error *ngIf="form.get('ci')?.hasError('minlength')">Ingrese un dato valido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Celular</mat-label>
+              <input matInput formControlName="celular" autocomplete="tel" />
+              <mat-error *ngIf="form.get('celular')?.hasError('required')">El celular es obligatorio</mat-error>
+              <mat-error *ngIf="form.get('celular')?.hasError('minlength')">Ingrese un numero valido</mat-error>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="currentStep === 2">
+          <div class="auth-toggle">
+            <span class="auth-toggle__label">Tipo de usuario</span>
+            <mat-button-toggle-group formControlName="tipoUsuario" (change)="syncAcademicValidators()">
+              <mat-button-toggle value="INTERNO">Interno</mat-button-toggle>
+              <mat-button-toggle value="EXTERNO">Externo</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <p class="auth-field-help">
+            Los usuarios internos deben seleccionar facultad y carrera. Los externos pueden continuar sin datos academicos.
+          </p>
+
+          <ng-container *ngIf="isInterno(); else externoInfo">
+            <div class="auth-inline-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Facultad</mat-label>
+                <mat-select formControlName="facultadId">
+                  <mat-option *ngFor="let facultad of facultades" [value]="facultad.id">
+                    {{ facultad.nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('facultadId')?.hasError('required')">La facultad es obligatoria</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Carrera</mat-label>
+                <mat-select formControlName="carreraId">
+                  <mat-option *ngFor="let carrera of carreras" [value]="carrera.id">
+                    {{ carrera.nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('carreraId')?.hasError('required')">La carrera es obligatoria</mat-error>
+              </mat-form-field>
+            </div>
+
+            <p class="auth-field-help" *ngIf="facultades.length === 0">
+              No se encontraron facultades activas para mostrar.
+            </p>
+          </ng-container>
+
+          <ng-template #externoInfo>
+            <div class="auth-strength">
+              <div class="auth-strength__row">
+                <strong>Modo externo activo</strong>
+                <span class="app-badge app-badge--info">Opcional</span>
+              </div>
+              <p class="auth-field-help">Complete los datos de acceso en el siguiente paso para finalizar el registro.</p>
+            </div>
+          </ng-template>
+        </ng-container>
+
+        <ng-container *ngIf="currentStep === 3">
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electronico</mat-label>
+            <input matInput formControlName="correoElectronico" type="email" autocomplete="email" />
+            <mat-error *ngIf="form.get('correoElectronico')?.hasError('required')">El correo es obligatorio</mat-error>
+            <mat-error *ngIf="form.get('correoElectronico')?.hasError('email')">Ingrese un correo valido</mat-error>
+          </mat-form-field>
+
+          <div class="auth-strength">
+            <div class="auth-strength__row">
+              <strong>Seguridad de contrasena</strong>
+              <span class="app-badge"
+                [class.app-badge--danger]="passwordTone === 'danger'"
+                [class.app-badge--warning]="passwordTone === 'warning'"
+                [class.app-badge--success]="passwordTone === 'success'">
+                {{ passwordLabel }}
+              </span>
+            </div>
+            <div class="auth-strength__bar">
+              <span
+                [style.width.%]="passwordStrength"
+                [style.background]="passwordTone === 'danger' ? 'var(--app-danger)' : passwordTone === 'warning' ? 'var(--app-warning)' : 'var(--app-success)'">
+              </span>
+            </div>
+            <ul class="auth-strength__notes">
+              <li>Minimo 8 caracteres</li>
+              <li>Incluya mayusculas, minusculas, numeros y simbolos</li>
+              <li>Evite claves faciles de adivinar</li>
+            </ul>
+          </div>
+
+          <div class="auth-inline-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Contrasena</mat-label>
+              <input matInput formControlName="contrasena" type="password" autocomplete="new-password" />
+              <mat-error *ngIf="form.get('contrasena')?.hasError('required')">La contrasena es obligatoria</mat-error>
+              <mat-error *ngIf="form.get('contrasena')?.hasError('minlength')">Use al menos 8 caracteres</mat-error>
+              <mat-error *ngIf="form.get('contrasena')?.hasError('pattern')">Debe incluir mayuscula, minuscula, numero y simbolo</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Confirmar contrasena</mat-label>
+              <input matInput formControlName="confirmacion" type="password" autocomplete="new-password" />
+              <mat-error *ngIf="form.get('confirmacion')?.hasError('required')">Confirme la contrasena</mat-error>
+              <mat-error *ngIf="form.hasError('notSame') && form.get('confirmacion')?.touched">Las contrasenas no coinciden</mat-error>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <div class="auth-actions__row">
+          <button mat-stroked-button type="button" (click)="previousStep()" [disabled]="currentStep === 1">
+            Atras
+          </button>
+
+          <div class="auth-actions__row">
+            <a mat-button routerLink="/auth/login">Ya tengo cuenta</a>
+
+            <button *ngIf="currentStep < 3" mat-flat-button color="primary" type="button" (click)="nextStep()">
+              Continuar
+            </button>
+
+            <button *ngIf="currentStep === 3" mat-flat-button color="primary" type="submit" [disabled]="loading || form.invalid">
+              {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }}
+            </button>
+          </div>
+        </div>
+
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+      </form>
+    </mat-card>
+  </section>
+</main>

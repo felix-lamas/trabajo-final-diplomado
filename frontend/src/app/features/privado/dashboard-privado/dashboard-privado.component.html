@@ -1,0 +1,190 @@
+<main class="app-page student-portal">
+  <section class="student-hero">
+    <div class="student-hero__copy">
+      <div class="app-chip">
+        <mat-icon>person</mat-icon>
+        Area privada
+      </div>
+      <h1>Bienvenido, {{ userName }}</h1>
+      <p>
+        Gestione sus inscripciones, pagos, credenciales y certificados desde un panel claro,
+        moderno y orientado a la experiencia estudiantil.
+      </p>
+      <div class="student-hero__actions">
+        <a mat-flat-button color="primary" routerLink="/privado/inscripciones">
+          <mat-icon>how_to_reg</mat-icon>
+          Mis inscripciones
+        </a>
+        <a mat-stroked-button routerLink="/privado/perfil">
+          <mat-icon>badge</mat-icon>
+          Ver perfil
+        </a>
+      </div>
+    </div>
+
+    <div class="student-hero__stats" *ngIf="!loading; else loadingStats">
+      <div class="student-stat">
+        <span>Inscripciones</span>
+        <strong>{{ inscripciones.length }}</strong>
+      </div>
+      <div class="student-stat">
+        <span>Pagos validados</span>
+        <strong>{{ pagosValidados }}</strong>
+      </div>
+      <div class="student-stat">
+        <span>Credenciales</span>
+        <strong>{{ credenciales.length }}</strong>
+      </div>
+      <div class="student-stat">
+        <span>Eventos recomendados</span>
+        <strong>{{ recomendados.length }}</strong>
+      </div>
+    </div>
+
+    <ng-template #loadingStats>
+      <div class="public-loading">
+        <mat-spinner diameter="34"></mat-spinner>
+      </div>
+    </ng-template>
+  </section>
+
+  <section class="student-grid student-grid--3" *ngIf="ejecutivo">
+    <article class="student-card" *ngFor="let item of [
+      { label: 'Eventos', value: ejecutivo.totalEventos, icon: 'event' },
+      { label: 'Participantes', value: ejecutivo.totalParticipantes, icon: 'groups' },
+      { label: 'Satisfaccion', value: ejecutivo.nivelSatisfaccion, icon: 'favorite' }
+    ]">
+      <div class="student-card__header">
+        <div>
+          <h3>{{ item.label }}</h3>
+          <p>Indicador institucional</p>
+        </div>
+        <mat-icon>{{ item.icon }}</mat-icon>
+      </div>
+      <div class="student-stat" style="padding: 0.85rem;">
+        <strong style="font-size: 1.5rem;">{{ item.value }}</strong>
+      </div>
+    </article>
+  </section>
+
+  <section class="student-split">
+    <mat-card class="student-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Proximo evento</h2>
+          <p>Recomendado para su participacion academica.</p>
+        </div>
+      </div>
+
+      <div *ngIf="siguienteEvento; else noEvent" class="student-card" style="padding: 0;">
+        <div style="min-height: 220px; overflow: hidden; border-radius: var(--radius-md);">
+          <img [src]="siguienteEvento.imagenPortada || 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1600&q=80'" [alt]="siguienteEvento.titulo" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div class="student-card__header" style="padding: 0 1rem;">
+          <div>
+            <h3>{{ siguienteEvento.titulo }}</h3>
+            <p>{{ siguienteEvento.categoriaNombre }} · {{ siguienteEvento.modalidad }}</p>
+          </div>
+          <span class="app-badge app-badge--info">{{ siguienteEvento.estado }}</span>
+        </div>
+        <div class="student-card__footer" style="padding: 0 1rem 1rem;">
+          <span>{{ siguienteEvento.fechaInicio | date:'dd MMM yyyy' }}</span>
+          <a mat-flat-button color="primary" [routerLink]="['/eventos', siguienteEvento.id]">Ver evento</a>
+        </div>
+      </div>
+
+      <ng-template #noEvent>
+        <div class="student-empty">
+          <mat-icon>event_busy</mat-icon>
+          <strong>No hay eventos recomendados</strong>
+          <p>Revise el catalogo publico para ver eventos publicados.</p>
+        </div>
+      </ng-template>
+    </mat-card>
+
+    <mat-card class="student-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Actividad reciente</h2>
+          <p>Ultimos movimientos de su cuenta.</p>
+        </div>
+      </div>
+
+      <div class="student-grid">
+        <div *ngFor="let item of actividad" class="student-card">
+          <div class="student-card__header">
+            <div>
+              <h3>{{ item.titulo }}</h3>
+              <p>{{ item.detalle }}</p>
+            </div>
+            <span class="app-badge app-badge--info">{{ item.tipo }}</span>
+          </div>
+          <div class="student-card__footer">
+            <span>{{ item.fecha | date:'dd MMM yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </section>
+
+  <section class="student-grid student-grid--2">
+    <mat-card class="student-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Pagos</h2>
+          <p>Estado de validacion y comprobantes.</p>
+        </div>
+        <a mat-button routerLink="/privado/pagos">Abrir</a>
+      </div>
+      <div class="student-grid">
+        <div class="student-card">
+          <div class="student-card__header">
+            <div>
+              <h3>Pagos pendientes</h3>
+              <p>Solicitudes a la espera de revision</p>
+            </div>
+            <span class="app-badge app-badge--warning">{{ pagosPendientes }}</span>
+          </div>
+        </div>
+        <div class="student-card">
+          <div class="student-card__header">
+            <div>
+              <h3>Pagos validados</h3>
+              <p>Comprobantes aprobados</p>
+            </div>
+            <span class="app-badge app-badge--success">{{ pagosValidados }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="student-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Accesos rapidos</h2>
+          <p>Atajos a las areas principales.</p>
+        </div>
+      </div>
+      <div class="student-grid">
+        <a class="student-card" routerLink="/privado/inscripciones">
+          <div class="student-card__header">
+            <div>
+              <h3>Mis inscripciones</h3>
+              <p>Ver detalle, cancelar y generar credencial</p>
+            </div>
+            <mat-icon>how_to_reg</mat-icon>
+          </div>
+        </a>
+        <a class="student-card" routerLink="/privado/credenciales">
+          <div class="student-card__header">
+            <div>
+              <h3>Mis credenciales</h3>
+              <p>Descarga y QR de acceso</p>
+            </div>
+            <mat-icon>badge</mat-icon>
+          </div>
+        </a>
+      </div>
+    </mat-card>
+  </section>
+</main>

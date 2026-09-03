@@ -1,0 +1,50 @@
+@startuml
+title Diagrama de Actividades: Proceso de Inscripción y Pago (Flujo Completo)
+
+|Participante|
+start
+:Explorar Catálogo;
+:Seleccionar Evento;
+
+if (¿Es Gratuito?) then (si)
+    |Sistema|
+    :Validar Cupos;
+    if (¿Hay Cupo?) then (si)
+        :Crear Inscripción (Estado: APROBADO);
+        :Generar QR de Acceso;
+        :Notificar por Email;
+        |Participante|
+        :Recibir Confirmación;
+    else (no)
+        :Mostrar mensaje "Sin Cupos";
+    endif
+else (no)
+    |Participante|
+    :Verificar Datos de Pago;
+    :Realizar Transferencia/Depósito;
+    :Subir Comprobante a la Plataforma;
+    
+    |Sistema|
+    :Crear Inscripción (Estado: PENDIENTE_PAGO);
+    :Notificar a Validador Financiero;
+    
+    |Validador Financiero|
+    :Revisar Comprobante vs Extracto;
+    if (¿Pago es Válido?) then (si)
+        :Aprobar Pago;
+        |Sistema|
+        :Cambiar Inscripción a (Estado: APROBADO);
+        :Generar QR de Acceso;
+        :Notificar por Email;
+    else (no)
+        :Rechazar Pago;
+        :Registrar Motivo (Ej. Monto insuficiente);
+        |Sistema|
+        :Notificar Rechazo al Participante;
+        |Participante|
+        :Corregir y Volver a Subir;
+        detach
+    endif
+endif
+stop
+@enduml

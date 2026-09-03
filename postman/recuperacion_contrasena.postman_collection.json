@@ -1,0 +1,228 @@
+{
+  "info": {
+    "name": "Eventos UAJMS - Recuperacion de Contrasena",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "correo",
+      "value": "estudiante@uajms.edu.bo"
+    },
+    {
+      "key": "tokenRecuperacion",
+      "value": "PEGAR_TOKEN_DEL_CORREO_O_LOG"
+    }
+  ],
+  "item": [
+    {
+      "name": "Solicitar recuperacion",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/recuperar-contrasena",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "recuperar-contrasena"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"correoElectronico\": \"{{correo}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restablecer contrasena - exito",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/restablecer-contrasena",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "restablecer-contrasena"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"{{tokenRecuperacion}}\",\n  \"nuevaContrasena\": \"NuevaClave123!\",\n  \"confirmacion\": \"NuevaClave123!\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restablecer contrasena - token reutilizado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/restablecer-contrasena",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"{{tokenRecuperacion}}\",\n  \"nuevaContrasena\": \"NuevaClave123!\",\n  \"confirmacion\": \"NuevaClave123!\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test('Token usado o expirado', function () {",
+              "  pm.expect(pm.response.json().mensaje).to.include('Token expirado o ya utilizado');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restablecer contrasena - token invalido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/restablecer-contrasena",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"token-invalido\",\n  \"nuevaContrasena\": \"NuevaClave123!\",\n  \"confirmacion\": \"NuevaClave123!\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restablecer contrasena - confirmacion no coincide",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/restablecer-contrasena",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"{{tokenRecuperacion}}\",\n  \"nuevaContrasena\": \"NuevaClave123!\",\n  \"confirmacion\": \"OtraClave123!\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restablecer contrasena - politica insegura",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/restablecer-contrasena",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"{{tokenRecuperacion}}\",\n  \"nuevaContrasena\": \"password\",\n  \"confirmacion\": \"password\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test('Error de validacion', function () {",
+              "  pm.expect(pm.response.json().codigo).to.eql('VALIDACION_ERROR');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+<main class="app-page admin-portal">
+  <section class="admin-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">{{ esEdicion ? 'Editar' : 'Nueva' }} categoria</h1>
+      <p>Formulario institucional para clasificacion de eventos.</p>
+    </div>
+    <a mat-stroked-button routerLink="/admin/categorias">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </a>
+  </section>
+
+  <form [formGroup]="categoriaForm" (ngSubmit)="guardar()" class="admin-form-shell">
+    <mat-card class="admin-form-panel">
+      <div class="app-form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" placeholder="Ej. Seminario, Taller, Conferencia" required>
+          <mat-error *ngIf="categoriaForm.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+          <mat-error *ngIf="categoriaForm.get('nombre')?.hasError('minlength')">Minimo 3 caracteres</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descripcion</mat-label>
+          <textarea matInput formControlName="descripcion" placeholder="Opcional..." rows="4"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" *ngIf="esEdicion">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="estado">
+            <mat-option value="ACTIVO">ACTIVO</mat-option>
+            <mat-option value="INACTIVO">INACTIVO</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <div class="student-card__footer" style="grid-column: 1 / -1;">
+      <button mat-stroked-button type="button" routerLink="/admin/categorias">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="categoriaForm.invalid">
+        <mat-icon>save</mat-icon>
+        Guardar
+      </button>
+    </div>
+  </form>
+</main>

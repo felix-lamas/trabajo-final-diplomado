@@ -1,0 +1,97 @@
+<main class="app-page student-portal">
+  <section class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Detalle de inscripcion</h1>
+      <p>Informacion completa del registro al evento.</p>
+    </div>
+    <a mat-stroked-button routerLink="/privado/inscripciones">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </a>
+  </section>
+
+  <div *ngIf="loading" class="public-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading && inscripcion">
+    <section class="student-split">
+      <mat-card class="student-panel">
+        <div class="student-card__header">
+          <div>
+            <h2>{{ inscripcion.eventoTitulo }}</h2>
+            <p>Registrado el {{ inscripcion.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p>
+          </div>
+          <span class="app-badge"
+            [class.app-badge--success]="inscripcion.estado === 'CONFIRMADA' || inscripcion.estado === 'ASISTIO'"
+            [class.app-badge--warning]="inscripcion.estado === 'PENDIENTE_PAGO' || inscripcion.estado === 'PENDIENTE_VALIDACION'"
+            [class.app-badge--danger]="inscripcion.estado === 'CANCELADA' || inscripcion.estado === 'RECHAZADA'">
+            {{ inscripcion.estado }}
+          </span>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="student-grid student-grid--2">
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Modalidad</h3>
+                <p>{{ inscripcion.modalidalEvento }}</p>
+              </div>
+              <mat-icon>event</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Ubicacion</h3>
+                <p>{{ inscripcion.ubicacionEvento || 'Enlace virtual' }}</p>
+              </div>
+              <mat-icon>location_on</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Participante</h3>
+                <p>{{ inscripcion.usuarioNombre }}</p>
+              </div>
+              <mat-icon>person</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Observacion</h3>
+                <p>{{ inscripcion.observacion || 'Sin observaciones' }}</p>
+              </div>
+              <mat-icon>notes</mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="student-card__footer">
+          <span>ID {{ inscripcion.id | slice:0:8 }}</span>
+          <button mat-flat-button color="warn" *ngIf="inscripcion.estado !== 'CANCELADA' && inscripcion.estado !== 'RECHAZADA' && inscripcion.estado !== 'ASISTIO'" (click)="cancelar()">
+            Cancelar inscripcion
+          </button>
+        </div>
+      </mat-card>
+
+      <mat-card class="student-panel" *ngIf="inscripcion.estado === 'PENDIENTE_PAGO'">
+        <div class="student-card__header">
+          <div>
+            <h2>Pago requerido</h2>
+            <p>Su inscripcion esta pendiente de validacion por comprobante.</p>
+          </div>
+          <mat-icon>info</mat-icon>
+        </div>
+        <p>Realice el pago correspondiente para completar la confirmacion del evento.</p>
+        <a mat-flat-button color="primary" routerLink="/privado/pagos/registrar" [queryParams]="{ inscripcionId: inscripcion.id }">
+          Subir comprobante
+        </a>
+      </mat-card>
+    </section>
+  </ng-container>
+</main>

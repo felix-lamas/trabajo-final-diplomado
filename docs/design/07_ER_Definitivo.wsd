@@ -1,0 +1,146 @@
+@startuml
+title Modelo Entidad Relación Oficial (Estandarizado a Español)
+
+skinparam Linetype ortho
+
+' --- Seguridad y Usuarios ---
+entity "usuario" as usuario {
+  * id : UUID <<PK>>
+  --
+  * correo_electronico : VARCHAR(100) <<UK>>
+  * contrasena : VARCHAR(255)
+  * nombres : VARCHAR(50)
+  * apellidos : VARCHAR(50)
+  * ci : VARCHAR(20) <<UK>>
+  * tipo_usuario : VARCHAR(20)
+  * carrera_id : UUID <<FK>>
+  * esta_activo : BOOLEAN
+  fecha_creacion : TIMESTAMPTZ
+  fecha_actualizacion : TIMESTAMPTZ
+}
+
+entity "rol" as rol {
+  * id : UUID <<PK>>
+  --
+  * nombre : VARCHAR(50) <<UK>>
+  * descripcion : TEXT
+}
+
+entity "permiso" as permiso {
+  * id : UUID <<PK>>
+  --
+  * codigo : VARCHAR(50) <<UK>>
+  * descripcion : TEXT
+}
+
+entity "usuario_rol" as usuario_rol {
+  * usuario_id : UUID <<FK>>
+  * rol_id : UUID <<FK>>
+}
+
+entity "rol_permiso" as rol_permiso {
+  * rol_id : UUID <<FK>>
+  * permiso_id : UUID <<FK>>
+}
+
+' --- Organización Académica ---
+entity "facultad" as facultad {
+  * id : UUID <<PK>>
+  --
+  * nombre : VARCHAR(100) <<UK>>
+  * codigo : VARCHAR(10) <<UK>>
+}
+
+entity "carrera" as carrera {
+  * id : UUID <<PK>>
+  --
+  * facultad_id : UUID <<FK>>
+  * nombre : VARCHAR(100)
+  * codigo : VARCHAR(10)
+}
+
+' --- Eventos ---
+entity "categoria_evento" as categoria_evento {
+  * id : UUID <<PK>>
+  --
+  * nombre : VARCHAR(50) <<UK>>
+  * descripcion : TEXT
+}
+
+entity "evento" as evento {
+  * id : UUID <<PK>>
+  --
+  * categoria_id : UUID <<FK>>
+  * facultad_id : UUID <<FK>>
+  * organizador_id : UUID <<FK>>
+  * titulo : VARCHAR(200)
+  * descripcion : TEXT
+  * fecha_inicio : TIMESTAMPTZ
+  * fecha_fin : TIMESTAMPTZ
+  * costo : NUMERIC(12,2)
+  * cupo : INTEGER
+  * estado : VARCHAR(20)
+  * modalidad : VARCHAR(20)
+  * asistencia_minima_cert : INTEGER
+  fecha_eliminacion : TIMESTAMPTZ
+}
+
+' --- Operativa ---
+entity "inscripcion" as inscripcion {
+  * id : UUID <<PK>>
+  --
+  * usuario_id : UUID <<FK>>
+  * evento_id : UUID <<FK>>
+  * estado : VARCHAR(20)
+  * datos_qr : TEXT <<UK>>
+  fecha_inscripcion : TIMESTAMPTZ
+}
+
+entity "pago" as pago {
+  * id : UUID <<PK>>
+  --
+  * inscripcion_id : UUID <<FK>>
+  * monto : NUMERIC(12,2)
+  * url_comprobante : VARCHAR(255)
+  * numero_referencia : VARCHAR(50)
+  * estado : VARCHAR(20)
+  * fecha_validacion : TIMESTAMPTZ
+  * validador_id : UUID <<FK>>
+  * motivo_rechazo : TEXT
+}
+
+entity "asistencia" as asistencia {
+  * id : UUID <<PK>>
+  --
+  * inscripcion_id : UUID <<FK>>
+  * fecha_hora_entrada : TIMESTAMPTZ
+  * fecha_hora_salida : TIMESTAMPTZ
+  * escaneador_id : UUID <<FK>>
+}
+
+entity "certificado" as certificado {
+  * id : UUID <<PK>>
+  --
+  * inscripcion_id : UUID <<FK>>
+  * codigo_verificacion : UUID <<UK>>
+  * fecha_emision : TIMESTAMPTZ
+  * url_archivo : VARCHAR(255)
+}
+
+' --- Relaciones ---
+usuario }o--|| carrera
+facultad ||--o{ carrera
+facultad ||--o{ evento
+categoria_evento ||--o{ evento
+usuario ||--o{ evento : "organiza"
+usuario ||--o{ inscripcion
+evento ||--o{ inscripcion
+inscripcion ||--o| pago
+inscripcion ||--o{ asistencia
+inscripcion ||--o| certificado
+usuario ||--o{ usuario_rol
+rol ||--o{ usuario_rol
+rol ||--o{ rol_permiso
+permiso ||--o{ rol_permiso
+
+@enduml

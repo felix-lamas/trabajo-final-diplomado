@@ -1,0 +1,117 @@
+<main class="app-page admin-portal">
+  <section class="admin-hero admin-command-hero">
+    <div class="admin-hero__copy">
+      <div class="app-chip">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Operacion universitaria 2026
+      </div>
+      <h1>Dashboard ejecutivo administrativo</h1>
+      <p>
+        Supervision centralizada de eventos, pagos, estructura academica, asistencia y emision
+        documental para la gestion institucional.
+      </p>
+      <div class="student-hero__actions">
+        <a mat-flat-button color="primary" routerLink="/admin/eventos">
+          <mat-icon>event</mat-icon>
+          Gestionar eventos
+        </a>
+        <a mat-stroked-button routerLink="/admin/pagos/validar">
+          <mat-icon>payments</mat-icon>
+          Validar pagos
+        </a>
+      </div>
+    </div>
+
+    <div class="admin-alerts admin-alerts--executive" *ngIf="!loading">
+      <article class="admin-alert admin-alert--priority" *ngFor="let alert of alerts">
+        <mat-icon>priority_high</mat-icon>
+        <span>{{ alert.label }}</span>
+        <strong>{{ alert.value }}</strong>
+      </article>
+    </div>
+  </section>
+
+  <section *ngIf="loading" class="public-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </section>
+
+  <ng-container *ngIf="!loading && ejecutivo && operativo && academico">
+    <section class="admin-kpi-grid">
+      <article class="admin-metric-card" *ngFor="let item of kpis">
+        <div class="admin-metric-card__icon">
+          <mat-icon>query_stats</mat-icon>
+        </div>
+        <span>{{ item.label }}</span>
+        <strong>{{ item.value }}</strong>
+        <div class="admin-kpi__bar" [attr.data-tone]="item.tone"></div>
+      </article>
+    </section>
+
+    <section class="admin-command-grid">
+      <mat-card class="admin-surface admin-chart-panel">
+        <div class="app-toolbar">
+          <div class="app-toolbar__title">
+            <h2 class="app-section-title">Grafico academico</h2>
+            <p>Participacion por facultad y carrera.</p>
+          </div>
+          <span class="app-badge app-badge--info">Tiempo real</span>
+        </div>
+
+        <div class="admin-chart">
+          <div *ngFor="let item of academico.participacionPorFacultad" class="admin-chart__row">
+            <div class="admin-chart__label">
+              <span>{{ item.name }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+            <mat-progress-bar mode="determinate" [value]="progress(item.value, 100)"></mat-progress-bar>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="admin-surface admin-activity-panel">
+        <div class="app-toolbar">
+          <div class="app-toolbar__title">
+            <h2 class="app-section-title">Actividad reciente</h2>
+            <p>Eventos y pagos que requieren seguimiento.</p>
+          </div>
+        </div>
+
+        <div class="admin-timeline">
+          <article class="admin-timeline__item" *ngFor="let evento of recentEvents">
+            <div class="admin-timeline__dot"></div>
+            <div class="student-card__header">
+              <div>
+                <h3>{{ evento.titulo }}</h3>
+                <p>{{ evento.categoriaNombre }} - {{ evento.estado }}</p>
+              </div>
+              <span class="app-badge app-badge--info">{{ evento.cupoDisponible }} cupos</span>
+            </div>
+          </article>
+          <article class="admin-timeline__item" *ngFor="let pago of recentPayments">
+            <div class="admin-timeline__dot admin-timeline__dot--warning"></div>
+            <div class="student-card__header">
+              <div>
+                <h3>{{ pago.eventoTitulo }}</h3>
+                <p>{{ pago.usuarioNombre }} - {{ pago.estado }}</p>
+              </div>
+              <span class="app-badge app-badge--warning">Pendiente</span>
+            </div>
+          </article>
+        </div>
+      </mat-card>
+    </section>
+
+    <section class="admin-grid-3">
+      <mat-card class="admin-action-card" *ngFor="let action of recommendedActions">
+        <div class="student-card__header">
+          <div>
+            <h3>{{ action.label }}</h3>
+            <p>{{ action.description }}</p>
+          </div>
+          <mat-icon>{{ action.icon }}</mat-icon>
+        </div>
+        <a mat-flat-button color="primary" [routerLink]="action.route">Abrir</a>
+      </mat-card>
+    </section>
+  </ng-container>
+</main>

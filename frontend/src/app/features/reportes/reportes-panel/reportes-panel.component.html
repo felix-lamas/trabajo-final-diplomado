@@ -1,0 +1,107 @@
+<main class="app-page bi-page">
+  <app-breadcrumbs
+    [items]="[
+      { label: 'Reportes', route: '/reportes/dashboard', icon: 'analytics' },
+      { label: 'Generador de datos', icon: 'table_view' }
+    ]">
+  </app-breadcrumbs>
+
+  <section class="bi-hero">
+    <div>
+      <span class="app-chip">
+        <mat-icon>assessment</mat-icon>
+        Report generation center
+      </span>
+      <h1>Generador de reportes y auditoria</h1>
+      <p>Consulta, filtrado y exportacion institucional de registros maestros.</p>
+    </div>
+    <div class="bi-hero__meta">
+      <span>Vista activa</span>
+      <strong>{{ tipoActual | titlecase }}</strong>
+      <small>{{ reporte?.totalRegistros || 0 }} registros</small>
+    </div>
+  </section>
+
+  <section class="bi-quick-actions" aria-label="Tipo de reporte">
+    <button mat-stroked-button [color]="tipoActual === 'eventos' ? 'primary' : ''" (click)="cargarReporte('eventos')">
+      <mat-icon>event</mat-icon>
+      Eventos maestros
+    </button>
+    <button mat-stroked-button [color]="tipoActual === 'participantes' ? 'primary' : ''" (click)="cargarReporte('participantes')">
+      <mat-icon>groups</mat-icon>
+      Padron participantes
+    </button>
+    <button mat-stroked-button [color]="tipoActual === 'pagos' ? 'primary' : ''" (click)="cargarReporte('pagos')">
+      <mat-icon>payments</mat-icon>
+      Balance de pagos
+    </button>
+    <button mat-stroked-button [color]="tipoActual === 'certificados' ? 'primary' : ''" (click)="cargarReporte('certificados')">
+      <mat-icon>workspace_premium</mat-icon>
+      Log certificados
+    </button>
+  </section>
+
+  <section class="bi-kpi-grid bi-kpi-grid--compact">
+    <article class="bi-kpi-card">
+      <span>Registros</span>
+      <strong>{{ reporte?.totalRegistros || 0 }}</strong>
+      <small>Fuente operativa</small>
+    </article>
+    <article class="bi-kpi-card">
+      <span>Columnas</span>
+      <strong>{{ columnas.length }}</strong>
+      <small>Estructura dinamica</small>
+    </article>
+    <article class="bi-kpi-card">
+      <span>Vista</span>
+      <strong>{{ tipoActual | titlecase }}</strong>
+      <small>Actualizacion manual</small>
+    </article>
+  </section>
+
+  <section *ngIf="loading" class="app-surface" aria-live="polite">
+    <app-skeleton variant="table" [count]="6"></app-skeleton>
+  </section>
+
+  <mat-card class="bi-card" *ngIf="!loading && reporte && reporte.filas.length > 0">
+    <div class="bi-card__header">
+      <div>
+        <h3>Vista previa de reporte</h3>
+        <p>{{ reporte.tipoReporte }} - total de {{ reporte.totalRegistros }} filas</p>
+      </div>
+      <div class="bi-report-actions">
+        <button mat-flat-button color="primary" (click)="exportar('pdf')">
+          <mat-icon>picture_as_pdf</mat-icon>
+          Exportar PDF
+        </button>
+        <button mat-flat-button color="accent" (click)="exportar('excel')">
+          <mat-icon>table_view</mat-icon>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-table-scroll">
+      <table mat-table [dataSource]="reporte.filas" class="w-full">
+        <ng-container *ngFor="let col of columnas" [matColumnDef]="col">
+          <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row[col] }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+      </table>
+    </div>
+  </mat-card>
+
+  <app-empty-state
+    *ngIf="!loading && reporte && reporte.filas.length === 0"
+    icon="search_off"
+    title="Sin datos disponibles"
+    message="No se han encontrado registros para este tipo de reporte."
+    actionLabel="Volver a cargar"
+    (action)="cargarReporte(tipoActual)">
+  </app-empty-state>
+</main>

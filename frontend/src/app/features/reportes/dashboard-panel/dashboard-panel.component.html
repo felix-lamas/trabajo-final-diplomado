@@ -1,0 +1,330 @@
+<main class="app-page bi-page">
+  <app-breadcrumbs
+    [items]="[
+      { label: 'Reportes', route: '/reportes/generador', icon: 'description' },
+      { label: 'Dashboard BI', icon: 'analytics' }
+    ]">
+  </app-breadcrumbs>
+
+  <section class="bi-hero">
+    <div>
+      <span class="app-chip">
+        <mat-icon>analytics</mat-icon>
+        Business Intelligence universitario
+      </span>
+      <h1>Suite ejecutiva de dashboards</h1>
+      <p>
+        Analitica institucional para eventos, operacion academica, participacion y gestion financiera.
+      </p>
+    </div>
+    <div class="bi-hero__meta">
+      <span>Modelo</span>
+      <strong>Eventos UAJMS BI</strong>
+      <small>Actualizacion operativa</small>
+    </div>
+  </section>
+
+  <section class="bi-quick-actions" aria-label="Acciones rapidas">
+    <a mat-stroked-button routerLink="/reportes/generador">
+      <mat-icon>description</mat-icon>
+      Generar reporte
+    </a>
+    <a mat-stroked-button routerLink="/admin/eventos">
+      <mat-icon>event</mat-icon>
+      Ver eventos
+    </a>
+    <a mat-stroked-button routerLink="/admin/pagos/validar">
+      <mat-icon>payments</mat-icon>
+      Revisar pagos
+    </a>
+  </section>
+
+  <section class="bi-filter-bar" aria-label="Filtros de dashboard">
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha inicio</mat-label>
+      <input matInput [matDatepicker]="inicioPicker" [(ngModel)]="filtroFechaInicio">
+      <mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle>
+      <mat-datepicker #inicioPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha fin</mat-label>
+      <input matInput [matDatepicker]="finPicker" [(ngModel)]="filtroFechaFin">
+      <mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle>
+      <mat-datepicker #finPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Facultad</mat-label>
+      <mat-select [(ngModel)]="filtroFacultad">
+        <mat-option *ngFor="let facultad of facultades" [value]="facultad">{{ facultad }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Carrera</mat-label>
+      <mat-select [(ngModel)]="filtroCarrera">
+        <mat-option *ngFor="let carrera of carreras" [value]="carrera">{{ carrera }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Categoria</mat-label>
+      <mat-select [(ngModel)]="filtroCategoria">
+        <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <section *ngIf="loading" class="app-surface" aria-live="polite">
+    <app-skeleton variant="dashboard" [count]="4"></app-skeleton>
+  </section>
+
+  <ng-container *ngIf="!loading && ejecutivo && operativo && academico">
+    <section class="bi-dashboard">
+      <header class="bi-section-header">
+        <div>
+          <span>Dashboard 01</span>
+          <h2>Ejecutivo</h2>
+        </div>
+        <p>Resumen institucional, cobertura, certificados e indicadores de satisfaccion.</p>
+      </header>
+
+      <div class="bi-kpi-grid">
+        <article class="bi-kpi-card">
+          <span>Total eventos</span>
+          <strong>{{ ejecutivo.totalEventos }}</strong>
+          <small>+12% vs periodo anterior</small>
+        </article>
+        <article class="bi-kpi-card">
+          <span>Participantes</span>
+          <strong>{{ ejecutivo.totalParticipantes }}</strong>
+          <small>+8.4% tendencia acumulada</small>
+        </article>
+        <article class="bi-kpi-card">
+          <span>Inscripciones</span>
+          <strong>{{ ejecutivo.totalInscripciones }}</strong>
+          <small>Conversion institucional activa</small>
+        </article>
+        <article class="bi-kpi-card">
+          <span>Certificados</span>
+          <strong>{{ ejecutivo.totalCertificados }}</strong>
+          <small>{{ certificadoRate() }}% sobre participantes</small>
+        </article>
+      </div>
+
+      <div class="bi-grid bi-grid--executive">
+        <article class="bi-card">
+          <div class="bi-card__header">
+            <div>
+              <h3>Satisfaccion global</h3>
+              <p>Encuestas consolidadas</p>
+            </div>
+            <span class="app-badge app-badge--success">{{ ejecutivo.nivelSatisfaccion }}</span>
+          </div>
+          <div class="bi-donut" [style.background]="donutBackground(ejecutivo.participacionEncuestas)">
+            <div>
+              <strong>{{ ejecutivo.participacionEncuestas }}%</strong>
+              <span>participacion</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="bi-card bi-card--wide">
+          <div class="bi-card__header">
+            <div>
+              <h3>Ranking de satisfaccion por evento</h3>
+              <p>Promedios ponderados de feedback academico</p>
+            </div>
+          </div>
+          <div class="bi-horizontal-bars">
+            <div *ngFor="let item of ejecutivo.promedioSatisfaccionPorEvento | slice:0:6" class="bi-bar-row">
+              <span>{{ item.evento }}</span>
+              <div><i [style.width.%]="progress(item.promedio, 5)"></i></div>
+              <strong>{{ item.promedio }}</strong>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="bi-dashboard">
+      <header class="bi-section-header">
+        <div>
+          <span>Dashboard 02</span>
+          <h2>Operativo</h2>
+        </div>
+        <p>Control de eventos, pagos, QR y asistencias registradas.</p>
+      </header>
+
+      <div class="bi-grid bi-grid--ops">
+        <article class="bi-kpi-card bi-kpi-card--accent">
+          <span>Eventos activos</span>
+          <strong>{{ operativo.eventosActivos }}</strong>
+          <small>{{ operativo.eventosFinalizados }} finalizados</small>
+        </article>
+        <article class="bi-kpi-card bi-kpi-card--accent">
+          <span>QR utilizados</span>
+          <strong>{{ operativo.qrUtilizados }}</strong>
+          <small>{{ asistenciaRate() }}% asistencia relativa</small>
+        </article>
+        <article class="bi-card bi-card--wide">
+          <div class="bi-card__header">
+            <div>
+              <h3>Flujo operativo</h3>
+              <p>Estados de ejecucion y validacion</p>
+            </div>
+          </div>
+          <div class="bi-column-chart">
+            <div>
+              <i [style.height.%]="progress(operativo.eventosActivos, ejecutivo.totalEventos)"></i>
+              <span>Activos</span>
+            </div>
+            <div>
+              <i [style.height.%]="progress(operativo.eventosFinalizados, ejecutivo.totalEventos)"></i>
+              <span>Finalizados</span>
+            </div>
+            <div>
+              <i [style.height.%]="paymentValidationRate()"></i>
+              <span>Pagos</span>
+            </div>
+            <div>
+              <i [style.height.%]="asistenciaRate()"></i>
+              <span>Asistencias</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="bi-dashboard">
+      <header class="bi-section-header">
+        <div>
+          <span>Dashboard 03</span>
+          <h2>Academico</h2>
+        </div>
+        <p>Participacion por facultad, carrera, categoria y periodo.</p>
+      </header>
+
+      <div class="bi-grid bi-grid--academic">
+        <article class="bi-card">
+          <div class="bi-card__header">
+            <div>
+              <h3>Participacion por facultad</h3>
+              <p>{{ total(academico.participacionPorFacultad) }} registros</p>
+            </div>
+          </div>
+          <div class="bi-horizontal-bars">
+            <div *ngFor="let fac of academico.participacionPorFacultad | slice:0:7" class="bi-bar-row">
+              <span>{{ fac.name }}</span>
+              <div><i [style.width.%]="progress(fac.value, maxValue(academico.participacionPorFacultad))"></i></div>
+              <strong>{{ fac.value }}</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="bi-card">
+          <div class="bi-card__header">
+            <div>
+              <h3>Participacion por carrera</h3>
+              <p>Distribucion CRM academica</p>
+            </div>
+          </div>
+          <div class="bi-horizontal-bars bi-horizontal-bars--teal">
+            <div *ngFor="let car of academico.participacionPorCarrera | slice:0:7" class="bi-bar-row">
+              <span>{{ car.name }}</span>
+              <div><i [style.width.%]="progress(car.value, maxValue(academico.participacionPorCarrera))"></i></div>
+              <strong>{{ car.value }}</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="bi-card">
+          <div class="bi-card__header">
+            <div>
+              <h3>Tendencia por periodo</h3>
+              <p>Inscritos por ciclo</p>
+            </div>
+          </div>
+          <svg class="bi-line-chart" viewBox="0 0 360 120" role="img" aria-label="Tendencia de inscritos por periodo">
+            <path class="bi-line-chart__area" [attr.d]="trendArea(academico.participacionPorPeriodo)"></path>
+            <path class="bi-line-chart__line" [attr.d]="trendPath(academico.participacionPorPeriodo)"></path>
+          </svg>
+          <div class="bi-period-labels">
+            <span *ngFor="let item of academico.participacionPorPeriodo | slice:0:5">{{ item.periodo }}</span>
+          </div>
+        </article>
+
+        <article class="bi-card">
+          <div class="bi-card__header">
+            <div>
+              <h3>Categorias academicas</h3>
+              <p>Mix institucional</p>
+            </div>
+          </div>
+          <div class="bi-category-list">
+            <div *ngFor="let cat of academico.participacionPorCategoria | slice:0:6">
+              <span>{{ cat.name }}</span>
+              <strong>{{ cat.value }}</strong>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="bi-dashboard">
+      <header class="bi-section-header">
+        <div>
+          <span>Dashboard 04</span>
+          <h2>Financiero</h2>
+        </div>
+        <p>Ingresos, validaciones de pago, pendientes y eficiencia de recaudo.</p>
+      </header>
+
+      <div class="bi-grid bi-grid--finance">
+        <article class="bi-kpi-card bi-kpi-card--money">
+          <span>Ingresos generados</span>
+          <strong>{{ ejecutivo.ingresosGenerados | currency:'Bs ' }}</strong>
+          <small>Recaudacion consolidada</small>
+        </article>
+        <article class="bi-kpi-card bi-kpi-card--money">
+          <span>Ingreso promedio</span>
+          <strong>{{ ingresoPromedio() | currency:'Bs ' }}</strong>
+          <small>Por inscripcion registrada</small>
+        </article>
+        <article class="bi-card">
+          <div class="bi-card__header">
+            <div>
+              <h3>Validacion de pagos</h3>
+              <p>Pagos validados vs pendientes</p>
+            </div>
+          </div>
+          <div class="bi-donut bi-donut--finance" [style.background]="donutBackground(paymentValidationRate())">
+            <div>
+              <strong>{{ paymentValidationRate() }}%</strong>
+              <span>validados</span>
+            </div>
+          </div>
+        </article>
+        <article class="bi-card">
+          <div class="bi-card__header">
+            <div>
+              <h3>Pipeline financiero</h3>
+              <p>Balance de comprobantes</p>
+            </div>
+          </div>
+          <div class="bi-finance-pipeline">
+            <div>
+              <span>Pendientes</span>
+              <strong>{{ operativo.pagosPendientes }}</strong>
+            </div>
+            <div>
+              <span>Validados</span>
+              <strong>{{ operativo.pagosValidados }}</strong>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </ng-container>
+</main>

@@ -1,0 +1,108 @@
+<a class="shell__skip-link" href="#app-main">Saltar al contenido principal</a>
+
+<mat-sidenav-container class="shell">
+  <mat-sidenav
+    #drawer
+    class="shell__sidenav"
+    [class.shell__sidenav--collapsed]="collapsed() && !mobile()"
+    [mode]="mobile() ? 'over' : 'side'"
+    [opened]="!mobile()"
+  >
+    <div class="shell__brand">
+      <div class="shell__mark">UAJMS</div>
+      <div *ngIf="!collapsed() || mobile()">
+        <div class="shell__eyebrow">Admin Center</div>
+        <div class="shell__title">Eventos UAJMS</div>
+      </div>
+    </div>
+
+    <div class="shell__tenant" *ngIf="!collapsed() || mobile()">
+      <span>Tenant institucional</span>
+      <strong>Universidad Autonoma Juan Misael Saracho</strong>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <nav class="shell__nav">
+      <a
+        mat-list-item
+        *ngFor="let item of navItems"
+        [routerLink]="item.route"
+        routerLinkActive="shell__active"
+        [class.shell__nav-item--collapsed]="collapsed() && !mobile()"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle *ngIf="!collapsed() || mobile()">{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="shell__sidebar-footer">
+      <div class="app-chip" *ngIf="!collapsed() || mobile()">Sesion activa</div>
+      <div class="shell__user" *ngIf="!collapsed() || mobile()">
+        <strong>{{ userName() }}</strong>
+        <span>{{ userRole() }}</span>
+      </div>
+      <button mat-stroked-button color="primary" type="button" (click)="cerrarSesion()" [attr.aria-label]="'Cerrar sesion'">
+        <mat-icon>logout</mat-icon>
+        <span *ngIf="!collapsed() || mobile()">Cerrar sesion</span>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <header class="shell__header app-surface">
+      <button mat-icon-button type="button" class="shell__menu" aria-label="Abrir menu" (click)="toggleDrawer()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="shell__headline">
+        <div class="shell__eyebrow">Universidad Autonoma Juan Misael Saracho</div>
+        <h1>Centro de administracion institucional</h1>
+      </div>
+      <div class="shell__actions">
+        <div class="shell__quick-actions" aria-label="Acciones rapidas">
+          <a
+            mat-icon-button
+            *ngFor="let action of quickActions"
+            [routerLink]="action.route"
+            [matTooltip]="action.label"
+            [attr.aria-label]="action.label">
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </a>
+        </div>
+        <button mat-icon-button type="button" (click)="toggleTheme()" [attr.aria-label]="darkMode() ? 'Activar tema claro' : 'Activar tema oscuro'">
+          <mat-icon>{{ darkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+        <span class="app-chip shell__status">
+          <mat-icon>monitor_heart</mat-icon>
+          Operacion estable
+        </span>
+        <button mat-icon-button type="button" aria-label="Notificaciones futuras">
+          <mat-icon>notifications_none</mat-icon>
+        </button>
+        <div class="shell__profile">
+          <div class="shell__avatar">{{ userName().slice(0, 1) }}</div>
+          <div class="shell__profile-copy">
+            <strong>{{ userName() }}</strong>
+            <span>{{ userRole() }}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="app-main" class="shell__main" tabindex="-1">
+      <div class="shell__context" *ngIf="breadcrumbs().length">
+        <app-breadcrumbs [items]="breadcrumbs()"></app-breadcrumbs>
+        <span class="shell__context-label">{{ currentSection() }}</span>
+      </div>
+      <router-outlet></router-outlet>
+    </main>
+
+    <footer class="shell__footer">
+      <div>
+        <strong>UAJMS</strong>
+        <span>Plataforma Web para la Gestion Integral de Eventos Universitarios</span>
+      </div>
+      <span>Release 1.0</span>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

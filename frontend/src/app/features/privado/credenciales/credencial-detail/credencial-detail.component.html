@@ -1,0 +1,84 @@
+<main class="app-page student-portal">
+  <section class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Detalle de credencial</h1>
+      <p>Credencial digital con QR destacado y descarga rapida.</p>
+    </div>
+    <a mat-stroked-button routerLink="/privado/credenciales">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </a>
+  </section>
+
+  <div *ngIf="loading" class="public-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading && credencial">
+    <section class="student-split">
+      <mat-card class="student-panel">
+        <div class="student-card__header">
+          <div>
+            <h2>{{ credencial.eventoTitulo }}</h2>
+            <p>Credencial digital de participante</p>
+          </div>
+          <span class="app-badge app-badge--success">{{ credencial.estado }}</span>
+        </div>
+
+        <div class="student-grid student-grid--2">
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Participante</h3>
+                <p>{{ credencial.usuarioNombre }}</p>
+              </div>
+              <mat-icon>person</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Codigo</h3>
+                <p>{{ credencial.codigoParticipante }}</p>
+              </div>
+              <mat-icon>badge</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Fecha de emision</h3>
+                <p>{{ credencial.fechaGeneracion | date:'dd MMM yyyy HH:mm' }}</p>
+              </div>
+              <mat-icon>schedule</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>QR</h3>
+                <p>Verificacion rapida</p>
+              </div>
+              <mat-icon>qr_code</mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <button mat-flat-button color="primary" type="button" (click)="descargar()">
+          <mat-icon>download</mat-icon>
+          Descargar PDF
+        </button>
+      </mat-card>
+
+      <mat-card class="student-panel" style="display:grid; place-items:center; gap: 1rem;">
+        <div style="padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--app-border); background: #fff;">
+          <img *ngIf="qrImage" [src]="qrImage" alt="Codigo QR" style="width: 280px; height: 280px; object-fit: contain;">
+          <div *ngIf="!qrImage" style="width: 280px; height: 280px; display:grid; place-items:center; color: var(--app-text-muted);">Sin QR</div>
+        </div>
+        <p class="app-muted" style="text-align:center; max-width: 280px;">
+          Escanee este codigo en el acceso del evento para validar su asistencia.
+        </p>
+      </mat-card>
+    </section>
+  </ng-container>
+</main>

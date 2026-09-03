@@ -1,0 +1,170 @@
+<main class="app-page admin-portal">
+  <section class="admin-module-header admin-access-header">
+    <div class="app-toolbar__title">
+      <span class="app-chip">
+        <mat-icon>qr_code_scanner</mat-icon>
+        Centro de control QR
+      </span>
+      <h1>Gestion de asistencias</h1>
+      <p>Validacion visual de identidad, autorizacion de ingreso y control en tiempo real.</p>
+    </div>
+    <a mat-stroked-button routerLink="/asistencias/historial">
+      <mat-icon>history</mat-icon>
+      Historial
+    </a>
+  </section>
+
+  <section class="admin-access-grid">
+    <div class="admin-access-tools">
+      <mat-card class="admin-surface admin-scan-card">
+        <div class="student-card__header">
+          <div>
+            <h2>Escaneo de codigo QR</h2>
+            <p>Lectura directa desde credencial institucional.</p>
+          </div>
+          <mat-icon>qr_code_2</mat-icon>
+        </div>
+        <form [formGroup]="qrForm" (ngSubmit)="escanearQr()" class="student-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Contenido / Token QR</mat-label>
+            <input matInput formControlName="tokenQr" placeholder="Pegue o escanee el token del QR aqui..." autocomplete="off">
+            <mat-icon matSuffix>camera_alt</mat-icon>
+          </mat-form-field>
+          <button mat-flat-button color="primary" type="submit" [disabled]="qrForm.invalid || loading">
+            <mat-icon>bolt</mat-icon>
+            Validar QR
+          </button>
+        </form>
+      </mat-card>
+
+      <mat-card class="admin-surface admin-scan-card">
+        <div class="student-card__header">
+          <div>
+            <h2>Busqueda de contingencia</h2>
+            <p>Use este canal si la lectura QR no esta disponible.</p>
+          </div>
+          <mat-icon>manage_search</mat-icon>
+        </div>
+        <form [formGroup]="searchForm" (ngSubmit)="buscarManual()" class="student-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Metodo de identificacion</mat-label>
+            <mat-select formControlName="tipoBusqueda">
+              <mat-option value="documento">Documento de Identidad (CI)</mat-option>
+              <mat-option value="codigo">Codigo unico de participante</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" *ngIf="searchForm.get('tipoBusqueda')?.value === 'documento'">
+            <mat-label>Seleccionar evento</mat-label>
+            <mat-select formControlName="eventoId">
+              <mat-option *ngFor="let evt of eventos" [value]="evt.id">{{ evt.titulo }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Valor a buscar</mat-label>
+            <input matInput formControlName="valor" placeholder="Ej: 7432189 o UAJMS-EVT-2026-000123">
+          </mat-form-field>
+
+          <button mat-stroked-button color="primary" type="submit" [disabled]="searchForm.invalid || loading">
+            <mat-icon>search</mat-icon>
+            Buscar participante
+          </button>
+        </form>
+      </mat-card>
+    </div>
+
+    <section class="admin-access-result">
+      <div *ngIf="loading" class="public-loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="!ficha && !loading" class="admin-live-empty">
+        <mat-icon>badge</mat-icon>
+        <strong>Esperando lectura de QR o busqueda manual</strong>
+        <p>Escanee la credencial del participante para verificar identidad y registrar asistencia.</p>
+      </div>
+
+      <mat-card *ngIf="ficha && !loading" class="admin-access-profile" [ngClass]="ficha.puedeIngresar ? 'admin-access-profile--ok' : 'admin-access-profile--alert'">
+        <div class="admin-access-profile__status">
+          <mat-icon>{{ ficha.puedeIngresar ? 'verified' : 'gpp_bad' }}</mat-icon>
+          <strong>{{ ficha.puedeIngresar ? 'Ficha de validacion disponible' : 'Acceso en alerta / rechazado' }}</strong>
+        </div>
+
+        <mat-card-content>
+          <div class="admin-access-profile__body">
+            <div class="admin-access-profile__photo">
+              <img *ngIf="ficha.fotografiaUrl" [src]="ficha.fotografiaUrl" alt="Fotografia Participante">
+              <mat-icon *ngIf="!ficha.fotografiaUrl">account_circle</mat-icon>
+              <span>Foto oficial perfil</span>
+            </div>
+
+            <div class="admin-access-profile__data">
+              <label>Nombre completo del participante</label>
+              <h2>{{ ficha.nombreCompleto }}</h2>
+
+              <div class="admin-detail-grid">
+                <div>
+                  <span>Documento identidad</span>
+                  <strong>{{ ficha.documentoIdentidad }}</strong>
+                </div>
+                <div>
+                  <span>Codigo participante</span>
+                  <strong>{{ ficha.codigoParticipante }}</strong>
+                </div>
+                <div>
+                  <span>Carrera</span>
+                  <strong>{{ ficha.carrera }}</strong>
+                </div>
+                <div>
+                  <span>Facultad</span>
+                  <strong>{{ ficha.facultad }}</strong>
+                </div>
+              </div>
+
+              <div class="admin-access-event">
+                <span>Evento academico</span>
+                <strong>{{ ficha.evento }}</strong>
+              </div>
+
+              <div class="admin-state-grid">
+                <div [ngClass]="ficha.estadoInscripcion === 'APROBADO' ? 'admin-state--ok' : 'admin-state--bad'">
+                  <span>Inscripcion</span>
+                  <strong>{{ ficha.estadoInscripcion }}</strong>
+                </div>
+                <div [ngClass]="ficha.estadoPago === 'VALIDADO' ? 'admin-state--ok' : 'admin-state--bad'">
+                  <span>Estado pago</span>
+                  <strong>{{ ficha.estadoPago }}</strong>
+                </div>
+                <div [ngClass]="ficha.estadoQr === 'GENERADO' ? 'admin-state--ok' : 'admin-state--warn'">
+                  <span>Estado QR</span>
+                  <strong>{{ ficha.estadoQr }}</strong>
+                </div>
+              </div>
+
+              <div class="admin-access-message">{{ ficha.mensajeValidacion }}</div>
+            </div>
+          </div>
+
+          <div class="admin-access-actions">
+            <mat-form-field appearance="outline">
+              <mat-label>Observaciones del control</mat-label>
+              <textarea matInput [(ngModel)]="observacion" placeholder="Detalle anomalias, ingreso manual, etc."></textarea>
+            </mat-form-field>
+
+            <div class="admin-action-row">
+              <button mat-stroked-button color="warn" type="button" (click)="denegar()">
+                <mat-icon>block</mat-icon>
+                Denegar ingreso
+              </button>
+              <button mat-flat-button color="primary" type="button" (click)="autorizar()" [disabled]="!ficha.puedeIngresar">
+                <mat-icon>check_circle</mat-icon>
+                Autorizar ingreso
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  </section>
+</main>

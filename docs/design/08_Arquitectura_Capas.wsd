@@ -1,0 +1,37 @@
+@startuml
+title Arquitectura por Capas - Backend Spring Boot
+
+package "com.uajms.events" {
+    package "api" {
+        [Controllers] as Ctrl
+        [DTOs] as DTO
+        [ExceptionHandlers] as Ex
+    }
+    
+    package "service" {
+        [Interfaces] as SrvInt
+        [Implementations] as SrvImpl
+        [Mappers] as Map
+    }
+    
+    package "domain" {
+        [Entities] as Ent
+        [Repositories] as Repo
+        [Enums] as Enum
+    }
+    
+    package "infrastructure" {
+        [SecurityConfig] as Sec
+        [StorageConfig] as Stor
+        [MailConfig] as Mail
+    }
+}
+
+Ctrl ..> DTO
+Ctrl ..> SrvInt
+SrvImpl ..|> SrvInt
+SrvImpl ..> Repo
+SrvImpl ..> Ent
+SrvImpl ..> Map
+Repo ..> Ent
+@enduml

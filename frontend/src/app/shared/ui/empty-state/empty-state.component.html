@@ -1,0 +1,24 @@
+<section class="empty-state" [class.empty-state--compact]="compact" role="status" aria-live="polite">
+  <div class="empty-state__icon">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+  <h3>{{ title }}</h3>
+  <p>{{ message }}</p>
+  <div class="empty-state__actions" *ngIf="actionLabel || secondaryLabel">
+    <ng-container *ngIf="actionLabel">
+      <a *ngIf="actionRoute; else actionButton" mat-flat-button color="primary" [routerLink]="actionRoute">
+        <mat-icon>arrow_forward</mat-icon>
+        {{ actionLabel }}
+      </a>
+      <ng-template #actionButton>
+        <button mat-flat-button color="primary" type="button" (click)="action.emit()">
+          <mat-icon>refresh</mat-icon>
+          {{ actionLabel }}
+        </button>
+      </ng-template>
+    </ng-container>
+    <button *ngIf="secondaryLabel" mat-stroked-button type="button" (click)="secondaryAction.emit()">
+      {{ secondaryLabel }}
+    </button>
+  </div>
+</section>

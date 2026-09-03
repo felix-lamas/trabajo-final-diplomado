@@ -1,0 +1,27 @@
+<div class="skeleton skeleton--{{ variant }}" aria-hidden="true">
+  <ng-container *ngIf="variant === 'dashboard'">
+    <div class="skeleton__hero"></div>
+    <div class="skeleton__grid">
+      <div class="skeleton__card" *ngFor="let _ of items"></div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="variant === 'table'">
+    <div class="skeleton__table-row skeleton__table-row--head"></div>
+    <div class="skeleton__table-row" *ngFor="let _ of items"></div>
+  </ng-container>
+
+  <ng-container *ngIf="variant === 'card'">
+    <div class="skeleton__card" *ngFor="let _ of items"></div>
+  </ng-container>
+
+  <ng-container *ngIf="variant === 'list'">
+    <div class="skeleton__list-row" *ngFor="let _ of items">
+      <span></span>
+      <div>
+        <i></i>
+        <b></b>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,67 @@
+<main class="app-page student-portal">
+  <section class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Mis pagos</h1>
+      <p>Historial visual de pagos, comprobantes y validaciones.</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/privado/inscripciones">
+      <mat-icon>how_to_reg</mat-icon>
+      Ver inscripciones
+    </a>
+  </section>
+
+  <section class="student-grid student-grid--3">
+    <article class="student-stat">
+      <span>Total</span>
+      <strong>{{ totalPagos }}</strong>
+    </article>
+    <article class="student-stat">
+      <span>Validados</span>
+      <strong>{{ totalValidados }}</strong>
+    </article>
+    <article class="student-stat">
+      <span>Pendientes</span>
+      <strong>{{ totalPendientes }}</strong>
+    </article>
+  </section>
+
+  <section class="student-panel">
+    <div class="student-card__meta" style="margin-bottom: 0.75rem;">
+      <button mat-stroked-button type="button" (click)="cambiarFiltro('TODOS')" [disabled]="estadoFiltro === 'TODOS'">Todos</button>
+      <button mat-stroked-button type="button" (click)="cambiarFiltro('VALIDADO')" [disabled]="estadoFiltro === 'VALIDADO'">Validados</button>
+      <button mat-stroked-button type="button" (click)="cambiarFiltro('PENDIENTE')" [disabled]="estadoFiltro === 'PENDIENTE'">Pendientes</button>
+      <button mat-stroked-button type="button" (click)="cambiarFiltro('RECHAZADO')" [disabled]="estadoFiltro === 'RECHAZADO'">Rechazados</button>
+    </div>
+
+    <div *ngIf="pagosFiltrados.length === 0" class="student-empty">
+      <mat-icon>payments</mat-icon>
+      <strong>No hay pagos en este filtro</strong>
+      <p>Cuando registre un pago aparecerá aquí con su estado y comprobante.</p>
+    </div>
+
+    <div *ngIf="pagosFiltrados.length > 0" class="student-grid student-grid--2">
+      <article *ngFor="let pago of pagosFiltrados" class="student-card">
+        <div class="student-card__header">
+          <div>
+            <h3>{{ pago.eventoTitulo }}</h3>
+            <p>Bs. {{ pago.monto }} · {{ pago.fechaPago | date:'dd MMM yyyy HH:mm' }}</p>
+          </div>
+          <span class="app-badge"
+            [class.app-badge--success]="pago.estado === 'VALIDADO'"
+            [class.app-badge--warning]="pago.estado === 'PENDIENTE'"
+            [class.app-badge--danger]="pago.estado === 'RECHAZADO'">
+            {{ getEstadoLabel(pago.estado) }}
+          </span>
+        </div>
+
+        <div class="student-card__footer">
+          <span>{{ pago.comprobante?.nombreArchivo || 'Sin comprobante adjunto' }}</span>
+          <div class="student-card__meta">
+            <button mat-stroked-button type="button" *ngIf="pago.comprobante" (click)="verComprobante(pago)">Comprobante</button>
+            <a mat-flat-button color="primary" [routerLink]="['/privado/inscripciones', pago.inscripcionId]">Inscripcion</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

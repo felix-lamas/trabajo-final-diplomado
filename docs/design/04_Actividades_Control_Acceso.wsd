@@ -1,0 +1,38 @@
+@startuml
+title Diagrama de Actividades: Control de Acceso y Asistencia
+
+|Participante|
+start
+:Presentar Credencial QR;
+
+|Personal de Control|
+:Escanear QR mediante App Web;
+
+|Sistema|
+if (¿QR es válido?) then (si)
+    :Consultar Estado de Inscripción;
+    if (¿Inscripción Pagada/Aprobada?) then (si)
+        :Verificar si ya ingresó;
+        if (¿Ya tiene ingreso hoy?) then (no)
+            :Registrar Hora de Ingreso;
+            :Mostrar mensaje "BIENVENIDO";
+            stop
+        else (si)
+            :Mostrar alerta "YA REGISTRADO";
+            stop
+        endif
+    else (no)
+        :Mostrar error "PAGO PENDIENTE";
+        stop
+    endif
+else (no)
+    :Mostrar error "QR INVÁLIDO";
+    :Opción: Registro Manual por CI;
+    |Personal de Control|
+    :Ingresar CI del Participante;
+    |Sistema|
+    :Validar CI en base de datos;
+    goto (¿Inscripción Pagada/Aprobada?);
+endif
+
+@enduml

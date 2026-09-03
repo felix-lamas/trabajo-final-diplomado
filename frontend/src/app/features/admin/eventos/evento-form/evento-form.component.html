@@ -1,0 +1,138 @@
+<main class="app-page admin-portal">
+  <section class="admin-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">{{ esEdicion ? 'Editar' : 'Nuevo' }} evento</h1>
+      <p>Formulario institucional para publicacion y programacion academica.</p>
+    </div>
+    <a mat-stroked-button routerLink="/admin/eventos">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </a>
+  </section>
+
+  <form [formGroup]="eventoForm" (ngSubmit)="guardar()" class="admin-form-shell">
+    <mat-card class="admin-form-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Informacion general</h2>
+          <p>Titulo, categoria y modalidad.</p>
+        </div>
+      </div>
+
+      <div class="app-form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Titulo del evento</mat-label>
+          <input matInput formControlName="titulo" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="categoriaId" required>
+            <mat-option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Modalidad</mat-label>
+          <mat-select formControlName="modalidad" required>
+            <mat-option value="PRESENCIAL">Presencial</mat-option>
+            <mat-option value="VIRTUAL">Virtual</mat-option>
+            <mat-option value="HIBRIDO">Hibrido</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <mat-card class="admin-form-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Fechas y cupos</h2>
+          <p>Programacion y capacidad institucional.</p>
+        </div>
+      </div>
+
+      <div class="app-form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha inicio</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" required>
+          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha fin</mat-label>
+          <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" required>
+          <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hora inicio</mat-label>
+          <input matInput type="time" formControlName="horaInicio">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hora fin</mat-label>
+          <input matInput type="time" formControlName="horaFin">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de inscripcion</mat-label>
+          <mat-select formControlName="tipoInscripcion" required>
+            <mat-option value="GRATUITO">Gratuito</mat-option>
+            <mat-option value="PAGO">Pago</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Costo</mat-label>
+          <input matInput type="number" formControlName="costo" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cupo maximo</mat-label>
+          <input matInput type="number" formControlName="cupoMaximo" required>
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <mat-card class="admin-form-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Ubicacion y contenido</h2>
+          <p>Descripcion, objetivos y enlace virtual.</p>
+        </div>
+      </div>
+
+      <div class="app-form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Ubicacion fisica</mat-label>
+          <input matInput formControlName="ubicacion" placeholder="Aula, auditorio, etc.">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Enlace virtual</mat-label>
+          <input matInput formControlName="enlaceVirtual" placeholder="URL de Zoom, Meet, etc.">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descripcion</mat-label>
+          <textarea matInput formControlName="descripcion" rows="4"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Objetivos</mat-label>
+          <textarea matInput formControlName="objetivos" rows="4"></textarea>
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <div class="student-card__footer" style="grid-column: 1 / -1;">
+      <button mat-stroked-button type="button" routerLink="/admin/eventos">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="eventoForm.invalid">
+        <mat-icon>save</mat-icon>
+        Guardar evento
+      </button>
+    </div>
+  </form>
+</main>

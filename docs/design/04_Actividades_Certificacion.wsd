@@ -1,0 +1,29 @@
+@startuml
+title Diagrama de Actividades: Proceso de Certificación Masiva
+
+|Coordinador de Evento|
+start
+:Finalizar Evento;
+:Solicitar "Cierre de Certificación";
+
+|Sistema|
+:Obtener lista de inscritos aprobados;
+loop para cada inscrito
+    :Calcular % de asistencia;
+    if (¿Asistencia >= Minimo?) then (si)
+        :Generar UUID único;
+        :Obtener Template del Evento;
+        :Inyectar datos del participante;
+        :Generar PDF;
+        :Almacenar en Storage;
+        :Registrar en Base de Datos;
+        :Notificar disponibilidad al participante;
+    else (no)
+        :Marcar como "No Elegible";
+    endif
+endloop
+
+|Coordinador de Evento|
+:Revisar Reporte de Emisión;
+stop
+@enduml

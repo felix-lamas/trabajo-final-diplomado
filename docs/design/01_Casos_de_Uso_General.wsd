@@ -1,0 +1,59 @@
+@startuml
+title Diagrama General de Casos de Uso - Plataforma Eventos UAJMS
+
+left to right direction
+
+actor "Usuario No Autenticado" as Guest
+actor "Participante (Estudiante/Externo)" as Participant
+actor "Organizador (Facultad/Carrera)" as Organizer
+actor "Personal de Control" as ControlStaff
+actor "Administrador (TI/Rectorado)" as Admin
+actor "Validador Financiero" as Finance
+actor "Sistema" as System
+
+rectangle "Plataforma de Eventos UAJMS" {
+    (Registro) as UC1
+    (Inicio de Sesión) as UC2
+    (Ver Catálogo de Eventos) as UC3
+    (Gestionar Eventos) as UC4
+    (Gestionar Categorías) as UC5
+    (Inscripción a Evento) as UC6
+    (Cargar Comprobante de Pago) as UC7
+    (Validar Pago) as UC8
+    (Generar QR de Acceso) as UC9
+    (Generar Credencial Digital) as UC10
+    (Registrar Asistencia) as UC11
+    (Emitir Certificados) as UC12
+    (Consultar Reportes) as UC13
+    (Dashboard Estadístico) as UC14
+}
+
+Guest --> UC1
+Guest --> UC2
+Guest --> UC3
+
+Participant --|> Guest
+Participant --> UC6
+Participant --> UC7
+Participant --> UC9
+Participant --> UC10
+Participant --> UC12
+
+Organizer --|> UC2
+Organizer --> UC4
+Organizer --> UC5
+Organizer --> UC11
+Organizer --> UC12
+Organizer --> UC13
+
+ControlStaff --> UC11
+
+Finance --> UC8
+
+Admin --|> Organizer
+Admin --> UC13
+Admin --> UC14
+
+System --> UC9
+System --> UC12
+@enduml

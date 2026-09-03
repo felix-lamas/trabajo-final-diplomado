@@ -1,0 +1,79 @@
+<main class="app-page public-portal">
+  <section class="public-section public-enroll">
+    <div class="app-toolbar">
+      <div class="app-toolbar__title">
+        <h1 class="app-section-title">Proceso de inscripcion</h1>
+        <p>Revise la informacion del evento y confirme su participacion.</p>
+      </div>
+      <a mat-stroked-button routerLink="/eventos">Volver al catalogo</a>
+    </div>
+
+    <div *ngIf="loading" class="public-loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <ng-container *ngIf="!loading && evento">
+      <div class="public-enroll__grid" *ngIf="!completado; else doneState">
+        <mat-card class="public-enroll__summary">
+          <div class="public-enroll__image">
+            <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1200&q=80'" [alt]="evento.titulo">
+          </div>
+          <div class="public-enroll__content">
+            <div class="public-event-card__meta">
+              <span>{{ evento.categoriaNombre }}</span>
+              <span>{{ evento.modalidad }}</span>
+            </div>
+            <h2>{{ evento.titulo }}</h2>
+            <p>{{ evento.descripcion }}</p>
+            <div class="public-enroll__facts">
+              <div><strong>Fecha</strong><span>{{ evento.fechaInicio | date:'dd MMM yyyy' }}</span></div>
+              <div><strong>Horario</strong><span>{{ evento.horaInicio }} - {{ evento.horaFin }}</span></div>
+              <div><strong>Costo</strong><span>{{ evento.tipoInscripcion === 'GRATUITO' ? 'Gratis' : (evento.costo | currency:'Bs. ') }}</span></div>
+              <div><strong>Cupos</strong><span>{{ evento.cupoDisponible }} disponibles</span></div>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="public-enroll__form">
+          <div class="public-enroll__step">
+            <span class="app-badge app-badge--info">Paso 1 de 1</span>
+            <strong>Confirmacion visual</strong>
+            <p>La inscripcion se registrara con un solo clic. Si el evento es de pago, el estado quedara sujeto a validacion.</p>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="public-enroll__check">
+            <mat-icon>task_alt</mat-icon>
+            <div>
+              <strong>Datos verificados</strong>
+              <span>Evento publicado, cupos disponibles y modalidad activa.</span>
+            </div>
+          </div>
+
+          <div class="public-enroll__check">
+            <mat-icon>shield</mat-icon>
+            <div>
+              <strong>Proceso seguro</strong>
+              <span>La solicitud se envia al sistema institucional con trazabilidad.</span>
+            </div>
+          </div>
+
+          <button mat-flat-button color="primary" type="button" (click)="confirmar()" [disabled]="confirmando || evento.cupoDisponible <= 0 || evento.estado !== 'PUBLICADO'">
+            {{ confirmando ? 'Confirmando...' : 'Confirmar inscripcion' }}
+          </button>
+
+          <p class="public-enroll__note" *ngIf="evento.cupoDisponible <= 0">El evento no tiene cupos disponibles.</p>
+        </mat-card>
+      </div>
+
+      <ng-template #doneState>
+        <mat-card class="public-enroll__done">
+          <mat-icon>check_circle</mat-icon>
+          <h2>Inscripcion completada</h2>
+          <p>Su registro fue procesado correctamente. Sera redirigido al detalle de la inscripcion.</p>
+        </mat-card>
+      </ng-template>
+    </ng-container>
+  </section>
+</main>

@@ -1,0 +1,62 @@
+# Environment and secrets
+.env
+.env.*
+*.env
+*.local
+*.local.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.orig
+*.pid
+*.swp
+
+# Java / Maven / Spring Boot
+backend/target/
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.hprof
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Node / Angular
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+coverage/
+frontend/coverage/
+.angular/cache/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# Operating systems
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Local frontend environments
+frontend/src/environments/environment.local.ts
+frontend/src/environments/environment.prod.ts

@@ -1,0 +1,164 @@
+<main class="app-page admin-portal">
+  <section class="admin-module-header">
+    <div class="app-toolbar__title">
+      <span class="app-chip">
+        <mat-icon>event_available</mat-icon>
+        Operacion academica
+      </span>
+      <h1>Gestion de eventos</h1>
+      <p>Publicacion, seguimiento y control operativo de eventos institucionales.</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="nuevo">
+      <mat-icon>add</mat-icon>
+      Nuevo evento
+    </a>
+  </section>
+
+  <section class="admin-kpi-grid admin-kpi-grid--compact">
+    <article class="admin-metric-card">
+      <div class="admin-metric-card__icon"><mat-icon>event</mat-icon></div>
+      <span>Total</span>
+      <strong>{{ totalEventos }}</strong>
+      <div class="admin-kpi__bar"></div>
+    </article>
+    <article class="admin-metric-card">
+      <div class="admin-metric-card__icon"><mat-icon>campaign</mat-icon></div>
+      <span>Publicados</span>
+      <strong>{{ totalPublicados }}</strong>
+      <div class="admin-kpi__bar" data-tone="green"></div>
+    </article>
+    <article class="admin-metric-card">
+      <div class="admin-metric-card__icon"><mat-icon>edit_calendar</mat-icon></div>
+      <span>Borradores</span>
+      <strong>{{ totalBorradores }}</strong>
+      <div class="admin-kpi__bar" data-tone="amber"></div>
+    </article>
+  </section>
+
+  <app-skeleton *ngIf="loading" variant="dashboard" [count]="3"></app-skeleton>
+
+  <section class="admin-card-grid admin-event-card-grid" *ngIf="!loading && eventosFiltrados.length > 0">
+    <article *ngFor="let ev of eventosFiltrados | slice:0:3" class="admin-event-card">
+      <div class="admin-event-card__top">
+        <span class="admin-status-pill"
+          [ngClass]="{
+            'admin-status-pill--warning': ev.estado === 'BORRADOR',
+            'admin-status-pill--success': ev.estado === 'PUBLICADO' || ev.estado === 'EN_CURSO',
+            'admin-status-pill--danger': ev.estado === 'CANCELADO',
+            'admin-status-pill--info': ev.estado === 'FINALIZADO'
+          }">
+          {{ getEstadoLabel(ev.estado) }}
+        </span>
+        <mat-icon>calendar_month</mat-icon>
+      </div>
+      <h2>{{ ev.titulo }}</h2>
+      <p>{{ ev.organizadorNombre }}</p>
+      <div class="admin-event-card__meta">
+        <span>{{ ev.categoriaNombre }}</span>
+        <strong>{{ ev.fechaInicio | date:'dd MMM yyyy' }}</strong>
+      </div>
+      <div class="admin-event-card__capacity">
+        <span>Cupos disponibles</span>
+        <strong>{{ ev.cupoDisponible }} / {{ ev.cupoMaximo }}</strong>
+      </div>
+    </article>
+  </section>
+
+  <mat-card class="admin-surface admin-table-wrap admin-data-center" *ngIf="!loading">
+    <div class="admin-toolbar">
+      <div class="admin-filters admin-filters--wide">
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar evento</mat-label>
+          <input matInput [(ngModel)]="busqueda" placeholder="Titulo, categoria o descripcion">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('TODOS')" [disabled]="estadoFiltro === 'TODOS'">Todos</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('BORRADOR')" [disabled]="estadoFiltro === 'BORRADOR'">Borradores</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('PUBLICADO')" [disabled]="estadoFiltro === 'PUBLICADO'">Publicados</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('EN_CURSO')" [disabled]="estadoFiltro === 'EN_CURSO'">En curso</button>
+      </div>
+      <span class="app-badge app-badge--info">{{ eventosFiltrados.length }} registros</span>
+    </div>
+
+    <app-empty-state
+      *ngIf="eventosFiltrados.length === 0"
+      icon="event_busy"
+      title="No hay eventos para mostrar"
+      message="Ajuste los filtros o cree un evento para activar el catalogo institucional."
+      actionLabel="Nuevo evento"
+      actionRoute="nuevo">
+    </app-empty-state>
+
+    <div class="admin-table-scroll" *ngIf="eventosFiltrados.length > 0">
+      <table mat-table [dataSource]="eventosFiltrados" class="w-full">
+        <ng-container matColumnDef="titulo">
+          <th mat-header-cell *matHeaderCellDef>Titulo</th>
+          <td mat-cell *matCellDef="let ev">
+            <div class="admin-entity-cell">
+              <div class="admin-entity-cell__avatar"><mat-icon>event</mat-icon></div>
+              <div>
+                <strong>{{ ev.titulo }}</strong>
+                <span>{{ ev.organizadorNombre }}</span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="categoria">
+          <th mat-header-cell *matHeaderCellDef>Categoria</th>
+          <td mat-cell *matCellDef="let ev">{{ ev.categoriaNombre }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef>Fecha</th>
+          <td mat-cell *matCellDef="let ev">{{ ev.fechaInicio | date:'dd MMM yyyy' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cupo">
+          <th mat-header-cell *matHeaderCellDef>Cupos</th>
+          <td mat-cell *matCellDef="let ev">
+            <div class="admin-progress-cell">
+              <strong>{{ ev.cupoDisponible }} / {{ ev.cupoMaximo }}</strong>
+              <div class="admin-mini-bar"><span [style.width.%]="ev.cupoMaximo ? (ev.cupoDisponible / ev.cupoMaximo) * 100 : 0"></span></div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let ev">
+            <span class="admin-status-pill"
+              [ngClass]="{
+                'admin-status-pill--warning': ev.estado === 'BORRADOR',
+                'admin-status-pill--success': ev.estado === 'PUBLICADO' || ev.estado === 'EN_CURSO',
+                'admin-status-pill--danger': ev.estado === 'CANCELADO',
+                'admin-status-pill--info': ev.estado === 'FINALIZADO'
+              }">
+              {{ getEstadoLabel(ev.estado) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let ev">
+            <div class="student-card__meta">
+              <button mat-icon-button color="primary" [routerLink]="[ev.id]" matTooltip="Detalle">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" *ngIf="ev.estado === 'BORRADOR'" [routerLink]="['editar', ev.id]" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" *ngIf="ev.estado === 'BORRADOR'" (click)="eliminar(ev)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-card>
+</main>

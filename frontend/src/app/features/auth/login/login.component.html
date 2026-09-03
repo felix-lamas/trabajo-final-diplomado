@@ -1,0 +1,85 @@
+<main class="auth-page">
+  <section class="auth-shell auth-shell--split">
+    <aside class="auth-visual app-surface">
+      <div class="auth-visual__badge">
+        <mat-icon>event</mat-icon>
+        Plataforma UAJMS
+      </div>
+
+      <div class="auth-visual__content">
+        <p class="auth-visual__eyebrow">Acceso institucional</p>
+        <h1 class="auth-visual__title">Gestion universitaria de eventos con experiencia moderna</h1>
+        <p class="auth-visual__text">
+          Ingrese a una interfaz segura, limpia y pensada para flujo operativo, control de acceso,
+          inscripciones, certificados y reportes.
+        </p>
+
+        <div class="auth-visual__image" aria-hidden="true">
+          <div class="auth-visual__image-copy">
+            <mat-icon style="font-size: 3.5rem; width: 3.5rem; height: 3.5rem;">account_balance</mat-icon>
+            <strong>Universidad autonoma</strong>
+            <span>Entorno institucional con identidad academica, trazabilidad y control.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-visual__stats">
+        <div class="auth-visual__stat">
+          <strong>JWT</strong>
+          <span>Autenticacion segura</span>
+        </div>
+        <div class="auth-visual__stat">
+          <strong>QR</strong>
+          <span>Control y asistencia</span>
+        </div>
+        <div class="auth-visual__stat">
+          <strong>24/7</strong>
+          <span>Disponibilidad en linea</span>
+        </div>
+      </div>
+    </aside>
+
+    <mat-card class="auth-card auth-card--auth">
+      <div class="auth-card__header--auth">
+        <div class="auth-card__meta">
+          <div class="app-chip">
+            <mat-icon>login</mat-icon>
+            Ingreso seguro
+          </div>
+          <div class="app-chip">
+            <mat-icon>verified_user</mat-icon>
+            UAJMS
+          </div>
+        </div>
+        <h1>Iniciar sesion</h1>
+        <p>Acceda a la plataforma institucional con su cuenta registrada.</p>
+      </div>
+
+      <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+      <form class="auth-form--auth" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Correo electronico</mat-label>
+          <input matInput type="email" formControlName="correoElectronico" autocomplete="email" />
+          <mat-error *ngIf="form.get('correoElectronico')?.hasError('required')">El correo es obligatorio</mat-error>
+          <mat-error *ngIf="form.get('correoElectronico')?.hasError('email')">Ingrese un correo valido</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contrasena</mat-label>
+          <input matInput type="password" formControlName="contrasena" autocomplete="current-password" />
+          <mat-error *ngIf="form.get('contrasena')?.hasError('required')">La contrasena es obligatoria</mat-error>
+        </mat-form-field>
+
+        <div class="auth-actions__row">
+          <a mat-button routerLink="/auth/recuperar-contrasena">Olvide mi contrasena</a>
+          <a mat-button routerLink="/auth/registro">Crear cuenta</a>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading || form.invalid">
+          {{ loading ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+      </form>
+    </mat-card>
+  </section>
+</main>

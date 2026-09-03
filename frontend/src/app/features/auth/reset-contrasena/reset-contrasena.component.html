@@ -1,0 +1,67 @@
+<main class="auth-page auth-page--compact">
+  <mat-card class="auth-card auth-card--auth auth-card--compact">
+    <div class="auth-card__header--auth">
+      <div class="auth-card__meta">
+        <div class="app-chip">
+          <mat-icon>security</mat-icon>
+          Seguridad
+        </div>
+        <div class="app-chip">
+          <mat-icon>password</mat-icon>
+          Validacion fuerte
+        </div>
+      </div>
+      <h1>Restablecer contrasena</h1>
+      <p>Defina una nueva contrasena segura para recuperar su acceso a la plataforma.</p>
+    </div>
+
+    <div class="auth-strength">
+      <div class="auth-strength__row">
+        <strong>Fortaleza de contrasena</strong>
+        <span class="app-badge"
+          [class.app-badge--danger]="passwordTone === 'danger'"
+          [class.app-badge--warning]="passwordTone === 'warning'"
+          [class.app-badge--success]="passwordTone === 'success'">
+          {{ passwordLabel }}
+        </span>
+      </div>
+      <div class="auth-strength__bar">
+        <span
+          [style.width.%]="passwordStrength"
+          [style.background]="passwordTone === 'danger' ? 'var(--app-danger)' : passwordTone === 'warning' ? 'var(--app-warning)' : 'var(--app-success)'">
+        </span>
+      </div>
+      <ul class="auth-strength__notes">
+        <li>Use minimo 8 caracteres</li>
+        <li>Incluya mayusculas, minusculas, numeros y simbolos</li>
+        <li>No reutilice contrasenas anteriores</li>
+      </ul>
+    </div>
+
+    <form [formGroup]="resetForm" (ngSubmit)="onSubmit()" class="auth-form--auth">
+      <mat-form-field appearance="outline">
+        <mat-label>Nueva contrasena</mat-label>
+        <input matInput formControlName="nuevaContrasena" type="password" (input)="onPasswordChange()">
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="resetForm.get('nuevaContrasena')?.hasError('required')">Requerido</mat-error>
+        <mat-error *ngIf="resetForm.get('nuevaContrasena')?.hasError('minlength')">Minimo 8 caracteres</mat-error>
+        <mat-error *ngIf="resetForm.get('nuevaContrasena')?.hasError('pattern')">Use mayuscula, minuscula, numero y simbolo</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Confirmar contrasena</mat-label>
+        <input matInput formControlName="confirmacion" type="password">
+        <mat-icon matSuffix>lock_reset</mat-icon>
+        <mat-error *ngIf="resetForm.hasError('notSame') && resetForm.get('confirmacion')?.touched">Las contrasenas no coinciden</mat-error>
+      </mat-form-field>
+
+      <div class="auth-field-help">
+        El token temporal es de un solo uso y expira luego de 30 minutos.
+      </div>
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="resetForm.invalid || loading">
+        {{ loading ? 'Actualizando...' : 'Cambiar contrasena' }}
+      </button>
+    </form>
+  </mat-card>
+</main>

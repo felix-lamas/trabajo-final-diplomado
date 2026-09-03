@@ -1,0 +1,34 @@
+@startuml
+title Diagrama de Secuencia: Emisión de Certificado
+
+actor Participante
+boundary "Interfaz Angular" as UI
+control "CertificateController" as API
+control "CertificateService" as Service
+control "AttendanceService" as Attendance
+entity "PDFGenerator" as PDF
+database "PostgreSQL" as DB
+
+Participante -> UI: Solicitar Certificado
+UI -> API: GET /certificates/download/{eventId}
+API -> Service: checkEligibility(userId, eventId)
+Service -> Attendance: getAttendancePercentage(userId, eventId)
+Attendance --> Service: 85%
+
+alt Cumple Requisitos (Asistencia >= 80%)
+    Service -> DB: checkIfExists(userId, eventId)
+    alt No generado aún
+        Service -> PDF: generate(participantData, eventData)
+        PDF --> Service: byte[] (PDF)
+        Service -> DB: saveCertificate(uuid, url)
+    end
+    Service --> API: certificateResource
+    API --> UI: return File (PDF)
+    UI --> Participante: Descarga Automática
+else No cumple requisitos
+    Service --> API: throw InsufficientAttendanceException
+    API --> UI: Error 403 "Asistencia insuficiente"
+    UI --> Participante: Mostrar mensaje de error
+end
+
+@enduml

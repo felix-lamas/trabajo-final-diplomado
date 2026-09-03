@@ -1,0 +1,110 @@
+<main class="app-page public-portal">
+  <div *ngIf="loading" class="public-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading && evento">
+    <section class="public-detail">
+      <div class="public-detail__hero">
+        <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1600&q=80'" [alt]="evento.titulo">
+        <div class="public-detail__overlay">
+          <div class="auth-card__meta">
+            <span class="app-badge app-badge--info">{{ evento.categoriaNombre }}</span>
+            <span class="app-badge">{{ evento.modalidad }}</span>
+          </div>
+          <h1>{{ evento.titulo }}</h1>
+          <p>{{ evento.descripcion }}</p>
+        </div>
+      </div>
+
+      <div class="public-detail__layout">
+        <div class="public-detail__content">
+          <mat-card class="public-block">
+            <div class="app-toolbar">
+              <div class="app-toolbar__title">
+                <h2 class="app-section-title">Descripcion</h2>
+                <p>Objetivos, alcance y contexto del evento.</p>
+              </div>
+            </div>
+            <p>{{ evento.descripcion }}</p>
+            <mat-divider></mat-divider>
+            <h3>Objetivos</h3>
+            <p>{{ evento.objetivos || 'No se registraron objetivos adicionales.' }}</p>
+          </mat-card>
+
+          <mat-card class="public-block">
+            <div class="app-toolbar">
+              <div class="app-toolbar__title">
+                <h2 class="app-section-title">Cronograma y expositores</h2>
+                <p>Vista general de la jornada academica.</p>
+              </div>
+            </div>
+            <div class="public-timeline">
+              <div class="public-timeline__item">
+                <strong>Inicio</strong>
+                <span>{{ evento.fechaInicio | date:'dd MMM yyyy' }} - {{ evento.horaInicio || 'Por definir' }}</span>
+              </div>
+              <div class="public-timeline__item">
+                <strong>Finalizacion</strong>
+                <span>{{ evento.fechaFin | date:'dd MMM yyyy' }} - {{ evento.horaFin || 'Por definir' }}</span>
+              </div>
+              <div class="public-timeline__item">
+                <strong>Organizador</strong>
+                <span>{{ evento.organizadorNombre }}</span>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+
+        <aside class="public-detail__sidebar">
+          <mat-card class="public-aside-card">
+            <div class="public-aside-card__price">
+              <span>Costo</span>
+              <strong>{{ evento.tipoInscripcion === 'GRATUITO' ? 'GRATIS' : (evento.costo | currency:'Bs. ') }}</strong>
+            </div>
+
+            <div class="public-aside-card__facts">
+              <div>
+                <mat-icon>calendar_today</mat-icon>
+                <div>
+                  <span>Fecha</span>
+                  <strong>{{ evento.fechaInicio | date:'dd/MM/yyyy' }}</strong>
+                </div>
+              </div>
+              <div>
+                <mat-icon>access_time</mat-icon>
+                <div>
+                  <span>Horario</span>
+                  <strong>{{ evento.horaInicio || 'Por definir' }} - {{ evento.horaFin || 'Por definir' }}</strong>
+                </div>
+              </div>
+              <div>
+                <mat-icon>location_on</mat-icon>
+                <div>
+                  <span>Ubicacion</span>
+                  <strong>{{ evento.ubicacion || evento.enlaceVirtual || 'Por confirmar' }}</strong>
+                </div>
+              </div>
+              <div>
+                <mat-icon>groups</mat-icon>
+                <div>
+                  <span>Cupos</span>
+                  <strong>{{ evento.cupoDisponible }} de {{ evento.cupoMaximo }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="public-aside-card__actions">
+              <a mat-flat-button color="primary" [routerLink]="['/eventos', evento.id, 'inscripcion']" [class.disabled]="evento.cupoDisponible <= 0 || evento.estado !== 'PUBLICADO'">
+                Inscribirme ahora
+              </a>
+              <p *ngIf="evento.tipoInscripcion === 'PAGO'" class="public-aside-card__note">
+                La inscripcion quedara pendiente hasta validar el comprobante.
+              </p>
+            </div>
+          </mat-card>
+        </aside>
+      </div>
+    </section>
+  </ng-container>
+</main>

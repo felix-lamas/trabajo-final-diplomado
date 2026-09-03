@@ -1,0 +1,77 @@
+@startuml
+title Modelo Entidad Relación (MER) - Lógico
+
+entity "users" {
+    * id : UUID <<PK>>
+    --
+    * email : VARCHAR(100) <<Unique>>
+    * password : VARCHAR(255)
+    * first_name : VARCHAR(50)
+    * last_name : VARCHAR(50)
+    * dni : VARCHAR(20) <<Unique>>
+    * user_type : VARCHAR(20)
+    * faculty_id : UUID <<FK>>
+}
+
+entity "events" {
+    * id : UUID <<PK>>
+    --
+    * title : VARCHAR(200)
+    * description : TEXT
+    * start_date : TIMESTAMP
+    * end_date : TIMESTAMP
+    * category_id : UUID <<FK>>
+    * organizer_id : UUID <<FK>>
+    * cost : DECIMAL(10,2)
+    * capacity : INTEGER
+    * current_enrolled : INTEGER
+    * status : VARCHAR(20)
+    * location : VARCHAR(255)
+    * modality : VARCHAR(20)
+}
+
+entity "inscriptions" {
+    * id : UUID <<PK>>
+    --
+    * user_id : UUID <<FK>>
+    * event_id : UUID <<FK>>
+    * inscription_date : TIMESTAMP
+    * status : VARCHAR(20)
+    * qr_code : TEXT
+}
+
+entity "payments" {
+    * id : UUID <<PK>>
+    --
+    * inscription_id : UUID <<FK>>
+    * receipt_url : VARCHAR(255)
+    * upload_date : TIMESTAMP
+    * validation_date : TIMESTAMP
+    * status : VARCHAR(20)
+    * validator_id : UUID <<FK>>
+}
+
+entity "attendance" {
+    * id : UUID <<PK>>
+    --
+    * inscription_id : UUID <<FK>>
+    * check_in : TIMESTAMP
+    * check_out : TIMESTAMP
+    * status : VARCHAR(20)
+}
+
+entity "certificates" {
+    * id : UUID <<PK>>
+    --
+    * inscription_id : UUID <<FK>>
+    * uuid_verification : UUID <<Unique>>
+    * issued_at : TIMESTAMP
+    * file_url : VARCHAR(255)
+}
+
+users ||--o{ inscriptions
+events ||--o{ inscriptions
+inscriptions ||--o| payments
+inscriptions ||--o{ attendance
+inscriptions ||--o| certificates
+@enduml

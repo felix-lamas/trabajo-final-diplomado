@@ -1,0 +1,37 @@
+@startuml
+title Diagramas de Casos de Uso por Módulos (Detalle)
+
+package "Módulo Seguridad y Usuarios" {
+    (UC-SEC-01: Autenticar Usuario)
+    (UC-SEC-02: Recuperar Contraseña)
+    (UC-SEC-03: Registrar Usuario Externo)
+    (UC-SEC-04: Gestionar Roles)
+}
+
+package "Módulo Eventos" {
+    (UC-EV-01: Crear Evento)
+    (UC-EV-02: Publicar Evento)
+    (UC-EV-03: Gestionar Cupos)
+    (UC-EV-04: Configurar Categorías)
+}
+
+package "Módulo Inscripciones y Pagos" {
+    (UC-PAY-01: Inscribirse a Evento)
+    (UC-PAY-02: Cargar Comprobante)
+    (UC-PAY-03: Validar Pago Administrativamente)
+    (UC-PAY-04: Cancelar Inscripción)
+}
+
+package "Módulo Asistencia y Certificados" {
+    (UC-CERT-01: Escanear QR de Acceso)
+    (UC-CERT-02: Registrar Asistencia Manual)
+    (UC-CERT-03: Generar Certificado Digital)
+    (UC-CERT-04: Verificar Certificado por UUID)
+}
+
+package "Módulo Reportes" {
+    (UC-REP-01: Reporte de Ingresos)
+    (UC-REP-02: Reporte de Asistencia por Carrera)
+    (UC-REP-03: Dashboard de Eventos Más Concurridos)
+}
+@enduml

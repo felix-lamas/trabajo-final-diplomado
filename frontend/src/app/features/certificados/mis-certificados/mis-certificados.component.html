@@ -1,0 +1,141 @@
+<main class="app-page admin-portal">
+  <section class="admin-module-header">
+    <div class="app-toolbar__title">
+      <span class="app-chip">
+        <mat-icon>workspace_premium</mat-icon>
+        Biblioteca institucional
+      </span>
+      <h1>Gestion de certificados</h1>
+      <p>Historial oficial de documentos academicos emitidos por la UAJMS.</p>
+    </div>
+  </section>
+
+  <section class="admin-library-layout">
+    <div [ngClass]="certificadoSeleccionado ? 'admin-library-main' : 'admin-library-main admin-library-main--full'">
+      <div *ngIf="loading" class="public-loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <mat-card class="admin-surface admin-table-wrap admin-data-center" *ngIf="!loading && certificados.length > 0">
+        <div class="admin-toolbar">
+          <div class="app-toolbar__title">
+            <h2 class="app-section-title">Certificados emitidos</h2>
+            <p>Documentos verificables con codigo oficial.</p>
+          </div>
+          <span class="app-badge app-badge--success">{{ certificados.length }} documentos</span>
+        </div>
+
+        <div class="admin-table-scroll">
+          <table mat-table [dataSource]="certificados" class="w-full">
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef>Codigo oficial</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="admin-code">{{ row.codigoCertificado }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="evento">
+              <th mat-header-cell *matHeaderCellDef>Evento academico</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="admin-entity-cell">
+                  <div class="admin-entity-cell__avatar"><mat-icon>school</mat-icon></div>
+                  <div>
+                    <strong>{{ row.evento }}</strong>
+                    <span>{{ row.nombreCompleto }}</span>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="horas">
+              <th mat-header-cell *matHeaderCellDef>Carga horaria</th>
+              <td mat-cell *matCellDef="let row"><strong>{{ row.cargaHoraria }} hrs</strong></td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef>Fecha emision</th>
+              <td mat-cell *matCellDef="let row">{{ row.fechaEmision | date:'dd/MM/yyyy' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="admin-status-pill"
+                  [ngClass]="{
+                    'admin-status-pill--success': row.estado === 'GENERADO',
+                    'admin-status-pill--info': row.estado === 'DESCARGADO',
+                    'admin-status-pill--danger': row.estado === 'ANULADO'
+                  }">
+                  {{ row.estado }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="student-card__meta">
+                  <button mat-icon-button color="primary" matTooltip="Vista previa institucional" (click)="verVistaPrevia(row)" [disabled]="row.estado === 'ANULADO'">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button color="accent" matTooltip="Descargar PDF firmado" (click)="descargar(row)" [disabled]="row.estado === 'ANULADO'">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </mat-card>
+
+      <div *ngIf="!loading && certificados.length === 0" class="student-empty">
+        <mat-icon>school</mat-icon>
+        <strong>Aun no existen certificados emitidos</strong>
+        <p>Los documentos se habilitan cuando se finalizan eventos y se cumplen requisitos de asistencia.</p>
+      </div>
+    </div>
+
+    <aside *ngIf="certificadoSeleccionado" class="admin-certificate-preview">
+      <mat-card class="admin-certificate-card">
+        <div class="admin-certificate-card__close">
+          <button mat-icon-button (click)="cerrarVistaPrevia()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="admin-certificate-document">
+          <div>
+            <strong>Universidad Autonoma Juan Misael Saracho</strong>
+            <span>Tarija - Bolivia</span>
+          </div>
+
+          <section>
+            <p>Otorga el presente Certificado de Acreditacion a:</p>
+            <h2>{{ certificadoSeleccionado.nombreCompleto }}</h2>
+            <span>Con Cedula de Identidad: {{ certificadoSeleccionado.ci }}</span>
+            <p>Por su participacion y aprobacion efectiva en el evento academico:</p>
+            <h3>{{ certificadoSeleccionado.evento }}</h3>
+            <span>Carga horaria oficial: {{ certificadoSeleccionado.cargaHoraria }} horas academicas</span>
+          </section>
+
+          <footer>
+            <div class="admin-fake-qr">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div>
+              <small>Codigo verificacion seguro</small>
+              <strong>{{ certificadoSeleccionado.codigoCertificado }}</strong>
+              <span>Emitido el {{ certificadoSeleccionado.fechaEmision | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </footer>
+        </div>
+      </mat-card>
+    </aside>
+  </section>
+</main>

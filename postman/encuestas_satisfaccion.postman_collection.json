@@ -1,0 +1,48 @@
+{
+  "info": {
+    "name": "Eventos UAJMS - Encuestas de Satisfaccion",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api" },
+    { "key": "token", "value": "PEGAR_JWT" },
+    { "key": "eventoId", "value": "PEGAR_UUID_EVENTO" }
+  ],
+  "item": [
+    {
+      "name": "Responder encuesta",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/encuestas/responder",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventoId\": \"{{eventoId}}\",\n  \"calificacion\": 5,\n  \"comentario\": \"Excelente organizacion y contenido.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Listar respuestas por evento",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/encuestas/evento/{{eventoId}}"
+      }
+    },
+    {
+      "name": "Estadisticas del evento",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/encuestas/estadisticas/{{eventoId}}"
+      }
+    }
+  ]
+}

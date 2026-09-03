@@ -1,0 +1,59 @@
+<main class="app-page student-portal">
+  <section class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Mis credenciales</h1>
+      <p>Biblioteca digital de credenciales y accesos QR.</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/privado/inscripciones">
+      <mat-icon>how_to_reg</mat-icon>
+      Ver inscripciones
+    </a>
+  </section>
+
+  <section class="student-grid student-grid--3">
+    <article class="student-stat">
+      <span>Total</span>
+      <strong>{{ totalCredenciales }}</strong>
+    </article>
+    <article class="student-stat">
+      <span>Activas</span>
+      <strong>{{ totalActivas }}</strong>
+    </article>
+    <article class="student-stat">
+      <span>Inactivas</span>
+      <strong>{{ totalInactivas }}</strong>
+    </article>
+  </section>
+
+  <section class="student-panel">
+    <div *ngIf="credenciales.length === 0" class="student-empty">
+      <mat-icon>badge</mat-icon>
+      <strong>No tiene credenciales generadas</strong>
+      <p>Las credenciales aparecen cuando una inscripcion confirmada cumple las condiciones de emision.</p>
+    </div>
+
+    <div *ngIf="credenciales.length > 0" class="student-grid student-grid--2">
+      <article *ngFor="let c of credenciales" class="student-card">
+        <div class="student-card__header">
+          <div>
+            <h3>{{ c.eventoTitulo }}</h3>
+            <p>Código {{ c.codigoParticipante }}</p>
+          </div>
+          <span class="app-badge"
+            [class.app-badge--success]="c.estado === 'ACTIVA'"
+            [class.app-badge--danger]="c.estado !== 'ACTIVA'">
+            {{ c.estado }}
+          </span>
+        </div>
+
+        <div class="student-card__footer">
+          <span>Emitida el {{ c.fechaGeneracion | date:'dd MMM yyyy' }}</span>
+          <div class="student-card__meta">
+            <a mat-stroked-button [routerLink]="['/privado/credenciales', c.id]">Abrir</a>
+            <button mat-flat-button color="primary" (click)="descargar(c.id)">Descargar</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

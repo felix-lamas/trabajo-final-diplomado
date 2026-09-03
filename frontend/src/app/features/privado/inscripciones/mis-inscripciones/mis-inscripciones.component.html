@@ -1,0 +1,94 @@
+<main class="app-page admin-portal">
+  <section class="admin-module-header">
+    <div class="app-toolbar__title">
+      <span class="app-chip">
+        <mat-icon>groups</mat-icon>
+        CRM academico
+      </span>
+      <h1>Gestion de participantes</h1>
+      <p>Historial de inscripciones, estados operativos y credenciales asociadas.</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/eventos">
+      <mat-icon>explore</mat-icon>
+      Explorar eventos
+    </a>
+  </section>
+
+  <section class="admin-kpi-grid admin-kpi-grid--compact">
+    <article class="admin-metric-card">
+      <div class="admin-metric-card__icon"><mat-icon>how_to_reg</mat-icon></div>
+      <span>Total</span>
+      <strong>{{ totalInscripciones }}</strong>
+      <div class="admin-kpi__bar"></div>
+    </article>
+    <article class="admin-metric-card">
+      <div class="admin-metric-card__icon"><mat-icon>verified</mat-icon></div>
+      <span>Confirmadas</span>
+      <strong>{{ totalConfirmadas }}</strong>
+      <div class="admin-kpi__bar" data-tone="green"></div>
+    </article>
+    <article class="admin-metric-card">
+      <div class="admin-metric-card__icon"><mat-icon>badge</mat-icon></div>
+      <span>Credenciales</span>
+      <strong>{{ totalCredenciales }}</strong>
+      <div class="admin-kpi__bar" data-tone="teal"></div>
+    </article>
+  </section>
+
+  <app-skeleton *ngIf="loading" variant="list" [count]="4"></app-skeleton>
+
+  <section class="admin-surface admin-crm-board" *ngIf="!loading">
+    <div class="admin-toolbar">
+      <div class="admin-filters">
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('TODAS')" [disabled]="estadoFiltro === 'TODAS'">Todas</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('CONFIRMADA')" [disabled]="estadoFiltro === 'CONFIRMADA'">Confirmadas</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('PENDIENTE_PAGO')" [disabled]="estadoFiltro === 'PENDIENTE_PAGO'">Pendientes</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('ASISTIO')" [disabled]="estadoFiltro === 'ASISTIO'">Asistidas</button>
+      </div>
+      <span class="app-badge app-badge--info">{{ inscripcionesFiltradas.length }} participantes</span>
+    </div>
+
+    <app-empty-state
+      *ngIf="inscripcionesFiltradas.length === 0"
+      icon="event_busy"
+      title="No hay inscripciones en este filtro"
+      message="Pruebe otra categoria o explore los eventos publicados."
+      actionLabel="Explorar eventos"
+      actionRoute="/eventos">
+    </app-empty-state>
+
+    <div *ngIf="inscripcionesFiltradas.length > 0" class="admin-crm-grid">
+      <article *ngFor="let ins of inscripcionesFiltradas" class="admin-crm-card">
+        <div class="admin-crm-card__avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="admin-crm-card__body">
+          <div class="student-card__header">
+            <div>
+              <h3>{{ ins.eventoTitulo }}</h3>
+              <p>Registrado el {{ ins.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p>
+            </div>
+            <span class="app-badge"
+              [class.app-badge--success]="ins.estado === 'CONFIRMADA' || ins.estado === 'ASISTIO'"
+              [class.app-badge--warning]="ins.estado === 'PENDIENTE_PAGO' || ins.estado === 'PENDIENTE_VALIDACION'"
+              [class.app-badge--danger]="ins.estado === 'CANCELADA' || ins.estado === 'RECHAZADA'"
+              [class.app-badge--info]="ins.estado === 'ASISTIO'">
+              {{ getEstadoLabel(ins.estado) }}
+            </span>
+          </div>
+          <div class="admin-crm-card__meta">
+            <span>ID {{ ins.id | slice:0:8 }}</span>
+            <span>Expediente academico</span>
+          </div>
+          <div class="student-card__footer">
+            <div class="student-card__meta">
+              <a mat-stroked-button [routerLink]="['/privado/inscripciones', ins.id]">Detalle</a>
+              <button mat-flat-button color="primary" *ngIf="ins.estado === 'CONFIRMADA'" (click)="generarCredencial(ins)">Credencial</button>
+              <button mat-stroked-button color="warn" *ngIf="puedeCancelar(ins.estado)" (click)="cancelar(ins)">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>

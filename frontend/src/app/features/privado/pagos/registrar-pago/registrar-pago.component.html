@@ -1,0 +1,89 @@
+<main class="app-page student-portal">
+  <section class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Registrar pago</h1>
+      <p>Envíe su comprobante con una experiencia visual clara y segura.</p>
+    </div>
+    <a mat-stroked-button routerLink="/privado/pagos">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </a>
+  </section>
+
+  <section class="student-split">
+    <mat-card class="student-panel">
+      <div class="student-card__header">
+        <div>
+          <h2>{{ eventoTitulo || 'Pago de inscripcion' }}</h2>
+          <p>Complete el monto y adjunte el comprobante correspondiente.</p>
+        </div>
+        <mat-icon>receipt_long</mat-icon>
+      </div>
+
+      <form [formGroup]="pagoForm" (ngSubmit)="guardar()" class="student-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Monto pagado</mat-label>
+          <input matInput type="number" formControlName="monto" placeholder="0.00">
+          <mat-error *ngIf="pagoForm.get('monto')?.hasError('required')">El monto es obligatorio</mat-error>
+          <mat-error *ngIf="pagoForm.get('monto')?.hasError('min')">El monto debe ser mayor a 0</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Observaciones</mat-label>
+          <textarea matInput formControlName="observacion" rows="4" placeholder="Datos complementarios..."></textarea>
+        </mat-form-field>
+
+        <div class="student-card" style="padding: 1rem;">
+          <div class="student-card__header">
+            <div>
+              <h3>Comprobante</h3>
+              <p>Adjunte JPG, PNG o PDF</p>
+            </div>
+            <mat-icon>upload_file</mat-icon>
+          </div>
+          <div style="border: 1px dashed var(--app-border); border-radius: var(--radius-md); padding: 1rem; text-align: center; position: relative; background: rgba(241,246,251,0.8);">
+            <input type="file" (change)="onFileSelected($event)" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*,.pdf">
+            <p *ngIf="!archivoComprobante" class="app-muted">Haga clic para seleccionar el archivo de respaldo.</p>
+            <p *ngIf="archivoComprobante" class="app-muted">Archivo seleccionado: <strong>{{ archivoComprobante.name }}</strong></p>
+          </div>
+        </div>
+
+        <div class="student-card__footer">
+          <button mat-stroked-button type="button" routerLink="/privado/inscripciones" [disabled]="enviando">Cancelar</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="enviando || pagoForm.invalid || !archivoComprobante">
+            {{ enviando ? 'Enviando...' : 'Confirmar y enviar' }}
+          </button>
+        </div>
+      </form>
+    </mat-card>
+
+    <mat-card class="student-panel">
+      <div class="app-toolbar">
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Estado del proceso</h2>
+          <p>Indicadores de validacion del comprobante.</p>
+        </div>
+      </div>
+      <div class="student-grid">
+        <div class="student-card">
+          <div class="student-card__header">
+            <div>
+              <h3>Pago asociado</h3>
+              <p>{{ inscripcionId ? 'Inscripcion vinculada' : 'Sin inscripcion' }}</p>
+            </div>
+            <mat-icon>link</mat-icon>
+          </div>
+        </div>
+        <div class="student-card">
+          <div class="student-card__header">
+            <div>
+              <h3>Validacion</h3>
+              <p>El pago sera revisado por el equipo correspondiente.</p>
+            </div>
+            <mat-icon>verified</mat-icon>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </section>
+</main>

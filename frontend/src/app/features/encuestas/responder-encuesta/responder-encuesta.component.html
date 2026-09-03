@@ -1,0 +1,44 @@
+<div class="min-h-screen bg-slate-100 p-4 md:p-8">
+  <mat-card class="mx-auto max-w-2xl p-6 shadow-md">
+    <div class="flex items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Responder Encuesta</h1>
+        <p class="text-sm text-slate-600">Califica tu experiencia del evento.</p>
+      </div>
+      <mat-icon class="text-slate-500">rate_review</mat-icon>
+    </div>
+
+    <ng-container *ngIf="!submitted; else done">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+        <div>
+          <div class="text-sm font-medium text-slate-700 mb-2">Calificación</div>
+          <div class="flex gap-2">
+            <button mat-icon-button type="button" *ngFor="let star of estrellas" (click)="seleccionar(star)">
+              <mat-icon [class.text-amber-500]="form.value.calificacion >= star" [class.text-slate-300]="form.value.calificacion < star">
+                {{ form.value.calificacion >= star ? 'star' : 'star_border' }}
+              </mat-icon>
+            </button>
+          </div>
+          <div class="text-xs text-slate-500 mt-1">1 a 5 estrellas</div>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Comentario opcional</mat-label>
+          <textarea matInput formControlName="comentario" rows="4" maxlength="1000"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading || form.invalid">
+          {{ loading ? 'Enviando...' : 'Enviar Encuesta' }}
+        </button>
+      </form>
+    </ng-container>
+
+    <ng-template #done>
+      <div class="py-10 text-center space-y-3">
+        <mat-icon class="text-emerald-600" style="font-size: 48px; width: 48px; height: 48px;">check_circle</mat-icon>
+        <div class="text-lg font-semibold text-slate-900">Encuesta registrada</div>
+        <p class="text-sm text-slate-600">Tu opinión fue guardada correctamente.</p>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>

@@ -1,0 +1,58 @@
+<main class="auth-page auth-page--compact">
+  <mat-card class="auth-card auth-card--auth auth-card--compact">
+    <div class="auth-card__header--auth">
+      <div class="auth-card__meta">
+        <div class="app-chip">
+          <mat-icon>lock_reset</mat-icon>
+          Recuperacion
+        </div>
+        <div class="app-chip">
+          <mat-icon>schedule</mat-icon>
+          30 minutos
+        </div>
+      </div>
+      <h1>Recuperar contrasena</h1>
+      <p>Recibira un enlace temporal en su correo institucional para continuar con el proceso.</p>
+    </div>
+
+    <ng-container *ngIf="!enviado; else enviadoState">
+      <div class="auth-compact-copy">
+        <strong>Estado actual</strong>
+        <span>Verifique que el correo corresponda a una cuenta registrada en la plataforma.</span>
+      </div>
+
+      <form [formGroup]="recuperarForm" (ngSubmit)="onSubmit()" class="auth-form--auth">
+        <mat-form-field appearance="outline">
+          <mat-label>Correo electronico</mat-label>
+          <input matInput formControlName="correoElectronico" type="email" placeholder="ejemplo@uajms.edu.bo">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="recuperarForm.get('correoElectronico')?.hasError('email')">Correo invalido</mat-error>
+          <mat-error *ngIf="recuperarForm.get('correoElectronico')?.hasError('required')">El correo es obligatorio</mat-error>
+        </mat-form-field>
+
+        <div class="auth-field-help">
+          El enlace de recuperacion expira en 30 minutos y solo puede usarse una vez.
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="recuperarForm.invalid || loading">
+          {{ loading ? 'Procesando...' : 'Enviar enlace' }}
+        </button>
+
+        <div class="auth-actions__row">
+          <a mat-button routerLink="/auth/login">Volver al inicio de sesion</a>
+        </div>
+
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+      </form>
+    </ng-container>
+
+    <ng-template #enviadoState>
+      <div class="auth-success">
+        <mat-icon>check_circle</mat-icon>
+        <h2>Enlace enviado</h2>
+        <p>Revise su bandeja de entrada y la carpeta de correo no deseado. El enlace es temporal y seguro.</p>
+        <button mat-flat-button color="primary" routerLink="/auth/login">Regresar al login</button>
+      </div>
+    </ng-template>
+  </mat-card>
+</main>

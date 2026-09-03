@@ -1,0 +1,29 @@
+@startuml
+title Diagrama de Secuencia: Inscripción con Pago
+
+actor Participante
+boundary "Interfaz Angular" as UI
+control "BillingController" as API
+control "BillingService" as Service
+entity "Inscripción" as Entity
+database "PostgreSQL" as DB
+entity "NotificationService" as Notify
+
+Participante -> UI: Seleccionar Evento Pago
+UI -> API: GET /events/{id}/payment-info
+API -> DB: Query info cuenta
+DB --> API: Info cuenta
+API --> UI: Mostrar datos transferencia
+
+Participante -> UI: Subir Foto Comprobante
+UI -> API: POST /inscriptions/pay (comprobante)
+API -> Service: processPaymentRequest(userId, eventId, file)
+Service -> DB: Save Inscripcion (Estado: PENDIENTE_PAGO)
+Service -> DB: Save Comprobante Info
+DB --> Service: OK
+Service -> Notify: Enviar Alerta a Validador Financiero
+Service --> API: Success
+API --> UI: "Inscripción recibida, pendiente de validación"
+UI --> Participante: Mensaje de confirmación
+
+@enduml

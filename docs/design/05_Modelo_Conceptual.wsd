@@ -1,0 +1,71 @@
+@startuml
+title Modelo Conceptual del Dominio - UAJMS Eventos
+
+package "Gestión de Usuarios" {
+    class Usuario {
+        nombre
+        email
+        password
+        ci
+        tipoUsuario
+    }
+    class Rol {
+        nombre
+        permisos
+    }
+}
+
+package "Gestión de Eventos" {
+    class Evento {
+        nombre
+        descripcion
+        fechaInicio
+        fechaFin
+        costo
+        cuposDisponibles
+        estado
+        modalidad
+    }
+    class Categoria {
+        nombre
+        descripcion
+    }
+    class Facultad {
+        nombre
+    }
+}
+
+package "Gestión Operativa" {
+    class Inscripcion {
+        fechaInscripcion
+        estadoPago
+        codigoInscripcion
+    }
+    class Pago {
+        comprobanteUrl
+        fechaCarga
+        monto
+        estadoValidacion
+    }
+    class Asistencia {
+        fechaHoraIngreso
+        fechaHoraSalida
+        estado
+    }
+    class Certificado {
+        codigoUUID
+        fechaEmision
+        urlArchivo
+    }
+}
+
+Usuario "1" *-- "1..*" Rol
+Facultad "1" *-- "0..*" Evento
+Evento "0..*" --o "1" Categoria
+Usuario "1" -- "0..*" Inscripcion
+Evento "1" -- "0..*" Inscripcion
+Inscripcion "1" *-- "0..1" Pago
+Inscripcion "1" *-- "0..*" Asistencia
+Inscripcion "1" -- "0..1" Certificado
+
+@enduml

@@ -1,0 +1,103 @@
+<main class="app-page student-portal">
+  <div class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Perfil de usuario</h1>
+      <p>Informacion personal y configuracion de acceso.</p>
+    </div>
+    <a mat-stroked-button routerLink="/privado/dashboard">Volver al dashboard</a>
+  </div>
+
+  <section class="student-profile">
+    <mat-card class="student-profile__hero">
+      <div class="student-profile__avatar">{{ initial }}</div>
+      <div>
+        <strong>{{ fullName }}</strong>
+        <div>{{ email }}</div>
+        <div class="student-hero__actions" style="margin-top: 0.75rem;">
+          <span class="app-chip">
+            <mat-icon>verified_user</mat-icon>
+            Acceso institucional
+          </span>
+          <span class="app-chip">
+            <mat-icon>badge</mat-icon>
+            {{ roles[0] || 'Usuario' }}
+          </span>
+        </div>
+      </div>
+    </mat-card>
+
+    <div class="student-split">
+      <mat-card class="student-panel">
+        <div class="app-toolbar">
+          <div class="app-toolbar__title">
+            <h2 class="app-section-title">Datos de cuenta</h2>
+            <p>Resumen visible de la sesion activa.</p>
+          </div>
+        </div>
+
+        <div class="student-grid">
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Nombre completo</h3>
+                <p>{{ fullName }}</p>
+              </div>
+              <mat-icon>person</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Correo electronico</h3>
+                <p>{{ email }}</p>
+              </div>
+              <mat-icon>mail</mat-icon>
+            </div>
+          </div>
+          <div class="student-card">
+            <div class="student-card__header">
+              <div>
+                <h3>Rol principal</h3>
+                <p>{{ roles[0] || 'Usuario' }}</p>
+              </div>
+              <mat-icon>admin_panel_settings</mat-icon>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="student-panel">
+        <div class="app-toolbar">
+          <div class="app-toolbar__title">
+            <h2 class="app-section-title">Configuracion</h2>
+            <p>Acciones rapidas para la cuenta.</p>
+          </div>
+        </div>
+
+        <div class="student-grid">
+          <a class="student-card" routerLink="/auth/recuperar-contrasena">
+            <div class="student-card__header">
+              <div>
+                <h3>Cambiar contrasena</h3>
+                <p>Recuperacion y restablecimiento seguro</p>
+              </div>
+              <mat-icon>lock_reset</mat-icon>
+            </div>
+          </a>
+          <a class="student-card" routerLink="/privado/inscripciones">
+            <div class="student-card__header">
+              <div>
+                <h3>Ver inscripciones</h3>
+                <p>Acceda al historial de eventos</p>
+              </div>
+              <mat-icon>how_to_reg</mat-icon>
+            </div>
+          </a>
+          <button mat-flat-button color="primary" type="button" (click)="cerrarSesion()">
+            Cerrar sesion
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </section>
+</main>

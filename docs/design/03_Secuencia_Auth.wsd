@@ -1,0 +1,35 @@
+@startuml
+title Diagrama de Secuencia: Registro e Inicio de Sesión
+
+actor Usuario
+boundary "Interfaz Angular" as UI
+control "AuthController" as API
+control "AuthService" as Service
+database "PostgreSQL" as DB
+
+== Registro ==
+Usuario -> UI: Ingresar datos de registro
+UI -> API: POST /auth/register (UserDTO)
+API -> Service: register(UserDTO)
+Service -> DB: checkEmailExists()
+DB --> Service: No existe
+Service -> Service: encodePassword(BCrypt)
+Service -> DB: save(User)
+DB --> Service: UserSaved
+Service --> API: Success
+API --> UI: 201 Created
+UI --> Usuario: Registro Exitoso
+
+== Inicio de Sesión ==
+Usuario -> UI: Ingresar Credenciales
+UI -> API: POST /auth/login (LoginDTO)
+API -> Service: authenticate(LoginDTO)
+Service -> DB: findByEmail()
+DB --> Service: UserData
+Service -> Service: validatePassword()
+Service -> Service: generateJWTToken(Roles)
+Service --> API: AuthResponse(Token)
+API --> UI: 200 OK (JWT)
+UI -> UI: Store Token in LocalStorage
+UI --> Usuario: Redirección a Dashboard
+@enduml

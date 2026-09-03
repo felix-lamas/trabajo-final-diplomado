@@ -1,0 +1,67 @@
+@startuml
+title Diagrama de Clases de Análisis (Entidades de Negocio)
+
+class Usuario {
+    UUID id
+    String email
+    String password
+    String nombre
+    String ci
+    TipoUsuario tipo
+}
+
+class Evento {
+    UUID id
+    String titulo
+    String descripcion
+    DateTime fechaInicio
+    DateTime fechaFin
+    Double costo
+    Integer cuposTotales
+    EstadoEvento estado
+    Modalidad modalidad
+}
+
+class Inscripcion {
+    UUID id
+    DateTime fechaInscripcion
+    EstadoInscripcion estado
+    String qrData
+}
+
+class Pago {
+    UUID id
+    String comprobanteUrl
+    DateTime fechaCarga
+    EstadoPago estado
+    String observacion
+}
+
+class Asistencia {
+    UUID id
+    DateTime horaIngreso
+    DateTime horaSalida
+    EstadoAsistencia estado
+}
+
+class Certificado {
+    UUID id
+    UUID uuidVerificacion
+    DateTime fechaEmision
+    String fileUrl
+}
+
+class Categoria {
+    UUID id
+    String nombre
+    String descripcion
+}
+
+Usuario "1" -- "0..*" Inscripcion : realiza
+Evento "1" -- "0..*" Inscripcion : contiene
+Inscripcion "1" *-- "0..1" Pago : tiene
+Inscripcion "1" *-- "0..*" Asistencia : registra
+Inscripcion "1" -- "0..1" Certificado : genera
+Evento "0..*" --o "1" Categoria : pertenece
+
+@enduml

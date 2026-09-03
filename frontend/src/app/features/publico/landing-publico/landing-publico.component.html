@@ -1,0 +1,118 @@
+<main class="app-page public-portal">
+  <section class="public-hero">
+    <div class="public-hero__copy">
+      <div class="app-chip">
+        <mat-icon>school</mat-icon>
+        UAJMS oficial
+      </div>
+      <h1>Plataforma institucional de eventos universitarios</h1>
+      <p>
+        Explore eventos academicos, inscribase con un flujo claro y acceda a una experiencia
+        moderna para la comunidad universitaria.
+      </p>
+      <div class="public-hero__actions">
+        <a mat-flat-button color="primary" routerLink="/eventos">
+          <mat-icon>explore</mat-icon>
+          Ver catalogo
+        </a>
+        <a mat-stroked-button routerLink="/auth/login">
+          <mat-icon>login</mat-icon>
+          Ingresar
+        </a>
+      </div>
+    </div>
+
+    <div class="public-hero__panel">
+      <div class="public-hero__panel-card">
+        <span>Eventos publicados</span>
+        <strong>{{ totalEventos }}</strong>
+      </div>
+      <div class="public-hero__panel-card">
+        <span>Cupos disponibles</span>
+        <strong>{{ totalCupos }}</strong>
+      </div>
+      <div class="public-hero__panel-card">
+        <span>Categorias activas</span>
+        <strong>{{ totalCategorias }}</strong>
+      </div>
+      <div class="public-hero__panel-card">
+        <span>Modalidad presencial</span>
+        <strong>{{ modalidadPresencial }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="public-section">
+    <div class="app-toolbar">
+      <div class="app-toolbar__title">
+        <h2 class="app-section-title">Eventos destacados</h2>
+        <p>Propuestas recientes publicadas para la comunidad universitaria.</p>
+      </div>
+      <a mat-button routerLink="/eventos">Ir al catalogo</a>
+    </div>
+
+    <div *ngIf="loading" class="public-loading">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+
+    <div *ngIf="!loading" class="public-grid public-grid--featured">
+      <mat-card *ngFor="let evento of destacados" class="public-event-card">
+        <div class="public-event-card__image">
+          <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1200&q=80'" [alt]="evento.titulo">
+          <span class="app-badge app-badge--info">{{ evento.categoriaNombre }}</span>
+        </div>
+        <div class="public-event-card__body">
+          <div class="public-event-card__meta">
+            <span>{{ evento.modalidad }}</span>
+            <span>{{ evento.fechaInicio | date:'dd MMM yyyy' }}</span>
+          </div>
+          <h3>{{ evento.titulo }}</h3>
+          <p>{{ evento.descripcion | slice:0:140 }}...</p>
+          <div class="public-event-card__footer">
+            <span>{{ evento.tipoInscripcion === 'GRATUITO' ? 'Gratis' : (evento.costo | currency:'Bs. ') }}</span>
+            <a mat-flat-button color="primary" [routerLink]="['/eventos', evento.id]">Ver detalle</a>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </section>
+
+  <section class="public-section">
+    <div class="app-toolbar">
+      <div class="app-toolbar__title">
+        <h2 class="app-section-title">Categorias institucionales</h2>
+        <p>Organizacion por areas academicas y de extension universitaria.</p>
+      </div>
+    </div>
+
+    <div class="public-chip-grid">
+      <span *ngFor="let categoria of categorias" class="public-pill">{{ categoria }}</span>
+    </div>
+  </section>
+
+  <section class="public-section public-section--benefits">
+    <div class="public-benefit">
+      <mat-icon>verified</mat-icon>
+      <strong>Inscripcion segura</strong>
+      <span>Flujos claros, validaciones y confirmaciones visibles.</span>
+    </div>
+    <div class="public-benefit">
+      <mat-icon>event_available</mat-icon>
+      <strong>Eventos actualizados</strong>
+      <span>Acceso a convocatorias, fechas y cupos disponibles.</span>
+    </div>
+    <div class="public-benefit">
+      <mat-icon>school</mat-icon>
+      <strong>Experiencia academica</strong>
+      <span>Diseño institucional pensado para estudiantes y organizadores.</span>
+    </div>
+  </section>
+
+  <footer class="public-footer">
+    <div>
+      <strong>UAJMS</strong>
+      <span>Portal institucional de eventos universitarios</span>
+    </div>
+    <a routerLink="/eventos">Catalogo de eventos</a>
+  </footer>
+</main>
