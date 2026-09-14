@@ -47,9 +47,12 @@ Variables principales:
 - `FRONTEND_RESET_PASSWORD_URL`
 - `MAIL_FROM`
 - `UPLOADS_BASE_DIR`
+- `CORS_ALLOWED_ORIGINS`
 - `PGADMIN_EMAIL`
 - `PGADMIN_PASSWORD`
 - `DEMO_PASSWORD`
+
+`CORS_ALLOWED_ORIGINS` acepta una lista de orígenes separados por comas. Para desarrollo local, usar `http://localhost:4200`, que es el origen del servidor Angular. La API usa JWT mediante el encabezado `Authorization`; la configuración no habilita credenciales por cookies ni orígenes comodín.
 
 ## 8. Ejecucion
 ### Backend

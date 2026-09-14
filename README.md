@@ -33,6 +33,8 @@ Copia `.env.example` como `.env` y reemplaza todos los valores de ejemplo por va
 
 En PowerShell, si ejecutas el backend sin Docker, asegúrate de que el servicio PostgreSQL esté disponible con los valores definidos en `.env`.
 
+Para el acceso desde Angular, configura `CORS_ALLOWED_ORIGINS` con los orígenes autorizados separados por comas. En desarrollo, el valor de ejemplo `http://localhost:4200` corresponde al servidor Angular; no se admiten comodines ni credenciales por cookies.
+
 ### 3. Ejecutar Backend
 ```bash
 cd backend
