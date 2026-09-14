@@ -8,14 +8,11 @@
 - PostgreSQL 16
 - Docker y Docker Compose, opcional
 
-## 2. PostgreSQL
-Crear la base de datos y usuario de trabajo.
+## 2. Configuracion local
 
-Parametros habituales:
-- Host: `localhost`
-- Puerto: `5432`
-- Base de datos: `uajms_eventos`
-- Usuario: `postgres` o el definido por el entorno
+Copiar `.env.example` como `.env` en la raiz del repositorio y reemplazar los marcadores por valores locales seguros. El archivo `.env` contiene secretos, esta ignorado por Git y no debe compartirse ni versionarse.
+
+La configuracion del backend y Docker Compose obtiene de ese archivo las variables de PostgreSQL, JWT, pgAdmin y usuarios de demostracion. No se deben escribir credenciales en `application.yml` ni en `docker/docker-compose.yml`.
 
 ## 3. Java 21
 Verificar instalacion:
@@ -46,15 +43,25 @@ Variables principales:
 - `DB_USER`
 - `DB_PASS`
 - `JWT_SECRET`
+- `JWT_EXPIRATION`
 - `FRONTEND_RESET_PASSWORD_URL`
 - `MAIL_FROM`
 - `UPLOADS_BASE_DIR`
+- `PGADMIN_EMAIL`
+- `PGADMIN_PASSWORD`
+- `DEMO_PASSWORD`
 
 ## 8. Ejecucion
 ### Backend
 ```bash
 cd backend
 mvn spring-boot:run
+```
+
+### Docker Compose (opcional)
+```bash
+cd docker
+docker compose --env-file ../.env up -d
 ```
 
 ### Frontend

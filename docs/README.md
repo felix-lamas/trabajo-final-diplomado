@@ -31,7 +31,7 @@ Plataforma centralizada para la administración de eventos académicos, científ
 
 ### Pasos Iniciales
 1. Clonar el repositorio.
-2. Configurar la base de datos en `src/main/resources/application.yml`.
+2. Copiar `.env.example` como `.env` en la raíz del proyecto y definir las variables locales requeridas. No editar ni versionar credenciales en `application.yml`.
 3. Ejecutar backend: `mvn spring-boot:run`.
 4. Ejecutar frontend: `npm install` y luego `ng serve`.
 
