@@ -2,6 +2,7 @@ package bo.uajms.eventos.modulos.eventos.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
+import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.categorias.entidades.CategoriaEvento;
 import bo.uajms.eventos.modulos.categorias.repositorios.CategoriaEventoRepository;
 import bo.uajms.eventos.modulos.eventos.dtos.*;
@@ -9,14 +10,13 @@ import bo.uajms.eventos.modulos.eventos.entidades.*;
 import bo.uajms.eventos.modulos.eventos.mappers.EventoMapper;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
-import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,12 +26,23 @@ public class EventoService {
 
     private final EventoRepository eventoRepository;
     private final CategoriaEventoRepository categoriaRepository;
-    private final UsuarioRepository usuarioRepository;
     private final EventoMapper eventoMapper;
+    private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     @Transactional(readOnly = true)
     public List<EventoResponse> listarTodos() {
-        return eventoRepository.findAll().stream()
+        List<Evento> eventos;
+
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            eventos = eventoRepository.findAll();
+        } else if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+            eventos = eventoRepository.findByOrganizadorIdOrEstado(organizadorId, EstadoEvento.PUBLICADO);
+        } else {
+            eventos = eventoRepository.findByEstado(EstadoEvento.PUBLICADO);
+        }
+
+        return eventos.stream()
                 .map(eventoMapper::toResponse)
                 .collect(Collectors.toList());
     }
@@ -45,14 +56,29 @@ public class EventoService {
 
     @Transactional(readOnly = true)
     public List<EventoResponse> listarPorCategoria(UUID categoriaId) {
-        return eventoRepository.findByCategoriaId(categoriaId).stream()
+        List<Evento> eventos;
+
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            eventos = eventoRepository.findByCategoriaId(categoriaId);
+        } else if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+            eventos = eventoRepository.findVisiblesPorCategoriaParaOrganizador(
+                    categoriaId,
+                    organizadorId,
+                    EstadoEvento.PUBLICADO
+            );
+        } else {
+            eventos = eventoRepository.findByCategoriaIdAndEstado(categoriaId, EstadoEvento.PUBLICADO);
+        }
+
+        return eventos.stream()
                 .map(eventoMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public EventoDetalleResponse buscarPorId(UUID id) {
-        return eventoRepository.findById(id)
+        return buscarEventoVisible(id)
                 .map(eventoMapper::toDetalleResponse)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
     }
@@ -64,7 +90,7 @@ public class EventoService {
 
         validarCosto(request.getTipoInscripcion(), request.getCosto());
 
-        Usuario organizador = obtenerUsuarioAutenticado();
+        Usuario organizador = usuarioAutenticadoService.obtenerUsuario();
 
         Evento evento = Evento.builder()
                 .titulo(request.getTitulo())
@@ -92,8 +118,7 @@ public class EventoService {
 
     @Transactional
     public EventoDetalleResponse actualizar(UUID id, ActualizarEventoRequest request) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        Evento evento = obtenerEventoGestionable(id);
 
         if (evento.getEstado() != EstadoEvento.BORRADOR) {
             throw new NegocioException("Solo se pueden editar eventos en estado BORRADOR");
@@ -134,8 +159,7 @@ public class EventoService {
 
     @Transactional
     public void publicar(UUID id) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        Evento evento = obtenerEventoAdministrable(id);
         if (evento.getEstado() != EstadoEvento.BORRADOR) {
             throw new NegocioException("Solo se pueden publicar eventos en estado BORRADOR");
         }
@@ -145,24 +169,21 @@ public class EventoService {
 
     @Transactional
     public void cancelar(UUID id) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        Evento evento = obtenerEventoGestionable(id);
         evento.setEstado(EstadoEvento.CANCELADO);
         eventoRepository.save(evento);
     }
 
     @Transactional
     public void finalizar(UUID id) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        Evento evento = obtenerEventoGestionable(id);
         evento.setEstado(EstadoEvento.FINALIZADO);
         eventoRepository.save(evento);
     }
 
     @Transactional
     public void eliminar(UUID id) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        Evento evento = obtenerEventoGestionable(id);
         if (evento.getEstado() != EstadoEvento.BORRADOR) {
             throw new NegocioException("No se puede eliminar un evento que ya ha sido publicado");
         }
@@ -178,9 +199,41 @@ public class EventoService {
         }
     }
 
-    private Usuario obtenerUsuarioAutenticado() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByCorreoElectronico(email)
-                .orElseThrow(() -> new NegocioException("Usuario autenticado no encontrado"));
+    private Optional<Evento> buscarEventoVisible(UUID id) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return eventoRepository.findById(id);
+        }
+
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+            return eventoRepository.findByIdAndOrganizadorId(id, organizadorId)
+                    .or(() -> eventoRepository.findByIdAndEstado(id, EstadoEvento.PUBLICADO));
+        }
+
+        return eventoRepository.findByIdAndEstado(id, EstadoEvento.PUBLICADO);
+    }
+
+    private Evento obtenerEventoGestionable(UUID id) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return eventoRepository.findById(id)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        }
+
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+            return eventoRepository.findByIdAndOrganizadorId(id, organizadorId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        }
+
+        throw new RecursoNoEncontradoException("Evento", id);
+    }
+
+    private Evento obtenerEventoAdministrable(UUID id) {
+        if (!usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            throw new RecursoNoEncontradoException("Evento", id);
+        }
+
+        return eventoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
     }
 }

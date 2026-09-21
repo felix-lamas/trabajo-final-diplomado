@@ -13,3 +13,4 @@
 | DEC-009 | 20/09/2026 | QR temporal y de un solo uso | Vigente |
 | DEC-010 | 20/09/2026 | Sin pasarela de pago | Vigente |
 | DEC-011 | 21/09/2026 | Los datos demo/semilla no deberán ejecutarse automáticamente en todos los perfiles. Se aislarán mediante configuración/perfil y se habilitarán únicamente de forma explícita en entornos controlados. | Vigente |
+| DEC-012 | 21/09/2026 | La autorización de eventos se aplicará en el backend por rol, propietario y estado. El administrador tendrá alcance global; el organizador solo gestionará eventos propios; participantes y público solo consultarán eventos publicados. Los recursos fuera de alcance responderán `404` y la publicación quedará reservada al administrador mientras se implementa el flujo `EN_REVISIÓN`. | Vigente |

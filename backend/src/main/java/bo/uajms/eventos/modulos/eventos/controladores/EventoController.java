@@ -25,8 +25,8 @@ public class EventoController {
     private final EventoService eventoService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
-    @Operation(summary = "Listar todos los eventos")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO', 'PARTICIPANTE')")
+    @Operation(summary = "Listar eventos segÃºn el alcance del usuario autenticado")
     public ResponseEntity<List<EventoResponse>> listar() {
         return ResponseEntity.ok(eventoService.listarTodos());
     }
@@ -68,8 +68,8 @@ public class EventoController {
     }
 
     @PatchMapping("/{id}/publicar")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
-    @Operation(summary = "Cambiar estado a PUBLICADO")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @Operation(summary = "Publicar evento como parte de la revisiÃ³n administrativa")
     public ResponseEntity<Void> publicar(@PathVariable UUID id) {
         eventoService.publicar(id);
         return ResponseEntity.ok().build();
