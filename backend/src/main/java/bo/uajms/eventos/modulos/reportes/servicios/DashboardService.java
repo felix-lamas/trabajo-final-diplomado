@@ -1,5 +1,6 @@
 package bo.uajms.eventos.modulos.reportes.servicios;
 
+import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.certificados.repositorios.CertificadoRepository;
 import bo.uajms.eventos.modulos.codigo_qr.entidades.CodigoQr;
@@ -11,6 +12,7 @@ import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.pagos.entidades.EstadoPago;
+import bo.uajms.eventos.modulos.pagos.entidades.Pago;
 import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
 import bo.uajms.eventos.modulos.reportes.dtos.*;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
@@ -34,9 +36,10 @@ public class DashboardService {
     private final CodigoQrRepository codigoQrRepository;
     private final EncuestaRepository encuestaRepository;
     private final RespuestaEncuestaRepository respuestaEncuestaRepository;
+    private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     public DashboardEjecutivoResponse obtenerDashboardEjecutivo() {
-        BigDecimal totalIngresos = pagoRepository.findAll().stream()
+        BigDecimal totalIngresos = obtenerPagosSegunAlcance().stream()
                 .filter(p -> p.getEstado() == EstadoPago.VALIDADO)
                 .map(p -> p.getMonto())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -107,11 +110,13 @@ public class DashboardService {
                 .filter(q -> q.getEstadoQr() == CodigoQr.EstadoQr.UTILIZADO)
                 .count();
 
-        long pagosPendientes = pagoRepository.findAll().stream()
+        List<Pago> pagos = obtenerPagosSegunAlcanceOperativo();
+
+        long pagosPendientes = pagos.stream()
                 .filter(p -> p.getEstado() == EstadoPago.PENDIENTE)
                 .count();
 
-        long pagosValidados = pagoRepository.findAll().stream()
+        long pagosValidados = pagos.stream()
                 .filter(p -> p.getEstado() == EstadoPago.VALIDADO)
                 .count();
 
@@ -144,7 +149,7 @@ public class DashboardService {
                     "estado", e.getEstado().name()
             )));
         } else if ("pagos".equalsIgnoreCase(tipo)) {
-            pagoRepository.findAll().forEach(p -> filas.add(Map.of(
+            obtenerPagosSegunAlcance().forEach(p -> filas.add(Map.of(
                     "referencia", p.getNumeroReferencia(),
                     "monto", p.getMonto(),
                     "estado", p.getEstado().name(),
@@ -171,6 +176,25 @@ public class DashboardService {
                 .totalRegistros(filas.size())
                 .filas(filas)
                 .build();
+    }
+
+    private List<Pago> obtenerPagosSegunAlcance() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return pagoRepository.findAll();
+        }
+
+        UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return pagoRepository.findByInscripcionEventoOrganizadorId(organizadorId);
+    }
+
+    private List<Pago> obtenerPagosSegunAlcanceOperativo() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")
+                || usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")) {
+            return pagoRepository.findAll();
+        }
+
+        UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return pagoRepository.findByInscripcionEventoOrganizadorId(organizadorId);
     }
 
     private Double calcularPromedioGlobalSatisfaccion() {

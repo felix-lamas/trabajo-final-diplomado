@@ -53,3 +53,19 @@ Las inscripciones y eventos existentes pero fuera del ámbito se responden como 
 La cancelación administrativa de inscripciones ajenas queda pendiente de decisión funcional. En esta etapa `ADMINISTRADOR` conserva el comportamiento previo y solo puede cancelar una inscripción propia.
 
 Esta corrección cubre específicamente el ámbito de Inscripciones y no implica que los demás módulos estén libres de IDOR.
+
+## Autorización y propiedad de pagos
+
+La autorización del módulo de pagos se resuelve en el backend mediante la cadena de propiedad del pago:
+
+- `ADMINISTRADOR` conserva alcance global para consulta, validación y rechazo.
+- `ORGANIZADOR` solo consulta, lista pendientes, valida y rechaza pagos asociados a inscripciones de eventos propios.
+- `ESTUDIANTE` y `PARTICIPANTE_EXTERNO` solo consultan pagos propios y cargan comprobantes sobre pagos propios.
+
+Los pagos e inscripciones existentes pero fuera del alcance se responden como recurso no encontrado (`404`). Los roles no admitidos por un endpoint se rechazan con `403`. Los UUID identifican el recurso, pero no otorgan acceso.
+
+La carga de comprobantes comprueba autenticación, rol, ownership y estado antes de invocar el almacenamiento. Un pago `PENDIENTE` o `RECHAZADO` admite carga o reemplazo; un pago `VALIDADO` no admite reemplazo. La recarga de un comprobante rechazado conserva el estado `RECHAZADO`, porque no existe una transición funcional explícita que autorice cambiarlo automáticamente.
+
+Los reportes de pagos y las métricas financieras de los dashboards se calculan globalmente para `ADMINISTRADOR` y se acotan a eventos propios para `ORGANIZADOR`. `PERSONAL_CONTROL` conserva temporalmente su comportamiento previo en el dashboard operativo hasta que se defina formalmente su alcance financiero.
+
+Las pruebas negativas cubren acceso cruzado entre usuarios y organizadores, ausencia de persistencia ante rechazos y la garantía de que el almacenamiento no se invoca antes de autorizar. Queda como mejora futura servir comprobantes mediante un endpoint autenticado y resolver de forma transaccional el ciclo de vida de archivos reemplazados. La exportación PDF continúa siendo simulada; cuando sea implementada deberá aplicar el mismo scope de pagos.

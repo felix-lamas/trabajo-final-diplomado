@@ -2,6 +2,7 @@ package bo.uajms.eventos.modulos.pagos.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
+import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
 import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
 import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
@@ -13,12 +14,9 @@ import bo.uajms.eventos.modulos.pagos.entidades.ComprobantePago;
 import bo.uajms.eventos.modulos.pagos.entidades.EstadoPago;
 import bo.uajms.eventos.modulos.pagos.entidades.Pago;
 import bo.uajms.eventos.modulos.pagos.mappers.PagoMapper;
-import bo.uajms.eventos.modulos.pagos.repositorios.ComprobantePagoRepository;
 import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
-import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,16 +31,18 @@ import java.util.stream.Collectors;
 public class PagoService {
 
     private final PagoRepository pagoRepository;
-    private final ComprobantePagoRepository comprobantePagoRepository;
     private final InscripcionRepository inscripcionRepository;
-    private final UsuarioRepository usuarioRepository;
     private final PagoMapper pagoMapper;
     private final ArchivoSeguroServicio archivoSeguroServicio;
+    private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     @Transactional
     public PagoResponse subirComprobante(UUID pagoId, MultipartFile archivo) {
-        Pago pago = pagoRepository.findById(pagoId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", pagoId));
+        Pago pago = obtenerPagoParaCargaComprobante(pagoId);
+
+        if (pago.getEstado() == EstadoPago.VALIDADO) {
+            throw new NegocioException("No se puede reemplazar el comprobante de un pago VALIDADO");
+        }
 
         ArchivoSeguroServicio.ArchivoGuardado guardado =
                 archivoSeguroServicio.guardarComprobante(archivo, "comprobantes");
@@ -60,13 +60,10 @@ public class PagoService {
 
     @Transactional
     public PagoResponse registrarPago(RegistrarPagoRequest request) {
-        Inscripcion inscripcion = inscripcionRepository.findById(request.getInscripcionId())
+        Usuario usuarioAutenticado = usuarioAutenticadoService.obtenerUsuario();
+        Inscripcion inscripcion = inscripcionRepository
+                .findByIdAndUsuarioId(request.getInscripcionId(), usuarioAutenticado.getId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", request.getInscripcionId()));
-
-        Usuario usuarioAutenticado = obtenerUsuarioAutenticado();
-        if (!inscripcion.getUsuario().getId().equals(usuarioAutenticado.getId())) {
-            throw new NegocioException("Solo puedes registrar pagos para tus propias inscripciones");
-        }
 
         if (inscripcion.getEvento().getTipoInscripcion() == TipoInscripcion.GRATUITO) {
             throw new NegocioException("No se requiere pago para eventos gratuitos");
@@ -92,7 +89,7 @@ public class PagoService {
 
     @Transactional(readOnly = true)
     public List<PagoResponse> listarMisPagos() {
-        Usuario usuario = obtenerUsuarioAutenticado();
+        Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
         return pagoRepository.findByUsuarioId(usuario.getId()).stream()
                 .map(pagoMapper::toResponse)
                 .collect(Collectors.toList());
@@ -100,7 +97,18 @@ public class PagoService {
 
     @Transactional(readOnly = true)
     public List<PagoResponse> listarPendientes() {
-        return pagoRepository.findByEstado(EstadoPago.PENDIENTE).stream()
+        List<Pago> pagos;
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            pagos = pagoRepository.findByEstado(EstadoPago.PENDIENTE);
+        } else {
+            UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+            pagos = pagoRepository.findByEstadoAndInscripcionEventoOrganizadorId(
+                    EstadoPago.PENDIENTE,
+                    organizadorId
+            );
+        }
+
+        return pagos.stream()
                 .map(pagoMapper::toResponse)
                 .collect(Collectors.toList());
     }
@@ -114,15 +122,12 @@ public class PagoService {
 
     @Transactional(readOnly = true)
     public PagoResponse obtenerPorId(UUID id) {
-        return pagoRepository.findById(id)
-                .map(pagoMapper::toResponse)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
+        return pagoMapper.toResponse(obtenerPagoVisible(id));
     }
 
     @Transactional
     public PagoResponse validarPago(UUID id, ValidarPagoRequest request) {
-        Pago pago = pagoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
+        Pago pago = obtenerPagoGestionable(id);
 
         if (pago.getEstado() != EstadoPago.PENDIENTE) {
             throw new NegocioException("Solo se pueden validar pagos en estado PENDIENTE");
@@ -140,8 +145,7 @@ public class PagoService {
 
     @Transactional
     public PagoResponse rechazarPago(UUID id, ValidarPagoRequest request) {
-        Pago pago = pagoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
+        Pago pago = obtenerPagoGestionable(id);
 
         if (pago.getEstado() != EstadoPago.PENDIENTE) {
             throw new NegocioException("Solo se pueden rechazar pagos en estado PENDIENTE");
@@ -157,9 +161,43 @@ public class PagoService {
         return pagoMapper.toResponse(pagoRepository.save(pago));
     }
 
-    private Usuario obtenerUsuarioAutenticado() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByCorreoElectronico(email)
-                .orElseThrow(() -> new NegocioException("Usuario autenticado no encontrado"));
+    private Pago obtenerPagoVisible(UUID id) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return obtenerPagoGlobal(id);
+        }
+
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            return pagoRepository.findByIdAndInscripcionEventoOrganizadorId(id, usuarioId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
+        }
+
+        return pagoRepository.findByIdAndInscripcionUsuarioId(id, usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
+    }
+
+    private Pago obtenerPagoParaCargaComprobante(UUID id) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return obtenerPagoGlobal(id);
+        }
+
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return pagoRepository.findByIdAndInscripcionUsuarioId(id, usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
+    }
+
+    private Pago obtenerPagoGestionable(UUID id) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return obtenerPagoGlobal(id);
+        }
+
+        UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return pagoRepository.findByIdAndInscripcionEventoOrganizadorId(id, organizadorId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
+    }
+
+    private Pago obtenerPagoGlobal(UUID id) {
+        return pagoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
     }
 }

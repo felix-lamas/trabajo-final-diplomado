@@ -14,8 +14,16 @@ import java.util.UUID;
 public interface PagoRepository extends JpaRepository<Pago, UUID> {
     
     Optional<Pago> findByInscripcionId(UUID inscripcionId);
+
+    Optional<Pago> findByIdAndInscripcionUsuarioId(UUID id, UUID usuarioId);
+
+    Optional<Pago> findByIdAndInscripcionEventoOrganizadorId(UUID id, UUID organizadorId);
     
     List<Pago> findByEstado(EstadoPago estado);
+
+    List<Pago> findByEstadoAndInscripcionEventoOrganizadorId(EstadoPago estado, UUID organizadorId);
+
+    List<Pago> findByInscripcionEventoOrganizadorId(UUID organizadorId);
     
     @Query("SELECT p FROM Pago p JOIN p.inscripcion i WHERE i.usuario.id = :usuarioId")
     List<Pago> findByUsuarioId(UUID usuarioId);
