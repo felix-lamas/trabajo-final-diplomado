@@ -13,6 +13,8 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> 
     boolean existsByUsuarioIdAndEventoId(UUID usuarioId, UUID eventoId);
     List<Inscripcion> findByUsuarioId(UUID usuarioId);
     List<Inscripcion> findByEventoId(UUID eventoId);
+    Optional<Inscripcion> findByIdAndUsuarioId(UUID id, UUID usuarioId);
+    Optional<Inscripcion> findByIdAndEventoOrganizadorId(UUID id, UUID organizadorId);
     Optional<Inscripcion> findByUsuarioIdAndEventoId(UUID usuarioId, UUID eventoId);
     Optional<Inscripcion> findByCodigoParticipante(String codigoParticipante);
     Optional<Inscripcion> findByUsuarioCiAndEventoId(String ci, UUID eventoId);

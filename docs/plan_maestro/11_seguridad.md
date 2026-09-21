@@ -38,3 +38,18 @@ Para reducir la revelación de existencia, un evento fuera del alcance del usuar
 Las operaciones de organizador utilizan consultas acotadas por identificador de evento e identificador de organizador. Los UUID identifican recursos, pero no constituyen un mecanismo de autorización.
 
 Queda pendiente incorporar el estado `EN_REVISIÓN` y completar el flujo `BORRADOR → EN_REVISIÓN → PUBLICADO`. Esta corrección no agrega estados ni migraciones y mantiene temporalmente la transición administrativa existente desde `BORRADOR`.
+
+## Autorización y propiedad de inscripciones
+
+La autorización del módulo de inscripciones se aplica en el backend con consultas acotadas al ámbito del usuario autenticado:
+
+- `ADMINISTRADOR` puede consultar cualquier inscripción y listar inscritos de cualquier evento.
+- `ORGANIZADOR` puede consultar inscripciones y listados únicamente cuando el evento le pertenece.
+- `ESTUDIANTE`, `PARTICIPANTE_EXTERNO` y `PARTICIPANTE` solo pueden consultar y cancelar inscripciones propias.
+- La creación de una inscripción conserva al usuario autenticado como propietario; el cliente no selecciona el usuario.
+
+Las inscripciones y eventos existentes pero fuera del ámbito se responden como recurso no encontrado (`404`). Los roles no habilitados para una operación continúan siendo rechazados con `403` por Spring Security.
+
+La cancelación administrativa de inscripciones ajenas queda pendiente de decisión funcional. En esta etapa `ADMINISTRADOR` conserva el comportamiento previo y solo puede cancelar una inscripción propia.
+
+Esta corrección cubre específicamente el ámbito de Inscripciones y no implica que los demás módulos estén libres de IDOR.
