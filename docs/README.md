@@ -35,5 +35,7 @@ Plataforma centralizada para la administración de eventos académicos, científ
 3. Ejecutar backend: `mvn spring-boot:run`.
 4. Ejecutar frontend: `npm install` y luego `ng serve`.
 
+El backend no carga datos demo durante el arranque normal. `DatosInicialesSeed` solo se registra cuando se activa explícitamente el perfil Spring `demo`. Esta activación requiere un entorno controlado y las variables locales correspondientes; el perfil `demo` no debe habilitarse en producción.
+
 ---
 © 2026 UAJMS - Dirección de Tecnologías de Información

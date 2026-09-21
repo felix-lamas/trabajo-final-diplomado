@@ -48,6 +48,7 @@ import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +64,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
+@Profile("demo")
 @RequiredArgsConstructor
 public class DatosInicialesSeed implements CommandLineRunner {
 

@@ -29,7 +29,24 @@ pgAdmin queda disponible en `http://localhost:5050`. Sus credenciales se definen
 ### 2. Configuración de Entorno
 Copia `.env.example` como `.env` y reemplaza todos los valores de ejemplo por valores locales seguros. El archivo `.env` no debe subirse al repositorio ni compartirse. El backend lo carga desde la raíz del proyecto al ejecutarse desde `backend/`.
 
-`DEMO_PASSWORD` se usa únicamente para los usuarios iniciales de demostración/desarrollo creados por el seeder. Debe configurarse con un valor local y nunca reutilizarse como credencial de producción.
+`DEMO_PASSWORD` se usa únicamente para los usuarios iniciales creados por el seed demo. Debe configurarse con un valor local y nunca reutilizarse como credencial de producción.
+
+El arranque normal no ejecuta `DatosInicialesSeed`. El seed está restringido al perfil Spring `demo` y solo debe habilitarse de forma explícita en un entorno controlado:
+
+```bash
+cd backend
+SPRING_PROFILES_ACTIVE=demo mvn spring-boot:run
+```
+
+En PowerShell:
+
+```powershell
+cd backend
+$env:SPRING_PROFILES_ACTIVE = 'demo'
+mvn spring-boot:run
+```
+
+Para volver al comportamiento normal en la misma sesión de PowerShell, elimina la variable con `Remove-Item Env:SPRING_PROFILES_ACTIVE`. En producción no se debe activar el perfil `demo` ni configurar cuentas de demostración.
 
 En PowerShell, si ejecutas el backend sin Docker, asegúrate de que el servicio PostgreSQL esté disponible con los valores definidos en `.env`.
 
@@ -40,6 +57,8 @@ Para el acceso desde Angular, configura `CORS_ALLOWED_ORIGINS` con los orígenes
 cd backend
 mvn spring-boot:run
 ```
+Este comando utiliza el perfil normal configurado por el entorno (por defecto `dev`) y no carga datos demo.
+
 Swagger UI: `http://localhost:8080/api/v1/swagger-ui.html`
 
 ### 4. Ejecutar Frontend
