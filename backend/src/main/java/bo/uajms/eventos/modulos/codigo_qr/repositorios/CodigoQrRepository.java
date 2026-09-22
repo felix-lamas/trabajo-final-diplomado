@@ -10,5 +10,8 @@ import java.util.UUID;
 @Repository
 public interface CodigoQrRepository extends JpaRepository<CodigoQr, UUID> {
     Optional<CodigoQr> findByCredencialId(UUID credencialId);
+    Optional<CodigoQr> findByCredencialIdAndCredencialUsuarioId(UUID credencialId, UUID usuarioId);
+    Optional<CodigoQr> findByCredencialIdAndCredencialEventoOrganizadorId(UUID credencialId, UUID organizadorId);
     Optional<CodigoQr> findByContenido(String contenido);
+    long countByEstadoQrAndCredencialEventoOrganizadorId(CodigoQr.EstadoQr estadoQr, UUID organizadorId);
 }

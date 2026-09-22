@@ -1,5 +1,9 @@
 package bo.uajms.eventos.modulos.codigo_qr.servicios;
 
+import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
+import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
+import bo.uajms.eventos.modulos.codigo_qr.entidades.CodigoQr;
+import bo.uajms.eventos.modulos.codigo_qr.repositorios.CodigoQrRepository;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -9,10 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CodigoQrService {
+
+    private final CodigoQrRepository codigoQrRepository;
+    private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     public byte[] generarImagenQr(String contenido, int ancho, int alto) {
         try {
@@ -30,5 +38,24 @@ public class CodigoQrService {
     public String generarQrBase64(String contenido) {
         byte[] imageBytes = generarImagenQr(contenido, 250, 250);
         return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
+    public CodigoQr validarContenidoVisible(String contenido) {
+        UUID credencialId;
+        try {
+            credencialId = UUID.fromString(contenido);
+        } catch (IllegalArgumentException ex) {
+            throw new RecursoNoEncontradoException("Código QR", contenido);
+        }
+
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return codigoQrRepository.findByCredencialId(credencialId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Código QR", credencialId));
+        }
+
+        UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return codigoQrRepository
+                .findByCredencialIdAndCredencialEventoOrganizadorId(credencialId, organizadorId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Código QR", credencialId));
     }
 }

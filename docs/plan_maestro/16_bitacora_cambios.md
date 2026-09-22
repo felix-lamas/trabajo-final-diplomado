@@ -7,6 +7,7 @@
 | 21/09/2026 | Backend / Eventos / Seguridad | ADAPTAR | Corrección de autorización por propietario y estado en consultas y operaciones de eventos; publicación restringida a administración; registro de DEC-012 | Pruebas unitarias de acceso público, alcance por rol, ownership y ausencia de mutación en rechazos | Completado |
 | 21/09/2026 | Backend / Inscripciones / Seguridad | ADAPTAR | Corrección de autorización por propietario y evento en consulta, listado y cancelación de inscripciones; reutilización de `UsuarioAutenticadoService` | Pruebas unitarias de aislamiento entre usuarios y organizadores, alcance administrativo y ausencia de efectos secundarios | Completado |
 | 21/09/2026 | Backend / Pagos / Seguridad | ADAPTAR | Corrección de ownership e IDOR/BOLA en pagos, comprobantes, reportes y métricas financieras; autorización previa al almacenamiento y scope por usuario u organizador | Pruebas unitarias de acceso cruzado, estados de comprobante, ausencia de mutación/storage en rechazos, reportes y dashboards acotados | Completado |
+| 21/09/2026 | Backend / Credenciales y QR / Seguridad | ADAPTAR | Corrección de ownership e IDOR/BOLA en generación, consulta, QR, descarga PDF y validación simple; autorización previa a PNG/PDF y scope del dashboard QR | Pruebas unitarias de aislamiento entre usuarios y organizadores, ausencia de efectos secundarios, contenido inválido y roles del validador QR | Completado |
 
 ## Tipos
 CONSERVAR · ADAPTAR · COMPLETAR · REEMPLAZAR · ELIMINAR · NUEVO

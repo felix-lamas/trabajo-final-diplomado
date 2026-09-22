@@ -69,3 +69,17 @@ La carga de comprobantes comprueba autenticación, rol, ownership y estado antes
 Los reportes de pagos y las métricas financieras de los dashboards se calculan globalmente para `ADMINISTRADOR` y se acotan a eventos propios para `ORGANIZADOR`. `PERSONAL_CONTROL` conserva temporalmente su comportamiento previo en el dashboard operativo hasta que se defina formalmente su alcance financiero.
 
 Las pruebas negativas cubren acceso cruzado entre usuarios y organizadores, ausencia de persistencia ante rechazos y la garantía de que el almacenamiento no se invoca antes de autorizar. Queda como mejora futura servir comprobantes mediante un endpoint autenticado y resolver de forma transaccional el ciclo de vida de archivos reemplazados. La exportación PDF continúa siendo simulada; cuando sea implementada deberá aplicar el mismo scope de pagos.
+
+## Autorización y propiedad de credenciales y QR
+
+La autorización de credenciales y de su QR permanente se aplica en el backend antes de devolver datos o generar archivos:
+
+- `ADMINISTRADOR` conserva alcance global para las operaciones que ya tiene habilitadas.
+- `ESTUDIANTE` y `PARTICIPANTE_EXTERNO` solo pueden generar, consultar, descargar y obtener el QR de credenciales propias, de acuerdo con los roles admitidos por cada endpoint.
+- `ORGANIZADOR` solo puede consultar credenciales, obtener imágenes QR y usar la validación simple cuando el recurso pertenece a uno de sus eventos. El endpoint de descarga conserva sus roles previos y no habilita al organizador.
+
+Una credencial, inscripción o QR fuera del ámbito se responde como recurso no encontrado (`404`); los roles no admitidos continúan recibiendo `403`. La autorización se completa antes de generar PNG, PDF o cualquier byte de respuesta. El contenido no UUID de la validación simple también se responde de forma controlada como `404`.
+
+Esta corrección conserva el contenido UUID y el carácter permanente del QR de credencial. No incorpora firma, expiración, sesión, GPS, nonce ni cambios de modelo. El conteo de QR utilizados del dashboard operativo se acota a eventos propios para `ORGANIZADOR`; `ADMINISTRADOR` y `PERSONAL_CONTROL` conservan el comportamiento global anterior.
+
+Queda pendiente separar el QR permanente de identificación del futuro QR temporal de asistencia. También permanecen pendientes de una tarea específica todos los endpoints de Control de acceso, incluidos validación operativa, autorización, denegación, historial y búsquedas por código o documento. El modelo mantiene referencias redundantes de usuario y evento entre credencial e inscripción; esta tarea no las sincroniza ni modifica.

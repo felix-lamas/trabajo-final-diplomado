@@ -2,6 +2,7 @@ package bo.uajms.eventos.modulos.credenciales.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
+import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.codigo_qr.entidades.CodigoQr;
 import bo.uajms.eventos.modulos.codigo_qr.repositorios.CodigoQrRepository;
 import bo.uajms.eventos.modulos.codigo_qr.servicios.CodigoQrService;
@@ -13,7 +14,6 @@ import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
 import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
-import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -21,7 +21,6 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.io.image.ImageDataFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +37,13 @@ public class CredencialService {
     private final CredencialRepository credencialRepository;
     private final CodigoQrRepository codigoQrRepository;
     private final InscripcionRepository inscripcionRepository;
-    private final UsuarioRepository usuarioRepository;
     private final CodigoQrService codigoQrService;
     private final CredencialMapper credencialMapper;
+    private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     @Transactional
     public CredencialResponse generarCredencial(UUID inscripcionId) {
-        Inscripcion inscripcion = inscripcionRepository.findById(inscripcionId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", inscripcionId));
+        Inscripcion inscripcion = obtenerInscripcionParaGenerar(inscripcionId);
 
         if (inscripcion.getEstado() != EstadoInscripcion.CONFIRMADA) {
             throw new NegocioException("Solo se pueden generar credenciales para inscripciones CONFIRMADAS");
@@ -84,14 +82,12 @@ public class CredencialService {
 
     @Transactional(readOnly = true)
     public CredencialResponse obtenerPorId(UUID id) {
-        return credencialRepository.findById(id)
-                .map(credencialMapper::toResponse)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Credencial", id));
+        return credencialMapper.toResponse(obtenerCredencialVisible(id));
     }
 
     @Transactional(readOnly = true)
     public List<CredencialResponse> listarMisCredenciales() {
-        Usuario usuario = obtenerUsuarioAutenticado();
+        Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
         return credencialRepository.findByUsuarioId(usuario.getId()).stream()
                 .map(credencialMapper::toResponse)
                 .collect(Collectors.toList());
@@ -99,16 +95,14 @@ public class CredencialService {
 
     @Transactional(readOnly = true)
     public byte[] obtenerQrImagen(UUID credencialId) {
-        CodigoQr codigoQr = codigoQrRepository.findByCredencialId(credencialId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Código QR", credencialId));
+        CodigoQr codigoQr = obtenerCodigoQrVisible(credencialId);
         
         return codigoQrService.generarImagenQr(codigoQr.getContenido(), 300, 300);
     }
 
     @Transactional(readOnly = true)
     public byte[] descargarPdf(UUID id) {
-        Credencial credencial = credencialRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Credencial", id));
+        Credencial credencial = obtenerCredencialDescargable(id);
 
         CodigoQr codigoQr = codigoQrRepository.findByCredencialId(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Código QR", id));
@@ -136,9 +130,58 @@ public class CredencialService {
         }
     }
 
-    private Usuario obtenerUsuarioAutenticado() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByCorreoElectronico(email)
-                .orElseThrow(() -> new NegocioException("Usuario autenticado no encontrado"));
+    private Inscripcion obtenerInscripcionParaGenerar(UUID inscripcionId) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return inscripcionRepository.findById(inscripcionId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", inscripcionId));
+        }
+
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return inscripcionRepository.findByIdAndUsuarioId(inscripcionId, usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", inscripcionId));
+    }
+
+    private Credencial obtenerCredencialVisible(UUID id) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return credencialRepository.findById(id)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Credencial", id));
+        }
+
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            return credencialRepository.findByIdAndEventoOrganizadorId(id, usuarioId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Credencial", id));
+        }
+
+        return credencialRepository.findByIdAndUsuarioId(id, usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Credencial", id));
+    }
+
+    private CodigoQr obtenerCodigoQrVisible(UUID credencialId) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return codigoQrRepository.findByCredencialId(credencialId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Código QR", credencialId));
+        }
+
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            return codigoQrRepository
+                    .findByCredencialIdAndCredencialEventoOrganizadorId(credencialId, usuarioId)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Código QR", credencialId));
+        }
+
+        return codigoQrRepository.findByCredencialIdAndCredencialUsuarioId(credencialId, usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Código QR", credencialId));
+    }
+
+    private Credencial obtenerCredencialDescargable(UUID id) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return credencialRepository.findById(id)
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Credencial", id));
+        }
+
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return credencialRepository.findByIdAndUsuarioId(id, usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Credencial", id));
     }
 }
