@@ -12,4 +12,5 @@ public interface AsistenciaRepository extends JpaRepository<Asistencia, UUID> {
     List<Asistencia> findByInscripcionId(UUID inscripcionId);
     List<Asistencia> findByInscripcionEventoId(UUID eventoId);
     boolean existsByInscripcionIdAndFechaEliminacionIsNull(UUID inscripcionId);
+    long countByInscripcionEventoOrganizadorId(UUID organizadorId);
 }

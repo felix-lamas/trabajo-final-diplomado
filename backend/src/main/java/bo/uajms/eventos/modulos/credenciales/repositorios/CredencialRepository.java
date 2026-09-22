@@ -13,6 +13,7 @@ public interface CredencialRepository extends JpaRepository<Credencial, UUID> {
     Optional<Credencial> findByInscripcionId(UUID inscripcionId);
     Optional<Credencial> findByIdAndUsuarioId(UUID id, UUID usuarioId);
     Optional<Credencial> findByIdAndEventoOrganizadorId(UUID id, UUID organizadorId);
+    Optional<Credencial> findByIdAndInscripcionEventoOrganizadorId(UUID id, UUID organizadorId);
     List<Credencial> findByUsuarioId(UUID usuarioId);
     boolean existsByInscripcionId(UUID inscripcionId);
 }

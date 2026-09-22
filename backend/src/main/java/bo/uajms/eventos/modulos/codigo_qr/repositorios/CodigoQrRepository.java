@@ -13,5 +13,6 @@ public interface CodigoQrRepository extends JpaRepository<CodigoQr, UUID> {
     Optional<CodigoQr> findByCredencialIdAndCredencialUsuarioId(UUID credencialId, UUID usuarioId);
     Optional<CodigoQr> findByCredencialIdAndCredencialEventoOrganizadorId(UUID credencialId, UUID organizadorId);
     Optional<CodigoQr> findByContenido(String contenido);
+    Optional<CodigoQr> findByContenidoAndCredencialInscripcionEventoOrganizadorId(String contenido, UUID organizadorId);
     long countByEstadoQrAndCredencialEventoOrganizadorId(CodigoQr.EstadoQr estadoQr, UUID organizadorId);
 }

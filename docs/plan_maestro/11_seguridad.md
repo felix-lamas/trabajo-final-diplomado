@@ -82,4 +82,21 @@ Una credencial, inscripción o QR fuera del ámbito se responde como recurso no 
 
 Esta corrección conserva el contenido UUID y el carácter permanente del QR de credencial. No incorpora firma, expiración, sesión, GPS, nonce ni cambios de modelo. El conteo de QR utilizados del dashboard operativo se acota a eventos propios para `ORGANIZADOR`; `ADMINISTRADOR` y `PERSONAL_CONTROL` conservan el comportamiento global anterior.
 
-Queda pendiente separar el QR permanente de identificación del futuro QR temporal de asistencia. También permanecen pendientes de una tarea específica todos los endpoints de Control de acceso, incluidos validación operativa, autorización, denegación, historial y búsquedas por código o documento. El modelo mantiene referencias redundantes de usuario y evento entre credencial e inscripción; esta tarea no las sincroniza ni modifica.
+Queda pendiente separar el QR permanente de identificación del futuro QR temporal de asistencia. El modelo mantiene referencias redundantes de usuario y evento entre credencial e inscripción; esta tarea no las sincroniza ni modifica.
+
+## Autorización de Control de acceso y Asistencia — Fase 1.4-A
+
+El backend aplica ownership por evento antes de exponer datos o realizar escrituras en los endpoints de validación QR operativa, autorización, denegación, historial, búsqueda por código, búsqueda por documento y listado de asistencias:
+
+- `ADMINISTRADOR` conserva alcance global.
+- `ORGANIZADOR` solo opera sobre credenciales, inscripciones, controles y asistencias vinculados mediante `Credencial → Inscripción → Evento → Organizador` a sus propios eventos.
+- Los recursos existentes fuera del alcance se responden como no encontrados (`404`).
+- `PERSONAL_CONTROL` conserva temporalmente el alcance previo porque todavía no existe una asignación formal a eventos; esta definición sigue pendiente.
+
+La búsqueda por código mantiene su contrato actual y se acota con el organizador autenticado. La búsqueda por documento valida primero el scope del `eventoId` y solo después consulta la inscripción. La autorización de ingreso comprueba ownership antes de guardar `ControlAcceso`, crear `Asistencia` o cambiar el QR a `UTILIZADO`.
+
+Con el modelo actual se aplican las reglas inequívocas siguientes: inscripción `CONFIRMADA`; pago `VALIDADO` para eventos de tipo `PAGO`; ausencia de pago permitida para eventos gratuitos; credencial con estado `ACTIVA`; QR activo y en estado `GENERADO`; y rechazo de eventos `BORRADOR`, `CANCELADO` o `FINALIZADO`. No se introducen estados nuevos.
+
+El dashboard operativo cuenta asistencias globalmente para `ADMINISTRADOR` y únicamente sobre eventos propios para `ORGANIZADOR`. `PERSONAL_CONTROL` conserva el conteo global hasta que se resuelva su alcance.
+
+Permanecen pendientes el control atómico de autorizaciones concurrentes, la asignación de `PERSONAL_CONTROL`, `SESION_EVENTO`, QR temporal, firma, expiración, nonce, GPS y radio. Esta fase no modifica entidades, migraciones, roles ni dependencias.

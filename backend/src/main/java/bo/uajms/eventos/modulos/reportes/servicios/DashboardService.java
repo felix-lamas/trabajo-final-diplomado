@@ -107,6 +107,7 @@ public class DashboardService {
 
     public DashboardOperativoResponse obtenerDashboardOperativo() {
         long qrsUsados = contarQrsUsadosSegunAlcance();
+        long asistenciasRegistradas = contarAsistenciasSegunAlcance();
 
         List<Pago> pagos = obtenerPagosSegunAlcanceOperativo();
 
@@ -132,7 +133,7 @@ public class DashboardService {
                 .pagosPendientes(pagosPendientes)
                 .pagosValidados(pagosValidados)
                 .qrUtilizados(qrsUsados)
-                .asistenciasRegistradas(asistenciaRepository.count())
+                .asistenciasRegistradas(asistenciasRegistradas)
                 .build();
     }
 
@@ -208,6 +209,16 @@ public class DashboardService {
                 CodigoQr.EstadoQr.UTILIZADO,
                 organizadorId
         );
+    }
+
+    private long contarAsistenciasSegunAlcance() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")
+                || usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")) {
+            return asistenciaRepository.count();
+        }
+
+        UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
+        return asistenciaRepository.countByInscripcionEventoOrganizadorId(organizadorId);
     }
 
     private Double calcularPromedioGlobalSatisfaccion() {
