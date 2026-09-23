@@ -39,8 +39,17 @@ public class Pago extends EntidadBase {
     @Column(columnDefinition = "TEXT")
     private String observacion;
 
-    @OneToOne(mappedBy = "pago", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private ComprobantePago comprobante;
+    @Column(name = "comprobante_url", length = 500)
+    private String comprobanteUrl;
+
+    @Column(name = "comprobante_nombre_archivo", length = 255)
+    private String comprobanteNombreArchivo;
+
+    @Column(name = "comprobante_tipo_contenido", length = 100)
+    private String comprobanteTipoContenido;
+
+    @Column(name = "fecha_carga_comprobante")
+    private LocalDateTime fechaCargaComprobante;
 
     public String getNumeroReferencia() {
         return getId() != null ? getId().toString() : null;

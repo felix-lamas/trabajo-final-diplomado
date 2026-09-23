@@ -11,6 +11,8 @@ import org.hibernate.annotations.SQLRestriction;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "eventos")
@@ -89,4 +91,8 @@ public class Evento extends EntidadBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizador_id", nullable = false)
     private Usuario organizador;
+
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<bo.uajms.eventos.modulos.sesiones.entidades.SesionEvento> sesiones = new ArrayList<>();
 }

@@ -64,9 +64,7 @@ public class AutenticacionServicio {
         Usuario usuario = usuarioMapper.deRegistroRequest(request);
         usuario.setContrasena(passwordEncoder.encode(request.getContrasena()));
 
-        String nombreRol = (usuario.getTipoUsuario() == Usuario.TipoUsuario.INTERNO)
-                ? "ESTUDIANTE"
-                : "PARTICIPANTE_EXTERNO";
+        String nombreRol = "USUARIO";
 
         Rol rol = rolRepository.findByNombre(nombreRol)
                 .orElseThrow(() -> new NegocioException("Rol de registro no encontrado: " + nombreRol));

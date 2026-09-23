@@ -10,7 +10,6 @@ import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository
 import bo.uajms.eventos.modulos.pagos.dtos.PagoResponse;
 import bo.uajms.eventos.modulos.pagos.dtos.RegistrarPagoRequest;
 import bo.uajms.eventos.modulos.pagos.dtos.ValidarPagoRequest;
-import bo.uajms.eventos.modulos.pagos.entidades.ComprobantePago;
 import bo.uajms.eventos.modulos.pagos.entidades.EstadoPago;
 import bo.uajms.eventos.modulos.pagos.entidades.Pago;
 import bo.uajms.eventos.modulos.pagos.mappers.PagoMapper;
@@ -40,21 +39,18 @@ public class PagoService {
     public PagoResponse subirComprobante(UUID pagoId, MultipartFile archivo) {
         Pago pago = obtenerPagoParaCargaComprobante(pagoId);
 
-        if (pago.getEstado() == EstadoPago.VALIDADO) {
-            throw new NegocioException("No se puede reemplazar el comprobante de un pago VALIDADO");
+        if (pago.getEstado() == EstadoPago.APROBADO) {
+            throw new NegocioException("No se puede reemplazar el comprobante de un pago APROBADO");
         }
 
         ArchivoSeguroServicio.ArchivoGuardado guardado =
                 archivoSeguroServicio.guardarComprobante(archivo, "comprobantes");
 
-        ComprobantePago comprobante = ComprobantePago.builder()
-                .pago(pago)
-                .urlArchivo(guardado.urlArchivo())
-                .nombreArchivo(guardado.nombreArchivo())
-                .tipoContenido(guardado.tipoContenido())
-                .build();
-
-        pago.setComprobante(comprobante);
+        pago.setComprobanteUrl(guardado.urlArchivo());
+        pago.setComprobanteNombreArchivo(guardado.nombreArchivo());
+        pago.setComprobanteTipoContenido(guardado.tipoContenido());
+        pago.setFechaCargaComprobante(LocalDateTime.now());
+        pago.setEstado(EstadoPago.PENDIENTE_VALIDACION);
         return pagoMapper.toResponse(pagoRepository.save(pago));
     }
 
@@ -77,7 +73,7 @@ public class PagoService {
                 .inscripcion(inscripcion)
                 .monto(request.getMonto())
                 .fechaPago(LocalDateTime.now())
-                .estado(EstadoPago.PENDIENTE)
+                .estado(EstadoPago.PENDIENTE_PAGO)
                 .observacion(request.getObservacion())
                 .build();
 
@@ -99,11 +95,11 @@ public class PagoService {
     public List<PagoResponse> listarPendientes() {
         List<Pago> pagos;
         if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
-            pagos = pagoRepository.findByEstado(EstadoPago.PENDIENTE);
+            pagos = pagoRepository.findByEstado(EstadoPago.PENDIENTE_VALIDACION);
         } else {
             UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
             pagos = pagoRepository.findByEstadoAndInscripcionEventoOrganizadorId(
-                    EstadoPago.PENDIENTE,
+                    EstadoPago.PENDIENTE_VALIDACION,
                     organizadorId
             );
         }
@@ -129,11 +125,11 @@ public class PagoService {
     public PagoResponse validarPago(UUID id, ValidarPagoRequest request) {
         Pago pago = obtenerPagoGestionable(id);
 
-        if (pago.getEstado() != EstadoPago.PENDIENTE) {
-            throw new NegocioException("Solo se pueden validar pagos en estado PENDIENTE");
+        if (pago.getEstado() != EstadoPago.PENDIENTE_VALIDACION) {
+            throw new NegocioException("Solo se pueden aprobar pagos en estado PENDIENTE_VALIDACION");
         }
 
-        pago.setEstado(EstadoPago.VALIDADO);
+        pago.setEstado(EstadoPago.APROBADO);
         pago.setObservacion(request.getObservacion());
         
         Inscripcion inscripcion = pago.getInscripcion();
@@ -147,8 +143,8 @@ public class PagoService {
     public PagoResponse rechazarPago(UUID id, ValidarPagoRequest request) {
         Pago pago = obtenerPagoGestionable(id);
 
-        if (pago.getEstado() != EstadoPago.PENDIENTE) {
-            throw new NegocioException("Solo se pueden rechazar pagos en estado PENDIENTE");
+        if (pago.getEstado() != EstadoPago.PENDIENTE_VALIDACION) {
+            throw new NegocioException("Solo se pueden rechazar pagos en estado PENDIENTE_VALIDACION");
         }
 
         pago.setEstado(EstadoPago.RECHAZADO);

@@ -2,7 +2,6 @@ package bo.uajms.eventos.modulos.pagos.mappers;
 
 import bo.uajms.eventos.modulos.pagos.dtos.ComprobantePagoResponse;
 import bo.uajms.eventos.modulos.pagos.dtos.PagoResponse;
-import bo.uajms.eventos.modulos.pagos.entidades.ComprobantePago;
 import bo.uajms.eventos.modulos.pagos.entidades.Pago;
 import org.springframework.stereotype.Component;
 
@@ -21,18 +20,18 @@ public class PagoMapper {
                 .fechaPago(pago.getFechaPago())
                 .estado(pago.getEstado())
                 .observacion(pago.getObservacion())
-                .comprobante(toComprobanteResponse(pago.getComprobante()))
+                .comprobante(toComprobanteResponse(pago))
                 .build();
     }
 
-    public ComprobantePagoResponse toComprobanteResponse(ComprobantePago comprobante) {
-        if (comprobante == null) return null;
+    public ComprobantePagoResponse toComprobanteResponse(Pago pago) {
+        if (pago.getComprobanteUrl() == null) return null;
 
         return ComprobantePagoResponse.builder()
-                .id(comprobante.getId())
-                .urlArchivo(comprobante.getUrlArchivo())
-                .nombreArchivo(comprobante.getNombreArchivo())
-                .tipoContenido(comprobante.getTipoContenido())
+                .id(pago.getId())
+                .urlArchivo(pago.getComprobanteUrl())
+                .nombreArchivo(pago.getComprobanteNombreArchivo())
+                .tipoContenido(pago.getComprobanteTipoContenido())
                 .build();
     }
 }

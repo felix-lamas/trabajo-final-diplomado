@@ -3,6 +3,7 @@ package bo.uajms.eventos.modulos.certificados.dtos;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -15,6 +16,9 @@ public class CertificadoResponse {
     private String ci;
     private String evento;
     private Integer cargaHoraria;
+    private String tipoCertificado;
+    private Integer horasAcademicas;
+    private BigDecimal porcentajeAsistencia;
     private String codigoCertificado;
     private LocalDateTime fechaEmision;
     private String urlVerificacion;

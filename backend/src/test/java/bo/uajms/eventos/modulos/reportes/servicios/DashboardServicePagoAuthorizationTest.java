@@ -3,9 +3,6 @@ package bo.uajms.eventos.modulos.reportes.servicios;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.certificados.repositorios.CertificadoRepository;
-import bo.uajms.eventos.modulos.codigo_qr.repositorios.CodigoQrRepository;
-import bo.uajms.eventos.modulos.encuestas.repositorios.EncuestaRepository;
-import bo.uajms.eventos.modulos.encuestas.repositorios.RespuestaEncuestaRepository;
 import bo.uajms.eventos.modulos.eventos.entidades.Evento;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
@@ -44,9 +41,6 @@ class DashboardServicePagoAuthorizationTest {
     @Mock private CertificadoRepository certificadoRepository;
     @Mock private PagoRepository pagoRepository;
     @Mock private AsistenciaRepository asistenciaRepository;
-    @Mock private CodigoQrRepository codigoQrRepository;
-    @Mock private EncuestaRepository encuestaRepository;
-    @Mock private RespuestaEncuestaRepository respuestaEncuestaRepository;
     @Mock private UsuarioAutenticadoService usuarioAutenticadoService;
 
     @InjectMocks
@@ -61,9 +55,9 @@ class DashboardServicePagoAuthorizationTest {
     void configurarEscenario() {
         organizadorA = usuario();
         Usuario organizadorB = usuario();
-        pagoAValidado = pago(organizadorA, EstadoPago.VALIDADO, new BigDecimal("100.00"));
-        pagoAPendiente = pago(organizadorA, EstadoPago.PENDIENTE, new BigDecimal("50.00"));
-        pagoBValidado = pago(organizadorB, EstadoPago.VALIDADO, new BigDecimal("900.00"));
+        pagoAValidado = pago(organizadorA, EstadoPago.APROBADO, new BigDecimal("100.00"));
+        pagoAPendiente = pago(organizadorA, EstadoPago.PENDIENTE_VALIDACION, new BigDecimal("50.00"));
+        pagoBValidado = pago(organizadorB, EstadoPago.APROBADO, new BigDecimal("900.00"));
     }
 
     @Test
@@ -115,22 +109,8 @@ class DashboardServicePagoAuthorizationTest {
         verify(pagoRepository, never()).findAll();
     }
 
-    @Test
-    void personalControlConservaConteosGlobalesExistentes() {
-        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
-        when(usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")).thenReturn(true);
-        when(pagoRepository.findAll()).thenReturn(List.of(pagoAValidado, pagoAPendiente, pagoBValidado));
-
-        DashboardOperativoResponse dashboard = dashboardService.obtenerDashboardOperativo();
-
-        assertEquals(1, dashboard.getPagosPendientes());
-        assertEquals(2, dashboard.getPagosValidados());
-        verify(pagoRepository).findAll();
-    }
-
     private void autenticarOrganizadorA() {
         lenient().when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
-        lenient().when(usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")).thenReturn(false);
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizadorA);
     }
 

@@ -6,12 +6,14 @@ import bo.uajms.eventos.modulos.asistencias.entidades.Asistencia;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
+import bo.uajms.eventos.modulos.sesiones.entidades.SesionEvento;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,11 +26,29 @@ public class AsistenciaService {
     private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     @Transactional
-    public Asistencia registrarAsistencia(Inscripcion inscripcion, Usuario usuarioControl, String observacion) {
+    public Asistencia registrarAsistencia(
+            Inscripcion inscripcion,
+            SesionEvento sesionEvento,
+            Usuario registradoPor,
+            BigDecimal distanciaMetros,
+            BigDecimal precisionGpsMetros,
+            String observacion
+    ) {
+        if (!inscripcion.getEvento().getId().equals(sesionEvento.getEvento().getId())) {
+            throw new IllegalArgumentException("La inscripcion y la sesion deben pertenecer al mismo evento");
+        }
+        if (asistenciaRepository.existsByInscripcionIdAndSesionEventoId(inscripcion.getId(), sesionEvento.getId())) {
+            throw new IllegalStateException("Ya existe una asistencia para la inscripcion y sesion");
+        }
+
         Asistencia asistencia = Asistencia.builder()
                 .inscripcion(inscripcion)
-                .usuarioControl(usuarioControl)
+                .sesionEvento(sesionEvento)
+                .registradoPor(registradoPor)
                 .fechaHoraRegistro(LocalDateTime.now())
+                .distanciaMetros(distanciaMetros)
+                .precisionGpsMetros(precisionGpsMetros)
+                .resultadoValidacion(Asistencia.ResultadoValidacion.VALIDADA)
                 .observacion(observacion)
                 .build();
         return asistenciaRepository.save(asistencia);
@@ -36,7 +56,7 @@ public class AsistenciaService {
 
     public List<Asistencia> obtenerAsistenciasPorEvento(UUID eventoId) {
         validarEventoVisible(eventoId);
-        return asistenciaRepository.findByInscripcionEventoId(eventoId);
+        return asistenciaRepository.findBySesionEventoEventoId(eventoId);
     }
 
     public List<Asistencia> obtenerAsistenciasPorInscripcion(UUID inscripcionId) {
@@ -44,8 +64,7 @@ public class AsistenciaService {
     }
 
     private void validarEventoVisible(UUID eventoId) {
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")
-                || usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
             eventoRepository.findById(eventoId)
                     .orElseThrow(() -> new RecursoNoEncontradoException("Evento", eventoId));
             return;

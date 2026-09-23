@@ -10,7 +10,8 @@ import java.util.UUID;
 @Repository
 public interface AsistenciaRepository extends JpaRepository<Asistencia, UUID> {
     List<Asistencia> findByInscripcionId(UUID inscripcionId);
-    List<Asistencia> findByInscripcionEventoId(UUID eventoId);
+    List<Asistencia> findBySesionEventoEventoId(UUID eventoId);
+    boolean existsByInscripcionIdAndSesionEventoId(UUID inscripcionId, UUID sesionEventoId);
     boolean existsByInscripcionIdAndFechaEliminacionIsNull(UUID inscripcionId);
-    long countByInscripcionEventoOrganizadorId(UUID organizadorId);
+    long countBySesionEventoEventoOrganizadorId(UUID organizadorId);
 }

@@ -24,19 +24,19 @@ public class CertificadoController {
     }
 
     @GetMapping("/certificados/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'PARTICIPANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     public ResponseEntity<CertificadoResponse> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(certificadoService.obtenerPorId(id));
     }
 
     @GetMapping("/certificados/mis-certificados")
-    @PreAuthorize("hasRole('PARTICIPANTE')")
+    @PreAuthorize("hasRole('USUARIO')")
     public ResponseEntity<List<CertificadoResponse>> misCertificados() {
         return ResponseEntity.ok(certificadoService.listarMisCertificados());
     }
 
     @GetMapping("/certificados/{id}/descargar")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'PARTICIPANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     public ResponseEntity<CertificadoResponse> descargar(@PathVariable UUID id) {
         return ResponseEntity.ok(certificadoService.descargarCertificado(id));
     }

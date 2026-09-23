@@ -77,8 +77,8 @@ class PagoServiceAuthorizationTest {
         Evento eventoB = crearEvento(organizadorB);
         inscripcionA = crearInscripcion(usuarioA, eventoA);
         inscripcionB = crearInscripcion(usuarioB, eventoB);
-        pagoA = crearPago(inscripcionA, EstadoPago.PENDIENTE);
-        pagoB = crearPago(inscripcionB, EstadoPago.PENDIENTE);
+        pagoA = crearPago(inscripcionA, EstadoPago.PENDIENTE_VALIDACION);
+        pagoB = crearPago(inscripcionB, EstadoPago.PENDIENTE_VALIDACION);
         pagoAId = pagoA.getId();
         pagoBId = pagoB.getId();
     }
@@ -132,7 +132,9 @@ class PagoServiceAuthorizationTest {
         when(pagoMapper.toResponse(pagoA)).thenReturn(response);
 
         assertSame(response, pagoService.subirComprobante(pagoAId, archivo));
-        assertSame(pagoA, pagoA.getComprobante().getPago());
+        assertEquals("/uploads/a.pdf", pagoA.getComprobanteUrl());
+        assertEquals("a.pdf", pagoA.getComprobanteNombreArchivo());
+        assertEquals(EstadoPago.PENDIENTE_VALIDACION, pagoA.getEstado());
         verify(archivoSeguroServicio).guardarComprobante(archivo, "comprobantes");
     }
 
@@ -154,7 +156,7 @@ class PagoServiceAuthorizationTest {
     @Test
     void usuarioNoReemplazaComprobanteValidado() {
         autenticarParticipante(usuarioA);
-        pagoA.setEstado(EstadoPago.VALIDADO);
+        pagoA.setEstado(EstadoPago.APROBADO);
         when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoAId, usuarioA.getId()))
                 .thenReturn(Optional.of(pagoA));
 
@@ -166,7 +168,7 @@ class PagoServiceAuthorizationTest {
     }
 
     @Test
-    void usuarioPuedeRecargarComprobanteRechazadoSinCambiarEstado() {
+    void usuarioPuedeRecargarComprobanteRechazadoYQuedaPendienteDeValidacion() {
         autenticarParticipante(usuarioA);
         pagoA.setEstado(EstadoPago.RECHAZADO);
         MockMultipartFile archivo = archivoValido();
@@ -178,7 +180,7 @@ class PagoServiceAuthorizationTest {
 
         pagoService.subirComprobante(pagoAId, archivo);
 
-        assertEquals(EstadoPago.RECHAZADO, pagoA.getEstado());
+        assertEquals(EstadoPago.PENDIENTE_VALIDACION, pagoA.getEstado());
         verify(pagoRepository).save(pagoA);
     }
 
@@ -214,11 +216,11 @@ class PagoServiceAuthorizationTest {
         autenticarOrganizador(organizadorA);
         PagoResponse response = respuesta(pagoAId);
         when(pagoRepository.findByEstadoAndInscripcionEventoOrganizadorId(
-                EstadoPago.PENDIENTE, organizadorA.getId())).thenReturn(List.of(pagoA));
+                EstadoPago.PENDIENTE_VALIDACION, organizadorA.getId())).thenReturn(List.of(pagoA));
         when(pagoMapper.toResponse(pagoA)).thenReturn(response);
 
         assertEquals(List.of(response), pagoService.listarPendientes());
-        verify(pagoRepository, never()).findByEstado(EstadoPago.PENDIENTE);
+        verify(pagoRepository, never()).findByEstado(EstadoPago.PENDIENTE_VALIDACION);
     }
 
     @Test
@@ -283,7 +285,7 @@ class PagoServiceAuthorizationTest {
 
         pagoService.validarPago(pagoBId, new ValidarPagoRequest());
 
-        assertEquals(EstadoPago.VALIDADO, pagoB.getEstado());
+        assertEquals(EstadoPago.APROBADO, pagoB.getEstado());
         assertEquals(EstadoInscripcion.CONFIRMADA, inscripcionB.getEstado());
         verify(inscripcionRepository).save(inscripcionB);
     }

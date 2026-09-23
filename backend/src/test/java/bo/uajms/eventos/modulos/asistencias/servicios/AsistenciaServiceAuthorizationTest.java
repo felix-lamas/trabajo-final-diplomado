@@ -46,7 +46,6 @@ class AsistenciaServiceAuthorizationTest {
         ReflectionTestUtils.setField(evento, "id", eventoId);
 
         lenient().when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
-        lenient().when(usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")).thenReturn(false);
         lenient().when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizador);
     }
 
@@ -54,7 +53,7 @@ class AsistenciaServiceAuthorizationTest {
     void organizadorListaAsistenciasDeEventoPropio() {
         List<Asistencia> asistencias = List.of(Asistencia.builder().build());
         when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorId)).thenReturn(Optional.of(evento));
-        when(asistenciaRepository.findByInscripcionEventoId(eventoId)).thenReturn(asistencias);
+        when(asistenciaRepository.findBySesionEventoEventoId(eventoId)).thenReturn(asistencias);
 
         assertSame(asistencias, service.obtenerAsistenciasPorEvento(eventoId));
     }
@@ -65,14 +64,14 @@ class AsistenciaServiceAuthorizationTest {
 
         assertThrows(RecursoNoEncontradoException.class,
                 () -> service.obtenerAsistenciasPorEvento(eventoId));
-        verify(asistenciaRepository, never()).findByInscripcionEventoId(any());
+        verify(asistenciaRepository, never()).findBySesionEventoEventoId(any());
     }
 
     @Test
     void administradorListaAsistenciasGlobalmente() {
         when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(true);
         when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(evento));
-        when(asistenciaRepository.findByInscripcionEventoId(eventoId)).thenReturn(List.of());
+        when(asistenciaRepository.findBySesionEventoEventoId(eventoId)).thenReturn(List.of());
 
         assertTrue(service.obtenerAsistenciasPorEvento(eventoId).isEmpty());
     }

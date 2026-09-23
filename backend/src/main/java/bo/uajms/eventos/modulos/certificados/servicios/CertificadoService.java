@@ -66,6 +66,8 @@ public class CertificadoService {
                 .urlVerificacion("http://localhost:4200/publico/verificacion/" + codigoCertificado)
                 .archivoPdfUrl("https://storage.uajms.edu.bo/certificados/" + codigoCertificado + ".pdf")
                 .estado(Certificado.EstadoCertificado.GENERADO)
+                .tipoCertificado(Certificado.TipoCertificado.NO_CURRICULAR)
+                .horasAcademicas(evento.getCargaHoraria())
                 .build();
 
         certificadoRepository.save(certificado);
@@ -120,6 +122,9 @@ public class CertificadoService {
                             .ci(u.getCi())
                             .evento(c.getEvento().getTitulo())
                             .cargaHoraria(c.getEvento().getCargaHoraria())
+                            .tipoCertificado(c.getTipoCertificado().name())
+                            .horasAcademicas(c.getHorasAcademicas())
+                            .porcentajeAsistencia(c.getPorcentajeAsistencia())
                             .fechaEmision(c.getFechaEmision())
                             .codigoCertificado(c.getCodigoCertificado())
                             .estado(c.getEstado().name())
@@ -141,6 +146,9 @@ public class CertificadoService {
                 .ci(u.getCi())
                 .evento(c.getEvento().getTitulo())
                 .cargaHoraria(c.getEvento().getCargaHoraria())
+                .tipoCertificado(c.getTipoCertificado().name())
+                .horasAcademicas(c.getHorasAcademicas())
+                .porcentajeAsistencia(c.getPorcentajeAsistencia())
                 .codigoCertificado(c.getCodigoCertificado())
                 .fechaEmision(c.getFechaEmision())
                 .urlVerificacion(c.getUrlVerificacion())

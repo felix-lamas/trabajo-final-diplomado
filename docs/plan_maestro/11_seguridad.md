@@ -100,3 +100,11 @@ Con el modelo actual se aplican las reglas inequívocas siguientes: inscripción
 El dashboard operativo cuenta asistencias globalmente para `ADMINISTRADOR` y únicamente sobre eventos propios para `ORGANIZADOR`. `PERSONAL_CONTROL` conserva el conteo global hasta que se resuelva su alcance.
 
 Permanecen pendientes el control atómico de autorizaciones concurrentes, la asignación de `PERSONAL_CONTROL`, `SESION_EVENTO`, QR temporal, firma, expiración, nonce, GPS y radio. Esta fase no modifica entidades, migraciones, roles ni dependencias.
+
+## Alineación del backend con el modelo oficial
+
+La reestructuración del backend posterior a las fases de ownership conserva `UsuarioAutenticadoService`, JWT, BCrypt y las consultas acotadas de Eventos, Inscripciones, Pagos y Asistencia. Los tres roles funcionales vigentes son `ADMINISTRADOR`, `ORGANIZADOR` y `USUARIO`; los tipos interno/externo permanecen como atributo de usuario y no como autoridades.
+
+Los módulos de credencial/QR permanente y Control de acceso fueron retirados porque no pertenecen al modelo final. Por tanto, las secciones históricas anteriores describen correcciones realizadas antes de su retirada, pero sus endpoints ya no forman parte de la API vigente. El futuro QR temporal de asistencia no está implementado en esta fase.
+
+`SesionEvento` y la relación única `Inscripcion + SesionEvento` en Asistencia preparan el control de duplicados por sesión. La implementación completa de QR temporal, GPS, validación de ventana horaria y persistencia física queda pendiente de migraciones y fases posteriores. No se modificó la configuración JWT ni se introdujeron secretos.

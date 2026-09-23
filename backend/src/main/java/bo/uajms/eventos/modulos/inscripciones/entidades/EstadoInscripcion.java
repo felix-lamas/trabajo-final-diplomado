@@ -5,7 +5,5 @@ public enum EstadoInscripcion {
     PENDIENTE_VALIDACION,
     CONFIRMADA,
     CANCELADA,
-    RECHAZADA,
-    ASISTIO,
-    NO_ASISTIO
+    RECHAZADA
 }

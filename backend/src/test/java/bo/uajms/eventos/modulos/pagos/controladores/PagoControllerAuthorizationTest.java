@@ -40,7 +40,7 @@ class PagoControllerAuthorizationTest {
 
     @Test
     void estudianteNoPuedeListarTodosLosPagos() {
-        autenticar("ESTUDIANTE");
+        autenticar("USUARIO");
 
         assertThrows(AccessDeniedException.class, () -> pagoController.listarTodos());
     }

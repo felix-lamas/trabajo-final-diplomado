@@ -44,10 +44,6 @@ public class Usuario extends EntidadBase {
     @Column(name = "fecha_carga_fotografia")
     private java.time.LocalDateTime fechaCargaFotografia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "carrera_id")
-    private bo.uajms.eventos.modulos.carreras.entidades.Carrera carrera;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_usuario", nullable = false, length = 20)
     private TipoUsuario tipoUsuario;

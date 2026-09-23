@@ -27,21 +27,21 @@ public class CategoriaEventoController {
     private final CategoriaEventoService categoriaService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     @Operation(summary = "Listar todas las categorías")
     public ResponseEntity<List<CategoriaEventoResponse>> listar() {
         return ResponseEntity.ok(categoriaService.listarTodas());
     }
 
     @GetMapping("/activas")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     @Operation(summary = "Listar solo categorías activas")
     public ResponseEntity<List<CategoriaEventoResponse>> listarActivas() {
         return ResponseEntity.ok(categoriaService.listarActivas());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     @Operation(summary = "Obtener detalle de una categoría")
     public ResponseEntity<CategoriaEventoResponse> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(categoriaService.buscarPorId(id));

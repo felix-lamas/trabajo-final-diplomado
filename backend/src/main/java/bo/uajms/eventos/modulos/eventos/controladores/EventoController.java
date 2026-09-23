@@ -25,7 +25,7 @@ public class EventoController {
     private final EventoService eventoService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO', 'PARTICIPANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     @Operation(summary = "Listar eventos segÃºn el alcance del usuario autenticado")
     public ResponseEntity<List<EventoResponse>> listar() {
         return ResponseEntity.ok(eventoService.listarTodos());

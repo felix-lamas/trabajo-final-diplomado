@@ -35,7 +35,7 @@ public class DashboardController {
     }
 
     @GetMapping("/dashboard/operativo")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'PERSONAL_CONTROL')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     public ResponseEntity<DashboardOperativoResponse> operativo() {
         return ResponseEntity.ok(dashboardService.obtenerDashboardOperativo());
     }

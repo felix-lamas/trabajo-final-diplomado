@@ -27,7 +27,7 @@ public class InscripcionController {
     private final InscripcionService inscripcionService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO', 'PARTICIPANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Inscribirse a un evento")
     public ResponseEntity<DetalleInscripcionResponse> inscribir(@Valid @RequestBody CrearInscripcionRequest request) {
@@ -35,21 +35,21 @@ public class InscripcionController {
     }
 
     @GetMapping("/mis-inscripciones")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO', 'PARTICIPANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
     @Operation(summary = "Listar inscripciones del usuario autenticado")
     public ResponseEntity<List<InscripcionResponse>> listarMisInscripciones() {
         return ResponseEntity.ok(inscripcionService.listarMisInscripciones());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO', 'PARTICIPANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     @Operation(summary = "Obtener detalle de una inscripción")
     public ResponseEntity<DetalleInscripcionResponse> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(inscripcionService.obtenerPorId(id));
     }
 
     @PatchMapping("/{id}/cancelar")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO', 'PARTICIPANTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
     @Operation(summary = "Cancelar inscripción propia")
     public ResponseEntity<Void> cancelar(@PathVariable UUID id) {
         inscripcionService.cancelar(id);

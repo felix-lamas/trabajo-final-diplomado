@@ -19,7 +19,7 @@ public class AsistenciaController {
     private final AsistenciaService asistenciaService;
 
     @GetMapping("/evento/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'PERSONAL_CONTROL')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     public ResponseEntity<List<AsistenciaResponse>> listarPorEvento(@PathVariable UUID id) {
         List<AsistenciaResponse> response = asistenciaService.obtenerAsistenciasPorEvento(id)
                 .stream()
@@ -28,9 +28,16 @@ public class AsistenciaController {
                         .nombreParticipante(a.getInscripcion().getUsuario().getNombres() + " " + a.getInscripcion().getUsuario().getApellidos())
                         .documentoIdentidad(a.getInscripcion().getUsuario().getCi())
                         .codigoParticipante(a.getInscripcion().getCodigoParticipante())
-                        .evento(a.getInscripcion().getEvento().getTitulo())
+                        .evento(a.getSesionEvento().getEvento().getTitulo())
+                        .sesionEventoId(a.getSesionEvento().getId())
+                        .sesion(a.getSesionEvento().getNombre())
                         .fechaHoraRegistro(a.getFechaHoraRegistro())
-                        .usuarioControl(a.getUsuarioControl().getNombres() + " " + a.getUsuarioControl().getApellidos())
+                        .registradoPor(a.getRegistradoPor() != null
+                                ? a.getRegistradoPor().getNombres() + " " + a.getRegistradoPor().getApellidos()
+                                : null)
+                        .distanciaMetros(a.getDistanciaMetros())
+                        .precisionGpsMetros(a.getPrecisionGpsMetros())
+                        .resultadoValidacion(a.getResultadoValidacion().name())
                         .observacion(a.getObservacion())
                         .build())
                 .collect(Collectors.toList());

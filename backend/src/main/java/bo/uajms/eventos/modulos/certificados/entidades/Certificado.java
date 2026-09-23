@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "certificados")
@@ -52,7 +53,22 @@ public class Certificado extends EntidadBase {
     @Column(name = "archivo_pdf_url", length = 255)
     private String archivoPdfUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_certificado", nullable = false, length = 20)
+    @Builder.Default
+    private TipoCertificado tipoCertificado = TipoCertificado.NO_CURRICULAR;
+
+    @Column(name = "horas_academicas")
+    private Integer horasAcademicas;
+
+    @Column(name = "porcentaje_asistencia", precision = 5, scale = 2)
+    private BigDecimal porcentajeAsistencia;
+
     public enum EstadoCertificado {
         GENERADO, DESCARGADO, ANULADO
+    }
+
+    public enum TipoCertificado {
+        CURRICULAR, NO_CURRICULAR
     }
 }

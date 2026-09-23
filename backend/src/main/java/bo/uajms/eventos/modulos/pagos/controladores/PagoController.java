@@ -28,14 +28,14 @@ public class PagoController {
     private final PagoService pagoService;
 
     @PostMapping("/{id}/comprobante")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
     @Operation(summary = "Subir comprobante de pago")
     public ResponseEntity<PagoResponse> subirComprobante(@PathVariable UUID id, @RequestParam("archivo") MultipartFile archivo) {
         return ResponseEntity.ok(pagoService.subirComprobante(id, archivo));
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registrar un pago")
     public ResponseEntity<PagoResponse> registrarPago(@Valid @RequestBody RegistrarPagoRequest request) {
@@ -43,7 +43,7 @@ public class PagoController {
     }
 
     @GetMapping("/mis-pagos")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
     @Operation(summary = "Listar pagos del usuario autenticado")
     public ResponseEntity<List<PagoResponse>> listarMisPagos() {
         return ResponseEntity.ok(pagoService.listarMisPagos());
@@ -64,7 +64,7 @@ public class PagoController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'ESTUDIANTE', 'PARTICIPANTE_EXTERNO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
     @Operation(summary = "Obtener detalle de un pago")
     public ResponseEntity<PagoResponse> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(pagoService.obtenerPorId(id));

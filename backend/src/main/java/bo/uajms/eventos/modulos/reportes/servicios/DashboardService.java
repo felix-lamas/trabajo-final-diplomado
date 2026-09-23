@@ -3,25 +3,26 @@ package bo.uajms.eventos.modulos.reportes.servicios;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.certificados.repositorios.CertificadoRepository;
-import bo.uajms.eventos.modulos.codigo_qr.entidades.CodigoQr;
-import bo.uajms.eventos.modulos.codigo_qr.repositorios.CodigoQrRepository;
-import bo.uajms.eventos.modulos.encuestas.entidades.TipoPreguntaEncuesta;
-import bo.uajms.eventos.modulos.encuestas.repositorios.EncuestaRepository;
-import bo.uajms.eventos.modulos.encuestas.repositorios.RespuestaEncuestaRepository;
 import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.pagos.entidades.EstadoPago;
 import bo.uajms.eventos.modulos.pagos.entidades.Pago;
 import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
-import bo.uajms.eventos.modulos.reportes.dtos.*;
+import bo.uajms.eventos.modulos.reportes.dtos.DashboardAcademicoResponse;
+import bo.uajms.eventos.modulos.reportes.dtos.DashboardEjecutivoResponse;
+import bo.uajms.eventos.modulos.reportes.dtos.DashboardOperativoResponse;
+import bo.uajms.eventos.modulos.reportes.dtos.ReporteDataResponse;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,98 +34,63 @@ public class DashboardService {
     private final CertificadoRepository certificadoRepository;
     private final PagoRepository pagoRepository;
     private final AsistenciaRepository asistenciaRepository;
-    private final CodigoQrRepository codigoQrRepository;
-    private final EncuestaRepository encuestaRepository;
-    private final RespuestaEncuestaRepository respuestaEncuestaRepository;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     public DashboardEjecutivoResponse obtenerDashboardEjecutivo() {
         BigDecimal totalIngresos = obtenerPagosSegunAlcance().stream()
-                .filter(p -> p.getEstado() == EstadoPago.VALIDADO)
-                .map(p -> p.getMonto())
+                .filter(pago -> pago.getEstado() == EstadoPago.APROBADO)
+                .map(Pago::getMonto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         long totalAsistentes = asistenciaRepository.findAll().stream()
-                .map(a -> a.getInscripcion().getId())
+                .map(asistencia -> asistencia.getInscripcion().getId())
                 .distinct()
                 .count();
-        long totalEncuestas = encuestaRepository.count();
-
-        List<Map<String, Object>> promedioPorEvento = eventoRepository.findAll().stream()
-                .map(e -> Map.<String, Object>of(
-                        "eventoId", e.getId().toString(),
-                        "evento", e.getTitulo(),
-                        "promedio", redondear(respuestaEncuestaRepository.promedioCalificacionPorEvento(
-                                e.getId(),
-                                TipoPreguntaEncuesta.CALIFICACION
-                        ))
-                ))
-                .toList();
 
         return DashboardEjecutivoResponse.builder()
                 .totalEventos(eventoRepository.count())
                 .totalUsuarios(usuarioRepository.count())
-                .totalParticipantes(usuarioRepository.count()) // Simplificado a total cuentas registradas
+                .totalParticipantes(usuarioRepository.count())
                 .totalInscripciones(inscripcionRepository.count())
                 .totalCertificados(certificadoRepository.count())
                 .ingresosGenerados(totalIngresos)
-                .nivelSatisfaccion(calcularPromedioGlobalSatisfaccion())
-                .participacionEncuestas(calcularParticipacion(totalEncuestas, totalAsistentes))
-                .promedioSatisfaccionPorEvento(promedioPorEvento)
+                .nivelSatisfaccion(0.0)
+                .participacionEncuestas(0.0)
+                .promedioSatisfaccionPorEvento(List.of())
                 .build();
     }
 
     public DashboardAcademicoResponse obtenerDashboardAcademico() {
-        // Generar listas estructuradas simuladas con datos base del repositorio para visualización fluida de analítica
-        List<Map<String, Object>> facs = new ArrayList<>();
-        facs.add(Map.of("name", "Facultad de Ciencias y Tecnología", "value", 450));
-        facs.add(Map.of("name", "Facultad de Ciencias Económicas", "value", 320));
-        facs.add(Map.of("name", "Facultad de Humanidades", "value", 180));
-        facs.add(Map.of("name", "Facultad de Ciencias de la Salud", "value", 210));
-
-        List<Map<String, Object>> carreras = new ArrayList<>();
-        carreras.add(Map.of("name", "Ingeniería de Sistemas", "value", 280));
-        carreras.add(Map.of("name", "Administración de Empresas", "value", 150));
-        carreras.add(Map.of("name", "Contaduría Pública", "value", 170));
-        carreras.add(Map.of("name", "Derecho", "value", 120));
-
-        List<Map<String, Object>> cats = new ArrayList<>();
-        cats.add(Map.of("name", "Congreso Académico", "value", 4));
-        cats.add(Map.of("name", "Seminario Científico", "value", 8));
-        cats.add(Map.of("name", "Taller Práctico", "value", 12));
-
-        List<Map<String, Object>> periodos = new ArrayList<>();
-        periodos.add(Map.of("periodo", "Enero - Marzo", "inscritos", 340));
-        periodos.add(Map.of("periodo", "Abril - Junio", "inscritos", 780));
+        Map<String, Long> eventosPorCategoria = eventoRepository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        evento -> evento.getCategoria().getNombre(),
+                        Collectors.counting()
+                ));
+        List<Map<String, Object>> categorias = eventosPorCategoria.entrySet().stream()
+                .map(entry -> Map.<String, Object>of("name", entry.getKey(), "value", entry.getValue()))
+                .toList();
 
         return DashboardAcademicoResponse.builder()
-                .participacionPorFacultad(facs)
-                .participacionPorCarrera(carreras)
-                .participacionPorCategoria(cats)
-                .participacionPorPeriodo(periodos)
+                .participacionPorFacultad(List.of())
+                .participacionPorCarrera(List.of())
+                .participacionPorCategoria(categorias)
+                .participacionPorPeriodo(List.of())
                 .build();
     }
 
     public DashboardOperativoResponse obtenerDashboardOperativo() {
-        long qrsUsados = contarQrsUsadosSegunAlcance();
-        long asistenciasRegistradas = contarAsistenciasSegunAlcance();
-
-        List<Pago> pagos = obtenerPagosSegunAlcanceOperativo();
-
+        List<Pago> pagos = obtenerPagosSegunAlcance();
         long pagosPendientes = pagos.stream()
-                .filter(p -> p.getEstado() == EstadoPago.PENDIENTE)
+                .filter(pago -> pago.getEstado() == EstadoPago.PENDIENTE_VALIDACION)
                 .count();
-
         long pagosValidados = pagos.stream()
-                .filter(p -> p.getEstado() == EstadoPago.VALIDADO)
+                .filter(pago -> pago.getEstado() == EstadoPago.APROBADO)
                 .count();
-
         long activos = eventoRepository.findAll().stream()
-                .filter(e -> e.getEstado() == EstadoEvento.PUBLICADO || e.getEstado() == EstadoEvento.EN_CURSO)
+                .filter(evento -> evento.getEstado() == EstadoEvento.PUBLICADO)
                 .count();
-
         long finalizados = eventoRepository.findAll().stream()
-                .filter(e -> e.getEstado() == EstadoEvento.FINALIZADO)
+                .filter(evento -> evento.getEstado() == EstadoEvento.FINALIZADO)
                 .count();
 
         return DashboardOperativoResponse.builder()
@@ -132,120 +98,49 @@ public class DashboardService {
                 .eventosFinalizados(finalizados)
                 .pagosPendientes(pagosPendientes)
                 .pagosValidados(pagosValidados)
-                .qrUtilizados(qrsUsados)
-                .asistenciasRegistradas(asistenciasRegistradas)
+                .qrUtilizados(0)
+                .asistenciasRegistradas(contarAsistenciasSegunAlcance())
                 .build();
     }
 
     public ReporteDataResponse generarReporte(String tipo) {
         List<Map<String, Object>> filas = new ArrayList<>();
-        
         if ("eventos".equalsIgnoreCase(tipo)) {
-            eventoRepository.findAll().forEach(e -> filas.add(Map.of(
-                    "titulo", e.getTitulo(),
-                    "fecha", e.getFechaInicio().toString(),
-                    "cupos", e.getCupoMaximo(),
-                    "estado", e.getEstado().name()
-            )));
+            eventoRepository.findAll().forEach(evento -> filas.add(Map.of(
+                    "titulo", evento.getTitulo(), "fecha", evento.getFechaInicio().toString(),
+                    "cupos", evento.getCupoMaximo(), "estado", evento.getEstado().name())));
         } else if ("pagos".equalsIgnoreCase(tipo)) {
-            obtenerPagosSegunAlcance().forEach(p -> filas.add(Map.of(
-                    "referencia", p.getNumeroReferencia(),
-                    "monto", p.getMonto(),
-                    "estado", p.getEstado().name(),
-                    "inscripcionId", p.getInscripcion().getId().toString()
-            )));
+            obtenerPagosSegunAlcance().forEach(pago -> filas.add(Map.of(
+                    "referencia", pago.getNumeroReferencia(), "monto", pago.getMonto(),
+                    "estado", pago.getEstado().name(), "inscripcionId", pago.getInscripcion().getId().toString())));
         } else if ("certificados".equalsIgnoreCase(tipo)) {
-            certificadoRepository.findAll().forEach(c -> filas.add(Map.of(
-                    "codigo", c.getCodigoCertificado(),
-                    "participante", c.getUsuario().getNombres() + " " + c.getUsuario().getApellidos(),
-                    "evento", c.getEvento().getTitulo(),
-                    "estado", c.getEstado().name()
-            )));
+            certificadoRepository.findAll().forEach(certificado -> filas.add(Map.of(
+                    "codigo", certificado.getCodigoCertificado(),
+                    "participante", certificado.getUsuario().getNombres() + " " + certificado.getUsuario().getApellidos(),
+                    "evento", certificado.getEvento().getTitulo(), "estado", certificado.getEstado().name())));
         } else {
-            inscripcionRepository.findAll().forEach(i -> filas.add(Map.of(
-                    "participante", i.getUsuario().getNombres() + " " + i.getUsuario().getApellidos(),
-                    "ci", i.getUsuario().getCi(),
-                    "evento", i.getEvento().getTitulo(),
-                    "codigo", i.getCodigoParticipante() != null ? i.getCodigoParticipante() : "N/A"
-            )));
+            inscripcionRepository.findAll().forEach(inscripcion -> filas.add(Map.of(
+                    "participante", inscripcion.getUsuario().getNombres() + " " + inscripcion.getUsuario().getApellidos(),
+                    "ci", inscripcion.getUsuario().getCi(), "evento", inscripcion.getEvento().getTitulo(),
+                    "codigo", inscripcion.getCodigoParticipante() != null ? inscripcion.getCodigoParticipante() : "N/A")));
         }
-
         return ReporteDataResponse.builder()
-                .tipoReporte(tipo.toUpperCase())
-                .totalRegistros(filas.size())
-                .filas(filas)
-                .build();
+                .tipoReporte(tipo.toUpperCase()).totalRegistros(filas.size()).filas(filas).build();
     }
 
     private List<Pago> obtenerPagosSegunAlcance() {
         if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
             return pagoRepository.findAll();
         }
-
         UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
         return pagoRepository.findByInscripcionEventoOrganizadorId(organizadorId);
-    }
-
-    private List<Pago> obtenerPagosSegunAlcanceOperativo() {
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")
-                || usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")) {
-            return pagoRepository.findAll();
-        }
-
-        UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
-        return pagoRepository.findByInscripcionEventoOrganizadorId(organizadorId);
-    }
-
-    private long contarQrsUsadosSegunAlcance() {
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")
-                || usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")) {
-            return codigoQrRepository.findAll().stream()
-                    .filter(q -> q.getEstadoQr() == CodigoQr.EstadoQr.UTILIZADO)
-                    .count();
-        }
-
-        UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
-        return codigoQrRepository.countByEstadoQrAndCredencialEventoOrganizadorId(
-                CodigoQr.EstadoQr.UTILIZADO,
-                organizadorId
-        );
     }
 
     private long contarAsistenciasSegunAlcance() {
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")
-                || usuarioAutenticadoService.tieneRol("PERSONAL_CONTROL")) {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
             return asistenciaRepository.count();
         }
-
         UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
-        return asistenciaRepository.countByInscripcionEventoOrganizadorId(organizadorId);
-    }
-
-    private Double calcularPromedioGlobalSatisfaccion() {
-        List<Double> promedios = eventoRepository.findAll().stream()
-                .map(e -> respuestaEncuestaRepository.promedioCalificacionPorEvento(e.getId(), TipoPreguntaEncuesta.CALIFICACION))
-                .filter(Objects::nonNull)
-                .toList();
-
-        if (promedios.isEmpty()) {
-            return 0.0;
-        }
-
-        double promedio = promedios.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-        return redondear(promedio);
-    }
-
-    private Double calcularParticipacion(long respuestas, long asistentes) {
-        if (asistentes == 0) {
-            return 0.0;
-        }
-        return redondear((respuestas * 100.0) / asistentes);
-    }
-
-    private Double redondear(Double valor) {
-        if (valor == null) {
-            return 0.0;
-        }
-        return BigDecimal.valueOf(valor).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return asistenciaRepository.countBySesionEventoEventoOrganizadorId(organizadorId);
     }
 }
