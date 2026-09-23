@@ -2,6 +2,7 @@ package bo.uajms.eventos.modulos.usuarios.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.seguridad.JwtService;
+import bo.uajms.eventos.core.seguridad.RolSistema;
 import bo.uajms.eventos.modulos.usuarios.dtos.LoginRequest;
 import bo.uajms.eventos.modulos.usuarios.dtos.LoginResponse;
 import bo.uajms.eventos.modulos.usuarios.dtos.RecuperarContrasenaRequest;
@@ -31,6 +32,7 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -54,14 +56,22 @@ public class AutenticacionServicio {
 
     @Transactional
     public LoginResponse registrar(RegistroUsuarioRequest request) {
-        if (usuarioRepository.existsByCorreoElectronico(request.getCorreoElectronico())) {
+        validarRegistro(request);
+        String correoNormalizado = normalizarCorreo(request.getCorreoElectronico());
+
+        if (usuarioRepository.existsByCorreoElectronicoIgnoreCase(correoNormalizado)) {
             throw new NegocioException("El correo electronico ya esta registrado");
         }
         if (usuarioRepository.existsByCi(request.getCi())) {
             throw new NegocioException("El CI ya esta registrado");
         }
+        if (request.getRu() != null && !request.getRu().isBlank()
+                && usuarioRepository.existsByRu(request.getRu().trim())) {
+            throw new NegocioException("El RU ya esta registrado");
+        }
 
         Usuario usuario = usuarioMapper.deRegistroRequest(request);
+        usuario.setCorreoElectronico(correoNormalizado);
         usuario.setContrasena(passwordEncoder.encode(request.getContrasena()));
 
         String nombreRol = "USUARIO";
@@ -88,19 +98,21 @@ public class AutenticacionServicio {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
+        String correoNormalizado = normalizarCorreo(request.getCorreoElectronico());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getCorreoElectronico(),
+                        correoNormalizado,
                         request.getContrasena()
                 )
         );
 
-        Usuario usuario = usuarioRepository.findByCorreoElectronico(request.getCorreoElectronico())
+        Usuario usuario = usuarioRepository.findByCorreoElectronicoIgnoreCase(correoNormalizado)
                 .orElseThrow();
 
         List<String> roles = usuarioRolRepository.findByUsuarioId(usuario.getId())
                 .stream()
                 .map(ur -> ur.getRol().getNombre())
+                .filter(RolSistema::esOficial)
                 .toList();
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getCorreoElectronico());
@@ -114,7 +126,7 @@ public class AutenticacionServicio {
 
     @Transactional
     public void solicitarRecuperacion(RecuperarContrasenaRequest request) {
-        usuarioRepository.findByCorreoElectronico(request.getCorreoElectronico())
+        usuarioRepository.findByCorreoElectronicoIgnoreCase(normalizarCorreo(request.getCorreoElectronico()))
                 .ifPresent(this::generarYEnviarTokenRecuperacion);
     }
 
@@ -174,5 +186,23 @@ public class AutenticacionServicio {
             token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         } while (tokenRecuperacionRepository.existsByToken(token));
         return token;
+    }
+
+    private void validarRegistro(RegistroUsuarioRequest request) {
+        if (!request.getContrasena().equals(request.getConfirmacionContrasena())) {
+            throw new NegocioException("La contrasena y su confirmacion no coinciden");
+        }
+
+        boolean tieneRu = request.getRu() != null && !request.getRu().isBlank();
+        if (request.getTipoUsuario() == Usuario.TipoUsuario.INTERNO && !tieneRu) {
+            throw new NegocioException("El RU es obligatorio para usuarios UAJMS");
+        }
+        if (request.getTipoUsuario() == Usuario.TipoUsuario.EXTERNO && tieneRu) {
+            throw new NegocioException("El RU solo corresponde a usuarios UAJMS");
+        }
+    }
+
+    private String normalizarCorreo(String correo) {
+        return correo.trim().toLowerCase(Locale.ROOT);
     }
 }

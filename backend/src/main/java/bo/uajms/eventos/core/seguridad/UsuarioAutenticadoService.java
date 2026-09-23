@@ -18,6 +18,9 @@ public class UsuarioAutenticadoService {
     private final UsuarioRepository usuarioRepository;
 
     public boolean tieneRol(String rol) {
+        if (!RolSistema.esOficial(rol)) {
+            return false;
+        }
         Authentication authentication = obtenerAutenticacion();
         if (!esAutenticacionValida(authentication)) {
             return false;
@@ -34,7 +37,7 @@ public class UsuarioAutenticadoService {
             throw new SeguridadException("Se requiere un usuario autenticado");
         }
 
-        return usuarioRepository.findByCorreoElectronico(authentication.getName())
+        return usuarioRepository.findByCorreoElectronicoIgnoreCase(authentication.getName())
                 .orElseThrow(() -> new SeguridadException("Usuario autenticado no encontrado"));
     }
 

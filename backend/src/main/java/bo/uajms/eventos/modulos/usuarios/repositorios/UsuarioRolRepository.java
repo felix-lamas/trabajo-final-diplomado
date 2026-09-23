@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface UsuarioRolRepository extends JpaRepository<UsuarioRol, UUID> {
     List<UsuarioRol> findByUsuarioId(UUID usuarioId);
+    boolean existsByUsuarioIdAndRolNombre(UUID usuarioId, String nombreRol);
+    void deleteByUsuarioId(UUID usuarioId);
 }

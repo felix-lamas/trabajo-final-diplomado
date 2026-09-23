@@ -40,11 +40,11 @@ public class DatosInicialesSeed implements CommandLineRunner {
     @Transactional
     public void run(String... args) {
         Map<String, Rol> roles = cargarSeguridad();
-        crearUsuarioDemo("admin@demo.local", "DEMO-ADMIN", "Administrador", "Demo",
+        crearUsuarioDemo("admin@demo.local", "DEMO-ADMIN", "RU-DEMO-ADMIN", "Administrador", "Demo",
                 Usuario.TipoUsuario.INTERNO, roles.get("ADMINISTRADOR"));
-        crearUsuarioDemo("organizador@demo.local", "DEMO-ORGANIZADOR", "Organizador", "Demo",
+        crearUsuarioDemo("organizador@demo.local", "DEMO-ORGANIZADOR", "RU-DEMO-ORG", "Organizador", "Demo",
                 Usuario.TipoUsuario.INTERNO, roles.get("ORGANIZADOR"));
-        crearUsuarioDemo("usuario@demo.local", "DEMO-USUARIO", "Usuario", "Demo",
+        crearUsuarioDemo("usuario@demo.local", "DEMO-USUARIO", null, "Usuario", "Demo",
                 Usuario.TipoUsuario.EXTERNO, roles.get("USUARIO"));
     }
 
@@ -87,7 +87,7 @@ public class DatosInicialesSeed implements CommandLineRunner {
         }
     }
 
-    private void crearUsuarioDemo(String correo, String ci, String nombres, String apellidos,
+    private void crearUsuarioDemo(String correo, String ci, String ru, String nombres, String apellidos,
                                   Usuario.TipoUsuario tipoUsuario, Rol rol) {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(correo).orElseGet(() ->
                 usuarioRepository.save(Usuario.builder()
@@ -96,6 +96,8 @@ public class DatosInicialesSeed implements CommandLineRunner {
                         .nombres(nombres)
                         .apellidos(apellidos)
                         .ci(ci)
+                        .ru(ru)
+                        .celular("70000000")
                         .tipoUsuario(tipoUsuario)
                         .build()));
         boolean asignado = usuarioRolRepository.findByUsuarioId(usuario.getId()).stream()

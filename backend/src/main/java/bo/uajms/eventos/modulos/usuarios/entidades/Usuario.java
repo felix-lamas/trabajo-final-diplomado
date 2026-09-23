@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usuario")
 @Getter
@@ -32,6 +34,9 @@ public class Usuario extends EntidadBase {
     @Column(name = "ci", nullable = false, unique = true, length = 20)
     private String ci;
 
+    @Column(name = "ru", unique = true, length = 20)
+    private String ru;
+
     @Column(name = "celular", length = 20)
     private String celular;
 
@@ -48,7 +53,29 @@ public class Usuario extends EntidadBase {
     @Column(name = "tipo_usuario", nullable = false, length = 20)
     private TipoUsuario tipoUsuario;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_solicitud_organizador", nullable = false, length = 20)
+    @Builder.Default
+    private EstadoSolicitudOrganizador estadoSolicitudOrganizador = EstadoSolicitudOrganizador.NINGUNA;
+
+    @Column(name = "fecha_solicitud_organizador")
+    private LocalDateTime fechaSolicitudOrganizador;
+
+    @Column(name = "fecha_resolucion_organizador")
+    private LocalDateTime fechaResolucionOrganizador;
+
+    @Column(name = "motivo_rechazo_organizador", length = 500)
+    private String motivoRechazoOrganizador;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "solicitud_resuelta_por_id")
+    private Usuario solicitudResueltaPor;
+
     public enum TipoUsuario {
         INTERNO, EXTERNO
+    }
+
+    public enum EstadoSolicitudOrganizador {
+        NINGUNA, PENDIENTE, APROBADA, RECHAZADA
     }
 }

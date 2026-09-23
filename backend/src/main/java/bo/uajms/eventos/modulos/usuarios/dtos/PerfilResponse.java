@@ -17,7 +17,9 @@ public class PerfilResponse {
     private String apellidos;
     private String correoElectronico;
     private String ci;
+    private String ru;
     private String celular;
     private String tipoUsuario;
+    private String estadoSolicitudOrganizador;
     private List<String> roles;
 }

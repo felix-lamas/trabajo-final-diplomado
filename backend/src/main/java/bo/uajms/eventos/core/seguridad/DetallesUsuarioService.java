@@ -29,13 +29,16 @@ public class DetallesUsuarioService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByCorreoElectronico(username)
+        Usuario usuario = usuarioRepository.findByCorreoElectronicoIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         // Obtener roles del usuario
         usuarioRolRepository.findByUsuarioId(usuario.getId()).forEach(ur -> {
+            if (!RolSistema.esOficial(ur.getRol().getNombre())) {
+                return;
+            }
             authorities.add(new SimpleGrantedAuthority("ROLE_" + ur.getRol().getNombre()));
             
             // Obtener permisos del rol

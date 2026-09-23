@@ -27,7 +27,7 @@ public class AutenticacionControlador {
     private final AutenticacionServicio autenticacionServicio;
 
     @PostMapping("/registro")
-    @Operation(summary = "Registrar un nuevo usuario (Estudiante o Externo)")
+    @Operation(summary = "Registrar un nuevo usuario UAJMS o externo")
     public ResponseEntity<LoginResponse> registrar(@Valid @RequestBody RegistroUsuarioRequest request) {
         return ResponseEntity.ok(autenticacionServicio.registrar(request));
     }

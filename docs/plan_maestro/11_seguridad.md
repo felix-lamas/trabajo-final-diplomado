@@ -108,3 +108,11 @@ La reestructuración del backend posterior a las fases de ownership conserva `Us
 Los módulos de credencial/QR permanente y Control de acceso fueron retirados porque no pertenecen al modelo final. Por tanto, las secciones históricas anteriores describen correcciones realizadas antes de su retirada, pero sus endpoints ya no forman parte de la API vigente. El futuro QR temporal de asistencia no está implementado en esta fase.
 
 `SesionEvento` y la relación única `Inscripcion + SesionEvento` en Asistencia preparan el control de duplicados por sesión. La implementación completa de QR temporal, GPS, validación de ventana horaria y persistencia física queda pendiente de migraciones y fases posteriores. No se modificó la configuración JWT ni se introdujeron secretos.
+
+## Usuarios, roles y promoción a organizador
+
+El registro público crea siempre un usuario con rol `USUARIO`; el contrato no acepta roles y no permite alta directa como `ORGANIZADOR` o `ADMINISTRADOR`. Se validan confirmación de contraseña, correo, CI y RU único cuando el tipo es UAJMS. La contraseña continúa almacenándose mediante BCrypt. La verificación institucional externa del RU no está implementada porque no existe una integración institucional disponible; solo se aplica validación estructural y unicidad local.
+
+La autenticación reconoce exclusivamente `ADMINISTRADOR`, `ORGANIZADOR` y `USUARIO`, incluso si una base anterior conserva registros técnicos con otros nombres. El perfil y el cambio de contraseña resuelven siempre al usuario autenticado mediante `UsuarioAutenticadoService` y no aceptan un identificador de tercero ni cambios de rol.
+
+La solicitud de organizador se almacena dentro de `Usuario` con estado, fechas, motivo de rechazo y administrador resolutor. Solo `USUARIO` puede crearla y solo `ADMINISTRADOR` puede listar, aprobar o rechazar. La aprobación reemplaza la asignación funcional por `ORGANIZADOR`; el rechazo conserva `USUARIO`. No se creó una entidad ni endpoint que permita autoasignarse privilegios.

@@ -18,6 +18,7 @@ public class UsuarioMapper {
                 .correoElectronico(dto.getCorreoElectronico())
                 .contrasena(dto.getContrasena())
                 .ci(dto.getCi())
+                .ru(normalizarOpcional(dto.getRu()))
                 .celular(dto.getCelular())
                 .tipoUsuario(dto.getTipoUsuario())
                 .build();
@@ -31,7 +32,10 @@ public class UsuarioMapper {
         dto.setApellidos(usuario.getApellidos());
         dto.setCorreoElectronico(usuario.getCorreoElectronico());
         dto.setCi(usuario.getCi());
+        dto.setRu(usuario.getRu());
+        dto.setCelular(usuario.getCelular());
         dto.setTipoUsuario(usuario.getTipoUsuario().name());
+        dto.setEstadoSolicitudOrganizador(estadoSolicitud(usuario));
         dto.setRoles(roles);
         return dto;
     }
@@ -44,9 +48,21 @@ public class UsuarioMapper {
                 .apellidos(usuario.getApellidos())
                 .correoElectronico(usuario.getCorreoElectronico())
                 .ci(usuario.getCi())
+                .ru(usuario.getRu())
                 .celular(usuario.getCelular())
                 .tipoUsuario(usuario.getTipoUsuario().name())
+                .estadoSolicitudOrganizador(estadoSolicitud(usuario))
                 .roles(roles)
                 .build();
+    }
+
+    private String normalizarOpcional(String valor) {
+        return valor == null || valor.isBlank() ? null : valor.trim();
+    }
+
+    private String estadoSolicitud(Usuario usuario) {
+        return usuario.getEstadoSolicitudOrganizador() == null
+                ? Usuario.EstadoSolicitudOrganizador.NINGUNA.name()
+                : usuario.getEstadoSolicitudOrganizador().name();
     }
 }
