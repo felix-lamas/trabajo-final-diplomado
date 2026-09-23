@@ -2,6 +2,8 @@ package bo.uajms.eventos.modulos.reportes.controladores;
 
 import bo.uajms.eventos.modulos.reportes.dtos.*;
 import bo.uajms.eventos.modulos.reportes.servicios.DashboardService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,8 +12,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping({"/api/v1", "/api"})
 @RequiredArgsConstructor
+@Tag(name = "Dashboards y reportes",
+        description = "Contrato canonico /api/v1. Las rutas equivalentes bajo /api se conservan como aliases legacy.")
+@SecurityRequirement(name = "bearerAuth")
 public class DashboardController {
 
     private final DashboardService dashboardService;
@@ -68,7 +73,9 @@ public class DashboardController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     public ResponseEntity<byte[]> exportarPdf(@RequestParam String tipo) {
         // Simulación lógica de generación de archivos binarios institucionales
-        byte[] mockPdf = "CONTENIDO_REPORTE_OFICIAL_UAJMS_PDF_BINARY".getBytes();
+        ReporteDataResponse reporte = dashboardService.generarReporte(tipo);
+        byte[] mockPdf = ("REPORTE_UAJMS_PDF|" + reporte.getTipoReporte() + "|"
+                + reporte.getTotalRegistros()).getBytes(java.nio.charset.StandardCharsets.UTF_8);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte_" + tipo + ".pdf")
                 .contentType(MediaType.APPLICATION_PDF)
@@ -78,7 +85,9 @@ public class DashboardController {
     @GetMapping("/reportes/exportar/excel")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     public ResponseEntity<byte[]> exportarExcel(@RequestParam String tipo) {
-        byte[] mockExcel = "CONTENIDO_REPORTE_OFICIAL_UAJMS_EXCEL_BINARY".getBytes();
+        ReporteDataResponse reporte = dashboardService.generarReporte(tipo);
+        byte[] mockExcel = ("REPORTE_UAJMS_EXCEL|" + reporte.getTipoReporte() + "|"
+                + reporte.getTotalRegistros()).getBytes(java.nio.charset.StandardCharsets.UTF_8);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte_" + tipo + ".xlsx")
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))

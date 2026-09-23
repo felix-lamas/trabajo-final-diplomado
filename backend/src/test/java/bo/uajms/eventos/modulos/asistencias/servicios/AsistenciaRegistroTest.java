@@ -7,6 +7,7 @@ import bo.uajms.eventos.modulos.asistencias.entidades.Asistencia;
 import bo.uajms.eventos.modulos.asistencias.infraestructura.QrAsistenciaTemporal;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.eventos.entidades.Evento;
+import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.entidades.*;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
@@ -36,7 +37,7 @@ class AsistenciaRegistroTest {
 
     @BeforeEach void setup(){
         usuario=Usuario.builder().correoElectronico("u@test.local").build(); usuario.setId(UUID.randomUUID());
-        evento=Evento.builder().organizador(Usuario.builder().build()).build(); evento.setId(UUID.randomUUID());
+        evento=Evento.builder().organizador(Usuario.builder().build()).estado(EstadoEvento.PUBLICADO).build(); evento.setId(UUID.randomUUID());
         sesion=SesionEvento.builder().evento(evento).fecha(ahora.toLocalDate()).horaInicio(LocalTime.of(9,0)).horaFin(LocalTime.of(11,0)).requiereAsistencia(true).activa(true).latitud(new BigDecimal("-21.5354900")).longitud(new BigDecimal("-64.7295600")).radioMetros(100).build(); sesion.setId(UUID.randomUUID());
         inscripcion=Inscripcion.builder().usuario(usuario).evento(evento).estado(EstadoInscripcion.CONFIRMADA).build(); inscripcion.setId(UUID.randomUUID());
         qr=QrAsistenciaTemporal.builder().sesionEvento(sesion).activo(true).emitidoEn(ahora.minusSeconds(30)).expiraEn(ahora.plusSeconds(90)).build();
@@ -67,6 +68,10 @@ class AsistenciaRegistroTest {
     @Test void noSeAlmacenanCoordenadasDelParticipante(){ prepararValido();when(asistenciaRepository.saveAndFlush(any())).thenAnswer(i->i.getArgument(0));Asistencia a=service.registrar(request);assertNotNull(a.getDistanciaMetros());assertNotNull(a.getPrecisionGpsMetros());assertTrue(Arrays.stream(Asistencia.class.getDeclaredFields()).noneMatch(f->f.getName().equals("latitud")||f.getName().equals("longitud"))); }
     @Test void registroNoEliminaAsistenciaHistorica(){ prepararValido();when(asistenciaRepository.saveAndFlush(any())).thenAnswer(i->i.getArgument(0));service.registrar(request);verify(asistenciaRepository,never()).delete(any());verify(asistenciaRepository,never()).deleteAll(); }
     @Test void haversineMismoPuntoEsCero(){ assertEquals(0d,AsistenciaService.haversine(-21.53549,-64.72956,-21.53549,-64.72956),0.001); }
+    @Test void eventoPublicadoPermiteAsistencia(){ prepararValido();when(asistenciaRepository.saveAndFlush(any())).thenAnswer(i->i.getArgument(0));assertDoesNotThrow(()->service.registrar(request)); }
+    @Test void eventoCanceladoRechazaAsistencia(){ evento.setEstado(EstadoEvento.CANCELADO);prepararConInscripcion();assertThrows(NegocioException.class,()->service.registrar(request));sinEscrituras(); }
+    @Test void eventoFinalizadoRechazaAsistencia(){ evento.setEstado(EstadoEvento.FINALIZADO);prepararConInscripcion();assertThrows(NegocioException.class,()->service.registrar(request));sinEscrituras(); }
+    @Test void eventoBorradorRechazaAsistencia(){ evento.setEstado(EstadoEvento.BORRADOR);prepararConInscripcion();assertThrows(NegocioException.class,()->service.registrar(request));sinEscrituras(); }
 
     private void prepararValido(){ prepararConInscripcion(); lenient().when(asistenciaRepository.existsByInscripcionIdAndSesionEventoId(inscripcion.getId(),sesion.getId())).thenReturn(false); }
     private void prepararConInscripcion(){ prepararHastaQr(); when(inscripcionRepository.findByUsuarioIdAndEventoId(usuario.getId(),evento.getId())).thenReturn(Optional.of(inscripcion)); }

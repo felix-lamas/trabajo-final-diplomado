@@ -14,6 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import java.nio.charset.StandardCharsets;
 
 import java.util.List;
 import java.util.UUID;
@@ -68,6 +74,20 @@ public class PagoController {
     @Operation(summary = "Obtener detalle de un pago")
     public ResponseEntity<PagoResponse> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(pagoService.obtenerPorId(id));
+    }
+
+    @GetMapping("/{id}/comprobante")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR', 'USUARIO')")
+    @Operation(summary = "Descargar comprobante con autorizacion por propietario o evento")
+    public ResponseEntity<Resource> descargarComprobante(@PathVariable UUID id) {
+        PagoService.ComprobanteDescarga descarga = pagoService.descargarComprobante(id);
+        ContentDisposition disposition = ContentDisposition.attachment()
+                .filename(descarga.nombreArchivo(), StandardCharsets.UTF_8)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .contentType(MediaType.parseMediaType(descarga.tipoContenido()))
+                .body(descarga.recurso());
     }
 
     @PatchMapping("/{id}/validar")

@@ -1,6 +1,8 @@
 package bo.uajms.eventos.modulos.inscripciones.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
+import bo.uajms.eventos.core.excepciones.ConflictoException;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
@@ -48,12 +50,14 @@ public class InscripcionService {
 
         // Regla: Unicidad
         if (inscripcionRepository.existsByUsuarioIdAndEventoId(usuario.getId(), evento.getId())) {
-            throw new NegocioException("Ya te encuentras inscrito en este evento");
+            throw new ConflictoException(CodigosError.INSCRIPTION_DUPLICATED,
+                    "Ya te encuentras inscrito en este evento");
         }
 
         // Regla: Estado del evento
         if (evento.getEstado() != EstadoEvento.PUBLICADO) {
-            throw new NegocioException("No se permiten inscripciones para este evento en su estado actual: " + evento.getEstado());
+            throw new NegocioException(CodigosError.EVENT_NOT_PUBLISHED,
+                    "No se permiten inscripciones para este evento en su estado actual: " + evento.getEstado());
         }
 
         if (!Boolean.TRUE.equals(evento.getRequiereInscripcion())) {
@@ -63,7 +67,8 @@ public class InscripcionService {
         // Regla: Cupos
         if (Boolean.TRUE.equals(evento.getCupoLimitado())
                 && (evento.getCupoDisponible() == null || evento.getCupoDisponible() <= 0)) {
-            throw new NegocioException("Ya no quedan cupos disponibles para este evento");
+            throw new NegocioException(CodigosError.INSCRIPTION_CAPACITY_FULL,
+                    "Ya no quedan cupos disponibles para este evento");
         }
 
         if (evento.getTipoInscripcion() == TipoInscripcion.PAGO

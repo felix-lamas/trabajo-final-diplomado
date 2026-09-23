@@ -154,3 +154,17 @@ Solo se emite para eventos `FINALIZADO`, inscripción `CONFIRMADA` y pago `APROB
 El código de verificación usa un UUID aleatorio completo y único. El endpoint público devuelve solo institución, participante, evento, tipo, horas, porcentaje, fecha, código y estado; no expone CI, RU, correo, teléfono, pago ni datos de ubicación. El PDF se genera bajo autorización e incorpora un QR independiente que apunta a la URL absoluta configurable `CERTIFICATE_VERIFICATION_BASE_URL` y al endpoint `/api/v1/certificados/verificar/{codigo}`. Este QR no reutiliza el mecanismo temporal de asistencia.
 
 Flyway deberá materializar `UNIQUE(inscripcion_id)` y `UNIQUE(codigo_certificado)` y reconciliar los datos históricos antes de activar validación estricta. Los certificados históricos incompletos se conservan y no reciben asistencias inventadas.
+
+## Cierre de hallazgos del backend y contrato API — Fase 7-B
+
+Los dashboards ejecutivo, académico y operativo, y los reportes de eventos, participantes, pagos y certificados, derivan al organizador del contexto autenticado. `ADMINISTRADOR` conserva alcance global; `ORGANIZADOR` recibe exclusivamente datos relacionados con sus eventos; `USUARIO` no tiene acceso a estas operaciones. Las exportaciones PDF y Excel conservan su implementación provisional, pero validan el mismo alcance antes de producir una respuesta. El contrato canónico se publica bajo `/api/v1`; los aliases históricos bajo `/api` se mantienen temporalmente por compatibilidad y se documentan como legacy.
+
+El comprobante de pago puede descargarse mediante `GET /api/v1/pagos/{id}/comprobante`. El servicio comprueba primero el scope global, por evento o por usuario y solo después resuelve el archivo dentro del directorio seguro. La respuesta usa el MIME validado y un nombre lógico; nunca expone la ruta ni el nombre físico interno.
+
+El registro de asistencia vuelve a verificar que el evento se encuentre `PUBLICADO`, además de las reglas existentes de inscripción, sesión, QR, tiempo y GPS. Los eventos `BORRADOR`, `EN_REVISION`, `RECHAZADO`, `CANCELADO` o `FINALIZADO` no admiten nuevas asistencias.
+
+Las respuestas de error usan códigos estables independientes del mensaje humano y un esquema común. La falta de autenticación y los JWT inválidos producen `401`, un rol insuficiente produce `403`, los recursos inexistentes o fuera de scope producen `404`, y los conflictos de estado o unicidad producen `409` cuando corresponde. Los errores inesperados se registran en servidor y no devuelven stack traces, SQL, nombres de clase ni rutas físicas.
+
+Los tokens de recuperación se generan aleatoriamente, el valor plano se entrega únicamente al mecanismo de correo y la persistencia conserva SHA-256. La validación vuelve a calcular el hash, respeta expiración y uso único. Los tokens históricos almacenados en texto plano dejan de ser válidos; su depuración y reconciliación física queda pendiente para Flyway.
+
+La cobertura incorporada en esta fase es unitaria/Mockito y contractual; incluye aislamiento de dashboards/reportes, descarga autorizada de comprobantes, estados de evento para asistencia, JWT inválido, respuestas seguras y recuperación por hash. Las pruebas HTTP completas con Spring Security y las pruebas de integración sobre PostgreSQL permanecen como siguiente paso antes de consumir el contrato desde Angular o Flutter.

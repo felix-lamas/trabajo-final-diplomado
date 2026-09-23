@@ -1,6 +1,8 @@
 package bo.uajms.eventos.modulos.asistencias.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
+import bo.uajms.eventos.core.excepciones.ConflictoException;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.dtos.RegistrarAsistenciaRequest;
@@ -9,6 +11,7 @@ import bo.uajms.eventos.modulos.asistencias.infraestructura.QrAsistenciaTemporal
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
+import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
 import bo.uajms.eventos.modulos.inscripciones.entidades.*;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.sesiones.entidades.SesionEvento;
@@ -44,19 +47,23 @@ public class AsistenciaService {
         QrAsistenciaTemporal qr = qrService.resolverToken(request.getToken());
         SesionEvento sesion = qr.getSesionEvento();
         Inscripcion inscripcion = inscripcionRepository.findByUsuarioIdAndEventoId(usuario.getId(), sesion.getEvento().getId())
-                .orElseThrow(() -> new NegocioException("Inscripcion no valida para la sesion"));
+                .orElseThrow(() -> new NegocioException(CodigosError.INSCRIPTION_REQUIRED,
+                        "Inscripcion no valida para la sesion"));
         if (inscripcion.getEstado() != EstadoInscripcion.CONFIRMADA)
-            throw new NegocioException("Inscripcion no valida para la sesion");
+            throw new NegocioException(CodigosError.INSCRIPTION_NOT_CONFIRMED,
+                    "Inscripcion no valida para la sesion");
         if (!inscripcion.getUsuario().getId().equals(usuario.getId())
                 || !inscripcion.getEvento().getId().equals(sesion.getEvento().getId()))
-            throw new NegocioException("Inscripcion no valida para la sesion");
+            throw new NegocioException(CodigosError.INSCRIPTION_REQUIRED,
+                    "Inscripcion no valida para la sesion");
 
         LocalDateTime ahora = LocalDateTime.now(clock);
         validarSesion(sesion, ahora);
         qrService.validarVigencia(qr, ahora);
         BigDecimal distancia = validarGps(sesion, request);
         if (asistenciaRepository.existsByInscripcionIdAndSesionEventoId(inscripcion.getId(), sesion.getId()))
-            throw new NegocioException("La asistencia ya fue registrada para esta sesion");
+            throw new ConflictoException(CodigosError.ATTENDANCE_DUPLICATED,
+                    "La asistencia ya fue registrada para esta sesion");
 
         Asistencia asistencia = Asistencia.builder().inscripcion(inscripcion).sesionEvento(sesion)
                 .registradoPor(usuario).fechaHoraRegistro(ahora).distanciaMetros(distancia)
@@ -65,7 +72,8 @@ public class AsistenciaService {
         try {
             return asistenciaRepository.saveAndFlush(asistencia);
         } catch (DataIntegrityViolationException ex) {
-            throw new NegocioException("La asistencia ya fue registrada para esta sesion");
+            throw new ConflictoException(CodigosError.ATTENDANCE_DUPLICATED,
+                    "La asistencia ya fue registrada para esta sesion");
         }
     }
 
@@ -95,12 +103,19 @@ public class AsistenciaService {
     }
 
     private void validarSesion(SesionEvento sesion, LocalDateTime ahora) {
-        if (!Boolean.TRUE.equals(sesion.getActiva()) || !Boolean.TRUE.equals(sesion.getRequiereAsistencia()))
-            throw new NegocioException("La sesion no admite asistencia");
+        if (sesion.getEvento().getEstado() != EstadoEvento.PUBLICADO)
+            throw new NegocioException(CodigosError.EVENT_NOT_PUBLISHED, "El evento no esta publicado");
+        if (!Boolean.TRUE.equals(sesion.getActiva()))
+            throw new NegocioException(CodigosError.ATTENDANCE_SESSION_INACTIVE,
+                    "La sesion no admite asistencia");
+        if (!Boolean.TRUE.equals(sesion.getRequiereAsistencia()))
+            throw new NegocioException(CodigosError.ATTENDANCE_SESSION_NOT_REQUIRED,
+                    "La sesion no admite asistencia");
         LocalDateTime inicio = LocalDateTime.of(sesion.getFecha(), sesion.getHoraInicio());
         LocalDateTime fin = LocalDateTime.of(sesion.getFecha(), sesion.getHoraFin());
         if (ahora.isBefore(inicio) || ahora.isAfter(fin))
-            throw new NegocioException("La sesion esta fuera de la ventana de asistencia");
+            throw new NegocioException(CodigosError.ATTENDANCE_OUTSIDE_WINDOW,
+                    "La sesion esta fuera de la ventana de asistencia");
     }
 
     private BigDecimal validarGps(SesionEvento sesion, RegistrarAsistenciaRequest request) {
@@ -108,7 +123,8 @@ public class AsistenciaService {
         if (sesion.getEvento().getModalidad() == Modalidad.VIRTUAL
                 && sesion.getLatitud() == null && sesion.getLongitud() == null) return null;
         if (request.getPrecision().compareTo(PRECISION_MAXIMA) > 0)
-            throw new NegocioException("La precision GPS debe ser de 30 metros o mejor");
+            throw new NegocioException(CodigosError.ATTENDANCE_GPS_ACCURACY_INVALID,
+                    "La precision GPS debe ser de 30 metros o mejor");
         if (sesion.getLatitud() == null || sesion.getLongitud() == null || sesion.getRadioMetros() == null)
             throw new NegocioException("La sesion no tiene configuracion GPS valida");
         BigDecimal distancia = BigDecimal.valueOf(haversine(
@@ -116,7 +132,8 @@ public class AsistenciaService {
                 request.getLatitud().doubleValue(), request.getLongitud().doubleValue()))
                 .setScale(2, RoundingMode.HALF_UP);
         if (distancia.add(request.getPrecision()).compareTo(BigDecimal.valueOf(sesion.getRadioMetros())) > 0)
-            throw new NegocioException("La ubicacion esta fuera del radio permitido");
+            throw new NegocioException(CodigosError.ATTENDANCE_OUTSIDE_RADIUS,
+                    "La ubicacion esta fuera del radio permitido");
         return distancia;
     }
 
@@ -127,7 +144,7 @@ public class AsistenciaService {
                 || request.getLongitud().compareTo(BigDecimal.valueOf(-180)) < 0
                 || request.getLongitud().compareTo(BigDecimal.valueOf(180)) > 0
                 || request.getPrecision().signum() < 0)
-            throw new NegocioException("Datos GPS invalidos");
+            throw new NegocioException(CodigosError.ATTENDANCE_GPS_INVALID, "Datos GPS invalidos");
     }
 
     static double haversine(double lat1, double lon1, double lat2, double lon2) {

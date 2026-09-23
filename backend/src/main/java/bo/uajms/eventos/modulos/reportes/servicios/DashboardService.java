@@ -1,6 +1,8 @@
 package bo.uajms.eventos.modulos.reportes.servicios;
 
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
+import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.certificados.repositorios.CertificadoRepository;
 import bo.uajms.eventos.modulos.certificados.entidades.Certificado;
@@ -38,21 +40,21 @@ public class DashboardService {
     private final UsuarioAutenticadoService usuarioAutenticadoService;
 
     public DashboardEjecutivoResponse obtenerDashboardEjecutivo() {
+        boolean administrador = usuarioAutenticadoService.tieneRol("ADMINISTRADOR");
+        UUID organizadorId = administrador ? null : usuarioAutenticadoService.obtenerUsuario().getId();
         BigDecimal totalIngresos = obtenerPagosSegunAlcance().stream()
                 .filter(pago -> pago.getEstado() == EstadoPago.APROBADO)
                 .map(Pago::getMonto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        long totalAsistentes = asistenciaRepository.findAll().stream()
-                .map(asistencia -> asistencia.getInscripcion().getId())
-                .distinct()
-                .count();
-
         return DashboardEjecutivoResponse.builder()
-                .totalEventos(eventoRepository.count())
-                .totalUsuarios(usuarioRepository.count())
-                .totalParticipantes(usuarioRepository.count())
-                .totalInscripciones(inscripcionRepository.count())
+                .totalEventos(administrador ? eventoRepository.count() : eventoRepository.countByOrganizadorId(organizadorId))
+                .totalUsuarios(administrador ? usuarioRepository.count()
+                        : inscripcionRepository.countUsuariosDistintosByEventoOrganizadorId(organizadorId))
+                .totalParticipantes(administrador ? usuarioRepository.count()
+                        : inscripcionRepository.countUsuariosDistintosByEventoOrganizadorId(organizadorId))
+                .totalInscripciones(administrador ? inscripcionRepository.count()
+                        : inscripcionRepository.countByEventoOrganizadorId(organizadorId))
                 .totalCertificados(contarCertificadosSegunAlcance())
                 .ingresosGenerados(totalIngresos)
                 .nivelSatisfaccion(0.0)
@@ -62,7 +64,7 @@ public class DashboardService {
     }
 
     public DashboardAcademicoResponse obtenerDashboardAcademico() {
-        Map<String, Long> eventosPorCategoria = eventoRepository.findAll().stream()
+        Map<String, Long> eventosPorCategoria = obtenerEventosSegunAlcance().stream()
                 .collect(Collectors.groupingBy(
                         evento -> evento.getCategoria().getNombre(),
                         Collectors.counting()
@@ -87,12 +89,14 @@ public class DashboardService {
         long pagosValidados = pagos.stream()
                 .filter(pago -> pago.getEstado() == EstadoPago.APROBADO)
                 .count();
-        long activos = eventoRepository.findAll().stream()
-                .filter(evento -> evento.getEstado() == EstadoEvento.PUBLICADO)
-                .count();
-        long finalizados = eventoRepository.findAll().stream()
-                .filter(evento -> evento.getEstado() == EstadoEvento.FINALIZADO)
-                .count();
+        boolean administrador = usuarioAutenticadoService.tieneRol("ADMINISTRADOR");
+        UUID organizadorId = administrador ? null : usuarioAutenticadoService.obtenerUsuario().getId();
+        long activos = administrador ? eventoRepository.findAll().stream()
+                .filter(evento -> evento.getEstado() == EstadoEvento.PUBLICADO).count()
+                : eventoRepository.countByOrganizadorIdAndEstado(organizadorId, EstadoEvento.PUBLICADO);
+        long finalizados = administrador ? eventoRepository.findAll().stream()
+                .filter(evento -> evento.getEstado() == EstadoEvento.FINALIZADO).count()
+                : eventoRepository.countByOrganizadorIdAndEstado(organizadorId, EstadoEvento.FINALIZADO);
 
         return DashboardOperativoResponse.builder()
                 .eventosActivos(activos)
@@ -107,7 +111,7 @@ public class DashboardService {
     public ReporteDataResponse generarReporte(String tipo) {
         List<Map<String, Object>> filas = new ArrayList<>();
         if ("eventos".equalsIgnoreCase(tipo)) {
-            eventoRepository.findAll().forEach(evento -> filas.add(Map.of(
+            obtenerEventosSegunAlcance().forEach(evento -> filas.add(Map.of(
                     "titulo", evento.getTitulo(), "fecha", evento.getFechaInicio().toString(),
                     "cupos", evento.getCupoMaximo(), "estado", evento.getEstado().name())));
         } else if ("pagos".equalsIgnoreCase(tipo)) {
@@ -119,14 +123,30 @@ public class DashboardService {
                     "codigo", certificado.getCodigoCertificado(),
                     "participante", certificado.getUsuario().getNombres() + " " + certificado.getUsuario().getApellidos(),
                     "evento", certificado.getEvento().getTitulo(), "estado", certificado.getEstado().name())));
-        } else {
-            inscripcionRepository.findAll().forEach(inscripcion -> filas.add(Map.of(
+        } else if ("participantes".equalsIgnoreCase(tipo)) {
+            obtenerInscripcionesSegunAlcance().forEach(inscripcion -> filas.add(Map.of(
                     "participante", inscripcion.getUsuario().getNombres() + " " + inscripcion.getUsuario().getApellidos(),
                     "ci", inscripcion.getUsuario().getCi(), "evento", inscripcion.getEvento().getTitulo(),
                     "codigo", inscripcion.getCodigoParticipante() != null ? inscripcion.getCodigoParticipante() : "N/A")));
+        } else {
+            throw new NegocioException(CodigosError.VALIDATION_ERROR, "Tipo de reporte no soportado");
         }
         return ReporteDataResponse.builder()
                 .tipoReporte(tipo.toUpperCase()).totalRegistros(filas.size()).filas(filas).build();
+    }
+
+    private List<bo.uajms.eventos.modulos.eventos.entidades.Evento> obtenerEventosSegunAlcance() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return eventoRepository.findAll();
+        }
+        return eventoRepository.findByOrganizadorId(usuarioAutenticadoService.obtenerUsuario().getId());
+    }
+
+    private List<bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion> obtenerInscripcionesSegunAlcance() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return inscripcionRepository.findAll();
+        }
+        return inscripcionRepository.findByEventoOrganizadorId(usuarioAutenticadoService.obtenerUsuario().getId());
     }
 
     private List<Pago> obtenerPagosSegunAlcance() {

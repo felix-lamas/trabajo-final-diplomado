@@ -19,6 +19,8 @@ import java.util.UUID;
 public interface EventoRepository extends JpaRepository<Evento, UUID> {
     List<Evento> findByEstado(EstadoEvento estado);
     List<Evento> findByOrganizadorId(UUID organizadorId);
+    long countByOrganizadorId(UUID organizadorId);
+    long countByOrganizadorIdAndEstado(UUID organizadorId, EstadoEvento estado);
     List<Evento> findByOrganizadorIdOrEstado(UUID organizadorId, EstadoEvento estado);
     List<Evento> findByCategoriaId(UUID categoriaId);
     List<Evento> findByCategoriaIdAndEstado(UUID categoriaId, EstadoEvento estado);

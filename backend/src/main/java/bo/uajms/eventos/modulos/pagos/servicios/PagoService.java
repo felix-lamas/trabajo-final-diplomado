@@ -15,6 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -93,6 +94,23 @@ public class PagoService {
         return pagoMapper.toResponse(obtenerPagoVisible(id));
     }
 
+    @Transactional(readOnly = true)
+    public ComprobanteDescarga descargarComprobante(UUID id) {
+        Pago pago = obtenerPagoVisible(id);
+        if (pago.getComprobanteUrl() == null || pago.getComprobanteTipoContenido() == null) {
+            throw new RecursoNoEncontradoException(CodigosError.PAYMENT_RECEIPT_NOT_FOUND,
+                    "Comprobante no encontrado");
+        }
+        Resource recurso;
+        try {
+            recurso = archivoSeguroServicio.cargarArchivo(pago.getComprobanteUrl());
+        } catch (NegocioException ex) {
+            throw new RecursoNoEncontradoException(CodigosError.PAYMENT_RECEIPT_NOT_FOUND,
+                    "Comprobante no encontrado");
+        }
+        return new ComprobanteDescarga(recurso, nombreLogico(pago), pago.getComprobanteTipoContenido());
+    }
+
     @Transactional
     public PagoResponse validarPago(UUID id, ValidarPagoRequest request) {
         Pago pago = obtenerPagoGestionableParaActualizar(id);
@@ -136,7 +154,8 @@ public class PagoService {
         if (inscripcion.getEvento().getTipoInscripcion() != TipoInscripcion.PAGO
                 || inscripcion.getEstado() != EstadoInscripcion.PENDIENTE_PAGO
                 || (pago.getEstado() != EstadoPago.PENDIENTE_PAGO && pago.getEstado() != EstadoPago.RECHAZADO))
-            throw new NegocioException("El pago no admite carga de comprobante en su estado actual");
+            throw new NegocioException(CodigosError.PAYMENT_INVALID_STATE,
+                    "El pago no admite carga de comprobante en su estado actual");
     }
 
     private void validarInscripcionPagadaPendiente(Inscripcion inscripcion) {
@@ -149,9 +168,11 @@ public class PagoService {
     private void validarPendienteConComprobante(Pago pago) {
         if (pago.getEstado() != EstadoPago.PENDIENTE_VALIDACION
                 || pago.getInscripcion().getEstado() != EstadoInscripcion.PENDIENTE_VALIDACION)
-            throw new NegocioException("El pago no esta pendiente de validacion");
+            throw new NegocioException(CodigosError.PAYMENT_INVALID_STATE,
+                    "El pago no esta pendiente de validacion");
         if (pago.getComprobanteUrl() == null || pago.getFechaCargaComprobante() == null)
-            throw new NegocioException("El pago no tiene comprobante");
+            throw new NegocioException(CodigosError.PAYMENT_RECEIPT_REQUIRED,
+                    "El pago no tiene comprobante");
     }
 
     private Pago obtenerPagoVisible(UUID id) {
@@ -183,6 +204,17 @@ public class PagoService {
     }
 
     private List<PagoResponse> mapear(List<Pago> pagos) { return pagos.stream().map(pagoMapper::toResponse).toList(); }
+    private String nombreLogico(Pago pago) {
+        String extension = switch (pago.getComprobanteTipoContenido()) {
+            case "image/jpeg" -> ".jpg";
+            case "image/png" -> ".png";
+            case "application/pdf" -> ".pdf";
+            default -> "";
+        };
+        return "comprobante-pago-" + pago.getId() + extension;
+    }
+
+    public record ComprobanteDescarga(Resource recurso, String nombreArchivo, String tipoContenido) {}
     private void exigirUsuario() { if (!usuarioAutenticadoService.tieneRol("USUARIO")) throw new AccessDeniedException("Se requiere rol USUARIO"); }
     private void exigirAdministrador() { if (!usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) throw new AccessDeniedException("Se requiere rol ADMINISTRADOR"); }
 }

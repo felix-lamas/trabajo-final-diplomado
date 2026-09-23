@@ -26,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+import bo.uajms.eventos.core.excepciones.CodigosError;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +36,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
+    private final SecurityErrorResponseWriter errorResponseWriter;
 
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
@@ -54,7 +56,9 @@ public class SecurityConfig {
                                 "/api/v1/certificados/verificar/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/api/v1/api-docs/**",
+                                "/api/v1/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,
@@ -68,6 +72,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .exceptionHandling(errors -> errors
+                        .authenticationEntryPoint((request, response, exception) ->
+                                errorResponseWriter.escribir(request, response, 401,
+                                        CodigosError.AUTH_REQUIRED, "Se requiere autenticacion"))
+                        .accessDeniedHandler((request, response, exception) ->
+                                errorResponseWriter.escribir(request, response, 403,
+                                        CodigosError.ACCESS_DENIED, "No tiene permisos para realizar esta operacion")))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

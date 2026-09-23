@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.usuarios.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.core.seguridad.RolSistema;
@@ -74,7 +75,7 @@ public class UsuarioServicio {
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
 
         if (!passwordEncoder.matches(request.getContrasenaActual(), usuario.getContrasena())) {
-            throw new NegocioException("La contraseña actual es incorrecta");
+            throw new NegocioException(CodigosError.PASSWORD_INVALID, "La contraseña actual es incorrecta");
         }
 
         if (!request.getNuevaContrasena().equals(request.getConfirmacion())) {

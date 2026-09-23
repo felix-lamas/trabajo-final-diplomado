@@ -4,6 +4,7 @@ import bo.uajms.eventos.modulos.eventos.dtos.*;
 import bo.uajms.eventos.modulos.eventos.servicios.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +35,14 @@ public class EventoController {
     }
 
     @GetMapping("/publicados")
+    @SecurityRequirements
     @Operation(summary = "Listar solo eventos publicados (Acceso Público)")
     public ResponseEntity<List<EventoResponse>> listarPublicados() {
         return ResponseEntity.ok(eventoService.listarPublicados());
     }
 
     @GetMapping("/publicados/buscar")
+    @SecurityRequirements
     @Operation(summary = "Buscar eventos publicados")
     public ResponseEntity<List<EventoResponse>> buscarPublicados(
             @RequestParam(required = false) String texto,
@@ -56,6 +59,7 @@ public class EventoController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirements
     @Operation(summary = "Obtener detalle completo de un evento")
     public ResponseEntity<EventoDetalleResponse> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(eventoService.buscarPorId(id));
@@ -133,6 +137,7 @@ public class EventoController {
     }
 
     @GetMapping("/categoria/{id}")
+    @SecurityRequirements
     @Operation(summary = "Filtrar eventos por categoría")
     public ResponseEntity<List<EventoResponse>> listarPorCategoria(@PathVariable UUID id) {
         return ResponseEntity.ok(eventoService.listarPorCategoria(id));

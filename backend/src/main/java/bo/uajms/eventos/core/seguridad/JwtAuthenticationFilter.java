@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import bo.uajms.eventos.core.excepciones.CodigosError;
+import io.jsonwebtoken.JwtException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final SecurityErrorResponseWriter errorResponseWriter;
 
     @Override
     protected void doFilterInternal(
@@ -38,20 +41,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        jwt = authHeader.substring(7);
-        correoUsuario = jwtService.extraerNombreUsuario(jwt);
+        try {
+            jwt = authHeader.substring(7);
+            correoUsuario = jwtService.extraerNombreUsuario(jwt);
 
-        if (correoUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(correoUsuario);
-            if (jwtService.esTokenValido(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (correoUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(correoUsuario);
+                if (jwtService.esTokenValido(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (JwtException | IllegalArgumentException | org.springframework.security.core.AuthenticationException ex) {
+            SecurityContextHolder.clearContext();
+            errorResponseWriter.escribir(request, response, HttpServletResponse.SC_UNAUTHORIZED,
+                    CodigosError.AUTH_INVALID_TOKEN, "El token de autenticacion no es valido");
+            return;
         }
         filterChain.doFilter(request, response);
     }

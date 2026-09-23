@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 
 import java.util.List;
 import java.util.UUID;
@@ -53,6 +54,7 @@ public class CertificadoController {
     }
 
     @GetMapping({"/certificados/verificar/{codigo}", "/verificacion-certificados/{codigo}"})
+    @SecurityRequirements
     public ResponseEntity<VerificacionCertificadoResponse> verificarPublico(@PathVariable String codigo) {
         return ResponseEntity.ok(certificadoService.verificarCertificadoPublico(codigo));
     }

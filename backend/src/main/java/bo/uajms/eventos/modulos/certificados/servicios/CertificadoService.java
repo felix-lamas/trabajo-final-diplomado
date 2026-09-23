@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.certificados.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
@@ -164,11 +165,13 @@ public class CertificadoService {
 
     private void validarCondicionesGenerales(Inscripcion inscripcion, Evento evento) {
         if (evento.getEstado() != EstadoEvento.FINALIZADO)
-            throw new NegocioException("El certificado solo puede emitirse para un evento FINALIZADO");
+            throw new NegocioException(CodigosError.CERTIFICATE_NOT_AVAILABLE,
+                    "El certificado solo puede emitirse para un evento FINALIZADO");
         if (!Boolean.TRUE.equals(evento.getEmiteCertificado()) || evento.getTipoCertificado() == null)
             throw new NegocioException("El evento no esta configurado para emitir certificados");
         if (inscripcion.getEstado() != EstadoInscripcion.CONFIRMADA)
-            throw new NegocioException("La inscripcion debe estar CONFIRMADA");
+            throw new NegocioException(CodigosError.CERTIFICATE_NOT_AVAILABLE,
+                    "La inscripcion debe estar CONFIRMADA");
         if (inscripcion.getUsuario() == null || inscripcion.getEvento() == null)
             throw new NegocioException("La inscripcion no tiene trazabilidad completa");
     }

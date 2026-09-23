@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class TokenRecuperacion extends EntidadBase {
 
+    /** Hash SHA-256 del token. El token plano nunca se persiste. */
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 

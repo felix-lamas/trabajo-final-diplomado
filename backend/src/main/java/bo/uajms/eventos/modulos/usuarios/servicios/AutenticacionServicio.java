@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.usuarios.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
 import bo.uajms.eventos.core.seguridad.JwtService;
 import bo.uajms.eventos.core.seguridad.RolSistema;
 import bo.uajms.eventos.modulos.usuarios.dtos.LoginRequest;
@@ -33,6 +34,10 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 
 @Service
 @RequiredArgsConstructor
@@ -136,12 +141,13 @@ public class AutenticacionServicio {
             throw new NegocioException("Las contrasenas no coinciden");
         }
 
-        TokenRecuperacion token = tokenRecuperacionRepository.findByToken(request.getToken())
-                .orElseThrow(() -> new NegocioException("Token invalido"));
+        TokenRecuperacion token = tokenRecuperacionRepository.findByToken(hashToken(request.getToken()))
+                .orElseThrow(() -> new NegocioException(CodigosError.PASSWORD_RESET_TOKEN_INVALID, "Token invalido"));
 
-        if (token.isUtilizado() || token.getFechaExpiracion().isBefore(LocalDateTime.now())) {
-            throw new NegocioException("Token expirado o ya utilizado");
-        }
+        if (token.isUtilizado())
+            throw new NegocioException(CodigosError.PASSWORD_RESET_TOKEN_USED, "Token ya utilizado");
+        if (token.getFechaExpiracion().isBefore(LocalDateTime.now()))
+            throw new NegocioException(CodigosError.PASSWORD_RESET_TOKEN_EXPIRED, "Token expirado");
 
         Usuario usuario = token.getUsuario();
         usuario.setContrasena(passwordEncoder.encode(request.getNuevaContrasena()));
@@ -162,7 +168,7 @@ public class AutenticacionServicio {
 
         String token = generarTokenUnico();
         TokenRecuperacion tokenEntity = TokenRecuperacion.builder()
-                .token(token)
+                .token(hashToken(token))
                 .usuario(usuario)
                 .fechaExpiracion(LocalDateTime.now().plusMinutes(30))
                 .utilizado(false)
@@ -184,8 +190,21 @@ public class AutenticacionServicio {
             byte[] bytes = new byte[32];
             SECURE_RANDOM.nextBytes(bytes);
             token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-        } while (tokenRecuperacionRepository.existsByToken(token));
+        } while (tokenRecuperacionRepository.existsByToken(hashToken(token)));
         return token;
+    }
+
+    private String hashToken(String token) {
+        if (token == null || token.isBlank()) {
+            throw new NegocioException(CodigosError.PASSWORD_RESET_TOKEN_INVALID, "Token invalido");
+        }
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256")
+                    .digest(token.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException ex) {
+            throw new IllegalStateException("SHA-256 no disponible", ex);
+        }
     }
 
     private void validarRegistro(RegistroUsuarioRequest request) {

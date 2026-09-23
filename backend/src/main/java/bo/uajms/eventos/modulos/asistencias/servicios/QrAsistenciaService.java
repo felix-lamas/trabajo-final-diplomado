@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.asistencias.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.dtos.QrAsistenciaResponse;
@@ -69,15 +70,18 @@ public class QrAsistenciaService {
 
     @Transactional(readOnly = true)
     public QrAsistenciaTemporal resolverToken(String token) {
-        if (token == null || token.isBlank()) throw new NegocioException("QR invalido");
-        return qrRepository.findByTokenHash(hash(token)).orElseThrow(() -> new NegocioException("QR invalido"));
+        if (token == null || token.isBlank()) throw new NegocioException(CodigosError.QR_INVALID, "QR invalido");
+        return qrRepository.findByTokenHash(hash(token))
+                .orElseThrow(() -> new NegocioException(CodigosError.QR_INVALID, "QR invalido"));
     }
 
     public void validarVigencia(QrAsistenciaTemporal qr, LocalDateTime ahora) {
         if (!Boolean.TRUE.equals(qr.getActivo()) || qr.getRevocadoEn() != null)
-            throw new NegocioException("QR revocado");
-        if (!ahora.isBefore(qr.getExpiraEn())) throw new NegocioException("QR expirado");
-        if (ahora.isBefore(qr.getEmitidoEn())) throw new NegocioException("QR invalido");
+            throw new NegocioException(CodigosError.QR_REVOKED, "QR revocado");
+        if (!ahora.isBefore(qr.getExpiraEn()))
+            throw new NegocioException(CodigosError.QR_EXPIRED, "QR expirado");
+        if (ahora.isBefore(qr.getEmitidoEn()))
+            throw new NegocioException(CodigosError.QR_INVALID, "QR invalido");
     }
 
     String hash(String token) {

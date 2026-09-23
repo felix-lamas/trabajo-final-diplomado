@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -96,6 +98,18 @@ public class ArchivoSeguroServicio {
     private boolean esImagen(String extension, String mime) {
         return ("jpg".equals(extension) || "jpeg".equals(extension) || "png".equals(extension))
                 && (mime.startsWith("image/"));
+    }
+
+    public Resource cargarArchivo(String rutaInterna) {
+        if (rutaInterna == null || rutaInterna.isBlank()) {
+            throw new NegocioException("El archivo solicitado no esta disponible");
+        }
+        Path raiz = Path.of(baseDir).toAbsolutePath().normalize();
+        Path archivo = raiz.resolve(rutaInterna).normalize();
+        if (!archivo.startsWith(raiz) || !Files.isRegularFile(archivo) || !Files.isReadable(archivo)) {
+            throw new NegocioException("El archivo solicitado no esta disponible");
+        }
+        return new FileSystemResource(archivo);
     }
 
     private void validarContenidoReal(String extension, String mimeDeclarado, String mimeDetectado) {

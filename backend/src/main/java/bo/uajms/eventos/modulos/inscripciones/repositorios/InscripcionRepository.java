@@ -18,6 +18,11 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> 
     boolean existsByUsuarioIdAndEventoId(UUID usuarioId, UUID eventoId);
     List<Inscripcion> findByUsuarioId(UUID usuarioId);
     List<Inscripcion> findByEventoId(UUID eventoId);
+    List<Inscripcion> findByEventoOrganizadorId(UUID organizadorId);
+    long countByEventoOrganizadorId(UUID organizadorId);
+
+    @Query("SELECT COUNT(DISTINCT i.usuario.id) FROM Inscripcion i WHERE i.evento.organizador.id = :organizadorId")
+    long countUsuariosDistintosByEventoOrganizadorId(@Param("organizadorId") UUID organizadorId);
     Optional<Inscripcion> findByIdAndUsuarioId(UUID id, UUID usuarioId);
     Optional<Inscripcion> findByIdAndEventoOrganizadorId(UUID id, UUID organizadorId);
     Optional<Inscripcion> findByUsuarioIdAndEventoId(UUID usuarioId, UUID eventoId);
