@@ -13,4 +13,5 @@ public interface CategoriaEventoRepository extends JpaRepository<CategoriaEvento
     boolean existsByNombreIgnoreCase(String nombre);
     boolean existsByNombreIgnoreCaseAndIdNot(String nombre, UUID id);
     List<CategoriaEvento> findByEstado(String estado);
+    Optional<CategoriaEvento> findByIdAndEstado(UUID id, String estado);
 }

@@ -10,6 +10,7 @@ import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
 import bo.uajms.eventos.modulos.eventos.entidades.Evento;
 import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
 import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
+import bo.uajms.eventos.modulos.eventos.entidades.PublicoObjetivo;
 import bo.uajms.eventos.modulos.eventos.mappers.EventoMapper;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
@@ -22,6 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -121,7 +124,8 @@ class EventoServiceAuthorizationTest {
         CategoriaEvento categoria = new CategoriaEvento();
         when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
                 .thenReturn(Optional.of(eventoPropio));
-        when(categoriaRepository.findById(categoriaId)).thenReturn(Optional.of(categoria));
+        categoria.setEstado("ACTIVO");
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
         when(eventoRepository.save(eventoPropio)).thenReturn(eventoPropio);
 
         assertDoesNotThrow(() -> eventoService.actualizar(eventoId, request));
@@ -161,7 +165,7 @@ class EventoServiceAuthorizationTest {
         when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(RecursoNoEncontradoException.class, () -> eventoService.cancelar(eventoId));
+        assertThrows(RecursoNoEncontradoException.class, () -> eventoService.cancelar(eventoId, "Motivo"));
 
         assertEquals(EstadoEvento.BORRADOR, eventoPropio.getEstado());
         verify(eventoRepository, never()).save(eventoPropio);
@@ -169,11 +173,9 @@ class EventoServiceAuthorizationTest {
 
     @Test
     void organizadorNoPuedeFinalizarEventoAjenoNiCambiarSuEstado() {
-        autenticarOrganizadorA();
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
-                .thenReturn(Optional.empty());
+        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
 
-        assertThrows(RecursoNoEncontradoException.class, () -> eventoService.finalizar(eventoId));
+        assertThrows(AccessDeniedException.class, () -> eventoService.finalizar(eventoId));
 
         assertEquals(EstadoEvento.BORRADOR, eventoPropio.getEstado());
         verify(eventoRepository, never()).save(eventoPropio);
@@ -183,7 +185,7 @@ class EventoServiceAuthorizationTest {
     void organizadorNoPuedePublicarEventoAunqueSeaConocidoPorId() {
         when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
 
-        assertThrows(RecursoNoEncontradoException.class, () -> eventoService.publicar(eventoId));
+        assertThrows(AccessDeniedException.class, () -> eventoService.publicar(eventoId));
 
         assertEquals(EstadoEvento.BORRADOR, eventoPropio.getEstado());
         verify(eventoRepository, never()).findById(eventoId);
@@ -193,19 +195,24 @@ class EventoServiceAuthorizationTest {
     @Test
     void administradorPuedeOperarEventoDeOtroOrganizador() {
         autenticarAdministrador();
+        eventoPropio.setEstado(EstadoEvento.PUBLICADO);
         when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(eventoPropio));
         when(eventoRepository.save(eventoPropio)).thenReturn(eventoPropio);
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizadorA);
 
-        assertDoesNotThrow(() -> eventoService.cancelar(eventoId));
+        assertDoesNotThrow(() -> eventoService.cancelar(eventoId, "Motivo administrativo"));
 
         assertEquals(EstadoEvento.CANCELADO, eventoPropio.getEstado());
         verify(eventoRepository).save(eventoPropio);
     }
 
     @Test
-    void administradorPuedePublicarEventoBorrador() {
+    void administradorPuedePublicarEventoEnRevision() {
         autenticarAdministrador();
+        eventoPropio.setEstado(EstadoEvento.EN_REVISION);
+        completarEvento(eventoPropio);
         when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(eventoPropio));
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizadorA);
 
         eventoService.publicar(eventoId);
 
@@ -226,12 +233,12 @@ class EventoServiceAuthorizationTest {
     @Test
     void organizadorListaSusEventosYLosPublicados() {
         autenticarOrganizadorA();
-        when(eventoRepository.findByOrganizadorIdOrEstado(organizadorAId, EstadoEvento.PUBLICADO))
+        when(eventoRepository.findByOrganizadorId(organizadorAId))
                 .thenReturn(List.of());
 
         eventoService.listarTodos();
 
-        verify(eventoRepository).findByOrganizadorIdOrEstado(organizadorAId, EstadoEvento.PUBLICADO);
+        verify(eventoRepository).findByOrganizadorId(organizadorAId);
     }
 
     @Test
@@ -258,19 +265,11 @@ class EventoServiceAuthorizationTest {
     @Test
     void organizadorListaSusEventosYLosPublicadosDeLaCategoria() {
         autenticarOrganizadorA();
-        when(eventoRepository.findVisiblesPorCategoriaParaOrganizador(
-                categoriaId,
-                organizadorAId,
-                EstadoEvento.PUBLICADO
-        )).thenReturn(List.of());
+        when(eventoRepository.findByCategoriaIdAndOrganizadorId(categoriaId, organizadorAId)).thenReturn(List.of());
 
         eventoService.listarPorCategoria(categoriaId);
 
-        verify(eventoRepository).findVisiblesPorCategoriaParaOrganizador(
-                categoriaId,
-                organizadorAId,
-                EstadoEvento.PUBLICADO
-        );
+        verify(eventoRepository).findByCategoriaIdAndOrganizadorId(categoriaId, organizadorAId);
     }
 
     private void comprobarEventoNoPublicadoInvisible(EstadoEvento estado) {
@@ -317,7 +316,28 @@ class EventoServiceAuthorizationTest {
         request.setCosto(BigDecimal.ZERO);
         request.setFechaInicio(LocalDate.now().plusDays(1));
         request.setFechaFin(LocalDate.now().plusDays(2));
+        request.setHoraInicio(LocalTime.of(8, 0));
+        request.setHoraFin(LocalTime.of(10, 0));
+        request.setUbicacion("Campus universitario");
+        request.setRequiereInscripcion(true);
+        request.setCupoLimitado(true);
         request.setCupoMaximo(20);
+        request.setEmiteCertificado(false);
+        request.setPublicoObjetivo(PublicoObjetivo.AMBOS);
         return request;
+    }
+
+    private void completarEvento(Evento evento) {
+        CategoriaEvento categoria = CategoriaEvento.builder().nombre("Academico").estado("ACTIVO").build();
+        evento.setCategoria(categoria);
+        evento.setDescripcion("Descripcion completa");
+        evento.setObjetivos("Objetivos completos");
+        evento.setModalidad(Modalidad.PRESENCIAL);
+        evento.setTipoInscripcion(TipoInscripcion.GRATUITO);
+        evento.setCosto(BigDecimal.ZERO);
+        evento.setFechaInicio(LocalDate.now().plusDays(1));
+        evento.setFechaFin(LocalDate.now().plusDays(1));
+        evento.setHoraInicio(LocalTime.of(8, 0));
+        evento.setHoraFin(LocalTime.of(10, 0));
     }
 }

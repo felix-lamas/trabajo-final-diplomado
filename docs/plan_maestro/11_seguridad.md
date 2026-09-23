@@ -116,3 +116,11 @@ El registro público crea siempre un usuario con rol `USUARIO`; el contrato no a
 La autenticación reconoce exclusivamente `ADMINISTRADOR`, `ORGANIZADOR` y `USUARIO`, incluso si una base anterior conserva registros técnicos con otros nombres. El perfil y el cambio de contraseña resuelven siempre al usuario autenticado mediante `UsuarioAutenticadoService` y no aceptan un identificador de tercero ni cambios de rol.
 
 La solicitud de organizador se almacena dentro de `Usuario` con estado, fechas, motivo de rechazo y administrador resolutor. Solo `USUARIO` puede crearla y solo `ADMINISTRADOR` puede listar, aprobar o rechazar. La aprobación reemplaza la asignación funcional por `ORGANIZADOR`; el rechazo conserva `USUARIO`. No se creó una entidad ni endpoint que permita autoasignarse privilegios.
+
+## Ciclo seguro de gestión de eventos
+
+El backend obtiene siempre al organizador desde el usuario autenticado; los DTO de creación y actualización no aceptan organizador, estado ni campos de auditoría. `ORGANIZADOR` crea en `BORRADOR`, edita únicamente recursos propios en `BORRADOR` o `RECHAZADO` y puede enviarlos a `EN_REVISION`. Los recursos ajenos se ocultan mediante consultas acotadas y respuesta `404`.
+
+Solo `ADMINISTRADOR` publica o rechaza eventos en revisión y finaliza eventos publicados cuya fecha y hora de fin ya transcurrieron. El rechazo y la cancelación exigen motivo. Ninguna transición permite reactivar eventos `CANCELADO` o `FINALIZADO`, y los endpoints públicos y filtros consultan exclusivamente eventos `PUBLICADO`.
+
+Las nuevas inscripciones se rechazan para cualquier estado distinto de `PUBLICADO`. Los eventos sin inscripción y los cupos ilimitados se tratan explícitamente, sin crear límites artificiales. La zona funcional usada para comprobar la finalización es `America/La_Paz`; la persistencia mantiene `LocalDate` y `LocalTime` sin conversiones implícitas de zona.

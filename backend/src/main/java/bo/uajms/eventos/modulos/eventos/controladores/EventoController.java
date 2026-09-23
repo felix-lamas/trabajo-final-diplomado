@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
+import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
 
 @RestController
 @RequestMapping("/api/v1/eventos")
@@ -37,6 +39,22 @@ public class EventoController {
         return ResponseEntity.ok(eventoService.listarPublicados());
     }
 
+    @GetMapping("/publicados/buscar")
+    @Operation(summary = "Buscar eventos publicados")
+    public ResponseEntity<List<EventoResponse>> buscarPublicados(
+            @RequestParam(required = false) String texto,
+            @RequestParam(required = false) UUID categoriaId,
+            @RequestParam(required = false) TipoInscripcion tipo,
+            @RequestParam(required = false) Modalidad modalidad) {
+        return ResponseEntity.ok(eventoService.buscarPublicados(texto, categoriaId, tipo, modalidad));
+    }
+
+    @GetMapping("/revision")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<List<EventoResponse>> listarEnRevision() {
+        return ResponseEntity.ok(eventoService.listarEnRevision());
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Obtener detalle completo de un evento")
     public ResponseEntity<EventoDetalleResponse> obtenerPorId(@PathVariable UUID id) {
@@ -44,7 +62,7 @@ public class EventoController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
+    @PreAuthorize("hasRole('ORGANIZADOR')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Crear nuevo evento")
     public ResponseEntity<EventoDetalleResponse> crear(@Valid @RequestBody CrearEventoRequest request) {
@@ -75,16 +93,39 @@ public class EventoController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{id}/enviar-revision")
+    @PreAuthorize("hasRole('ORGANIZADOR')")
+    public ResponseEntity<Void> enviarARevision(@PathVariable UUID id) {
+        eventoService.enviarARevision(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/rechazar")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<Void> rechazar(@PathVariable UUID id,
+                                          @Valid @RequestBody EventoRechazoRequest request) {
+        eventoService.rechazar(id, request.getMotivo());
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/volver-borrador")
+    @PreAuthorize("hasRole('ORGANIZADOR')")
+    public ResponseEntity<Void> volverABorrador(@PathVariable UUID id) {
+        eventoService.volverABorrador(id);
+        return ResponseEntity.ok().build();
+    }
+
     @PatchMapping("/{id}/cancelar")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     @Operation(summary = "Cambiar estado a CANCELADO")
-    public ResponseEntity<Void> cancelar(@PathVariable UUID id) {
-        eventoService.cancelar(id);
+    public ResponseEntity<Void> cancelar(@PathVariable UUID id,
+                                          @Valid @RequestBody EventoCancelacionRequest request) {
+        eventoService.cancelar(id, request.getMotivo());
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/finalizar")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Cambiar estado a FINALIZADO")
     public ResponseEntity<Void> finalizar(@PathVariable UUID id) {
         eventoService.finalizar(id);

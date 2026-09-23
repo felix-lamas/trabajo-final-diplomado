@@ -67,7 +67,7 @@ public class CertificadoService {
                 .archivoPdfUrl("https://storage.uajms.edu.bo/certificados/" + codigoCertificado + ".pdf")
                 .estado(Certificado.EstadoCertificado.GENERADO)
                 .tipoCertificado(Certificado.TipoCertificado.NO_CURRICULAR)
-                .horasAcademicas(evento.getCargaHoraria())
+                .horasAcademicas(evento.getHorasAcademicas())
                 .build();
 
         certificadoRepository.save(certificado);
@@ -121,7 +121,7 @@ public class CertificadoService {
                             .nombreCompleto(u.getNombres() + " " + u.getApellidos())
                             .ci(u.getCi())
                             .evento(c.getEvento().getTitulo())
-                            .cargaHoraria(c.getEvento().getCargaHoraria())
+                            .cargaHoraria(c.getEvento().getHorasAcademicas())
                             .tipoCertificado(c.getTipoCertificado().name())
                             .horasAcademicas(c.getHorasAcademicas())
                             .porcentajeAsistencia(c.getPorcentajeAsistencia())
@@ -145,7 +145,7 @@ public class CertificadoService {
                 .nombreCompleto(u.getNombres() + " " + u.getApellidos())
                 .ci(u.getCi())
                 .evento(c.getEvento().getTitulo())
-                .cargaHoraria(c.getEvento().getCargaHoraria())
+                .cargaHoraria(c.getEvento().getHorasAcademicas())
                 .tipoCertificado(c.getTipoCertificado().name())
                 .horasAcademicas(c.getHorasAcademicas())
                 .porcentajeAsistencia(c.getPorcentajeAsistencia())

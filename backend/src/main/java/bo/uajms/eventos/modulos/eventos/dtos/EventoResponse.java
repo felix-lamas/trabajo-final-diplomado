@@ -3,6 +3,8 @@ package bo.uajms.eventos.modulos.eventos.dtos;
 import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
 import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
 import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
+import bo.uajms.eventos.modulos.eventos.entidades.PublicoObjetivo;
+import bo.uajms.eventos.modulos.eventos.entidades.TipoCertificadoEvento;
 import lombok.Builder;
 import lombok.Data;
 
@@ -31,6 +33,12 @@ public class EventoResponse {
     private Integer cupoDisponible;
     private EstadoEvento estado;
     private String imagenPortada;
+    private Boolean requiereInscripcion;
+    private Boolean cupoLimitado;
+    private Boolean emiteCertificado;
+    private TipoCertificadoEvento tipoCertificado;
+    private Integer horasAcademicas;
+    private PublicoObjetivo publicoObjetivo;
     private UUID organizadorId;
     private String organizadorNombre;
 }

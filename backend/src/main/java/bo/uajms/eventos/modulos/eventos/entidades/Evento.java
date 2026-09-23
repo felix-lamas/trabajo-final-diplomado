@@ -64,22 +64,65 @@ public class Evento extends EntidadBase {
     @Column(length = 255)
     private String ubicacion;
 
+    @Column(length = 500)
+    private String direccion;
+
+    @Column(precision = 10, scale = 7)
+    private BigDecimal latitud;
+
+    @Column(precision = 10, scale = 7)
+    private BigDecimal longitud;
+
+    @Column(name = "radio_metros")
+    private Integer radioMetros;
+
     @Column(name = "enlace_virtual", length = 500)
     private String enlaceVirtual;
 
-    @Column(name = "cupo_maximo", nullable = false)
+    @Column(name = "requiere_inscripcion", nullable = false)
+    @Builder.Default
+    private Boolean requiereInscripcion = true;
+
+    @Column(name = "cupo_limitado", nullable = false)
+    @Builder.Default
+    private Boolean cupoLimitado = true;
+
+    @Column(name = "cupo_maximo")
     private Integer cupoMaximo;
 
-    @Column(name = "cupo_disponible", nullable = false)
+    @Column(name = "cupo_disponible")
     private Integer cupoDisponible;
 
-    @Column(name = "carga_horaria")
+    @Column(name = "emite_certificado", nullable = false)
     @Builder.Default
-    private Integer cargaHoraria = 20;
+    private Boolean emiteCertificado = false;
 
-    @Column(name = "asistencia_minima_cert")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_certificado", length = 20)
+    private TipoCertificadoEvento tipoCertificado;
+
+    @Column(name = "horas_academicas")
+    private Integer horasAcademicas;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "publico_objetivo", nullable = false, length = 20)
     @Builder.Default
-    private Integer asistenciaMinimaCert = 80;
+    private PublicoObjetivo publicoObjetivo = PublicoObjetivo.AMBOS;
+
+    @Column(name = "telefono_contacto", length = 20)
+    private String telefonoContacto;
+
+    @Column(name = "email_contacto", length = 100)
+    private String emailContacto;
+
+    @Column(name = "whatsapp_contacto", length = 20)
+    private String whatsappContacto;
+
+    @Column(name = "qr_pago_url", length = 500)
+    private String qrPagoUrl;
+
+    @Column(name = "instrucciones_pago", columnDefinition = "TEXT")
+    private String instruccionesPago;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
@@ -87,6 +130,22 @@ public class Evento extends EntidadBase {
 
     @Column(name = "imagen_portada", length = 500)
     private String imagenPortada;
+
+    @Column(name = "motivo_rechazo", length = 1000)
+    private String motivoRechazo;
+
+    @Column(name = "motivo_cancelacion", length = 1000)
+    private String motivoCancelacion;
+
+    @Column(name = "fecha_envio_revision")
+    private java.time.LocalDateTime fechaEnvioRevision;
+
+    @Column(name = "fecha_resolucion")
+    private java.time.LocalDateTime fechaResolucion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resuelto_por_id")
+    private Usuario resueltoPor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizador_id", nullable = false)

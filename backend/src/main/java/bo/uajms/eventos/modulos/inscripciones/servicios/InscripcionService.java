@@ -50,8 +50,13 @@ public class InscripcionService {
             throw new NegocioException("No se permiten inscripciones para este evento en su estado actual: " + evento.getEstado());
         }
 
+        if (!Boolean.TRUE.equals(evento.getRequiereInscripcion())) {
+            throw new NegocioException("Este evento no requiere inscripcion");
+        }
+
         // Regla: Cupos
-        if (evento.getCupoDisponible() <= 0) {
+        if (Boolean.TRUE.equals(evento.getCupoLimitado())
+                && (evento.getCupoDisponible() == null || evento.getCupoDisponible() <= 0)) {
             throw new NegocioException("Ya no quedan cupos disponibles para este evento");
         }
 
@@ -68,8 +73,10 @@ public class InscripcionService {
                 .build();
 
         // Actualizar cupo
-        evento.setCupoDisponible(evento.getCupoDisponible() - 1);
-        eventoRepository.save(evento);
+        if (Boolean.TRUE.equals(evento.getCupoLimitado())) {
+            evento.setCupoDisponible(evento.getCupoDisponible() - 1);
+            eventoRepository.save(evento);
+        }
 
         return inscripcionMapper.toDetalleResponse(inscripcionRepository.save(inscripcion));
     }
@@ -126,8 +133,10 @@ public class InscripcionService {
         
         // Devolver cupo
         Evento evento = inscripcion.getEvento();
-        evento.setCupoDisponible(evento.getCupoDisponible() + 1);
-        eventoRepository.save(evento);
+        if (Boolean.TRUE.equals(evento.getCupoLimitado())) {
+            evento.setCupoDisponible(evento.getCupoDisponible() + 1);
+            eventoRepository.save(evento);
+        }
 
         inscripcionRepository.save(inscripcion);
     }
