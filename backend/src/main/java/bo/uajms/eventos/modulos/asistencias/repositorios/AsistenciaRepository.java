@@ -10,6 +10,7 @@ import java.util.UUID;
 @Repository
 public interface AsistenciaRepository extends JpaRepository<Asistencia, UUID> {
     List<Asistencia> findByInscripcionId(UUID inscripcionId);
+    List<Asistencia> findByInscripcionUsuarioId(UUID usuarioId);
     List<Asistencia> findBySesionEventoEventoId(UUID eventoId);
     boolean existsByInscripcionIdAndSesionEventoId(UUID inscripcionId, UUID sesionEventoId);
     boolean existsByInscripcionIdAndFechaEliminacionIsNull(UUID inscripcionId);

@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.inscripciones.repositorios;
 
 import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
+import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,7 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> 
     Optional<Inscripcion> findByIdAndUsuarioId(UUID id, UUID usuarioId);
     Optional<Inscripcion> findByIdAndEventoOrganizadorId(UUID id, UUID organizadorId);
     Optional<Inscripcion> findByUsuarioIdAndEventoId(UUID usuarioId, UUID eventoId);
+    Optional<Inscripcion> findByUsuarioIdAndEventoIdAndEstado(UUID usuarioId, UUID eventoId, EstadoInscripcion estado);
     Optional<Inscripcion> findByCodigoParticipante(String codigoParticipante);
     Optional<Inscripcion> findByCodigoParticipanteAndEventoOrganizadorId(String codigoParticipante, UUID organizadorId);
     Optional<Inscripcion> findByUsuarioCiAndEventoId(String ci, UUID eventoId);

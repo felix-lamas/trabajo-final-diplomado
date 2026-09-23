@@ -124,3 +124,13 @@ El backend obtiene siempre al organizador desde el usuario autenticado; los DTO 
 Solo `ADMINISTRADOR` publica o rechaza eventos en revisión y finaliza eventos publicados cuya fecha y hora de fin ya transcurrieron. El rechazo y la cancelación exigen motivo. Ninguna transición permite reactivar eventos `CANCELADO` o `FINALIZADO`, y los endpoints públicos y filtros consultan exclusivamente eventos `PUBLICADO`.
 
 Las nuevas inscripciones se rechazan para cualquier estado distinto de `PUBLICADO`. Los eventos sin inscripción y los cupos ilimitados se tratan explícitamente, sin crear límites artificiales. La zona funcional usada para comprobar la finalización es `America/La_Paz`; la persistencia mantiene `LocalDate` y `LocalTime` sin conversiones implícitas de zona.
+
+## Sesiones, QR temporal y asistencia
+
+`SesionEvento` aplica ownership mediante `SesionEvento -> Evento -> organizador`. `ADMINISTRADOR` tiene alcance global; `ORGANIZADOR` gestiona únicamente sesiones de eventos propios y `USUARIO` solo consulta sesiones de eventos donde posee una inscripción confirmada. Las sesiones iniciadas o históricas son inmutables desde la API y no pueden desactivarse retroactivamente.
+
+El QR de asistencia es infraestructura técnica separada del modelo conceptual. Se genera con 32 bytes de `SecureRandom`, se entrega una sola vez y solo se persiste su hash SHA-256. Dura dos minutos, pertenece a una sesión y puede ser compartido por sus participantes. La rotación bloquea la sesión y revoca emisiones activas anteriores; el QR no se consume globalmente.
+
+El registro obtiene al usuario desde JWT y deriva la inscripción a partir del usuario autenticado y del evento de la sesión. Exige inscripción `CONFIRMADA`, sesión activa y requerida, ventana inclusiva y QR vigente. Para sesiones presenciales, el backend calcula Haversine y acepta únicamente `distancia + precisión <= radio`, con precisión máxima de 30 metros. Las coordenadas del participante no se persisten.
+
+La entidad declara unicidad `inscripcion_id + sesion_evento_id`, y el servicio usa `saveAndFlush` para convertir carreras concurrentes en un rechazo de duplicado. La migración Flyway pendiente deberá crear esta restricción considerando el soft delete y una restricción/índice parcial que garantice una sola emisión QR activa por sesión. No se migraron asistencias históricas ni se inventaron horarios o coordenadas.

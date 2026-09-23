@@ -46,6 +46,7 @@ class AsistenciaServiceAuthorizationTest {
         ReflectionTestUtils.setField(evento, "id", eventoId);
 
         lenient().when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
+        lenient().when(usuarioAutenticadoService.tieneRol("ORGANIZADOR")).thenReturn(true);
         lenient().when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizador);
     }
 
