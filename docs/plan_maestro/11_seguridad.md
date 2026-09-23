@@ -134,3 +134,13 @@ El QR de asistencia es infraestructura técnica separada del modelo conceptual. 
 El registro obtiene al usuario desde JWT y deriva la inscripción a partir del usuario autenticado y del evento de la sesión. Exige inscripción `CONFIRMADA`, sesión activa y requerida, ventana inclusiva y QR vigente. Para sesiones presenciales, el backend calcula Haversine y acepta únicamente `distancia + precisión <= radio`, con precisión máxima de 30 metros. Las coordenadas del participante no se persisten.
 
 La entidad declara unicidad `inscripcion_id + sesion_evento_id`, y el servicio usa `saveAndFlush` para convertir carreras concurrentes en un rechazo de duplicado. La migración Flyway pendiente deberá crear esta restricción considerando el soft delete y una restricción/índice parcial que garantice una sola emisión QR activa por sesión. No se migraron asistencias históricas ni se inventaron horarios o coordenadas.
+
+## Flujo definitivo de inscripciones pagadas y comprobantes
+
+Los eventos gratuitos crean una inscripción `CONFIRMADA` y no crean un registro `Pago`. Los eventos pagados crean, dentro de la misma transacción, una inscripción y un único pago en `PENDIENTE_PAGO`; el monto se toma exclusivamente de `Evento.costo` y no forma parte del contrato enviado por el participante.
+
+La carga del comprobante está reservada al rol `USUARIO` propietario. La consulta acotada y el estado se verifican antes de invocar el almacenamiento. El backend limita el tamaño a 5 MB, admite JPEG, PNG y PDF, contrasta extensión, MIME declarado y contenido detectado, genera el nombre físico y conserva una referencia interna que no se expone en la respuesta. Una carga válida mueve pago e inscripción a `PENDIENTE_VALIDACION`.
+
+`ADMINISTRADOR` puede resolver globalmente y `ORGANIZADOR` solo pagos de sus eventos. La aprobación requiere comprobante y estado pendiente, cambia el pago a `APROBADO` y la inscripción a `CONFIRMADA`. El rechazo exige motivo, cambia el pago a `RECHAZADO` y devuelve la inscripción a `PENDIENTE_PAGO`; el reenvío reutiliza el mismo pago, incrementa el contador de intentos y vuelve a `PENDIENTE_VALIDACION`. Los pagos se bloquean durante carga y resolución para impedir dobles transiciones concurrentes.
+
+La inscripción bloquea el evento durante la comprobación de duplicidad y capacidad. Actualmente toda inscripción pagada pendiente reserva cupo y la cancelación lo libera. La caducidad de esa reserva requiere una decisión funcional futura. Flyway deberá materializar y reconciliar las restricciones de pago único por inscripción e inscripción única por usuario y evento, con tratamiento explícito del borrado lógico.

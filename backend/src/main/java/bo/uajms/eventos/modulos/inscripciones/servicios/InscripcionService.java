@@ -15,11 +15,15 @@ import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
 import bo.uajms.eventos.modulos.inscripciones.mappers.InscripcionMapper;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
+import bo.uajms.eventos.modulos.pagos.entidades.Pago;
+import bo.uajms.eventos.modulos.pagos.entidades.EstadoPago;
+import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,11 +37,13 @@ public class InscripcionService {
     private final EventoRepository eventoRepository;
     private final InscripcionMapper inscripcionMapper;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
+    private final PagoRepository pagoRepository;
+    private final Clock clock;
 
     @Transactional
     public DetalleInscripcionResponse inscribir(CrearInscripcionRequest request) {
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
-        Evento evento = eventoRepository.findById(request.getEventoId())
+        Evento evento = eventoRepository.findByIdForUpdate(request.getEventoId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Evento", request.getEventoId()));
 
         // Regla: Unicidad
@@ -60,6 +66,11 @@ public class InscripcionService {
             throw new NegocioException("Ya no quedan cupos disponibles para este evento");
         }
 
+        if (evento.getTipoInscripcion() == TipoInscripcion.PAGO
+                && (evento.getCosto() == null || evento.getCosto().signum() <= 0)) {
+            throw new NegocioException("El evento pagado no tiene monto valido");
+        }
+
         // Regla: Estado inicial basado en costo
         EstadoInscripcion estadoInicial = (evento.getTipoInscripcion() == TipoInscripcion.GRATUITO)
                 ? EstadoInscripcion.CONFIRMADA
@@ -68,7 +79,7 @@ public class InscripcionService {
         Inscripcion inscripcion = Inscripcion.builder()
                 .usuario(usuario)
                 .evento(evento)
-                .fechaInscripcion(LocalDateTime.now())
+                .fechaInscripcion(LocalDateTime.now(clock))
                 .estado(estadoInicial)
                 .build();
 
@@ -78,7 +89,14 @@ public class InscripcionService {
             eventoRepository.save(evento);
         }
 
-        return inscripcionMapper.toDetalleResponse(inscripcionRepository.save(inscripcion));
+        Inscripcion guardada = inscripcionRepository.save(inscripcion);
+        if (evento.getTipoInscripcion() == TipoInscripcion.PAGO) {
+            Pago pago = Pago.builder().inscripcion(guardada).monto(evento.getCosto())
+                    .fechaPago(LocalDateTime.now(clock)).estado(EstadoPago.PENDIENTE_PAGO)
+                    .intentosComprobante(0).build();
+            pagoRepository.save(pago);
+        }
+        return inscripcionMapper.toDetalleResponse(guardada);
     }
 
     @Transactional(readOnly = true)
@@ -122,7 +140,7 @@ public class InscripcionService {
     @Transactional
     public void cancelar(UUID id) {
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
-        Inscripcion inscripcion = inscripcionRepository.findByIdAndUsuarioId(id, usuario.getId())
+        Inscripcion inscripcion = inscripcionRepository.findByIdAndUsuarioForUpdate(id, usuario.getId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", id));
 
         if (inscripcion.getEstado() == EstadoInscripcion.CANCELADA || inscripcion.getEstado() == EstadoInscripcion.RECHAZADA) {

@@ -4,6 +4,9 @@ import bo.uajms.eventos.modulos.pagos.entidades.EstadoPago;
 import bo.uajms.eventos.modulos.pagos.entidades.Pago;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.repository.query.Param;
+import jakarta.persistence.LockModeType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,4 +30,16 @@ public interface PagoRepository extends JpaRepository<Pago, UUID> {
     
     @Query("SELECT p FROM Pago p JOIN p.inscripcion i WHERE i.usuario.id = :usuarioId")
     List<Pago> findByUsuarioId(UUID usuarioId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Pago p WHERE p.id = :id")
+    Optional<Pago> findByIdForUpdate(@Param("id") UUID id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Pago p WHERE p.id = :id AND p.inscripcion.usuario.id = :usuarioId")
+    Optional<Pago> findByIdAndUsuarioForUpdate(@Param("id") UUID id, @Param("usuarioId") UUID usuarioId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Pago p WHERE p.id = :id AND p.inscripcion.evento.organizador.id = :organizadorId")
+    Optional<Pago> findByIdAndOrganizadorForUpdate(@Param("id") UUID id, @Param("organizadorId") UUID organizadorId);
 }

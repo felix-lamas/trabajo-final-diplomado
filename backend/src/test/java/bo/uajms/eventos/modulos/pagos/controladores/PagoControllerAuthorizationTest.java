@@ -1,5 +1,6 @@
 package bo.uajms.eventos.modulos.pagos.controladores;
 
+import bo.uajms.eventos.modulos.pagos.dtos.ValidarPagoRequest;
 import bo.uajms.eventos.modulos.pagos.servicios.PagoService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -59,6 +61,22 @@ class PagoControllerAuthorizationTest {
 
         assertDoesNotThrow(() -> pagoController.listarTodos());
         verify(pagoService).listarTodos();
+    }
+
+    @Test
+    void usuarioNoPuedeAprobarNiRechazarPagos() {
+        autenticar("USUARIO");
+        UUID id = UUID.randomUUID();
+
+        assertThrows(AccessDeniedException.class, () -> pagoController.validarPago(id, new ValidarPagoRequest()));
+        assertThrows(AccessDeniedException.class, () -> pagoController.rechazarPago(id, new ValidarPagoRequest()));
+    }
+
+    @Test
+    void organizadorNoPuedeCargarComprobanteComoParticipante() {
+        autenticar("ORGANIZADOR");
+        assertThrows(AccessDeniedException.class,
+                () -> pagoController.subirComprobante(UUID.randomUUID(), null));
     }
 
     private void autenticar(String rol) {

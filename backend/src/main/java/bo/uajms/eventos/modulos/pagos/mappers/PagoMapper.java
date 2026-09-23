@@ -20,6 +20,9 @@ public class PagoMapper {
                 .fechaPago(pago.getFechaPago())
                 .estado(pago.getEstado())
                 .observacion(pago.getObservacion())
+                .motivoRechazo(pago.getMotivoRechazo())
+                .fechaResolucion(pago.getFechaResolucion())
+                .intentosComprobante(pago.getIntentosComprobante())
                 .comprobante(toComprobanteResponse(pago))
                 .build();
     }
@@ -29,9 +32,10 @@ public class PagoMapper {
 
         return ComprobantePagoResponse.builder()
                 .id(pago.getId())
-                .urlArchivo(pago.getComprobanteUrl())
                 .nombreArchivo(pago.getComprobanteNombreArchivo())
                 .tipoContenido(pago.getComprobanteTipoContenido())
+                .fechaCarga(pago.getFechaCargaComprobante())
+                .disponible(true)
                 .build();
     }
 }

@@ -44,6 +44,7 @@ public class ArchivoSeguroServicio {
             String extension = extensionNormalizada(archivo.getOriginalFilename());
             byte[] contenido = archivo.getBytes();
             String mimeDetectado = TIKA.detect(contenido, archivo.getOriginalFilename());
+            validarContenidoReal(extension, archivo.getContentType(), mimeDetectado);
 
             if (esImagen(extension, mimeDetectado)) {
                 contenido = optimizarImagen(contenido, extension);
@@ -55,7 +56,7 @@ public class ArchivoSeguroServicio {
             Files.write(destino, contenido);
 
             return new ArchivoGuardado(
-                    "/" + destino.toString().replace('\\', '/'),
+                    Path.of(baseDir).toAbsolutePath().normalize().relativize(destino).toString().replace('\\', '/'),
                     destino.getFileName().toString(),
                     mimeDetectado
             );
@@ -97,6 +98,19 @@ public class ArchivoSeguroServicio {
                 && (mime.startsWith("image/"));
     }
 
+    private void validarContenidoReal(String extension, String mimeDeclarado, String mimeDetectado) {
+        if (!MIME_PERMITIDOS.contains(mimeDetectado)) {
+            throw new NegocioException("El contenido real del archivo no esta permitido");
+        }
+        if (mimeDeclarado == null || !mimeDetectado.equalsIgnoreCase(mimeDeclarado)) {
+            throw new NegocioException("El tipo MIME declarado no coincide con el contenido real del archivo");
+        }
+        boolean coherente = ("pdf".equals(extension) && "application/pdf".equals(mimeDetectado))
+                || (("jpg".equals(extension) || "jpeg".equals(extension)) && "image/jpeg".equals(mimeDetectado))
+                || ("png".equals(extension) && "image/png".equals(mimeDetectado));
+        if (!coherente) throw new NegocioException("La extension no coincide con el contenido real del archivo");
+    }
+
     private byte[] optimizarImagen(byte[] contenido, String extension) throws IOException {
         BufferedImage original = ImageIO.read(new ByteArrayInputStream(contenido));
         if (original == null) {
@@ -126,7 +140,10 @@ public class ArchivoSeguroServicio {
 
     private Path prepararDestino(String subDirectorio, String extension) {
         String nombreSeguro = generarNombreSeguro() + "." + extension;
-        return Path.of(baseDir, subDirectorio, nombreSeguro).normalize();
+        Path raiz = Path.of(baseDir).toAbsolutePath().normalize();
+        Path directorio = raiz.resolve(subDirectorio).normalize();
+        if (!directorio.startsWith(raiz)) throw new NegocioException("Directorio de almacenamiento invalido");
+        return directorio.resolve(nombreSeguro).normalize();
     }
 
     private String generarNombreSeguro() {
@@ -146,5 +163,5 @@ public class ArchivoSeguroServicio {
         return originalFilename.substring(lastDot + 1).toLowerCase();
     }
 
-    public record ArchivoGuardado(String urlArchivo, String nombreArchivo, String tipoContenido) {}
+    public record ArchivoGuardado(String rutaInterna, String nombreArchivo, String tipoContenido) {}
 }

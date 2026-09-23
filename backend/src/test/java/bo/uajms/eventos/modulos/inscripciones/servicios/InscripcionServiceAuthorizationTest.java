@@ -14,6 +14,7 @@ import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
 import bo.uajms.eventos.modulos.inscripciones.mappers.InscripcionMapper;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
+import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,6 +53,9 @@ class InscripcionServiceAuthorizationTest {
 
     @Mock
     private UsuarioAutenticadoService usuarioAutenticadoService;
+
+    @Mock private PagoRepository pagoRepository;
+    @Mock private Clock clock;
 
     @InjectMocks
     private InscripcionService inscripcionService;
@@ -82,6 +89,8 @@ class InscripcionServiceAuthorizationTest {
         eventoB = crearEvento(eventoBId, organizadorB);
         inscripcionA = crearInscripcion(inscripcionAId, usuarioA, eventoA);
         inscripcionB = crearInscripcion(inscripcionBId, usuarioB, eventoB);
+        org.mockito.Mockito.lenient().when(clock.instant()).thenReturn(Instant.parse("2026-09-23T14:00:00Z"));
+        org.mockito.Mockito.lenient().when(clock.getZone()).thenReturn(ZoneId.of("America/La_Paz"));
     }
 
     @Test
@@ -125,7 +134,7 @@ class InscripcionServiceAuthorizationTest {
         autenticarUsuario(usuarioA);
         CrearInscripcionRequest request = new CrearInscripcionRequest(eventoAId);
         DetalleInscripcionResponse response = DetalleInscripcionResponse.builder().build();
-        when(eventoRepository.findById(eventoAId)).thenReturn(Optional.of(eventoA));
+        when(eventoRepository.findByIdForUpdate(eventoAId)).thenReturn(Optional.of(eventoA));
         when(inscripcionRepository.existsByUsuarioIdAndEventoId(usuarioA.getId(), eventoAId)).thenReturn(false);
         when(inscripcionRepository.save(any(Inscripcion.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -141,7 +150,7 @@ class InscripcionServiceAuthorizationTest {
     @Test
     void usuarioPuedeCancelarSuInscripcion() {
         autenticarUsuario(usuarioA);
-        when(inscripcionRepository.findByIdAndUsuarioId(inscripcionAId, usuarioA.getId()))
+        when(inscripcionRepository.findByIdAndUsuarioForUpdate(inscripcionAId, usuarioA.getId()))
                 .thenReturn(Optional.of(inscripcionA));
 
         assertDoesNotThrow(() -> inscripcionService.cancelar(inscripcionAId));
@@ -157,7 +166,7 @@ class InscripcionServiceAuthorizationTest {
         autenticarUsuario(usuarioA);
         EstadoInscripcion estadoOriginal = inscripcionB.getEstado();
         int cupoOriginal = eventoB.getCupoDisponible();
-        when(inscripcionRepository.findByIdAndUsuarioId(inscripcionBId, usuarioA.getId()))
+        when(inscripcionRepository.findByIdAndUsuarioForUpdate(inscripcionBId, usuarioA.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(RecursoNoEncontradoException.class, () -> inscripcionService.cancelar(inscripcionBId));

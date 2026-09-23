@@ -19,5 +19,8 @@ public class PagoResponse {
     private LocalDateTime fechaPago;
     private EstadoPago estado;
     private String observacion;
+    private String motivoRechazo;
+    private LocalDateTime fechaResolucion;
+    private Integer intentosComprobante;
     private ComprobantePagoResponse comprobante;
 }

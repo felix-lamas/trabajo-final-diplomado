@@ -28,6 +28,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -51,6 +55,8 @@ class PagoServiceAuthorizationTest {
     private ArchivoSeguroServicio archivoSeguroServicio;
     @Mock
     private UsuarioAutenticadoService usuarioAutenticadoService;
+    @Mock
+    private Clock clock;
 
     @InjectMocks
     private PagoService pagoService;
@@ -81,6 +87,8 @@ class PagoServiceAuthorizationTest {
         pagoB = crearPago(inscripcionB, EstadoPago.PENDIENTE_VALIDACION);
         pagoAId = pagoA.getId();
         pagoBId = pagoB.getId();
+        lenient().when(clock.instant()).thenReturn(Instant.parse("2026-09-23T14:00:00Z"));
+        lenient().when(clock.getZone()).thenReturn(ZoneId.of("America/La_Paz"));
     }
 
     @Test
@@ -122,9 +130,11 @@ class PagoServiceAuthorizationTest {
     @Test
     void usuarioCargaComprobanteEnPagoPropioPendiente() {
         autenticarParticipante(usuarioA);
+        pagoA.setEstado(EstadoPago.PENDIENTE_PAGO);
+        inscripcionA.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
         MockMultipartFile archivo = archivoValido();
         PagoResponse response = respuesta(pagoAId);
-        when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoAId, usuarioA.getId()))
+        when(pagoRepository.findByIdAndUsuarioForUpdate(pagoAId, usuarioA.getId()))
                 .thenReturn(Optional.of(pagoA));
         when(archivoSeguroServicio.guardarComprobante(archivo, "comprobantes"))
                 .thenReturn(new ArchivoSeguroServicio.ArchivoGuardado("/uploads/a.pdf", "a.pdf", "application/pdf"));
@@ -142,7 +152,7 @@ class PagoServiceAuthorizationTest {
     void usuarioNoCargaComprobanteEnPagoAjenoNiInvocaStorage() {
         autenticarParticipante(usuarioA);
         MockMultipartFile archivo = archivoValido();
-        when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoBId, usuarioA.getId()))
+        when(pagoRepository.findByIdAndUsuarioForUpdate(pagoBId, usuarioA.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(RecursoNoEncontradoException.class,
@@ -157,7 +167,7 @@ class PagoServiceAuthorizationTest {
     void usuarioNoReemplazaComprobanteValidado() {
         autenticarParticipante(usuarioA);
         pagoA.setEstado(EstadoPago.APROBADO);
-        when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoAId, usuarioA.getId()))
+        when(pagoRepository.findByIdAndUsuarioForUpdate(pagoAId, usuarioA.getId()))
                 .thenReturn(Optional.of(pagoA));
 
         assertThrows(NegocioException.class,
@@ -171,8 +181,9 @@ class PagoServiceAuthorizationTest {
     void usuarioPuedeRecargarComprobanteRechazadoYQuedaPendienteDeValidacion() {
         autenticarParticipante(usuarioA);
         pagoA.setEstado(EstadoPago.RECHAZADO);
+        inscripcionA.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
         MockMultipartFile archivo = archivoValido();
-        when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoAId, usuarioA.getId()))
+        when(pagoRepository.findByIdAndUsuarioForUpdate(pagoAId, usuarioA.getId()))
                 .thenReturn(Optional.of(pagoA));
         when(archivoSeguroServicio.guardarComprobante(archivo, "comprobantes"))
                 .thenReturn(new ArchivoSeguroServicio.ArchivoGuardado("/uploads/nuevo.pdf", "nuevo.pdf", "application/pdf"));
@@ -200,8 +211,7 @@ class PagoServiceAuthorizationTest {
         autenticarUsuario(usuarioA);
         RegistrarPagoRequest request = new RegistrarPagoRequest();
         request.setInscripcionId(inscripcionB.getId());
-        request.setMonto(BigDecimal.TEN);
-        when(inscripcionRepository.findByIdAndUsuarioId(inscripcionB.getId(), usuarioA.getId()))
+        when(inscripcionRepository.findByIdAndUsuarioForUpdate(inscripcionB.getId(), usuarioA.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(RecursoNoEncontradoException.class, () -> pagoService.registrarPago(request));
@@ -238,7 +248,7 @@ class PagoServiceAuthorizationTest {
         autenticarOrganizador(organizadorA);
         EstadoPago estadoPago = pagoB.getEstado();
         EstadoInscripcion estadoInscripcion = inscripcionB.getEstado();
-        when(pagoRepository.findByIdAndInscripcionEventoOrganizadorId(pagoBId, organizadorA.getId()))
+        when(pagoRepository.findByIdAndOrganizadorForUpdate(pagoBId, organizadorA.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(RecursoNoEncontradoException.class,
@@ -255,11 +265,11 @@ class PagoServiceAuthorizationTest {
         autenticarOrganizador(organizadorA);
         EstadoPago estadoPago = pagoB.getEstado();
         EstadoInscripcion estadoInscripcion = inscripcionB.getEstado();
-        when(pagoRepository.findByIdAndInscripcionEventoOrganizadorId(pagoBId, organizadorA.getId()))
+        when(pagoRepository.findByIdAndOrganizadorForUpdate(pagoBId, organizadorA.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(RecursoNoEncontradoException.class,
-                () -> pagoService.rechazarPago(pagoBId, new ValidarPagoRequest()));
+                () -> pagoService.rechazarPago(pagoBId, rechazo("Motivo")));
 
         assertEquals(estadoPago, pagoB.getEstado());
         assertEquals(estadoInscripcion, inscripcionB.getEstado());
@@ -280,7 +290,7 @@ class PagoServiceAuthorizationTest {
     @Test
     void administradorValidaPagoGlobalmente() {
         autenticarAdministrador();
-        when(pagoRepository.findById(pagoBId)).thenReturn(Optional.of(pagoB));
+        when(pagoRepository.findByIdForUpdate(pagoBId)).thenReturn(Optional.of(pagoB));
         when(pagoRepository.save(pagoB)).thenReturn(pagoB);
 
         pagoService.validarPago(pagoBId, new ValidarPagoRequest());
@@ -293,13 +303,13 @@ class PagoServiceAuthorizationTest {
     @Test
     void administradorRechazaPagoGlobalmente() {
         autenticarAdministrador();
-        when(pagoRepository.findById(pagoBId)).thenReturn(Optional.of(pagoB));
+        when(pagoRepository.findByIdForUpdate(pagoBId)).thenReturn(Optional.of(pagoB));
         when(pagoRepository.save(pagoB)).thenReturn(pagoB);
 
-        pagoService.rechazarPago(pagoBId, new ValidarPagoRequest());
+        pagoService.rechazarPago(pagoBId, rechazo("Comprobante ilegible"));
 
         assertEquals(EstadoPago.RECHAZADO, pagoB.getEstado());
-        assertEquals(EstadoInscripcion.RECHAZADA, inscripcionB.getEstado());
+        assertEquals(EstadoInscripcion.PENDIENTE_PAGO, inscripcionB.getEstado());
         verify(inscripcionRepository).save(inscripcionB);
     }
 
@@ -317,9 +327,11 @@ class PagoServiceAuthorizationTest {
 
     private void autenticarAdministrador() {
         when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(true);
+        lenient().when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizadorA);
     }
 
     private void autenticarUsuario(Usuario usuario) {
+        lenient().when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(true);
         lenient().when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
     }
 
@@ -359,6 +371,10 @@ class PagoServiceAuthorizationTest {
                 .monto(BigDecimal.TEN)
                 .estado(estado)
                 .build();
+        if (estado == EstadoPago.PENDIENTE_VALIDACION) {
+            pago.setComprobanteUrl("comprobantes/archivo.pdf");
+            pago.setFechaCargaComprobante(LocalDateTime.of(2026, 9, 23, 9, 0));
+        }
         pago.setId(UUID.randomUUID());
         return pago;
     }
@@ -369,5 +385,11 @@ class PagoServiceAuthorizationTest {
 
     private MockMultipartFile archivoValido() {
         return new MockMultipartFile("archivo", "comprobante.pdf", "application/pdf", "pdf".getBytes());
+    }
+
+    private ValidarPagoRequest rechazo(String motivo) {
+        ValidarPagoRequest request = new ValidarPagoRequest();
+        request.setObservacion(motivo);
+        return request;
     }
 }

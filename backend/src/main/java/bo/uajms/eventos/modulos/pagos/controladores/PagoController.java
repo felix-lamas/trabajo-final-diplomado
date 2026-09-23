@@ -28,14 +28,14 @@ public class PagoController {
     private final PagoService pagoService;
 
     @PostMapping("/{id}/comprobante")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
+    @PreAuthorize("hasRole('USUARIO')")
     @Operation(summary = "Subir comprobante de pago")
     public ResponseEntity<PagoResponse> subirComprobante(@PathVariable UUID id, @RequestParam("archivo") MultipartFile archivo) {
         return ResponseEntity.ok(pagoService.subirComprobante(id, archivo));
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
+    @PreAuthorize("hasRole('USUARIO')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registrar un pago")
     public ResponseEntity<PagoResponse> registrarPago(@Valid @RequestBody RegistrarPagoRequest request) {
@@ -43,7 +43,7 @@ public class PagoController {
     }
 
     @GetMapping("/mis-pagos")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'USUARIO')")
+    @PreAuthorize("hasRole('USUARIO')")
     @Operation(summary = "Listar pagos del usuario autenticado")
     public ResponseEntity<List<PagoResponse>> listarMisPagos() {
         return ResponseEntity.ok(pagoService.listarMisPagos());
@@ -73,14 +73,14 @@ public class PagoController {
     @PatchMapping("/{id}/validar")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     @Operation(summary = "Validar un pago")
-    public ResponseEntity<PagoResponse> validarPago(@PathVariable UUID id, @RequestBody ValidarPagoRequest request) {
+    public ResponseEntity<PagoResponse> validarPago(@PathVariable UUID id, @Valid @RequestBody ValidarPagoRequest request) {
         return ResponseEntity.ok(pagoService.validarPago(id, request));
     }
 
     @PatchMapping("/{id}/rechazar")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     @Operation(summary = "Rechazar un pago")
-    public ResponseEntity<PagoResponse> rechazarPago(@PathVariable UUID id, @RequestBody ValidarPagoRequest request) {
+    public ResponseEntity<PagoResponse> rechazarPago(@PathVariable UUID id, @Valid @RequestBody ValidarPagoRequest request) {
         return ResponseEntity.ok(pagoService.rechazarPago(id, request));
     }
 }

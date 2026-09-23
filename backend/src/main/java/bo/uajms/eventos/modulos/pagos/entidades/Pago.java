@@ -2,6 +2,7 @@ package bo.uajms.eventos.modulos.pagos.entidades;
 
 import bo.uajms.eventos.comun.EntidadBase;
 import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
+import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -50,6 +51,20 @@ public class Pago extends EntidadBase {
 
     @Column(name = "fecha_carga_comprobante")
     private LocalDateTime fechaCargaComprobante;
+
+    @Column(name = "intentos_comprobante", nullable = false)
+    @Builder.Default
+    private Integer intentosComprobante = 0;
+
+    @Column(name = "motivo_rechazo", length = 1000)
+    private String motivoRechazo;
+
+    @Column(name = "fecha_resolucion")
+    private LocalDateTime fechaResolucion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resuelto_por_id")
+    private Usuario resueltoPor;
 
     public String getNumeroReferencia() {
         return getId() != null ? getId().toString() : null;

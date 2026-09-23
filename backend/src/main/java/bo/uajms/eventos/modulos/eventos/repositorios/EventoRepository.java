@@ -6,6 +6,8 @@ import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
 import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Lock;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -51,4 +53,8 @@ public interface EventoRepository extends JpaRepository<Evento, UUID> {
             @Param("tipo") TipoInscripcion tipo,
             @Param("modalidad") Modalidad modalidad
     );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT e FROM Evento e WHERE e.id = :id")
+    Optional<Evento> findByIdForUpdate(@Param("id") UUID id);
 }
