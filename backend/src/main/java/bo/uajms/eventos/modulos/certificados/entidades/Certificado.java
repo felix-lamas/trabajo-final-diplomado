@@ -13,7 +13,10 @@ import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "certificados")
+@Table(name = "certificados", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_certificado_inscripcion", columnNames = "inscripcion_id"),
+        @UniqueConstraint(name = "uk_certificado_codigo", columnNames = "codigo_certificado")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,15 +27,15 @@ import java.math.BigDecimal;
 public class Certificado extends EntidadBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false, updatable = false)
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evento_id", nullable = false)
+    @JoinColumn(name = "evento_id", nullable = false, updatable = false)
     private Evento evento;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inscripcion_id", nullable = false, unique = true)
+    @JoinColumn(name = "inscripcion_id", nullable = false, unique = true, updatable = false)
     private Inscripcion inscripcion;
 
     @Column(name = "codigo_certificado", nullable = false, unique = true, length = 50)

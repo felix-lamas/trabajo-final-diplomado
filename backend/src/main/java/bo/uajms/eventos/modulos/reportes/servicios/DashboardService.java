@@ -3,6 +3,7 @@ package bo.uajms.eventos.modulos.reportes.servicios;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.certificados.repositorios.CertificadoRepository;
+import bo.uajms.eventos.modulos.certificados.entidades.Certificado;
 import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
@@ -52,7 +53,7 @@ public class DashboardService {
                 .totalUsuarios(usuarioRepository.count())
                 .totalParticipantes(usuarioRepository.count())
                 .totalInscripciones(inscripcionRepository.count())
-                .totalCertificados(certificadoRepository.count())
+                .totalCertificados(contarCertificadosSegunAlcance())
                 .ingresosGenerados(totalIngresos)
                 .nivelSatisfaccion(0.0)
                 .participacionEncuestas(0.0)
@@ -114,7 +115,7 @@ public class DashboardService {
                     "referencia", pago.getNumeroReferencia(), "monto", pago.getMonto(),
                     "estado", pago.getEstado().name(), "inscripcionId", pago.getInscripcion().getId().toString())));
         } else if ("certificados".equalsIgnoreCase(tipo)) {
-            certificadoRepository.findAll().forEach(certificado -> filas.add(Map.of(
+            obtenerCertificadosSegunAlcance().forEach(certificado -> filas.add(Map.of(
                     "codigo", certificado.getCodigoCertificado(),
                     "participante", certificado.getUsuario().getNombres() + " " + certificado.getUsuario().getApellidos(),
                     "evento", certificado.getEvento().getTitulo(), "estado", certificado.getEstado().name())));
@@ -142,5 +143,19 @@ public class DashboardService {
         }
         UUID organizadorId = usuarioAutenticadoService.obtenerUsuario().getId();
         return asistenciaRepository.countBySesionEventoEventoOrganizadorId(organizadorId);
+    }
+
+    private List<Certificado> obtenerCertificadosSegunAlcance() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return certificadoRepository.findAll();
+        }
+        return certificadoRepository.findByEventoOrganizadorId(usuarioAutenticadoService.obtenerUsuario().getId());
+    }
+
+    private long contarCertificadosSegunAlcance() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return certificadoRepository.count();
+        }
+        return certificadoRepository.countByEventoOrganizadorId(usuarioAutenticadoService.obtenerUsuario().getId());
     }
 }

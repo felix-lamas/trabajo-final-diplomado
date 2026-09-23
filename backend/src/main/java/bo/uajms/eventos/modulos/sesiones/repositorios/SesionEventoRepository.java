@@ -15,6 +15,7 @@ public interface SesionEventoRepository extends JpaRepository<SesionEvento, UUID
     List<SesionEvento> findByEventoIdOrderByFechaAscHoraInicioAsc(UUID eventoId);
     Optional<SesionEvento> findByIdAndEventoOrganizadorId(UUID id, UUID organizadorId);
     long countByEventoIdAndRequiereAsistenciaTrueAndActivaTrue(UUID eventoId);
+    long countByEventoIdAndRequiereAsistenciaTrue(UUID eventoId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM SesionEvento s WHERE s.id = :id")

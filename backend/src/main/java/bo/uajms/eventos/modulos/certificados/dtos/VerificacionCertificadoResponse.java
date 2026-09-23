@@ -12,10 +12,9 @@ import java.math.BigDecimal;
 public class VerificacionCertificadoResponse {
     private boolean valido;
     private String mensaje;
+    private String institucion;
     private String nombreCompleto;
-    private String ci;
     private String evento;
-    private Integer cargaHoraria;
     private String tipoCertificado;
     private Integer horasAcademicas;
     private BigDecimal porcentajeAsistencia;

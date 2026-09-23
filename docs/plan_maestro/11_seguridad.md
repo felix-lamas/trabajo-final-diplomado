@@ -144,3 +144,13 @@ La carga del comprobante está reservada al rol `USUARIO` propietario. La consul
 `ADMINISTRADOR` puede resolver globalmente y `ORGANIZADOR` solo pagos de sus eventos. La aprobación requiere comprobante y estado pendiente, cambia el pago a `APROBADO` y la inscripción a `CONFIRMADA`. El rechazo exige motivo, cambia el pago a `RECHAZADO` y devuelve la inscripción a `PENDIENTE_PAGO`; el reenvío reutiliza el mismo pago, incrementa el contador de intentos y vuelve a `PENDIENTE_VALIDACION`. Los pagos se bloquean durante carga y resolución para impedir dobles transiciones concurrentes.
 
 La inscripción bloquea el evento durante la comprobación de duplicidad y capacidad. Actualmente toda inscripción pagada pendiente reserva cupo y la cancelación lo libera. La caducidad de esa reserva requiere una decisión funcional futura. Flyway deberá materializar y reconciliar las restricciones de pago único por inscripción e inscripción única por usuario y evento, con tratamiento explícito del borrado lógico.
+
+## Certificados y verificación pública
+
+La generación bloquea la inscripción y es idempotente por `inscripcion_id`. `ADMINISTRADOR` tiene alcance global y `ORGANIZADOR` solo puede emitir y consultar certificados de eventos propios. `USUARIO` consulta y descarga únicamente certificados propios. Los recursos fuera de alcance se resuelven como no encontrados y el PDF no se genera antes de completar la autorización.
+
+Solo se emite para eventos `FINALIZADO`, inscripción `CONFIRMADA` y pago `APROBADO` cuando el evento es pagado. El tipo y las horas académicas proceden de `Evento`. El porcentaje usa sesiones distintas marcadas con `requiereAsistencia=true`; sin sesiones requeridas se considera cumplido sin dividir por cero. Los certificados curriculares exigen al menos 80 % mediante comparación entera exacta. Para certificados no curriculares, cada sesión marcada como requerida debe contar con asistencia validada; no se reutiliza el umbral curricular.
+
+El código de verificación usa un UUID aleatorio completo y único. El endpoint público devuelve solo institución, participante, evento, tipo, horas, porcentaje, fecha, código y estado; no expone CI, RU, correo, teléfono, pago ni datos de ubicación. El PDF se genera bajo autorización e incorpora un QR independiente que apunta a la URL absoluta configurable `CERTIFICATE_VERIFICATION_BASE_URL` y al endpoint `/api/v1/certificados/verificar/{codigo}`. Este QR no reutiliza el mecanismo temporal de asistencia.
+
+Flyway deberá materializar `UNIQUE(inscripcion_id)` y `UNIQUE(codigo_certificado)` y reconciliar los datos históricos antes de activar validación estricta. Los certificados históricos incompletos se conservan y no reciben asistencias inventadas.

@@ -41,6 +41,8 @@ app:
     from: ${MAIL_FROM:no-reply@example.invalid}
   uploads:
     base-dir: ${UPLOADS_BASE_DIR:uploads}
+  certificados:
+    verificacion-base-url: ${CERTIFICATE_VERIFICATION_BASE_URL:http://localhost:8080/api/v1/certificados/verificar}
 
 springdoc:
   api-docs:

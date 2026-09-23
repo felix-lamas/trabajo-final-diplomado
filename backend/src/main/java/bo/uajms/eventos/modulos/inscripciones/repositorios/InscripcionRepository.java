@@ -30,4 +30,13 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT i FROM Inscripcion i WHERE i.id = :id AND i.usuario.id = :usuarioId")
     Optional<Inscripcion> findByIdAndUsuarioForUpdate(@Param("id") UUID id, @Param("usuarioId") UUID usuarioId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT i FROM Inscripcion i WHERE i.id = :id")
+    Optional<Inscripcion> findByIdForUpdate(@Param("id") UUID id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT i FROM Inscripcion i WHERE i.id = :id AND i.evento.organizador.id = :organizadorId")
+    Optional<Inscripcion> findByIdAndEventoOrganizadorForUpdate(@Param("id") UUID id,
+                                                                @Param("organizadorId") UUID organizadorId);
 }
