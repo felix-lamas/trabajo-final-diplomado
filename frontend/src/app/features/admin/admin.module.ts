@@ -25,31 +25,18 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 
 // Components
-import { FacultadListComponent } from './facultades/facultad-list/facultad-list.component';
-import { FacultadFormComponent } from './facultades/facultad-form/facultad-form.component';
-import { CarreraListComponent } from './carreras/carrera-list/carrera-list.component';
-import { CarreraFormComponent } from './carreras/carrera-form/carrera-form.component';
 import { CategoriaListComponent } from './categorias/categoria-list/categoria-list.component';
 import { CategoriaFormComponent } from './categorias/categoria-form/categoria-form.component';
-import { EventoListComponent } from './eventos/evento-list/evento-list.component';
-import { EventoFormComponent } from './eventos/evento-form/evento-form.component';
-import { EventoDetailComponent } from './eventos/evento-detail/evento-detail.component';
 import { ValidarPagosListComponent } from './pagos/validar-pagos-list/validar-pagos-list.component';
+import { EventosGestionModule } from '../eventos-gestion/eventos-gestion.module';
 
 // Routing
 import { AdminRoutingModule } from './admin-routing.module';
 
 @NgModule({
   declarations: [
-    FacultadListComponent,
-    FacultadFormComponent,
-    CarreraListComponent,
-    CarreraFormComponent,
     CategoriaListComponent,
     CategoriaFormComponent,
-    EventoListComponent,
-    EventoFormComponent,
-    EventoDetailComponent,
     ValidarPagosListComponent
   ],
   imports: [
@@ -58,6 +45,7 @@ import { AdminRoutingModule } from './admin-routing.module';
     FormsModule,
     RouterModule,
     AdminRoutingModule,
+    EventosGestionModule,
     
     // Material
     MatTableModule,

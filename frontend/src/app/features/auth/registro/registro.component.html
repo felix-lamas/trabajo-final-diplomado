@@ -52,7 +52,7 @@
           </div>
         </div>
         <h1>Crear cuenta institucional</h1>
-        <p>Complete los datos personales, academicos y de acceso. El flujo esta pensado para desktop y mobile.</p>
+        <p>Complete sus datos personales, tipo de usuario y credenciales de acceso.</p>
       </div>
 
       <div class="auth-progress">
@@ -68,7 +68,7 @@
           1. Datos personales
         </button>
         <button type="button" class="auth-step-indicator__item" [class.auth-step-indicator__item--active]="currentStep === 2" (click)="goToStep(2)">
-          2. Datos academicos
+          2. Tipo de usuario
         </button>
         <button type="button" class="auth-step-indicator__item" [class.auth-step-indicator__item--active]="currentStep === 3" (click)="goToStep(3)">
           3. Credenciales
@@ -120,35 +120,16 @@
           </div>
 
           <p class="auth-field-help">
-            Los usuarios internos deben seleccionar facultad y carrera. Los externos pueden continuar sin datos academicos.
+            El registro siempre crea una cuenta de participante. Los usuarios internos deben informar su RU.
           </p>
 
           <ng-container *ngIf="isInterno(); else externoInfo">
-            <div class="auth-inline-group">
-              <mat-form-field appearance="outline">
-                <mat-label>Facultad</mat-label>
-                <mat-select formControlName="facultadId">
-                  <mat-option *ngFor="let facultad of facultades" [value]="facultad.id">
-                    {{ facultad.nombre }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="form.get('facultadId')?.hasError('required')">La facultad es obligatoria</mat-error>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Carrera</mat-label>
-                <mat-select formControlName="carreraId">
-                  <mat-option *ngFor="let carrera of carreras" [value]="carrera.id">
-                    {{ carrera.nombre }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="form.get('carreraId')?.hasError('required')">La carrera es obligatoria</mat-error>
-              </mat-form-field>
-            </div>
-
-            <p class="auth-field-help" *ngIf="facultades.length === 0">
-              No se encontraron facultades activas para mostrar.
-            </p>
+            <mat-form-field appearance="outline">
+              <mat-label>Registro universitario (RU)</mat-label>
+              <input matInput formControlName="ru" autocomplete="off" />
+              <mat-error *ngIf="form.get('ru')?.hasError('required')">El RU es obligatorio para usuarios internos</mat-error>
+              <mat-error *ngIf="form.get('ru')?.hasError('minlength')">Ingrese un RU valido</mat-error>
+            </mat-form-field>
           </ng-container>
 
           <ng-template #externoInfo>
@@ -204,9 +185,9 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Confirmar contrasena</mat-label>
-              <input matInput formControlName="confirmacion" type="password" autocomplete="new-password" />
-              <mat-error *ngIf="form.get('confirmacion')?.hasError('required')">Confirme la contrasena</mat-error>
-              <mat-error *ngIf="form.hasError('notSame') && form.get('confirmacion')?.touched">Las contrasenas no coinciden</mat-error>
+              <input matInput formControlName="confirmacionContrasena" type="password" autocomplete="new-password" />
+              <mat-error *ngIf="form.get('confirmacionContrasena')?.hasError('required')">Confirme la contrasena</mat-error>
+              <mat-error *ngIf="form.hasError('notSame') && form.get('confirmacionContrasena')?.touched">Las contrasenas no coinciden</mat-error>
             </mat-form-field>
           </div>
         </ng-container>

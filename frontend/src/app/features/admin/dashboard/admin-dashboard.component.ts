@@ -97,10 +97,8 @@ export class AdminDashboardComponent implements OnInit {
 
   get recommendedActions(): Array<{ label: string; icon: string; route: string; description: string }> {
     return [
-      { label: 'Gestionar eventos', icon: 'event_note', route: '/admin/eventos', description: 'Publicacion, edicion y cierre operativo.' },
+      { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', description: 'Revision y publicacion administrativa.' },
       { label: 'Validar pagos', icon: 'verified', route: '/admin/pagos/validar', description: 'Revision rapida de comprobantes.' },
-      { label: 'Facultades', icon: 'domain', route: '/admin/facultades', description: 'Estructura academica institucional.' },
-      { label: 'Carreras', icon: 'account_tree', route: '/admin/carreras', description: 'Catalogo academico actualizado.' },
       { label: 'Categorias', icon: 'label', route: '/admin/categorias', description: 'Clasificacion de eventos.' }
     ];
   }

@@ -1,32 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject, takeUntil } from 'rxjs';
 import { AuthService, RegistroUsuarioRequest } from '../../../core/services/auth.service';
-import { FacultadService } from '../../../core/services/facultad.service';
-import { CarreraService } from '../../../core/services/carrera.service';
-import { Facultad } from '../../../core/models/facultad.model';
-import { Carrera } from '../../../core/models/carrera.model';
+import { apiErrorMessage } from '../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   standalone: false
 })
-export class RegistroComponent implements OnInit, OnDestroy {
+export class RegistroComponent {
   form: FormGroup;
   currentStep = 1;
   loading = false;
-  facultades: Facultad[] = [];
-  carreras: Carrera[] = [];
-  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private facultadService: FacultadService,
-    private carreraService: CarreraService,
     private router: Router,
     private snackBar: MatSnackBar
   ) {
@@ -36,41 +27,15 @@ export class RegistroComponent implements OnInit, OnDestroy {
       ci: ['', [Validators.required, Validators.minLength(5)]],
       celular: ['', [Validators.required, Validators.minLength(7)]],
       tipoUsuario: ['INTERNO', [Validators.required]],
-      facultadId: [null],
-      carreraId: [null],
+      ru: ['', [Validators.required, Validators.minLength(4)]],
       correoElectronico: ['', [Validators.required, Validators.email]],
       contrasena: ['', [
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/)
       ]],
-      confirmacion: ['', [Validators.required]]
+      confirmacionContrasena: ['', [Validators.required]]
     }, { validators: this.checkPasswords });
-  }
-
-  ngOnInit(): void {
-    this.cargarFacultades();
-    this.syncAcademicValidators();
-
-    this.form.get('tipoUsuario')?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.syncAcademicValidators());
-
-    this.form.get('facultadId')?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((facultadId) => {
-        if (this.isInterno() && facultadId) {
-          this.cargarCarreras(facultadId);
-        } else {
-          this.carreras = [];
-          this.form.get('carreraId')?.reset(null, { emitEvent: false });
-        }
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   isInterno(): boolean {
@@ -110,25 +75,26 @@ export class RegistroComponent implements OnInit, OnDestroy {
     this.loading = true;
     const value = this.form.getRawValue();
     const request: RegistroUsuarioRequest = {
-      correoElectronico: value.correoElectronico,
-      contrasena: value.contrasena,
       nombres: value.nombres,
       apellidos: value.apellidos,
+      correoElectronico: value.correoElectronico,
       ci: value.ci,
+      ru: this.isInterno() ? String(value.ru).trim() : null,
       celular: value.celular,
-      tipoUsuario: value.tipoUsuario,
-      carreraId: this.isInterno() ? value.carreraId ?? undefined : undefined
+      contrasena: value.contrasena,
+      confirmacionContrasena: value.confirmacionContrasena,
+      tipoUsuario: value.tipoUsuario
     };
 
     this.authService.registro(request).subscribe({
       next: () => {
         this.loading = false;
         this.snackBar.open('Registro completado correctamente', 'Cerrar', { duration: 3500 });
-        this.router.navigate(['/privado/dashboard']);
+        this.router.navigate(['/eventos']);
       },
       error: (err) => {
         this.loading = false;
-        this.snackBar.open(err.error?.mensaje || 'No fue posible completar el registro', 'Cerrar', { duration: 4500 });
+        this.snackBar.open(apiErrorMessage(err, 'No fue posible completar el registro'), 'Cerrar', { duration: 4500 });
       }
     });
   }
@@ -174,7 +140,7 @@ export class RegistroComponent implements OnInit, OnDestroy {
         return true;
       }
 
-      return ['facultadId', 'carreraId'].every((control) => this.form.get(control)?.valid);
+      return this.form.get('ru')?.valid ?? false;
     }
 
     return true;
@@ -187,54 +153,28 @@ export class RegistroComponent implements OnInit, OnDestroy {
     }
 
     if (this.currentStep === 2 && this.isInterno()) {
-      ['facultadId', 'carreraId'].forEach((control) => this.form.get(control)?.markAsTouched());
+      this.form.get('ru')?.markAsTouched();
     }
-  }
-
-  private cargarFacultades(): void {
-    this.facultadService.listar().subscribe({
-      next: (data) => this.facultades = data.filter((facultad) => facultad.estado === 'ACTIVO'),
-      error: () => this.snackBar.open('No fue posible cargar las facultades', 'Cerrar', { duration: 3000 })
-    });
-  }
-
-  private cargarCarreras(facultadId: string): void {
-    this.carreraService.listar().subscribe({
-      next: (data) => {
-        this.carreras = data.filter((carrera) => carrera.estado === 'ACTIVO' && carrera.facultadId === facultadId);
-        if (this.carreras.length === 0) {
-          this.form.get('carreraId')?.reset(null, { emitEvent: false });
-        }
-      },
-      error: () => this.snackBar.open('No fue posible cargar las carreras', 'Cerrar', { duration: 3000 })
-    });
   }
 
   syncAcademicValidators(): void {
     const tipoUsuario = this.form.get('tipoUsuario')?.value;
-    const facultadCtrl = this.form.get('facultadId');
-    const carreraCtrl = this.form.get('carreraId');
+    const ruCtrl = this.form.get('ru');
 
     if (tipoUsuario === 'INTERNO') {
-      facultadCtrl?.setValidators([Validators.required]);
-      carreraCtrl?.setValidators([Validators.required]);
-      facultadCtrl?.updateValueAndValidity({ emitEvent: false });
-      carreraCtrl?.updateValueAndValidity({ emitEvent: false });
+      ruCtrl?.setValidators([Validators.required, Validators.minLength(4)]);
+      ruCtrl?.updateValueAndValidity({ emitEvent: false });
       return;
     }
 
-    facultadCtrl?.clearValidators();
-    carreraCtrl?.clearValidators();
-    facultadCtrl?.reset(null, { emitEvent: false });
-    carreraCtrl?.reset(null, { emitEvent: false });
-    facultadCtrl?.updateValueAndValidity({ emitEvent: false });
-    carreraCtrl?.updateValueAndValidity({ emitEvent: false });
-    this.carreras = [];
+    ruCtrl?.clearValidators();
+    ruCtrl?.reset('', { emitEvent: false });
+    ruCtrl?.updateValueAndValidity({ emitEvent: false });
   }
 
   private checkPasswords(group: FormGroup) {
     const pass = group.get('contrasena')?.value;
-    const confirmPass = group.get('confirmacion')?.value;
+    const confirmPass = group.get('confirmacionContrasena')?.value;
     return pass === confirmPass ? null : { notSame: true };
   }
 }

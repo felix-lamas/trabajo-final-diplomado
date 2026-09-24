@@ -10,14 +10,15 @@ export interface LoginRequest {
 }
 
 export interface RegistroUsuarioRequest {
-  correoElectronico: string;
-  contrasena: string;
   nombres: string;
   apellidos: string;
+  correoElectronico: string;
   ci: string;
+  ru: string | null;
   celular: string;
+  contrasena: string;
+  confirmacionContrasena: string;
   tipoUsuario: 'INTERNO' | 'EXTERNO';
-  carreraId?: string;
 }
 
 export interface LoginResponse {
@@ -37,7 +38,7 @@ export interface LoginResponse {
 export class AuthService {
   private readonly tokenKey = 'token';
   private readonly userKey = 'usuario';
-  private apiUrl = `${environment.apiUrl.replace(/\/v1$/, '')}/auth`;
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) {}
 
@@ -75,7 +76,20 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.getToken() !== null;
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))) as { exp?: number };
+      if (!payload.exp || payload.exp * 1000 <= Date.now()) {
+        this.logout();
+        return false;
+      }
+      return true;
+    } catch {
+      this.logout();
+      return false;
+    }
   }
 
   getUser(): LoginResponse['usuario'] | null {
