@@ -10,6 +10,8 @@ import bo.uajms.eventos.modulos.usuarios.repositorios.RolPermisoRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.RolRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRolRepository;
+import bo.uajms.eventos.modulos.categorias.entidades.CategoriaEvento;
+import bo.uajms.eventos.modulos.categorias.repositorios.CategoriaEventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -34,18 +36,37 @@ public class DatosInicialesSeed implements CommandLineRunner {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioRolRepository usuarioRolRepository;
     private final RolPermisoRepository rolPermisoRepository;
+    private final CategoriaEventoRepository categoriaEventoRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public void run(String... args) {
         Map<String, Rol> roles = cargarSeguridad();
+        cargarCategoriasDemo();
         crearUsuarioDemo("admin@demo.local", "DEMO-ADMIN", "RU-DEMO-ADMIN", "Administrador", "Demo",
                 Usuario.TipoUsuario.INTERNO, roles.get("ADMINISTRADOR"));
         crearUsuarioDemo("organizador@demo.local", "DEMO-ORGANIZADOR", "RU-DEMO-ORG", "Organizador", "Demo",
                 Usuario.TipoUsuario.INTERNO, roles.get("ORGANIZADOR"));
         crearUsuarioDemo("usuario@demo.local", "DEMO-USUARIO", null, "Usuario", "Demo",
                 Usuario.TipoUsuario.EXTERNO, roles.get("USUARIO"));
+    }
+
+    private void cargarCategoriasDemo() {
+        crearCategoriaDemo("Conferencia", "Conferencias ficticias para demostracion");
+        crearCategoriaDemo("Taller", "Talleres ficticios para demostracion");
+        crearCategoriaDemo("Curso", "Cursos ficticios para demostracion");
+        crearCategoriaDemo("Seminario", "Seminarios ficticios para demostracion");
+    }
+
+    private void crearCategoriaDemo(String nombre, String descripcion) {
+        if (!categoriaEventoRepository.existsByNombreIgnoreCase(nombre)) {
+            categoriaEventoRepository.save(CategoriaEvento.builder()
+                    .nombre(nombre)
+                    .descripcion(descripcion)
+                    .estado("ACTIVO")
+                    .build());
+        }
     }
 
     private Map<String, Rol> cargarSeguridad() {
