@@ -38,7 +38,7 @@
           <div class="public-enroll__step">
             <span class="app-badge app-badge--info">Paso 1 de 1</span>
             <strong>Confirmacion visual</strong>
-            <p>La inscripcion se registrara con un solo clic. Si el evento es de pago, el estado quedara sujeto a validacion.</p>
+            <p>La inscripcion gratuita se registrara y quedara confirmada inmediatamente.</p>
           </div>
 
           <mat-divider></mat-divider>
@@ -59,19 +59,19 @@
             </div>
           </div>
 
-          <button mat-flat-button color="primary" type="button" (click)="confirmar()" [disabled]="confirmando || evento.cupoDisponible <= 0 || evento.estado !== 'PUBLICADO'">
+          <button mat-flat-button color="primary" type="button" (click)="confirmar()" [disabled]="confirmando || (evento.cupoLimitado && (evento.cupoDisponible ?? 0) <= 0) || evento.estado !== 'PUBLICADO'">
             {{ confirmando ? 'Confirmando...' : 'Confirmar inscripcion' }}
           </button>
 
-          <p class="public-enroll__note" *ngIf="evento.cupoDisponible <= 0">El evento no tiene cupos disponibles.</p>
+          <p class="public-enroll__note" *ngIf="evento.cupoLimitado && (evento.cupoDisponible ?? 0) <= 0">El evento no tiene cupos disponibles.</p>
         </mat-card>
       </div>
 
       <ng-template #doneState>
         <mat-card class="public-enroll__done">
           <mat-icon>check_circle</mat-icon>
-          <h2>Inscripcion completada</h2>
-          <p>Su registro fue procesado correctamente. Sera redirigido al detalle de la inscripcion.</p>
+          <h2>Inscripcion confirmada</h2>
+          <p>Su registro gratuito quedo en estado CONFIRMADA. Sera redirigido al detalle.</p>
         </mat-card>
       </ng-template>
     </ng-container>

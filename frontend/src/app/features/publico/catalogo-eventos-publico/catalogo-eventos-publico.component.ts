@@ -29,7 +29,7 @@ export class CatalogoEventosPublicoComponent implements OnInit {
   ngOnInit(): void {
     this.eventoService.listarPublicados().subscribe({
       next: (data) => {
-        this.eventos = data;
+        this.eventos = data.filter((evento) => evento.tipoInscripcion === 'GRATUITO');
         this.loading = false;
         this.aplicarFiltros();
       },

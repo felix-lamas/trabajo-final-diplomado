@@ -6,7 +6,7 @@
         CRM academico
       </span>
       <h1>Gestion de participantes</h1>
-      <p>Historial de inscripciones, estados operativos y credenciales asociadas.</p>
+      <p>Historial y estado de sus inscripciones a eventos gratuitos.</p>
     </div>
     <a mat-flat-button color="primary" routerLink="/eventos">
       <mat-icon>explore</mat-icon>
@@ -26,12 +26,6 @@
       <span>Confirmadas</span>
       <strong>{{ totalConfirmadas }}</strong>
       <div class="admin-kpi__bar" data-tone="green"></div>
-    </article>
-    <article class="admin-metric-card">
-      <div class="admin-metric-card__icon"><mat-icon>badge</mat-icon></div>
-      <span>Credenciales</span>
-      <strong>{{ totalCredenciales }}</strong>
-      <div class="admin-kpi__bar" data-tone="teal"></div>
     </article>
   </section>
 
@@ -83,7 +77,6 @@
           <div class="student-card__footer">
             <div class="student-card__meta">
               <a mat-stroked-button [routerLink]="['/privado/inscripciones', ins.id]">Detalle</a>
-              <button mat-flat-button color="primary" *ngIf="ins.estado === 'CONFIRMADA'" (click)="generarCredencial(ins)">Credencial</button>
               <button mat-stroked-button color="warn" *ngIf="puedeCancelar(ins.estado)" (click)="cancelar(ins)">Cancelar</button>
             </div>
           </div>

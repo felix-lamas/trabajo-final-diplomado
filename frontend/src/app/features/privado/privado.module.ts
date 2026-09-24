@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { EncuestasModule } from '../encuestas/encuestas.module';
 
 // Material
 import { MatTableModule } from '@angular/material/table';
@@ -51,8 +50,7 @@ const routes: Routes = [
     BreadcrumbsComponent,
     EmptyStateComponent,
     SkeletonComponent,
-    ConfirmDialogComponent,
-    EncuestasModule
+    ConfirmDialogComponent
   ]
 })
 export class PrivadoInscripcionesModule { }

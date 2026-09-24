@@ -4,6 +4,7 @@ import { EventoService } from '../../../core/services/evento.service';
 import { InscripcionService } from '../../../core/services/inscripcion.service';
 import { Evento } from '../../../core/models/evento.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { apiErrorMessage } from '../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-inscripcion-publica',
@@ -33,11 +34,17 @@ export class InscripcionPublicaComponent implements OnInit {
 
     this.eventoService.obtenerPorId(id).subscribe({
       next: (data) => {
+        if (data.tipoInscripcion !== 'GRATUITO') {
+          this.snackBar.open('El flujo E2 solo admite eventos gratuitos', 'Cerrar', { duration: 4500 });
+          this.router.navigate(['/eventos']);
+          return;
+        }
         this.evento = data;
         this.loading = false;
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
+        this.snackBar.open(apiErrorMessage(err, 'No fue posible cargar el evento'), 'Cerrar', { duration: 4500 });
         this.router.navigate(['/eventos']);
       }
     });
@@ -56,7 +63,10 @@ export class InscripcionPublicaComponent implements OnInit {
       },
       error: (err) => {
         this.confirmando = false;
-        this.snackBar.open(err.error?.mensaje || 'No fue posible completar la inscripcion', 'Cerrar', { duration: 4500 });
+        const mensaje = err.status === 409
+          ? 'Ya existe una inscripcion para este evento'
+          : apiErrorMessage(err, 'No fue posible completar la inscripcion');
+        this.snackBar.open(mensaje, 'Cerrar', { duration: 4500 });
       }
     });
   }

@@ -95,12 +95,9 @@
             </div>
 
             <div class="public-aside-card__actions">
-              <a mat-flat-button color="primary" [routerLink]="['/eventos', evento.id, 'inscripcion']" [class.disabled]="evento.cupoDisponible <= 0 || evento.estado !== 'PUBLICADO'">
+              <a mat-flat-button color="primary" *ngIf="evento.tipoInscripcion === 'GRATUITO'" [routerLink]="['/eventos', evento.id, 'inscripcion']" [class.disabled]="(evento.cupoLimitado && (evento.cupoDisponible ?? 0) <= 0) || evento.estado !== 'PUBLICADO'">
                 Inscribirme ahora
               </a>
-              <p *ngIf="evento.tipoInscripcion === 'PAGO'" class="public-aside-card__note">
-                La inscripcion quedara pendiente hasta validar el comprobante.
-              </p>
             </div>
           </mat-card>
         </aside>

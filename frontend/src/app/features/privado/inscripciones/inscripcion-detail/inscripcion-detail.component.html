@@ -79,19 +79,6 @@
         </div>
       </mat-card>
 
-      <mat-card class="student-panel" *ngIf="inscripcion.estado === 'PENDIENTE_PAGO'">
-        <div class="student-card__header">
-          <div>
-            <h2>Pago requerido</h2>
-            <p>Su inscripcion esta pendiente de validacion por comprobante.</p>
-          </div>
-          <mat-icon>info</mat-icon>
-        </div>
-        <p>Realice el pago correspondiente para completar la confirmacion del evento.</p>
-        <a mat-flat-button color="primary" routerLink="/privado/pagos/registrar" [queryParams]="{ inscripcionId: inscripcion.id }">
-          Subir comprobante
-        </a>
-      </mat-card>
     </section>
   </ng-container>
 </main>
