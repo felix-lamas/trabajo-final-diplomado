@@ -20,6 +20,7 @@ interface NavItem {
   label: string;
   icon: string;
   route: string;
+  roles?: string[];
 }
 
 @Component({
@@ -56,24 +57,17 @@ export class AppShellComponent implements OnInit {
   readonly breadcrumbs = signal<BreadcrumbItem[]>([]);
   readonly currentSection = computed(() => this.breadcrumbs().at(-1)?.label ?? 'Inicio');
   readonly navItems: NavItem[] = [
-    { label: 'Panel ejecutivo', icon: 'space_dashboard', route: '/admin' },
-    { label: 'Dashboard', icon: 'analytics', route: '/reportes/dashboard' },
-    { label: 'Eventos', icon: 'event', route: '/admin/eventos' },
-    { label: 'Pagos', icon: 'payments', route: '/admin/pagos/validar' },
-    { label: 'Participantes', icon: 'groups', route: '/privado/inscripciones' },
-    { label: 'Asistencias', icon: 'qr_code_scanner', route: '/asistencias/escaneo' },
-    { label: 'Certificados', icon: 'workspace_premium', route: '/certificados/mis-certificados' },
-    { label: 'Facultades', icon: 'domain', route: '/admin/facultades' },
-    { label: 'Carreras', icon: 'account_tree', route: '/admin/carreras' },
-    { label: 'Categorias', icon: 'category', route: '/admin/categorias' },
-    { label: 'Reportes', icon: 'bar_chart', route: '/reportes/generador' }
-  ];
+    { label: 'Panel administrativo', icon: 'space_dashboard', route: '/admin', roles: ['ADMINISTRADOR'] },
+    { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
+    { label: 'Mis eventos', icon: 'event', route: '/organizador/eventos', roles: ['ORGANIZADOR'] },
+    { label: 'Eventos publicados', icon: 'explore', route: '/eventos', roles: ['USUARIO'] },
+    { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] }
+  ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles));
   readonly quickActions: NavItem[] = [
-    { label: 'Nuevo evento', icon: 'add_circle', route: '/admin/eventos/nuevo' },
-    { label: 'Validar pagos', icon: 'fact_check', route: '/admin/pagos/validar' },
-    { label: 'Escanear QR', icon: 'qr_code_scanner', route: '/asistencias/escaneo' },
-    { label: 'Generar reporte', icon: 'bar_chart', route: '/reportes/generador' }
-  ];
+    { label: 'Nuevo evento', icon: 'add_circle', route: '/organizador/eventos/nuevo', roles: ['ORGANIZADOR'] },
+    { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
+    { label: 'Explorar eventos', icon: 'explore', route: '/eventos', roles: ['USUARIO'] }
+  ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles));
 
   readonly userName = signal('Usuario');
   readonly userRole = signal('Acceso institucional');

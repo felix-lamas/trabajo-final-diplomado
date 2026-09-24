@@ -24,10 +24,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/admin/admin.module').then((m) => m.AdminModule)
       },
       {
-        path: 'asistencias',
+        path: 'organizador',
         canMatch: [authGuard, roleGuard],
-        data: { roles: ['ADMINISTRADOR', 'PERSONAL_CONTROL'] },
-        loadChildren: () => import('./features/asistencias/asistencias.module').then((m) => m.AsistenciasModule)
+        data: { roles: ['ORGANIZADOR'] },
+        loadChildren: () => import('./features/organizador/organizador.module').then((m) => m.OrganizadorModule)
       },
       {
         path: 'certificados',
@@ -35,19 +35,14 @@ export const routes: Routes = [
         loadChildren: () => import('./features/certificados/certificados.module').then((m) => m.CertificadosModule)
       },
       {
-        path: 'encuestas',
-        canMatch: [authGuard],
-        loadChildren: () => import('./features/encuestas/encuestas.module').then((m) => m.EncuestasModule)
-      },
-      {
         path: 'privado',
         pathMatch: 'full',
-        redirectTo: '/privado/dashboard'
+        redirectTo: '/eventos'
       },
       {
         path: 'privado/dashboard',
-        canMatch: [authGuard],
-        loadComponent: () => import('./features/privado/dashboard-privado/dashboard-privado.component').then((m) => m.DashboardPrivadoComponent)
+        pathMatch: 'full',
+        redirectTo: '/eventos'
       },
       {
         path: 'privado/perfil',
@@ -63,11 +58,6 @@ export const routes: Routes = [
         path: 'privado/pagos',
         canMatch: [authGuard],
         loadChildren: () => import('./features/privado/pagos/pagos.module').then((m) => m.PrivadoPagosModule)
-      },
-      {
-        path: 'privado/credenciales',
-        canMatch: [authGuard],
-        loadChildren: () => import('./features/privado/credenciales/credenciales.module').then((m) => m.CredencialesModule)
       },
       {
         path: 'reportes',

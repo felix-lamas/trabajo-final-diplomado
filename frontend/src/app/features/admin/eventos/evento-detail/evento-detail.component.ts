@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { EventoService } from '../../../../core/services/evento.service';
 import { Evento } from '../../../../core/models/evento.model';
-import { InscripcionService } from '../../../../core/services/inscripcion.service';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ToastService } from '../../../../shared/ui/toast.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-evento-detail',
@@ -18,9 +19,8 @@ export class EventoDetailComponent implements OnInit {
 
   constructor(
     private eventoService: EventoService,
-    private inscripcionService: InscripcionService,
+    private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router,
     private dialog: MatDialog,
     private toast: ToastService
   ) {}
@@ -35,18 +35,7 @@ export class EventoDetailComponent implements OnInit {
   cargarEvento(id: string): void {
     this.eventoService.obtenerPorId(id).subscribe({
       next: (data) => this.evento = data,
-      error: () => this.toast.error('Error al cargar detalle')
-    });
-  }
-
-  inscribirse(): void {
-    if (!this.evento) return;
-    this.inscripcionService.inscribir({ eventoId: this.evento.id }).subscribe({
-      next: () => {
-        this.toast.success('Inscripcion exitosa');
-        this.router.navigate(['/privado/inscripciones']);
-      },
-      error: (err) => this.toast.error(err.error?.mensaje || 'Error al inscribirse')
+      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al cargar detalle'))
     });
   }
 
@@ -57,8 +46,31 @@ export class EventoDetailComponent implements OnInit {
         this.toast.success('Evento publicado con exito');
         this.cargarEvento(this.evento!.id);
       },
-      error: (err) => this.toast.error(err.error?.mensaje || 'Error al publicar')
+      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al publicar'))
     });
+  }
+
+  enviarARevision(): void {
+    if (!this.evento) return;
+    this.eventoService.enviarARevision(this.evento.id).subscribe({
+      next: () => {
+        this.toast.success('Evento enviado a revision');
+        this.cargarEvento(this.evento!.id);
+      },
+      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al enviar a revision'))
+    });
+  }
+
+  get esAdministrador(): boolean {
+    return this.authService.hasAnyRole(['ADMINISTRADOR']);
+  }
+
+  get esOrganizador(): boolean {
+    return this.authService.hasAnyRole(['ORGANIZADOR']);
+  }
+
+  get rutaGestion(): string {
+    return this.esOrganizador ? '/organizador/eventos' : '/admin/eventos';
   }
 
   cancelar(): void {
@@ -75,12 +87,12 @@ export class EventoDetailComponent implements OnInit {
     }).afterClosed().subscribe((confirmed) => {
       if (!confirmed || !this.evento) return;
 
-      this.eventoService.cancelar(this.evento.id).subscribe({
+      this.eventoService.cancelar(this.evento.id, 'Cancelado desde el panel web').subscribe({
         next: () => {
           this.toast.warning('Evento cancelado');
           this.cargarEvento(this.evento!.id);
         },
-        error: (err) => this.toast.error(err.error?.mensaje || 'Error al cancelar')
+        error: (err) => this.toast.error(apiErrorMessage(err, 'Error al cancelar'))
       });
     });
   }
@@ -92,7 +104,7 @@ export class EventoDetailComponent implements OnInit {
         this.toast.success('Evento finalizado correctamente');
         this.cargarEvento(this.evento!.id);
       },
-      error: (err) => this.toast.error(err.error?.mensaje || 'Error al finalizar')
+      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al finalizar'))
     });
   }
 }

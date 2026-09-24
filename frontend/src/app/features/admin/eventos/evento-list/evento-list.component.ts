@@ -6,6 +6,7 @@ import { EventoService } from '../../../../core/services/evento.service';
 import { Evento } from '../../../../core/models/evento.model';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ToastService } from '../../../../shared/ui/toast.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-evento-list',
@@ -21,6 +22,7 @@ export class EventoListComponent implements OnInit {
 
   constructor(
     private eventoService: EventoService,
+    private authService: AuthService,
     private dialog: MatDialog,
     private toast: ToastService
   ) {}
@@ -31,7 +33,11 @@ export class EventoListComponent implements OnInit {
 
   cargarEventos(): void {
     this.loading = true;
-    this.eventoService.listar()
+    const eventos$ = this.esAdministrador
+      ? this.eventoService.listarEnRevision()
+      : this.eventoService.listar();
+
+    eventos$
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (data) => this.eventos = data,
@@ -63,6 +69,14 @@ export class EventoListComponent implements OnInit {
     return this.eventos.filter((evento) => evento.estado === 'BORRADOR').length;
   }
 
+  get esOrganizador(): boolean {
+    return this.authService.hasAnyRole(['ORGANIZADOR']);
+  }
+
+  get esAdministrador(): boolean {
+    return this.authService.hasAnyRole(['ADMINISTRADOR']);
+  }
+
   cambiarFiltro(estado: string): void {
     this.estadoFiltro = estado;
   }
@@ -70,9 +84,10 @@ export class EventoListComponent implements OnInit {
   getEstadoClass(estado: string): string {
     switch (estado) {
       case 'BORRADOR': return 'bg-gray-100 text-gray-800';
+      case 'EN_REVISION': return 'bg-yellow-100 text-yellow-800';
       case 'PUBLICADO': return 'bg-green-100 text-green-800';
-      case 'EN_CURSO': return 'bg-blue-100 text-blue-800';
       case 'FINALIZADO': return 'bg-purple-100 text-purple-800';
+      case 'RECHAZADO': return 'bg-orange-100 text-orange-800';
       case 'CANCELADO': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -81,9 +96,10 @@ export class EventoListComponent implements OnInit {
   getEstadoLabel(estado: string): string {
     switch (estado) {
       case 'BORRADOR': return 'Borrador';
+      case 'EN_REVISION': return 'En revision';
       case 'PUBLICADO': return 'Publicado';
-      case 'EN_CURSO': return 'En curso';
       case 'FINALIZADO': return 'Finalizado';
+      case 'RECHAZADO': return 'Rechazado';
       case 'CANCELADO': return 'Cancelado';
       default: return estado;
     }

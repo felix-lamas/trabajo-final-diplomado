@@ -5,10 +5,10 @@
         <mat-icon>event_available</mat-icon>
         Operacion academica
       </span>
-      <h1>Gestion de eventos</h1>
-      <p>Publicacion, seguimiento y control operativo de eventos institucionales.</p>
+      <h1>{{ esAdministrador ? 'Eventos en revision' : 'Mis eventos' }}</h1>
+      <p>{{ esAdministrador ? 'Revise y publique los eventos enviados por organizadores.' : 'Cree y envie sus eventos a revision administrativa.' }}</p>
     </div>
-    <a mat-flat-button color="primary" routerLink="nuevo">
+    <a mat-flat-button color="primary" routerLink="nuevo" *ngIf="esOrganizador">
       <mat-icon>add</mat-icon>
       Nuevo evento
     </a>
@@ -42,9 +42,9 @@
       <div class="admin-event-card__top">
         <span class="admin-status-pill"
           [ngClass]="{
-            'admin-status-pill--warning': ev.estado === 'BORRADOR',
-            'admin-status-pill--success': ev.estado === 'PUBLICADO' || ev.estado === 'EN_CURSO',
-            'admin-status-pill--danger': ev.estado === 'CANCELADO',
+            'admin-status-pill--warning': ev.estado === 'BORRADOR' || ev.estado === 'EN_REVISION',
+            'admin-status-pill--success': ev.estado === 'PUBLICADO',
+            'admin-status-pill--danger': ev.estado === 'CANCELADO' || ev.estado === 'RECHAZADO',
             'admin-status-pill--info': ev.estado === 'FINALIZADO'
           }">
           {{ getEstadoLabel(ev.estado) }}
@@ -72,10 +72,12 @@
           <input matInput [(ngModel)]="busqueda" placeholder="Titulo, categoria o descripcion">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
-        <button mat-stroked-button type="button" (click)="cambiarFiltro('TODOS')" [disabled]="estadoFiltro === 'TODOS'">Todos</button>
-        <button mat-stroked-button type="button" (click)="cambiarFiltro('BORRADOR')" [disabled]="estadoFiltro === 'BORRADOR'">Borradores</button>
-        <button mat-stroked-button type="button" (click)="cambiarFiltro('PUBLICADO')" [disabled]="estadoFiltro === 'PUBLICADO'">Publicados</button>
-        <button mat-stroked-button type="button" (click)="cambiarFiltro('EN_CURSO')" [disabled]="estadoFiltro === 'EN_CURSO'">En curso</button>
+        <ng-container *ngIf="esOrganizador">
+          <button mat-stroked-button type="button" (click)="cambiarFiltro('TODOS')" [disabled]="estadoFiltro === 'TODOS'">Todos</button>
+          <button mat-stroked-button type="button" (click)="cambiarFiltro('BORRADOR')" [disabled]="estadoFiltro === 'BORRADOR'">Borradores</button>
+          <button mat-stroked-button type="button" (click)="cambiarFiltro('PUBLICADO')" [disabled]="estadoFiltro === 'PUBLICADO'">Publicados</button>
+          <button mat-stroked-button type="button" (click)="cambiarFiltro('EN_REVISION')" [disabled]="estadoFiltro === 'EN_REVISION'">En revision</button>
+        </ng-container>
       </div>
       <span class="app-badge app-badge--info">{{ eventosFiltrados.length }} registros</span>
     </div>
@@ -85,8 +87,8 @@
       icon="event_busy"
       title="No hay eventos para mostrar"
       message="Ajuste los filtros o cree un evento para activar el catalogo institucional."
-      actionLabel="Nuevo evento"
-      actionRoute="nuevo">
+      [actionLabel]="esOrganizador ? 'Nuevo evento' : undefined"
+      [actionRoute]="esOrganizador ? 'nuevo' : undefined">
     </app-empty-state>
 
     <div class="admin-table-scroll" *ngIf="eventosFiltrados.length > 0">
@@ -129,9 +131,9 @@
           <td mat-cell *matCellDef="let ev">
             <span class="admin-status-pill"
               [ngClass]="{
-                'admin-status-pill--warning': ev.estado === 'BORRADOR',
-                'admin-status-pill--success': ev.estado === 'PUBLICADO' || ev.estado === 'EN_CURSO',
-                'admin-status-pill--danger': ev.estado === 'CANCELADO',
+                'admin-status-pill--warning': ev.estado === 'BORRADOR' || ev.estado === 'EN_REVISION',
+                'admin-status-pill--success': ev.estado === 'PUBLICADO',
+                'admin-status-pill--danger': ev.estado === 'CANCELADO' || ev.estado === 'RECHAZADO',
                 'admin-status-pill--info': ev.estado === 'FINALIZADO'
               }">
               {{ getEstadoLabel(ev.estado) }}
@@ -146,10 +148,10 @@
               <button mat-icon-button color="primary" [routerLink]="[ev.id]" matTooltip="Detalle">
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button mat-icon-button color="accent" *ngIf="ev.estado === 'BORRADOR'" [routerLink]="['editar', ev.id]" matTooltip="Editar">
+              <button mat-icon-button color="accent" *ngIf="esOrganizador && (ev.estado === 'BORRADOR' || ev.estado === 'RECHAZADO')" [routerLink]="['editar', ev.id]" matTooltip="Editar">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" *ngIf="ev.estado === 'BORRADOR'" (click)="eliminar(ev)" matTooltip="Eliminar">
+              <button mat-icon-button color="warn" *ngIf="esOrganizador && ev.estado === 'BORRADOR'" (click)="eliminar(ev)" matTooltip="Eliminar">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

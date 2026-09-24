@@ -6,23 +6,27 @@
     </div>
 
     <div class="admin-toolbar__meta">
-      <a mat-stroked-button routerLink="/admin/eventos">
+      <a mat-stroked-button [routerLink]="rutaGestion">
         <mat-icon>arrow_back</mat-icon>
         Volver
       </a>
-      <button mat-flat-button color="primary" *ngIf="evento.estado === 'BORRADOR'" (click)="publicar()">
+      <button mat-flat-button color="primary" *ngIf="esOrganizador && evento.estado === 'BORRADOR'" (click)="enviarARevision()">
+        <mat-icon>send</mat-icon>
+        Enviar a revision
+      </button>
+      <button mat-flat-button color="primary" *ngIf="esAdministrador && evento.estado === 'EN_REVISION'" (click)="publicar()">
         <mat-icon>publish</mat-icon>
         Publicar
       </button>
-      <a mat-stroked-button color="accent" *ngIf="evento.estado === 'BORRADOR'" [routerLink]="['/admin/eventos/editar', evento.id]">
+      <a mat-stroked-button color="accent" *ngIf="esOrganizador && (evento.estado === 'BORRADOR' || evento.estado === 'RECHAZADO')" [routerLink]="[rutaGestion, 'editar', evento.id]">
         <mat-icon>edit</mat-icon>
         Editar
       </a>
-      <button mat-flat-button color="warn" *ngIf="evento.estado === 'PUBLICADO'" (click)="cancelar()">
+      <button mat-flat-button color="warn" *ngIf="evento.estado === 'PUBLICADO' && (esAdministrador || esOrganizador)" (click)="cancelar()">
         <mat-icon>cancel</mat-icon>
         Cancelar
       </button>
-      <button mat-flat-button color="primary" *ngIf="evento.estado === 'PUBLICADO'" (click)="finalizar()">
+      <button mat-flat-button color="primary" *ngIf="esAdministrador && evento.estado === 'PUBLICADO'" (click)="finalizar()">
         <mat-icon>check_circle</mat-icon>
         Finalizar
       </button>
@@ -86,9 +90,6 @@
 
       <div class="student-card__footer" style="margin-top: 1rem;">
         <span>{{ evento.estado }}</span>
-        <button mat-flat-button color="primary" *ngIf="evento.estado === 'PUBLICADO' && evento.cupoDisponible > 0" (click)="inscribirse()">
-          Inscribirme
-        </button>
       </div>
     </mat-card>
   </section>

@@ -4,8 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventoService } from '../../../../core/services/evento.service';
 import { CategoriaEventoService } from '../../../../core/services/categoria-evento.service';
 import { CategoriaEvento } from '../../../../core/models/categoria-evento.model';
-import { Modalidad, TipoInscripcion } from '../../../../core/models/evento.model';
+import { CrearEventoRequest, Modalidad, PublicoObjetivo, TipoInscripcion } from '../../../../core/models/evento.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-evento-form',
@@ -28,19 +29,24 @@ export class EventoFormComponent implements OnInit {
   ) {
     this.eventoForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.maxLength(200)]],
-      descripcion: [''],
-      objetivos: [''],
+      descripcion: ['', Validators.required],
+      objetivos: ['', Validators.required],
       categoriaId: ['', Validators.required],
       modalidad: [Modalidad.PRESENCIAL, Validators.required],
       tipoInscripcion: [TipoInscripcion.GRATUITO, Validators.required],
       costo: [0, [Validators.required, Validators.min(0)]],
       fechaInicio: ['', Validators.required],
       fechaFin: ['', Validators.required],
-      horaInicio: [''],
-      horaFin: [''],
-      ubicacion: [''],
+      horaInicio: ['', Validators.required],
+      horaFin: ['', Validators.required],
+      ubicacion: ['', Validators.required],
+      direccion: [''],
       enlaceVirtual: [''],
+      requiereInscripcion: [true, Validators.required],
+      cupoLimitado: [true, Validators.required],
       cupoMaximo: [100, [Validators.required, Validators.min(1)]],
+      emiteCertificado: [false, Validators.required],
+      publicoObjetivo: [PublicoObjetivo.AMBOS, Validators.required],
       imagenPortada: ['']
     });
 
@@ -54,6 +60,9 @@ export class EventoFormComponent implements OnInit {
         costoControl?.enable();
       }
     });
+
+    this.eventoForm.get('modalidad')?.valueChanges.subscribe(() => this.actualizarValidadoresModalidad());
+    this.eventoForm.get('cupoLimitado')?.valueChanges.subscribe(() => this.actualizarValidadorCupo());
   }
 
   ngOnInit(): void {
@@ -66,37 +75,72 @@ export class EventoFormComponent implements OnInit {
   }
 
   cargarCategorias(): void {
-    this.categoriaService.listarActivas().subscribe(data => this.categorias = data);
+    this.categoriaService.listarActivas().subscribe({
+      next: (data) => this.categorias = data,
+      error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al cargar categorias activas'), 'Cerrar', { duration: 4500 })
+    });
   }
 
   cargarEvento(id: string): void {
     this.eventoService.obtenerPorId(id).subscribe({
       next: (ev) => this.eventoForm.patchValue(ev),
-      error: () => this.snackBar.open('Error al cargar evento', 'Cerrar', { duration: 3000 })
+      error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al cargar evento'), 'Cerrar', { duration: 4500 })
     });
   }
 
   guardar(): void {
     if (this.eventoForm.invalid) return;
 
-    const request = this.eventoForm.getRawValue();
+    const raw = this.eventoForm.getRawValue();
+    const request: CrearEventoRequest = {
+      ...raw,
+      costo: 0,
+      cupoMaximo: raw.cupoLimitado ? raw.cupoMaximo : null,
+      emiteCertificado: false
+    };
 
     if (this.esEdicion && this.id) {
       this.eventoService.actualizar(this.id, request).subscribe({
         next: () => {
           this.snackBar.open('Evento actualizado', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/admin/eventos']);
+          this.router.navigate([this.rutaGestion]);
         },
-        error: (err) => this.snackBar.open(err.error?.mensaje || 'Error al actualizar', 'Cerrar')
+        error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al actualizar'), 'Cerrar', { duration: 4500 })
       });
     } else {
       this.eventoService.crear(request).subscribe({
         next: () => {
           this.snackBar.open('Evento creado correctamente', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/admin/eventos']);
+          this.router.navigate([this.rutaGestion]);
         },
-        error: (err) => this.snackBar.open(err.error?.mensaje || 'Error al crear', 'Cerrar')
+        error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al crear'), 'Cerrar', { duration: 4500 })
       });
     }
+  }
+
+  get rutaGestion(): string {
+    return this.router.url.startsWith('/organizador') ? '/organizador/eventos' : '/admin/eventos';
+  }
+
+  private actualizarValidadoresModalidad(): void {
+    const presencial = this.eventoForm.get('modalidad')?.value === Modalidad.PRESENCIAL;
+    const ubicacion = this.eventoForm.get('ubicacion');
+    const enlaceVirtual = this.eventoForm.get('enlaceVirtual');
+
+    presencial ? ubicacion?.setValidators([Validators.required]) : ubicacion?.clearValidators();
+    presencial ? enlaceVirtual?.clearValidators() : enlaceVirtual?.setValidators([Validators.required]);
+    ubicacion?.updateValueAndValidity({ emitEvent: false });
+    enlaceVirtual?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private actualizarValidadorCupo(): void {
+    const cupo = this.eventoForm.get('cupoMaximo');
+    if (this.eventoForm.get('cupoLimitado')?.value) {
+      cupo?.setValidators([Validators.required, Validators.min(1)]);
+    } else {
+      cupo?.clearValidators();
+      cupo?.setValue(null, { emitEvent: false });
+    }
+    cupo?.updateValueAndValidity({ emitEvent: false });
   }
 }

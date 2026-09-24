@@ -16,6 +16,10 @@ export class EventoService {
     return this.http.get<Evento[]>(this.apiUrl);
   }
 
+  listarEnRevision(): Observable<Evento[]> {
+    return this.http.get<Evento[]>(`${this.apiUrl}/revision`);
+  }
+
   listarPublicados(): Observable<Evento[]> {
     return this.http.get<Evento[]>(`${this.apiUrl}/publicados`);
   }
@@ -40,8 +44,12 @@ export class EventoService {
     return this.http.patch<void>(`${this.apiUrl}/${id}/publicar`, {});
   }
 
-  cancelar(id: string): Observable<void> {
-    return this.http.patch<void>(`${this.apiUrl}/${id}/cancelar`, {});
+  enviarARevision(id: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/enviar-revision`, {});
+  }
+
+  cancelar(id: string, motivo: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/cancelar`, { motivo });
   }
 
   finalizar(id: string): Observable<void> {

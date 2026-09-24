@@ -1,21 +1,26 @@
 export enum Modalidad {
   PRESENCIAL = 'PRESENCIAL',
-  VIRTUAL = 'VIRTUAL',
-  HIBRIDO = 'HIBRIDO'
+  VIRTUAL = 'VIRTUAL'
 }
 
 export enum EstadoEvento {
   BORRADOR = 'BORRADOR',
+  EN_REVISION = 'EN_REVISION',
   PUBLICADO = 'PUBLICADO',
-  INSCRIPCIONES_CERRADAS = 'INSCRIPCIONES_CERRADAS',
-  EN_CURSO = 'EN_CURSO',
   FINALIZADO = 'FINALIZADO',
+  RECHAZADO = 'RECHAZADO',
   CANCELADO = 'CANCELADO'
 }
 
 export enum TipoInscripcion {
   GRATUITO = 'GRATUITO',
   PAGO = 'PAGO'
+}
+
+export enum PublicoObjetivo {
+  UAJMS = 'UAJMS',
+  EXTERNO = 'EXTERNO',
+  AMBOS = 'AMBOS'
 }
 
 export interface Evento {
@@ -28,14 +33,18 @@ export interface Evento {
   modalidad: Modalidad;
   tipoInscripcion: TipoInscripcion;
   costo: number;
-  fechaInicio: Date;
-  fechaFin: Date;
+  fechaInicio: string;
+  fechaFin: string;
   horaInicio: string;
   horaFin: string;
   ubicacion?: string;
   enlaceVirtual?: string;
-  cupoMaximo: number;
-  cupoDisponible: number;
+  requiereInscripcion: boolean;
+  cupoLimitado: boolean;
+  cupoMaximo: number | null;
+  cupoDisponible: number | null;
+  emiteCertificado: boolean;
+  publicoObjetivo: PublicoObjetivo;
   estado: EstadoEvento;
   imagenPortada?: string;
   organizadorId: string;
@@ -44,18 +53,23 @@ export interface Evento {
 
 export interface CrearEventoRequest {
   titulo: string;
-  descripcion?: string;
-  objetivos?: string;
+  descripcion: string;
+  objetivos: string;
   categoriaId: string;
   modalidad: Modalidad;
   tipoInscripcion: TipoInscripcion;
-  costo: number;
+  costo: number | null;
   fechaInicio: string;
   fechaFin: string;
-  horaInicio?: string;
-  horaFin?: string;
+  horaInicio: string;
+  horaFin: string;
   ubicacion?: string;
+  direccion?: string;
   enlaceVirtual?: string;
-  cupoMaximo: number;
+  requiereInscripcion: boolean;
+  cupoLimitado: boolean;
+  cupoMaximo: number | null;
+  emiteCertificado: boolean;
+  publicoObjetivo: PublicoObjetivo;
   imagenPortada?: string;
 }
