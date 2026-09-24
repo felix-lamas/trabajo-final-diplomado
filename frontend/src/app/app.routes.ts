@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
-import { AppShellComponent } from './core/layout/app-shell.component';
 
 export const routes: Routes = [
   {
@@ -15,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: AppShellComponent,
+    loadComponent: () => import('./core/layout/app-shell.component').then((m) => m.AppShellComponent),
     children: [
       {
         path: 'admin',
