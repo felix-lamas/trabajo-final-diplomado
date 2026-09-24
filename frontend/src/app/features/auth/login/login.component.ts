@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth.service';
+import { apiErrorMessage } from '../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-login',
@@ -37,12 +38,19 @@ export class LoginComponent {
     this.authService.login(this.form.getRawValue()).pipe(
       finalize(() => setTimeout(() => this.loading = false))
     ).subscribe({
-      next: () => {
+      next: (response) => {
         this.snackBar.open('Sesion iniciada correctamente', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/privado/dashboard']);
+        const roles = response.usuario.roles;
+        if (roles.includes('ADMINISTRADOR')) {
+          this.router.navigate(['/admin']);
+        } else if (roles.includes('ORGANIZADOR')) {
+          this.router.navigate(['/organizador/eventos']);
+        } else {
+          this.router.navigate(['/eventos']);
+        }
       },
       error: (err) => {
-        this.snackBar.open(err.error?.mensaje || 'No fue posible iniciar sesion', 'Cerrar', { duration: 4000 });
+        this.snackBar.open(apiErrorMessage(err, 'No fue posible iniciar sesion'), 'Cerrar', { duration: 4000 });
       }
     });
   }
