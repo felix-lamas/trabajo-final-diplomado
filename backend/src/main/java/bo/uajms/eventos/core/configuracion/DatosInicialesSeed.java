@@ -110,8 +110,12 @@ public class DatosInicialesSeed implements CommandLineRunner {
 
     private void crearUsuarioDemo(String correo, String ci, String ru, String nombres, String apellidos,
                                   Usuario.TipoUsuario tipoUsuario, Rol rol) {
-        Usuario usuario = usuarioRepository.findByCorreoElectronico(correo).orElseGet(() ->
-                usuarioRepository.save(Usuario.builder()
+        Usuario usuario = usuarioRepository.findByCorreoElectronico(correo)
+                .map(existente -> {
+                    existente.setContrasena(passwordEncoder.encode(demoPassword));
+                    return usuarioRepository.save(existente);
+                })
+                .orElseGet(() -> usuarioRepository.save(Usuario.builder()
                         .correoElectronico(correo)
                         .contrasena(passwordEncoder.encode(demoPassword))
                         .nombres(nombres)
