@@ -1,0 +1,125 @@
+# ============================================================
+# VIDIA - Flutter / Dart / Android
+# ============================================================
+
+# -------------------------
+# Flutter / Dart
+# -------------------------
+.dart_tool/
+.packages
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+coverage/
+
+# -------------------------
+# IDE
+# -------------------------
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# -------------------------
+# Android / Gradle
+# -------------------------
+.gradle/
+android/.gradle/
+android/local.properties
+android/key.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/app/build/
+android/captures/
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
+# -------------------------
+# iOS
+# -------------------------
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Runner/GeneratedPluginRegistrant.*
+
+# -------------------------
+# macOS
+# -------------------------
+macos/Pods/
+macos/Flutter/ephemeral/
+macos/Flutter/GeneratedPluginRegistrant.*
+
+# -------------------------
+# Windows
+# -------------------------
+windows/flutter/ephemeral/
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugin_registrant.h
+windows/flutter/generated_plugins.cmake
+
+# -------------------------
+# Linux
+# -------------------------
+linux/flutter/ephemeral/
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugin_registrant.h
+linux/flutter/generated_plugins.cmake
+
+# -------------------------
+# Web
+# -------------------------
+web/flutter_bootstrap.js
+
+# ============================================================
+# CONFIGURACIÓN LOCAL / SECRETOS
+# ============================================================
+
+
+# Cualquier archivo local de configuración
+config/*.local.json
+config/*local*.json
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Claves privadas
+*.pem
+*.key
+*.keystore
+*.jks
+
+# ============================================================
+# ARCHIVOS DEL SISTEMA
+# ============================================================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# ============================================================
+# LOGS
+# ============================================================
+
+*.log
+
+# ============================================================
+# ARCHIVOS TEMPORALES
+# ============================================================
+
+*.tmp
+*.temp
+*.swp
+*.swo
