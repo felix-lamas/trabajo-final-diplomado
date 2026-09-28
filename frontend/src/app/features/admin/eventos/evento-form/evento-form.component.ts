@@ -7,6 +7,7 @@ import { CategoriaEvento } from '../../../../core/models/categoria-evento.model'
 import { CrearEventoRequest, Modalidad, PublicoObjetivo, TipoInscripcion } from '../../../../core/models/evento.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { apiErrorMessage } from '../../../../core/utils/api-error.util';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-evento-form',
@@ -18,6 +19,7 @@ export class EventoFormComponent implements OnInit {
   esEdicion = false;
   id: string | null = null;
   categorias: CategoriaEvento[] = [];
+  guardando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -89,7 +91,9 @@ export class EventoFormComponent implements OnInit {
   }
 
   guardar(): void {
-    if (this.eventoForm.invalid) return;
+    if (this.eventoForm.invalid || this.guardando) return;
+
+    this.guardando = true;
 
     const raw = this.eventoForm.getRawValue();
     const request: CrearEventoRequest = {
@@ -100,7 +104,9 @@ export class EventoFormComponent implements OnInit {
     };
 
     if (this.esEdicion && this.id) {
-      this.eventoService.actualizar(this.id, request).subscribe({
+      this.eventoService.actualizar(this.id, request)
+        .pipe(finalize(() => this.guardando = false))
+        .subscribe({
         next: () => {
           this.snackBar.open('Evento actualizado', 'Cerrar', { duration: 3000 });
           this.router.navigate([this.rutaGestion]);
@@ -108,7 +114,9 @@ export class EventoFormComponent implements OnInit {
         error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al actualizar'), 'Cerrar', { duration: 4500 })
       });
     } else {
-      this.eventoService.crear(request).subscribe({
+      this.eventoService.crear(request)
+        .pipe(finalize(() => this.guardando = false))
+        .subscribe({
         next: () => {
           this.snackBar.open('Evento creado correctamente', 'Cerrar', { duration: 3000 });
           this.router.navigate([this.rutaGestion]);

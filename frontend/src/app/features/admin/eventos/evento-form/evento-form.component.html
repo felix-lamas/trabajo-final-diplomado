@@ -156,9 +156,9 @@
 
     <div class="student-card__footer" style="grid-column: 1 / -1;">
       <button mat-stroked-button type="button" [routerLink]="rutaGestion">Cancelar</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="eventoForm.invalid">
+      <button mat-flat-button color="primary" type="submit" [disabled]="eventoForm.invalid || guardando">
         <mat-icon>save</mat-icon>
-        Guardar evento
+        {{ guardando ? 'Guardando...' : 'Guardar evento' }}
       </button>
     </div>
   </form>

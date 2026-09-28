@@ -12,6 +12,7 @@ export class CatalogoEventosPublicoComponent implements OnInit {
   eventos: Evento[] = [];
   filtrados: Evento[] = [];
   loading = true;
+  errorCarga = false;
   pageIndex = 0;
   pageSize = 6;
   filtros: FormGroup;
@@ -27,6 +28,14 @@ export class CatalogoEventosPublicoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cargarEventos();
+
+    this.filtros.valueChanges.subscribe(() => this.aplicarFiltros());
+  }
+
+  cargarEventos(): void {
+    this.loading = true;
+    this.errorCarga = false;
     this.eventoService.listarPublicados().subscribe({
       next: (data) => {
         this.eventos = data.filter((evento) => evento.tipoInscripcion === 'GRATUITO');
@@ -35,12 +44,11 @@ export class CatalogoEventosPublicoComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.errorCarga = true;
         this.eventos = [];
         this.filtrados = [];
       }
     });
-
-    this.filtros.valueChanges.subscribe(() => this.aplicarFiltros());
   }
 
   get categorias(): string[] {

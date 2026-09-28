@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventoService } from '../../../core/services/evento.service';
 import { InscripcionService } from '../../../core/services/inscripcion.service';
 import { Evento } from '../../../core/models/evento.model';
+import { EstadoInscripcion } from '../../../core/models/inscripcion.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { apiErrorMessage } from '../../../core/utils/api-error.util';
 
@@ -16,6 +17,7 @@ export class InscripcionPublicaComponent implements OnInit {
   loading = true;
   confirmando = false;
   completado = false;
+  estadoInscripcion?: EstadoInscripcion;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +60,8 @@ export class InscripcionPublicaComponent implements OnInit {
       next: (inscripcion) => {
         this.confirmando = false;
         this.completado = true;
-        this.snackBar.open('Inscripcion realizada con exito', 'Cerrar', { duration: 3500 });
+        this.estadoInscripcion = inscripcion.estado;
+        this.snackBar.open(`Inscripcion realizada con exito. Estado: ${inscripcion.estado}`, 'Cerrar', { duration: 3500 });
         setTimeout(() => this.router.navigate(['/privado/inscripciones', inscripcion.id]), 900);
       },
       error: (err) => {

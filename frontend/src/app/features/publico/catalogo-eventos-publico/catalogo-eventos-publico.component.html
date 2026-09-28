@@ -37,15 +37,24 @@
     <app-skeleton *ngIf="loading" variant="card" [count]="6"></app-skeleton>
 
     <app-empty-state
-      *ngIf="!loading && paginados.length === 0"
+      *ngIf="!loading && errorCarga"
+      icon="cloud_off"
+      title="No fue posible cargar los eventos"
+      message="Intenta nuevamente."
+      actionLabel="Reintentar"
+      (action)="cargarEventos()">
+    </app-empty-state>
+
+    <app-empty-state
+      *ngIf="!loading && !errorCarga && paginados.length === 0"
       icon="search_off"
-      title="No se encontraron eventos"
+      title="No hay eventos publicados disponibles"
       message="Pruebe con otros filtros o vuelva mas tarde."
       actionLabel="Limpiar filtros"
       (action)="limpiarFiltros()">
     </app-empty-state>
 
-    <div class="public-grid public-grid--catalog" *ngIf="!loading && paginados.length > 0">
+    <div class="public-grid public-grid--catalog" *ngIf="!loading && !errorCarga && paginados.length > 0">
       <mat-card *ngFor="let evento of paginados" class="public-event-card">
         <div class="public-event-card__image">
           <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?auto=format&fit=crop&w=1200&q=80'" [alt]="evento.titulo">
