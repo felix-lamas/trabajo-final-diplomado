@@ -1,6 +1,7 @@
 package bo.uajms.eventos.core.configuracion;
 
 import bo.uajms.eventos.modulos.categorias.repositorios.CategoriaEventoRepository;
+import bo.uajms.eventos.modulos.usuarios.entidades.Permiso;
 import bo.uajms.eventos.modulos.usuarios.entidades.Rol;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import bo.uajms.eventos.modulos.usuarios.entidades.UsuarioRol;
@@ -22,16 +23,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
@@ -53,6 +59,8 @@ class DatosInicialesSeedProfileTest {
 
     private DatosInicialesSeed seed;
     private Rol rolAdministrador;
+    private Rol rolOrganizador;
+    private Rol rolUsuario;
     private String demoPassword;
     private String contrasenaCodificada;
 
@@ -66,6 +74,10 @@ class DatosInicialesSeedProfileTest {
 
         rolAdministrador = Rol.builder().nombre("ADMINISTRADOR").build();
         ReflectionTestUtils.setField(rolAdministrador, "id", UUID.randomUUID());
+        rolOrganizador = Rol.builder().nombre("ORGANIZADOR").build();
+        ReflectionTestUtils.setField(rolOrganizador, "id", UUID.randomUUID());
+        rolUsuario = Rol.builder().nombre("USUARIO").build();
+        ReflectionTestUtils.setField(rolUsuario, "id", UUID.randomUUID());
         lenient().when(passwordEncoder.encode(demoPassword)).thenReturn(contrasenaCodificada);
     }
 
@@ -154,6 +166,71 @@ class DatosInicialesSeedProfileTest {
         verify(usuarioRepository, times(2)).findByCorreoElectronico(CORREO_DEMO);
         verify(usuarioRepository, times(2)).save(existente);
         verify(usuarioRolRepository, never()).save(any(UsuarioRol.class));
+    }
+
+    @Test
+    void debePrepararOrganizadoresDemoAprobadoYPendienteConRolesCoherentes() throws Exception {
+        when(rolRepository.findByNombre("ADMINISTRADOR")).thenReturn(Optional.of(rolAdministrador));
+        when(rolRepository.findByNombre("ORGANIZADOR")).thenReturn(Optional.of(rolOrganizador));
+        when(rolRepository.findByNombre("USUARIO")).thenReturn(Optional.of(rolUsuario));
+        when(permisoRepository.findByNombre(anyString())).thenAnswer(invocacion -> {
+            Permiso permiso = Permiso.builder().nombre(invocacion.getArgument(0)).build();
+            ReflectionTestUtils.setField(permiso, "id", UUID.randomUUID());
+            return Optional.of(permiso);
+        });
+        when(rolPermisoRepository.findByRolId(any(UUID.class))).thenReturn(List.of());
+        when(categoriaEventoRepository.existsByNombreIgnoreCase(anyString())).thenReturn(true);
+        when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());
+        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocacion -> {
+            Usuario usuario = invocacion.getArgument(0);
+            if (usuario.getId() == null) {
+                ReflectionTestUtils.setField(usuario, "id", UUID.randomUUID());
+            }
+            return usuario;
+        });
+        when(usuarioRolRepository.findByUsuarioId(any(UUID.class))).thenReturn(List.of());
+
+        seed.run();
+
+        ArgumentCaptor<Usuario> usuarioCaptor = ArgumentCaptor.forClass(Usuario.class);
+        verify(usuarioRepository, times(7)).save(usuarioCaptor.capture());
+        Map<String, Usuario> usuarios = usuarioCaptor.getAllValues().stream()
+                .collect(Collectors.toMap(Usuario::getCorreoElectronico, Function.identity(), (primero, ultimo) -> ultimo));
+
+        assertEquals(4, usuarios.size());
+        Usuario administrador = usuarios.get("admin@demo.local");
+        Usuario organizadorAprobado = usuarios.get("organizador1@demo.local");
+        Usuario organizadorPendiente = usuarios.get("organizador2@demo.local");
+        Usuario participante = usuarios.get("usuario@demo.local");
+
+        assertNotNull(administrador);
+        assertEquals(Usuario.EstadoSolicitudOrganizador.APROBADA,
+                organizadorAprobado.getEstadoSolicitudOrganizador());
+        assertNotNull(organizadorAprobado.getFechaSolicitudOrganizador());
+        assertNotNull(organizadorAprobado.getFechaResolucionOrganizador());
+        assertSame(administrador, organizadorAprobado.getSolicitudResueltaPor());
+
+        assertEquals(Usuario.EstadoSolicitudOrganizador.PENDIENTE,
+                organizadorPendiente.getEstadoSolicitudOrganizador());
+        assertNotNull(organizadorPendiente.getFechaSolicitudOrganizador());
+        assertNull(organizadorPendiente.getFechaResolucionOrganizador());
+        assertNull(organizadorPendiente.getSolicitudResueltaPor());
+
+        assertEquals(Usuario.EstadoSolicitudOrganizador.NINGUNA,
+                participante.getEstadoSolicitudOrganizador());
+        assertNull(participante.getFechaSolicitudOrganizador());
+
+        ArgumentCaptor<UsuarioRol> rolCaptor = ArgumentCaptor.forClass(UsuarioRol.class);
+        verify(usuarioRolRepository, times(4)).save(rolCaptor.capture());
+        Map<String, String> rolesPorCorreo = rolCaptor.getAllValues().stream()
+                .collect(Collectors.toMap(
+                        relacion -> relacion.getUsuario().getCorreoElectronico(),
+                        relacion -> relacion.getRol().getNombre()));
+
+        assertEquals("ADMINISTRADOR", rolesPorCorreo.get("admin@demo.local"));
+        assertEquals("ORGANIZADOR", rolesPorCorreo.get("organizador1@demo.local"));
+        assertEquals("USUARIO", rolesPorCorreo.get("organizador2@demo.local"));
+        assertEquals("USUARIO", rolesPorCorreo.get("usuario@demo.local"));
     }
 
     private boolean esCandidatoConPerfil(String perfil) {

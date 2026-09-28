@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,12 +45,25 @@ public class DatosInicialesSeed implements CommandLineRunner {
     public void run(String... args) {
         Map<String, Rol> roles = cargarSeguridad();
         cargarCategoriasDemo();
-        crearUsuarioDemo("admin@demo.local", "DEMO-ADMIN", "RU-DEMO-ADMIN", "Administrador", "Demo",
+        Usuario administrador = crearUsuarioDemo("admin@demo.local", "DEMO-ADMIN", "RU-DEMO-ADMIN", "Administrador", "Demo",
                 Usuario.TipoUsuario.INTERNO, roles.get("ADMINISTRADOR"));
-        crearUsuarioDemo("organizador@demo.local", "DEMO-ORGANIZADOR", "RU-DEMO-ORG", "Organizador", "Demo",
+
+        Usuario organizadorAprobado = crearUsuarioDemo(
+                "organizador1@demo.local", "DEMO-ORGANIZADOR-1", "RU-DEMO-ORG-1", "Organizador", "Demo Uno",
                 Usuario.TipoUsuario.INTERNO, roles.get("ORGANIZADOR"));
-        crearUsuarioDemo("usuario@demo.local", "DEMO-USUARIO", null, "Usuario", "Demo",
+        configurarSolicitudOrganizadorDemo(organizadorAprobado,
+                Usuario.EstadoSolicitudOrganizador.APROBADA, administrador);
+
+        Usuario organizadorPendiente = crearUsuarioDemo(
+                "organizador2@demo.local", "DEMO-ORGANIZADOR-2", "RU-DEMO-ORG-2", "Organizador", "Demo Dos",
+                Usuario.TipoUsuario.INTERNO, roles.get("USUARIO"));
+        configurarSolicitudOrganizadorDemo(organizadorPendiente,
+                Usuario.EstadoSolicitudOrganizador.PENDIENTE, null);
+
+        Usuario participante = crearUsuarioDemo("usuario@demo.local", "DEMO-USUARIO", null, "Usuario", "Demo",
                 Usuario.TipoUsuario.EXTERNO, roles.get("USUARIO"));
+        configurarSolicitudOrganizadorDemo(participante,
+                Usuario.EstadoSolicitudOrganizador.NINGUNA, null);
     }
 
     private void cargarCategoriasDemo() {
@@ -108,8 +122,8 @@ public class DatosInicialesSeed implements CommandLineRunner {
         }
     }
 
-    private void crearUsuarioDemo(String correo, String ci, String ru, String nombres, String apellidos,
-                                  Usuario.TipoUsuario tipoUsuario, Rol rol) {
+    private Usuario crearUsuarioDemo(String correo, String ci, String ru, String nombres, String apellidos,
+                                     Usuario.TipoUsuario tipoUsuario, Rol rol) {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(correo)
                 .map(existente -> {
                     existente.setContrasena(passwordEncoder.encode(demoPassword));
@@ -125,10 +139,37 @@ public class DatosInicialesSeed implements CommandLineRunner {
                         .celular("70000000")
                         .tipoUsuario(tipoUsuario)
                         .build()));
-        boolean asignado = usuarioRolRepository.findByUsuarioId(usuario.getId()).stream()
-                .anyMatch(relacion -> relacion.getRol().getId().equals(rol.getId()));
-        if (!asignado) {
+        var rolesActuales = usuarioRolRepository.findByUsuarioId(usuario.getId());
+        boolean asignacionExacta = rolesActuales.size() == 1
+                && rolesActuales.getFirst().getRol().getId().equals(rol.getId());
+        if (!asignacionExacta) {
+            usuarioRolRepository.deleteByUsuarioId(usuario.getId());
             usuarioRolRepository.save(UsuarioRol.builder().usuario(usuario).rol(rol).build());
         }
+        return usuario;
+    }
+
+    private void configurarSolicitudOrganizadorDemo(Usuario usuario,
+                                                     Usuario.EstadoSolicitudOrganizador estado,
+                                                     Usuario administrador) {
+        usuario.setEstadoSolicitudOrganizador(estado);
+        usuario.setMotivoRechazoOrganizador(null);
+
+        if (estado == Usuario.EstadoSolicitudOrganizador.APROBADA) {
+            LocalDateTime fechaSolicitud = LocalDateTime.now();
+            usuario.setFechaSolicitudOrganizador(fechaSolicitud);
+            usuario.setFechaResolucionOrganizador(LocalDateTime.now());
+            usuario.setSolicitudResueltaPor(administrador);
+        } else if (estado == Usuario.EstadoSolicitudOrganizador.PENDIENTE) {
+            usuario.setFechaSolicitudOrganizador(LocalDateTime.now());
+            usuario.setFechaResolucionOrganizador(null);
+            usuario.setSolicitudResueltaPor(null);
+        } else {
+            usuario.setFechaSolicitudOrganizador(null);
+            usuario.setFechaResolucionOrganizador(null);
+            usuario.setSolicitudResueltaPor(null);
+        }
+
+        usuarioRepository.save(usuario);
     }
 }
