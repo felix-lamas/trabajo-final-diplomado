@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
@@ -14,10 +14,13 @@ import { apiErrorMessage } from '../../../../core/utils/api-error.util';
   standalone: false
 })
 export class MisInscripcionesComponent implements OnInit {
-  inscripciones: Inscripcion[] = [];
+  private readonly viewState = signal({ inscripciones: [] as Inscripcion[], loading: true });
+  get inscripciones(): Inscripcion[] { return this.viewState().inscripciones; }
+  private set inscripciones(value: Inscripcion[]) { this.viewState.update((state) => ({ ...state, inscripciones: value })); }
   displayedColumns: string[] = ['evento', 'fecha', 'estado', 'acciones'];
   estadoFiltro = 'TODAS';
-  loading = true;
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private inscripcionService: InscripcionService,

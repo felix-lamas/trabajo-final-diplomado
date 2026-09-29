@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { PagoService } from '../../../../core/services/pago.service';
 import { Pago, EstadoPago } from '../../../../core/models/pago.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,7 +9,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: false
 })
 export class MisPagosComponent implements OnInit {
-  pagos: Pago[] = [];
+  private readonly pagosState = signal<Pago[]>([]);
+  get pagos(): Pago[] { return this.pagosState(); }
+  private set pagos(value: Pago[]) { this.pagosState.set(value); }
   displayedColumns: string[] = ['evento', 'monto', 'fecha', 'estado', 'acciones'];
   estadoFiltro = 'TODOS';
 

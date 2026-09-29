@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
@@ -36,12 +36,26 @@ import { DashboardEjecutivoResponse } from '../../../core/models/dashboard.model
   templateUrl: './dashboard-privado.component.html'
 })
 export class DashboardPrivadoComponent implements OnInit {
-  loading = true;
-  ejecutivo?: DashboardEjecutivoResponse;
-  inscripciones: Inscripcion[] = [];
-  pagos: Pago[] = [];
-  credenciales: Credencial[] = [];
-  recomendados: Evento[] = [];
+  private readonly viewState = signal<{
+    loading: boolean;
+    ejecutivo?: DashboardEjecutivoResponse;
+    inscripciones: Inscripcion[];
+    pagos: Pago[];
+    credenciales: Credencial[];
+    recomendados: Evento[];
+  }>({ loading: true, inscripciones: [], pagos: [], credenciales: [], recomendados: [] });
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get ejecutivo(): DashboardEjecutivoResponse | undefined { return this.viewState().ejecutivo; }
+  private set ejecutivo(value: DashboardEjecutivoResponse | undefined) { this.viewState.update((state) => ({ ...state, ejecutivo: value })); }
+  get inscripciones(): Inscripcion[] { return this.viewState().inscripciones; }
+  private set inscripciones(value: Inscripcion[]) { this.viewState.update((state) => ({ ...state, inscripciones: value })); }
+  get pagos(): Pago[] { return this.viewState().pagos; }
+  private set pagos(value: Pago[]) { this.viewState.update((state) => ({ ...state, pagos: value })); }
+  get credenciales(): Credencial[] { return this.viewState().credenciales; }
+  private set credenciales(value: Credencial[]) { this.viewState.update((state) => ({ ...state, credenciales: value })); }
+  get recomendados(): Evento[] { return this.viewState().recomendados; }
+  private set recomendados(value: Evento[]) { this.viewState.update((state) => ({ ...state, recomendados: value })); }
 
   constructor(
     private readonly authService: AuthService,

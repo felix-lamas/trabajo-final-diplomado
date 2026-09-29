@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
@@ -13,9 +13,12 @@ import { ToastService } from '../../../../shared/ui/toast.service';
   standalone: false
 })
 export class ValidarPagosListComponent implements OnInit {
-  pagos: Pago[] = [];
+  private readonly viewState = signal({ pagos: [] as Pago[], loading: true });
+  get pagos(): Pago[] { return this.viewState().pagos; }
+  private set pagos(value: Pago[]) { this.viewState.update((state) => ({ ...state, pagos: value })); }
   displayedColumns: string[] = ['usuario', 'evento', 'monto', 'fecha', 'acciones'];
-  loading = true;
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private pagoService: PagoService,

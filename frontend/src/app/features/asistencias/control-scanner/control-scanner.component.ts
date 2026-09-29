@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -27,9 +27,17 @@ import { Evento } from '../../../core/models/evento.model';
 export class ControlScannerComponent implements OnInit {
   searchForm: FormGroup;
   qrForm: FormGroup;
-  ficha: ValidarQrResponse | null = null;
-  loading = false;
-  eventos: Evento[] = [];
+  private readonly viewState = signal<{
+    ficha: ValidarQrResponse | null;
+    loading: boolean;
+    eventos: Evento[];
+  }>({ ficha: null, loading: false, eventos: [] });
+  get ficha(): ValidarQrResponse | null { return this.viewState().ficha; }
+  private set ficha(value: ValidarQrResponse | null) { this.viewState.update((state) => ({ ...state, ficha: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get eventos(): Evento[] { return this.viewState().eventos; }
+  private set eventos(value: Evento[]) { this.viewState.update((state) => ({ ...state, eventos: value })); }
   observacion = '';
 
   constructor(

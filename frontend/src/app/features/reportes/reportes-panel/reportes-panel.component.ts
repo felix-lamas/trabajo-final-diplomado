@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 // Service & Model
 import { DashboardService } from '../../../core/services/dashboard.service';
@@ -12,10 +12,18 @@ import { ToastService } from '../../../shared/ui/toast.service';
   standalone: false
 })
 export class ReportesPanelComponent implements OnInit {
-  reporte: ReporteDataResponse | null = null;
+  private readonly viewState = signal<{
+    reporte: ReporteDataResponse | null;
+    loading: boolean;
+    columnas: string[];
+  }>({ reporte: null, loading: false, columnas: [] });
+  get reporte(): ReporteDataResponse | null { return this.viewState().reporte; }
+  private set reporte(value: ReporteDataResponse | null) { this.viewState.update((state) => ({ ...state, reporte: value })); }
   tipoActual: 'eventos' | 'participantes' | 'pagos' | 'certificados' = 'eventos';
-  loading = false;
-  columnas: string[] = [];
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get columnas(): string[] { return this.viewState().columnas; }
+  private set columnas(value: string[]) { this.viewState.update((state) => ({ ...state, columnas: value })); }
 
   constructor(
     private dashboardService: DashboardService,

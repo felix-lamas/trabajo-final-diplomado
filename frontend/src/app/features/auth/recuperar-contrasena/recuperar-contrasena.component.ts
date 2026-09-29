@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,8 +10,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class RecuperarContrasenaComponent {
   recuperarForm: FormGroup;
-  loading = false;
-  enviado = false;
+  private readonly viewState = signal({ loading: false, enviado: false });
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get enviado(): boolean { return this.viewState().enviado; }
+  private set enviado(value: boolean) { this.viewState.update((state) => ({ ...state, enviado: value })); }
 
   constructor(
     private fb: FormBuilder,

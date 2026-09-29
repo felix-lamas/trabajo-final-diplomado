@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PagoService } from '../../../../core/services/pago.service';
@@ -13,10 +13,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RegistrarPagoComponent implements OnInit {
   pagoForm: FormGroup;
   inscripcionId = '';
-  eventoTitulo = '';
-  montoSugerido = 0;
+  private readonly viewState = signal({ eventoTitulo: '', montoSugerido: 0, enviando: false });
+  get eventoTitulo(): string { return this.viewState().eventoTitulo; }
+  private set eventoTitulo(value: string) { this.viewState.update((state) => ({ ...state, eventoTitulo: value })); }
+  get montoSugerido(): number { return this.viewState().montoSugerido; }
+  private set montoSugerido(value: number) { this.viewState.update((state) => ({ ...state, montoSugerido: value })); }
   archivoComprobante: File | null = null;
-  enviando = false;
+  get enviando(): boolean { return this.viewState().enviando; }
+  private set enviando(value: boolean) { this.viewState.update((state) => ({ ...state, enviando: value })); }
 
   constructor(
     private fb: FormBuilder,

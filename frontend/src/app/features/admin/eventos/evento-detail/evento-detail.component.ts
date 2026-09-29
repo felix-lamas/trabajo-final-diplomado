@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -15,7 +15,9 @@ import { apiErrorMessage } from '../../../../core/utils/api-error.util';
   standalone: false
 })
 export class EventoDetailComponent implements OnInit {
-  evento?: Evento;
+  private readonly eventoState = signal<Evento | undefined>(undefined);
+  get evento(): Evento | undefined { return this.eventoState(); }
+  private set evento(value: Evento | undefined) { this.eventoState.set(value); }
 
   constructor(
     private eventoService: EventoService,

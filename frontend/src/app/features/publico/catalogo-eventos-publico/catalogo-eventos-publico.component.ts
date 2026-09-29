@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EventoService } from '../../../core/services/evento.service';
 import { Evento } from '../../../core/models/evento.model';
@@ -9,10 +9,20 @@ import { Evento } from '../../../core/models/evento.model';
   standalone: false
 })
 export class CatalogoEventosPublicoComponent implements OnInit {
-  eventos: Evento[] = [];
-  filtrados: Evento[] = [];
-  loading = true;
-  errorCarga = false;
+  private readonly viewState = signal({
+    eventos: [] as Evento[],
+    filtrados: [] as Evento[],
+    loading: true,
+    errorCarga: false
+  });
+  get eventos(): Evento[] { return this.viewState().eventos; }
+  private set eventos(value: Evento[]) { this.viewState.update((state) => ({ ...state, eventos: value })); }
+  get filtrados(): Evento[] { return this.viewState().filtrados; }
+  private set filtrados(value: Evento[]) { this.viewState.update((state) => ({ ...state, filtrados: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get errorCarga(): boolean { return this.viewState().errorCarga; }
+  private set errorCarga(value: boolean) { this.viewState.update((state) => ({ ...state, errorCarga: value })); }
   pageIndex = 0;
   pageSize = 6;
   filtros: FormGroup;

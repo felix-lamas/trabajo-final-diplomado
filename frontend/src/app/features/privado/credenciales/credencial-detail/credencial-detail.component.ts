@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredencialService } from '../../../../core/services/credencial.service';
 import { Credencial } from '../../../../core/models/credencial.model';
@@ -10,9 +10,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: false
 })
 export class CredencialDetailComponent implements OnInit {
-  credencial?: Credencial;
-  qrImage: string | null = null;
-  loading = true;
+  private readonly viewState = signal<{ credencial?: Credencial; qrImage: string | null; loading: boolean }>({
+    qrImage: null,
+    loading: true
+  });
+  get credencial(): Credencial | undefined { return this.viewState().credencial; }
+  private set credencial(value: Credencial | undefined) { this.viewState.update((state) => ({ ...state, credencial: value })); }
+  get qrImage(): string | null { return this.viewState().qrImage; }
+  private set qrImage(value: string | null) { this.viewState.update((state) => ({ ...state, qrImage: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private route: ActivatedRoute,

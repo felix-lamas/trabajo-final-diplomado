@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
@@ -13,9 +13,12 @@ import { ToastService } from '../../../../shared/ui/toast.service';
   standalone: false
 })
 export class CategoriaListComponent implements OnInit {
-  categorias: CategoriaEvento[] = [];
+  private readonly viewState = signal({ categorias: [] as CategoriaEvento[], loading: true });
+  get categorias(): CategoriaEvento[] { return this.viewState().categorias; }
+  private set categorias(value: CategoriaEvento[]) { this.viewState.update((state) => ({ ...state, categorias: value })); }
   displayedColumns: string[] = ['nombre', 'descripcion', 'estado', 'acciones'];
-  loading = true;
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private categoriaService: CategoriaEventoService,

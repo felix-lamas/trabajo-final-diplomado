@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,8 +14,14 @@ import { VerificacionCertificadoResponse } from '../../../core/models/certificad
 })
 export class ValidacionPublicaComponent implements OnInit {
   valForm: FormGroup;
-  resultado: VerificacionCertificadoResponse | null = null;
-  loading = false;
+  private readonly viewState = signal<{
+    resultado: VerificacionCertificadoResponse | null;
+    loading: boolean;
+  }>({ resultado: null, loading: false });
+  get resultado(): VerificacionCertificadoResponse | null { return this.viewState().resultado; }
+  private set resultado(value: VerificacionCertificadoResponse | null) { this.viewState.update((state) => ({ ...state, resultado: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private fb: FormBuilder,

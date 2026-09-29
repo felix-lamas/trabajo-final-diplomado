@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { EventoService } from '../../../core/services/evento.service';
 import { Evento } from '../../../core/models/evento.model';
 
@@ -8,8 +8,11 @@ import { Evento } from '../../../core/models/evento.model';
   standalone: false
 })
 export class LandingPublicoComponent implements OnInit {
-  eventos: Evento[] = [];
-  loading = true;
+  private readonly viewState = signal({ eventos: [] as Evento[], loading: true });
+  get eventos(): Evento[] { return this.viewState().eventos; }
+  private set eventos(value: Evento[]) { this.viewState.update((state) => ({ ...state, eventos: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(private eventoService: EventoService) {}
 

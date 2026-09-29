@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
@@ -33,12 +33,26 @@ import { Pago } from '../../../core/models/pago.model';
   templateUrl: './admin-dashboard.component.html'
 })
 export class AdminDashboardComponent implements OnInit {
-  loading = true;
-  ejecutivo?: DashboardEjecutivoResponse;
-  academico?: DashboardAcademicoResponse;
-  operativo?: DashboardOperativoResponse;
-  eventos: Evento[] = [];
-  pagosPendientes: Pago[] = [];
+  private readonly viewState = signal<{
+    loading: boolean;
+    ejecutivo?: DashboardEjecutivoResponse;
+    academico?: DashboardAcademicoResponse;
+    operativo?: DashboardOperativoResponse;
+    eventos: Evento[];
+    pagosPendientes: Pago[];
+  }>({ loading: true, eventos: [], pagosPendientes: [] });
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get ejecutivo(): DashboardEjecutivoResponse | undefined { return this.viewState().ejecutivo; }
+  private set ejecutivo(value: DashboardEjecutivoResponse | undefined) { this.viewState.update((state) => ({ ...state, ejecutivo: value })); }
+  get academico(): DashboardAcademicoResponse | undefined { return this.viewState().academico; }
+  private set academico(value: DashboardAcademicoResponse | undefined) { this.viewState.update((state) => ({ ...state, academico: value })); }
+  get operativo(): DashboardOperativoResponse | undefined { return this.viewState().operativo; }
+  private set operativo(value: DashboardOperativoResponse | undefined) { this.viewState.update((state) => ({ ...state, operativo: value })); }
+  get eventos(): Evento[] { return this.viewState().eventos; }
+  private set eventos(value: Evento[]) { this.viewState.update((state) => ({ ...state, eventos: value })); }
+  get pagosPendientes(): Pago[] { return this.viewState().pagosPendientes; }
+  private set pagosPendientes(value: Pago[]) { this.viewState.update((state) => ({ ...state, pagosPendientes: value })); }
 
   constructor(
     private readonly dashboardService: DashboardService,

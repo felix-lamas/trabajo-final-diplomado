@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
@@ -14,11 +14,14 @@ import { AuthService } from '../../../../core/services/auth.service';
   standalone: false
 })
 export class EventoListComponent implements OnInit {
-  eventos: Evento[] = [];
+  private readonly viewState = signal({ eventos: [] as Evento[], loading: true });
+  get eventos(): Evento[] { return this.viewState().eventos; }
+  private set eventos(value: Evento[]) { this.viewState.update((state) => ({ ...state, eventos: value })); }
   displayedColumns: string[] = ['titulo', 'categoria', 'fecha', 'cupo', 'estado', 'acciones'];
   busqueda = '';
   estadoFiltro = 'TODOS';
-  loading = true;
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private eventoService: EventoService,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,8 +12,11 @@ import { apiErrorMessage } from '../../../core/utils/api-error.util';
 })
 export class RegistroComponent {
   form: FormGroup;
-  currentStep = 1;
-  loading = false;
+  private readonly viewState = signal({ currentStep: 1, loading: false });
+  get currentStep(): number { return this.viewState().currentStep; }
+  private set currentStep(value: number) { this.viewState.update((state) => ({ ...state, currentStep: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private fb: FormBuilder,

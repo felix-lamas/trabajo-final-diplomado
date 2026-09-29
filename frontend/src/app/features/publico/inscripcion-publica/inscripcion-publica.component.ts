@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventoService } from '../../../core/services/evento.service';
 import { InscripcionService } from '../../../core/services/inscripcion.service';
@@ -13,11 +13,23 @@ import { apiErrorMessage } from '../../../core/utils/api-error.util';
   standalone: false
 })
 export class InscripcionPublicaComponent implements OnInit {
-  evento?: Evento;
-  loading = true;
-  confirmando = false;
-  completado = false;
-  estadoInscripcion?: EstadoInscripcion;
+  private readonly viewState = signal<{
+    evento?: Evento;
+    loading: boolean;
+    confirmando: boolean;
+    completado: boolean;
+    estadoInscripcion?: EstadoInscripcion;
+  }>({ loading: true, confirmando: false, completado: false });
+  get evento(): Evento | undefined { return this.viewState().evento; }
+  private set evento(value: Evento | undefined) { this.viewState.update((state) => ({ ...state, evento: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get confirmando(): boolean { return this.viewState().confirmando; }
+  private set confirmando(value: boolean) { this.viewState.update((state) => ({ ...state, confirmando: value })); }
+  get completado(): boolean { return this.viewState().completado; }
+  private set completado(value: boolean) { this.viewState.update((state) => ({ ...state, completado: value })); }
+  get estadoInscripcion(): EstadoInscripcion | undefined { return this.viewState().estadoInscripcion; }
+  private set estadoInscripcion(value: EstadoInscripcion | undefined) { this.viewState.update((state) => ({ ...state, estadoInscripcion: value })); }
 
   constructor(
     private route: ActivatedRoute,

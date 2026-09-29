@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CredencialService } from '../../../../core/services/credencial.service';
 import { Credencial } from '../../../../core/models/credencial.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,7 +9,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: false
 })
 export class MisCredencialesComponent implements OnInit {
-  credenciales: Credencial[] = [];
+  private readonly credencialesState = signal<Credencial[]>([]);
+  get credenciales(): Credencial[] { return this.credencialesState(); }
+  private set credenciales(value: Credencial[]) { this.credencialesState.set(value); }
   displayedColumns: string[] = ['evento', 'codigo', 'fecha', 'estado', 'acciones'];
 
   constructor(

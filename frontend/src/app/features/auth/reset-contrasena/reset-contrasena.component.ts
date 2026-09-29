@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,7 +11,9 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class ResetContrasenaComponent implements OnInit {
   resetForm: FormGroup;
-  loading = false;
+  private readonly loadingState = signal(false);
+  get loading(): boolean { return this.loadingState(); }
+  private set loading(value: boolean) { this.loadingState.set(value); }
   token = '';
 
   constructor(

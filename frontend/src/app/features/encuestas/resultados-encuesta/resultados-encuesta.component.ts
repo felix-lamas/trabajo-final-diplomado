@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EncuestaService } from '../../../core/services/encuesta.service';
 import { EstadisticasEncuestaResponse, EncuestaResponse } from '../../../core/models/encuesta.model';
@@ -10,9 +10,17 @@ import { EstadisticasEncuestaResponse, EncuestaResponse } from '../../../core/mo
 })
 export class ResultadosEncuestaComponent implements OnInit {
   eventoId = '';
-  loading = false;
-  estadisticas: EstadisticasEncuestaResponse | null = null;
-  respuestas: EncuestaResponse[] = [];
+  private readonly viewState = signal<{
+    loading: boolean;
+    estadisticas: EstadisticasEncuestaResponse | null;
+    respuestas: EncuestaResponse[];
+  }>({ loading: false, estadisticas: null, respuestas: [] });
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get estadisticas(): EstadisticasEncuestaResponse | null { return this.viewState().estadisticas; }
+  private set estadisticas(value: EstadisticasEncuestaResponse | null) { this.viewState.update((state) => ({ ...state, estadisticas: value })); }
+  get respuestas(): EncuestaResponse[] { return this.viewState().respuestas; }
+  private set respuestas(value: EncuestaResponse[]) { this.viewState.update((state) => ({ ...state, respuestas: value })); }
 
   constructor(
     private route: ActivatedRoute,

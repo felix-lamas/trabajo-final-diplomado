@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 // Material
@@ -18,9 +18,17 @@ import { Evento } from '../../../core/models/evento.model';
 })
 export class AsistenciaListComponent implements OnInit {
   filtroForm: FormGroup;
-  eventos: Evento[] = [];
-  asistencias: AsistenciaResponse[] = [];
-  loading = false;
+  private readonly viewState = signal({
+    eventos: [] as Evento[],
+    asistencias: [] as AsistenciaResponse[],
+    loading: false
+  });
+  get eventos(): Evento[] { return this.viewState().eventos; }
+  private set eventos(value: Evento[]) { this.viewState.update((state) => ({ ...state, eventos: value })); }
+  get asistencias(): AsistenciaResponse[] { return this.viewState().asistencias; }
+  private set asistencias(value: AsistenciaResponse[]) { this.viewState.update((state) => ({ ...state, asistencias: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
   displayedColumns: string[] = ['indice', 'codigo', 'participante', 'documento', 'fechaHora', 'operador'];
 
   constructor(

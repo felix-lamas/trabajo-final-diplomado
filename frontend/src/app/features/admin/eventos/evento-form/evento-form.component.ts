@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventoService } from '../../../../core/services/evento.service';
@@ -18,8 +18,13 @@ export class EventoFormComponent implements OnInit {
   eventoForm: FormGroup;
   esEdicion = false;
   id: string | null = null;
-  categorias: CategoriaEvento[] = [];
-  guardando = false;
+  private readonly viewState = signal({ categorias: [] as CategoriaEvento[], cargandoEvento: false, guardando: false });
+  get categorias(): CategoriaEvento[] { return this.viewState().categorias; }
+  private set categorias(value: CategoriaEvento[]) { this.viewState.update((state) => ({ ...state, categorias: value })); }
+  get cargandoEvento(): boolean { return this.viewState().cargandoEvento; }
+  private set cargandoEvento(value: boolean) { this.viewState.update((state) => ({ ...state, cargandoEvento: value })); }
+  get guardando(): boolean { return this.viewState().guardando; }
+  private set guardando(value: boolean) { this.viewState.update((state) => ({ ...state, guardando: value })); }
 
   constructor(
     private fb: FormBuilder,
@@ -84,7 +89,10 @@ export class EventoFormComponent implements OnInit {
   }
 
   cargarEvento(id: string): void {
-    this.eventoService.obtenerPorId(id).subscribe({
+    this.cargandoEvento = true;
+    this.eventoService.obtenerPorId(id)
+      .pipe(finalize(() => this.cargandoEvento = false))
+      .subscribe({
       next: (ev) => this.eventoForm.patchValue(ev),
       error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al cargar evento'), 'Cerrar', { duration: 4500 })
     });

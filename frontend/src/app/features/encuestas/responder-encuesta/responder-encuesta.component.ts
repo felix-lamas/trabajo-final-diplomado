@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,8 +12,11 @@ import { EncuestaService } from '../../../core/services/encuesta.service';
 export class ResponderEncuestaComponent implements OnInit {
   form: FormGroup;
   eventoId = '';
-  loading = false;
-  submitted = false;
+  private readonly viewState = signal({ loading: false, submitted: false });
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get submitted(): boolean { return this.viewState().submitted; }
+  private set submitted(value: boolean) { this.viewState.update((state) => ({ ...state, submitted: value })); }
   estrellas = [1, 2, 3, 4, 5];
 
   constructor(

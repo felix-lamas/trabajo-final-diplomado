@@ -10,7 +10,7 @@
     </a>
   </section>
 
-  <form [formGroup]="eventoForm" (ngSubmit)="guardar()" class="admin-form-shell">
+  <form [formGroup]="eventoForm" (ngSubmit)="guardar()" class="admin-form-shell" [attr.aria-busy]="cargandoEvento || guardando">
     <mat-card class="admin-form-panel">
       <div class="app-toolbar">
         <div class="app-toolbar__title">
@@ -156,9 +156,9 @@
 
     <div class="student-card__footer" style="grid-column: 1 / -1;">
       <button mat-stroked-button type="button" [routerLink]="rutaGestion">Cancelar</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="eventoForm.invalid || guardando">
+      <button mat-flat-button color="primary" type="submit" [disabled]="eventoForm.invalid || cargandoEvento || guardando">
         <mat-icon>save</mat-icon>
-        {{ guardando ? 'Guardando...' : 'Guardar evento' }}
+        {{ guardando ? 'Guardando...' : (cargandoEvento ? 'Cargando...' : 'Guardar evento') }}
       </button>
     </div>
   </form>

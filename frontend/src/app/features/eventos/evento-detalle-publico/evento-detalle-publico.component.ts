@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventoService } from '../../../core/services/evento.service';
@@ -10,8 +10,11 @@ import { Evento } from '../../../core/models/evento.model';
   standalone: false
 })
 export class EventoDetallePublicoComponent implements OnInit {
-  evento?: Evento;
-  loading = true;
+  private readonly viewState = signal<{ evento?: Evento; loading: boolean }>({ loading: true });
+  get evento(): Evento | undefined { return this.viewState().evento; }
+  private set evento(value: Evento | undefined) { this.viewState.update((state) => ({ ...state, evento: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private route: ActivatedRoute,

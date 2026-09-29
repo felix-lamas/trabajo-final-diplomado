@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
@@ -14,8 +14,11 @@ import { ToastService } from '../../../../shared/ui/toast.service';
   standalone: false
 })
 export class InscripcionDetailComponent implements OnInit {
-  inscripcion?: DetalleInscripcion;
-  loading = true;
+  private readonly viewState = signal<{ inscripcion?: DetalleInscripcion; loading: boolean }>({ loading: true });
+  get inscripcion(): DetalleInscripcion | undefined { return this.viewState().inscripcion; }
+  private set inscripcion(value: DetalleInscripcion | undefined) { this.viewState.update((state) => ({ ...state, inscripcion: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private route: ActivatedRoute,

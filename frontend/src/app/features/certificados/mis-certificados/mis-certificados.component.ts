@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,9 +14,17 @@ import { CertificadoResponse } from '../../../core/models/certificado.model';
   standalone: false
 })
 export class MisCertificadosComponent implements OnInit {
-  certificados: CertificadoResponse[] = [];
-  loading = false;
-  certificadoSeleccionado: CertificadoResponse | null = null;
+  private readonly viewState = signal<{
+    certificados: CertificadoResponse[];
+    loading: boolean;
+    certificadoSeleccionado: CertificadoResponse | null;
+  }>({ certificados: [], loading: false, certificadoSeleccionado: null });
+  get certificados(): CertificadoResponse[] { return this.viewState().certificados; }
+  private set certificados(value: CertificadoResponse[]) { this.viewState.update((state) => ({ ...state, certificados: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get certificadoSeleccionado(): CertificadoResponse | null { return this.viewState().certificadoSeleccionado; }
+  private set certificadoSeleccionado(value: CertificadoResponse | null) { this.viewState.update((state) => ({ ...state, certificadoSeleccionado: value })); }
   displayedColumns: string[] = ['codigo', 'evento', 'horas', 'fecha', 'estado', 'acciones'];
 
   constructor(

@@ -10,7 +10,7 @@
     </a>
   </section>
 
-  <form [formGroup]="categoriaForm" (ngSubmit)="guardar()" class="admin-form-shell">
+  <form [formGroup]="categoriaForm" (ngSubmit)="guardar()" class="admin-form-shell" [attr.aria-busy]="cargando || guardando">
     <mat-card class="admin-form-panel">
       <div class="app-form-grid">
         <mat-form-field appearance="outline">
@@ -37,9 +37,9 @@
 
     <div class="student-card__footer" style="grid-column: 1 / -1;">
       <button mat-stroked-button type="button" routerLink="/admin/categorias">Cancelar</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="categoriaForm.invalid">
+      <button mat-flat-button color="primary" type="submit" [disabled]="categoriaForm.invalid || cargando || guardando">
         <mat-icon>save</mat-icon>
-        Guardar
+        {{ guardando ? 'Guardando...' : (cargando ? 'Cargando...' : 'Guardar') }}
       </button>
     </div>
   </form>

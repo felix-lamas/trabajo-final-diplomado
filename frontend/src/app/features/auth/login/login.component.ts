@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,7 +13,9 @@ import { apiErrorMessage } from '../../../core/utils/api-error.util';
 })
 export class LoginComponent {
   form: FormGroup;
-  loading = false;
+  private readonly loadingState = signal(false);
+  get loading(): boolean { return this.loadingState(); }
+  private set loading(value: boolean) { this.loadingState.set(value); }
 
   constructor(
     private fb: FormBuilder,

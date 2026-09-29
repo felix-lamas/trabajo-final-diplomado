@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 import { DashboardService } from '../../../core/services/dashboard.service';
 import {
@@ -14,10 +14,20 @@ import {
   standalone: false
 })
 export class DashboardPanelComponent implements OnInit {
-  ejecutivo: DashboardEjecutivoResponse | null = null;
-  academico: DashboardAcademicoResponse | null = null;
-  operativo: DashboardOperativoResponse | null = null;
-  loading = false;
+  private readonly viewState = signal<{
+    ejecutivo: DashboardEjecutivoResponse | null;
+    academico: DashboardAcademicoResponse | null;
+    operativo: DashboardOperativoResponse | null;
+    loading: boolean;
+  }>({ ejecutivo: null, academico: null, operativo: null, loading: false });
+  get ejecutivo(): DashboardEjecutivoResponse | null { return this.viewState().ejecutivo; }
+  private set ejecutivo(value: DashboardEjecutivoResponse | null) { this.viewState.update((state) => ({ ...state, ejecutivo: value })); }
+  get academico(): DashboardAcademicoResponse | null { return this.viewState().academico; }
+  private set academico(value: DashboardAcademicoResponse | null) { this.viewState.update((state) => ({ ...state, academico: value })); }
+  get operativo(): DashboardOperativoResponse | null { return this.viewState().operativo; }
+  private set operativo(value: DashboardOperativoResponse | null) { this.viewState.update((state) => ({ ...state, operativo: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   filtroFechaInicio: Date | null = null;
   filtroFechaFin: Date | null = null;
