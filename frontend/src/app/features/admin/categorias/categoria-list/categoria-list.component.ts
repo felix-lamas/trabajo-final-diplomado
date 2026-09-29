@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
 import { CategoriaEventoService } from '../../../../core/services/categoria-evento.service';
 import { CategoriaEvento } from '../../../../core/models/categoria-evento.model';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ToastService } from '../../../../shared/ui/toast.service';
 
@@ -13,12 +14,13 @@ import { ToastService } from '../../../../shared/ui/toast.service';
   standalone: false
 })
 export class CategoriaListComponent implements OnInit {
-  private readonly viewState = signal({ categorias: [] as CategoriaEvento[], loading: true });
-  get categorias(): CategoriaEvento[] { return this.viewState().categorias; }
-  private set categorias(value: CategoriaEvento[]) { this.viewState.update((state) => ({ ...state, categorias: value })); }
-  displayedColumns: string[] = ['nombre', 'descripcion', 'estado', 'acciones'];
-  get loading(): boolean { return this.viewState().loading; }
-  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  readonly categorias = signal<CategoriaEvento[]>([]);
+  readonly loading = signal(true);
+  readonly error = signal<string | null>(null);
+  readonly eliminandoId = signal<string | null>(null);
+  readonly activas = computed(() => this.categorias().filter((categoria) => categoria.estado === 'ACTIVO').length);
+  readonly inactivas = computed(() => this.categorias().length - this.activas());
+  readonly displayedColumns: string[] = ['nombre', 'descripcion', 'estado', 'acciones'];
 
   constructor(
     private categoriaService: CategoriaEventoService,
@@ -31,42 +33,43 @@ export class CategoriaListComponent implements OnInit {
   }
 
   cargarCategorias(): void {
-    this.loading = true;
+    this.loading.set(true);
+    this.error.set(null);
     this.categoriaService.listar()
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (data) => this.categorias = data,
-        error: () => this.toast.error('Error al cargar categorias')
+        next: (data) => this.categorias.set(data),
+        error: (error) => this.error.set(apiErrorMessage(error, 'No fue posible cargar las categorías.'))
       });
   }
 
-  get activas(): number {
-    return this.categorias.filter((categoria) => categoria.estado === 'ACTIVO').length;
-  }
-
-  get inactivas(): number {
-    return this.categorias.filter((categoria) => categoria.estado !== 'ACTIVO').length;
-  }
-
-  desactivar(cat: CategoriaEvento): void {
+  eliminar(categoria: CategoriaEvento): void {
     this.dialog.open(ConfirmDialogComponent, {
       width: 'min(440px, 92vw)',
       data: {
-        title: 'Desactivar categoria',
-        message: `La categoria "${cat.nombre}" dejara de estar disponible para clasificar nuevos eventos.`,
-        confirmText: 'Desactivar',
+        title: 'Eliminar categoría',
+        message: `La categoría "${categoria.nombre}" dejará de estar disponible. No podrá eliminarse si tiene eventos asociados.`,
+        confirmText: 'Eliminar',
         tone: 'warning'
       }
     }).afterClosed().subscribe((confirmed) => {
       if (!confirmed) return;
 
-      this.categoriaService.eliminar(cat.id).subscribe({
-        next: () => {
-          this.toast.success('Categoria desactivada correctamente');
-          this.cargarCategorias();
-        },
-        error: () => this.toast.error('Error al desactivar categoria')
-      });
+      this.eliminandoId.set(categoria.id);
+      this.error.set(null);
+      this.categoriaService.eliminar(categoria.id)
+        .pipe(finalize(() => this.eliminandoId.set(null)))
+        .subscribe({
+          next: () => {
+            this.categorias.update((categorias) => categorias.filter((item) => item.id !== categoria.id));
+            this.toast.success('Categoría eliminada correctamente');
+          },
+          error: (error) => {
+            const mensaje = apiErrorMessage(error, 'No fue posible eliminar la categoría.');
+            this.error.set(mensaje);
+            this.toast.error(mensaje);
+          }
+        });
     });
   }
 }

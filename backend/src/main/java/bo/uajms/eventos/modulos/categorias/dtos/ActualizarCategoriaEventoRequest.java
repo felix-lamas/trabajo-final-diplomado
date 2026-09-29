@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.categorias.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -13,5 +14,6 @@ public class ActualizarCategoriaEventoRequest {
     private String descripcion;
     
     @NotBlank(message = "El estado es obligatorio")
+    @Pattern(regexp = "ACTIVO|INACTIVO", message = "El estado debe ser ACTIVO o INACTIVO")
     private String estado;
 }

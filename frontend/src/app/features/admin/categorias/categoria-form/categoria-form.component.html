@@ -10,7 +10,11 @@
     </a>
   </section>
 
-  <form [formGroup]="categoriaForm" (ngSubmit)="guardar()" class="admin-form-shell" [attr.aria-busy]="cargando || guardando">
+  <form [formGroup]="categoriaForm" (ngSubmit)="guardar()" class="admin-form-shell" [attr.aria-busy]="cargando() || guardando()">
+    <mat-card class="admin-surface" *ngIf="error()">
+      <p role="alert">{{ error() }}</p>
+      <button *ngIf="esEdicion && id" mat-stroked-button type="button" (click)="cargarCategoria(id)">Reintentar</button>
+    </mat-card>
     <mat-card class="admin-form-panel">
       <div class="app-form-grid">
         <mat-form-field appearance="outline">
@@ -18,6 +22,7 @@
           <input matInput formControlName="nombre" placeholder="Ej. Seminario, Taller, Conferencia" required>
           <mat-error *ngIf="categoriaForm.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
           <mat-error *ngIf="categoriaForm.get('nombre')?.hasError('minlength')">Minimo 3 caracteres</mat-error>
+          <mat-error *ngIf="categoriaForm.get('nombre')?.hasError('maxlength')">Maximo 100 caracteres</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -37,9 +42,9 @@
 
     <div class="student-card__footer" style="grid-column: 1 / -1;">
       <button mat-stroked-button type="button" routerLink="/admin/categorias">Cancelar</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="categoriaForm.invalid || cargando || guardando">
+      <button mat-flat-button color="primary" type="submit" [disabled]="categoriaForm.invalid || cargando() || guardando()">
         <mat-icon>save</mat-icon>
-        {{ guardando ? 'Guardando...' : (cargando ? 'Cargando...' : 'Guardar') }}
+        {{ guardando() ? 'Guardando...' : (cargando() ? 'Cargando...' : 'Guardar') }}
       </button>
     </div>
   </form>

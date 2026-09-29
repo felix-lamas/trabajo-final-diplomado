@@ -90,10 +90,13 @@ public class DatosInicialesSeed implements CommandLineRunner {
         crearCategoriaDemo("Taller", "Talleres ficticios para demostracion");
         crearCategoriaDemo("Curso", "Cursos ficticios para demostracion");
         crearCategoriaDemo("Seminario", "Seminarios ficticios para demostracion");
+        crearCategoriaDemo("Jornada", "Jornadas ficticias para demostracion");
+        crearCategoriaDemo("Cultural", "Actividades culturales ficticias para demostracion");
+        crearCategoriaDemo("Deportivo", "Actividades deportivas ficticias para demostracion");
     }
 
     private void crearCategoriaDemo(String nombre, String descripcion) {
-        if (!categoriaEventoRepository.existsByNombreIgnoreCase(nombre)) {
+        if (!categoriaEventoRepository.existsByNombreNormalizado(nombre.trim().toLowerCase(Locale.ROOT))) {
             categoriaEventoRepository.save(CategoriaEvento.builder()
                     .nombre(nombre)
                     .descripcion(descripcion)

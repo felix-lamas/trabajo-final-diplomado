@@ -71,12 +71,28 @@ Esta fase no activa Flyway. Para una migracion productiva futura deben declarars
 
 ### Categorias
 
-- `GET /api/v1/categorias-evento`
-- `GET /api/v1/categorias-evento/activas`
-- `GET /api/v1/categorias-evento/{id}`
-- `POST /api/v1/categorias-evento`
-- `PUT /api/v1/categorias-evento/{id}`
-- `DELETE /api/v1/categorias-evento/{id}`
+Contrato canonico, sin aliases:
+
+| Metodo y ruta | Rol | Resultado | Errores relevantes |
+| --- | --- | --- | --- |
+| `GET /api/v1/categorias-evento` | `ADMINISTRADOR`, `ORGANIZADOR`, `USUARIO` | `200`, lista de DTOs activos e inactivos | `401`, `403` |
+| `GET /api/v1/categorias-evento/activas` | `ADMINISTRADOR`, `ORGANIZADOR`, `USUARIO` | `200`, categorias utilizables por selectores de eventos | `401`, `403` |
+| `GET /api/v1/categorias-evento/{id}` | `ADMINISTRADOR`, `ORGANIZADOR`, `USUARIO` | `200`, DTO de categoria | `400`, `401`, `403`, `404` |
+| `POST /api/v1/categorias-evento` | `ADMINISTRADOR` | `201`, categoria creada | `400`, `401`, `403`, `409` por nombre duplicado |
+| `PUT /api/v1/categorias-evento/{id}` | `ADMINISTRADOR` | `200`, categoria actualizada | `400`, `401`, `403`, `404`, `409` por nombre duplicado |
+| `DELETE /api/v1/categorias-evento/{id}` | `ADMINISTRADOR` | `204`, eliminacion logica | `400`, `401`, `403`, `404`, `409` si existen eventos asociados |
+
+El nombre se recorta en sus extremos y debe tener entre 3 y 100 caracteres una vez normalizado. La
+unicidad no distingue mayusculas ni espacios externos. La respuesta publica es
+`CategoriaEventoResponse` (`id`, `nombre`, `descripcion`, `estado`); nunca se expone la entidad JPA ni
+la clave tecnica `nombreNormalizado`. Todos los errores usan `ErrorRespuesta` con `codigo`, `mensaje`,
+`detalles`, `timestamp` y `ruta`.
+
+La entidad declara `nombre_normalizado VARCHAR(100) NOT NULL UNIQUE` como defensa fisica ante carreras
+concurrentes. El esquema actual sigue dependiendo de `ddl-auto=update`: antes de desplegar sobre una
+base con categorias historicas se debe reconciliar duplicados, poblar la columna con
+`lower(trim(nombre))` y crear/verificar su restriccion unica mediante el procedimiento de despliegue.
+No se incorpora Flyway en esta fase y PostgreSQL no se considera validado por las pruebas unitarias.
 
 ### Eventos
 

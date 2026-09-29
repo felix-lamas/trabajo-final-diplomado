@@ -25,6 +25,7 @@ public interface EventoRepository extends JpaRepository<Evento, UUID> {
     List<Evento> findByCategoriaId(UUID categoriaId);
     List<Evento> findByCategoriaIdAndEstado(UUID categoriaId, EstadoEvento estado);
     List<Evento> findByCategoriaIdAndOrganizadorId(UUID categoriaId, UUID organizadorId);
+    boolean existsByCategoriaId(UUID categoriaId);
     Optional<Evento> findByIdAndEstado(UUID id, EstadoEvento estado);
     Optional<Evento> findByIdAndOrganizadorId(UUID id, UUID organizadorId);
 

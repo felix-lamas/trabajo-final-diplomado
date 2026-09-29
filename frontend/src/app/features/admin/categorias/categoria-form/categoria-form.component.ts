@@ -1,9 +1,18 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoriaEventoService } from '../../../../core/services/categoria-evento.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
+
+import { CategoriaEventoService } from '../../../../core/services/categoria-evento.service';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
+
+function nombreCategoriaValido(control: AbstractControl): ValidationErrors | null {
+  const longitud = typeof control.value === 'string' ? control.value.trim().length : 0;
+  if (longitud < 3) return { minlength: true };
+  if (longitud > 100) return { maxlength: true };
+  return null;
+}
 
 @Component({
   selector: 'app-categoria-form',
@@ -11,14 +20,12 @@ import { finalize } from 'rxjs';
   standalone: false
 })
 export class CategoriaFormComponent implements OnInit {
-  categoriaForm: FormGroup;
+  readonly cargando = signal(false);
+  readonly guardando = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly categoriaForm: FormGroup;
   esEdicion = false;
   id: string | null = null;
-  private readonly viewState = signal({ cargando: false, guardando: false });
-  get cargando(): boolean { return this.viewState().cargando; }
-  private set cargando(value: boolean) { this.viewState.update((state) => ({ ...state, cargando: value })); }
-  get guardando(): boolean { return this.viewState().guardando; }
-  private set guardando(value: boolean) { this.viewState.update((state) => ({ ...state, guardando: value })); }
 
   constructor(
     private fb: FormBuilder,
@@ -28,9 +35,9 @@ export class CategoriaFormComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.categoriaForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      nombre: ['', [Validators.required, nombreCategoriaValido]],
       descripcion: [''],
-      estado: ['ACTIVO']
+      estado: ['ACTIVO', Validators.required]
     });
   }
 
@@ -43,47 +50,45 @@ export class CategoriaFormComponent implements OnInit {
   }
 
   cargarCategoria(id: string): void {
-    this.cargando = true;
+    this.cargando.set(true);
+    this.error.set(null);
     this.categoriaService.obtenerPorId(id)
-      .pipe(finalize(() => this.cargando = false))
+      .pipe(finalize(() => this.cargando.set(false)))
       .subscribe({
-      next: (cat) => {
-        this.categoriaForm.patchValue({
-          nombre: cat.nombre,
-          descripcion: cat.descripcion,
-          estado: cat.estado
-        });
-      },
-      error: () => this.snackBar.open('Error al cargar categoría', 'Cerrar', { duration: 3000 })
-    });
+        next: (categoria) => this.categoriaForm.patchValue(categoria),
+        error: (error) => this.error.set(apiErrorMessage(error, 'No fue posible cargar la categoría.'))
+      });
   }
 
   guardar(): void {
-    if (this.categoriaForm.invalid || this.guardando) return;
-
-    this.guardando = true;
-    const request = this.categoriaForm.value;
-
-    if (this.esEdicion && this.id) {
-      this.categoriaService.actualizar(this.id, request)
-        .pipe(finalize(() => this.guardando = false))
-        .subscribe({
-        next: () => {
-          this.snackBar.open('Categoría actualizada correctamente', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/admin/categorias']);
-        },
-        error: () => this.snackBar.open('Error al actualizar categoría', 'Cerrar', { duration: 3000 })
-      });
-    } else {
-      this.categoriaService.crear(request)
-        .pipe(finalize(() => this.guardando = false))
-        .subscribe({
-        next: () => {
-          this.snackBar.open('Categoría creada correctamente', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/admin/categorias']);
-        },
-        error: () => this.snackBar.open('Error al crear categoría', 'Cerrar', { duration: 3000 })
-      });
+    if (this.categoriaForm.invalid || this.guardando() || this.cargando()) {
+      this.categoriaForm.markAllAsTouched();
+      return;
     }
+
+    this.guardando.set(true);
+    this.error.set(null);
+    const raw = this.categoriaForm.getRawValue();
+    const request = { ...raw, nombre: raw.nombre.trim(), descripcion: raw.descripcion?.trim() || undefined };
+    const operacion = this.esEdicion && this.id
+      ? this.categoriaService.actualizar(this.id, request)
+      : this.categoriaService.crear({ nombre: request.nombre, descripcion: request.descripcion });
+
+    operacion.pipe(finalize(() => this.guardando.set(false))).subscribe({
+      next: () => {
+        this.snackBar.open(
+          this.esEdicion ? 'Categoría actualizada correctamente' : 'Categoría creada correctamente',
+          'Cerrar',
+          { duration: 3000 }
+        );
+        this.router.navigate(['/admin/categorias']);
+      },
+      error: (error) => {
+        const mensaje = apiErrorMessage(error,
+          this.esEdicion ? 'No fue posible actualizar la categoría.' : 'No fue posible crear la categoría.');
+        this.error.set(mensaje);
+        this.snackBar.open(mensaje, 'Cerrar', { duration: 4500 });
+      }
+    });
   }
 }

@@ -188,7 +188,7 @@ class DatosInicialesSeedProfileTest {
             return Optional.of(permiso);
         });
         when(rolPermisoRepository.findByRolId(any(UUID.class))).thenReturn(List.of());
-        when(categoriaEventoRepository.existsByNombreIgnoreCase(anyString())).thenReturn(true);
+        when(categoriaEventoRepository.existsByNombreNormalizado(anyString())).thenReturn(true);
         when(categoriaEventoRepository.findAll()).thenReturn(categoriasDemo());
         when(eventoRepository.findAll()).thenReturn(List.of());
         when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());

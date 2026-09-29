@@ -10,8 +10,8 @@ import java.util.UUID;
 
 @Repository
 public interface CategoriaEventoRepository extends JpaRepository<CategoriaEvento, UUID> {
-    boolean existsByNombreIgnoreCase(String nombre);
-    boolean existsByNombreIgnoreCaseAndIdNot(String nombre, UUID id);
+    boolean existsByNombreNormalizado(String nombreNormalizado);
+    boolean existsByNombreNormalizadoAndIdNot(String nombreNormalizado, UUID id);
     List<CategoriaEvento> findByEstado(String estado);
     Optional<CategoriaEvento> findByIdAndEstado(UUID id, String estado);
 }

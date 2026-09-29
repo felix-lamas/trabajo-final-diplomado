@@ -13,5 +13,5 @@ export interface CrearCategoriaEventoRequest {
 export interface ActualizarCategoriaEventoRequest {
   nombre: string;
   descripcion?: string;
-  estado: string;
+  estado: 'ACTIVO' | 'INACTIVO';
 }
