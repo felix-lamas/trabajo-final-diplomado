@@ -31,6 +31,13 @@ Los aliases conservados no deben utilizarse en desarrollos nuevos. Su retirada r
 - `POST /api/v1/auth/login`
 - `POST /api/v1/auth/recuperar-contrasena`
 - `POST /api/v1/auth/restablecer-contrasena`
+- `POST /api/v1/auth/verificar-correo`
+- `POST /api/v1/auth/reenviar-verificacion`
+- `POST /api/v1/auth/logout`
+
+El registro crea una cuenta con `correoVerificado=false`, emite un token aleatorio de verificacion con vigencia de 24 horas y no devuelve JWT. El valor plano se entrega exclusivamente al servicio SMTP; la base conserva SHA-256. La verificacion consume el token una sola vez. El reenvio responde de forma no enumerativa tanto para correos inexistentes, cuentas verificadas y fallos operativos de SMTP; la respuesta confirma procesamiento, no entrega. Los fallos SMTP se controlan internamente sin registrar destinatario, URL ni token.
+
+El login solo admite cuentas verificadas. Cada login bloquea la fila del usuario, revoca sesiones anteriores, crea una unica sesion activa y emite un JWT cuyo `jti` referencia esa sesion. Firma, expiracion y sesion persistida se validan en cada peticion. `POST /api/v1/auth/logout` requiere Bearer JWT, devuelve `204` y revoca la sesion actual; el backend no elimina el token almacenado por el cliente.
 
 ### Usuarios
 
@@ -45,6 +52,18 @@ Los aliases conservados no deben utilizarse en desarrollos nuevos. Su retirada r
 - `PATCH /api/v1/usuarios/solicitudes-organizador/{usuarioId}/rechazar`
 
 El cambio de contrasena conserva `POST` porque es el contrato implementado y no existe un consumidor de un supuesto `PATCH`. El registro canonico permanece en `/auth/registro`; no existe `POST /usuarios` en el backend real.
+
+## Persistencia pendiente de migracion
+
+Esta fase no activa Flyway. Para una migracion productiva futura deben declararse y reconciliarse de forma explicita:
+
+- `usuario.correo_verificado BOOLEAN NOT NULL` con politica definida para cuentas historicas;
+- tabla `token_verificacion_correo` con UUID, `token_hash CHAR(64) UNIQUE NOT NULL`, usuario, expiracion, uso y auditoria;
+- tabla `sesion_usuario` con UUID usado como `jti`, usuario, expiracion, revocacion y auditoria;
+- indices por usuario para tokens y sesiones, y por expiracion para limpieza;
+- garantia fisica de una unica sesion no revocada por usuario mediante indice parcial de PostgreSQL, como defensa adicional al bloqueo pesimista transaccional del login.
+
+`spring.jpa.hibernate.ddl-auto=update` sigue siendo solo una facilidad local y no se considera migracion de produccion.
 
 ### Categorias
 

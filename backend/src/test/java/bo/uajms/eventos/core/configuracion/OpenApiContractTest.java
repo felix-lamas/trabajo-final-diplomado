@@ -13,6 +13,8 @@ import bo.uajms.eventos.modulos.usuarios.controladores.AutenticacionControlador;
 import bo.uajms.eventos.modulos.usuarios.controladores.UsuarioControlador;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +45,7 @@ class OpenApiContractTest {
     );
 
     @Test
-    void contratoCanonicoContiene74OperacionesDocumentadas() {
+    void contratoCanonicoContiene77OperacionesDocumentadas() {
         int operaciones = 0;
         for (Class<?> controller : CONTROLLERS) {
             for (Method method : controller.getDeclaredMethods()) {
@@ -69,7 +71,7 @@ class OpenApiContractTest {
                 }
             }
         }
-        assertEquals(74, operaciones);
+        assertEquals(77, operaciones);
     }
 
     @Test
@@ -78,6 +80,20 @@ class OpenApiContractTest {
                 Arrays.asList(AutenticacionControlador.class.getAnnotation(RequestMapping.class).value()));
         assertTrue(Arrays.stream(AutenticacionControlador.class.getDeclaredMethods())
                 .noneMatch(method -> method.getName().equals("resetearContrasena")));
+    }
+
+    @Test
+    void logoutEsProtegidoYVerificacionEsPublica() throws Exception {
+        Method logout = Arrays.stream(AutenticacionControlador.class.getDeclaredMethods())
+                .filter(method -> method.getName().equals("logout"))
+                .findFirst().orElseThrow();
+        assertNotNull(logout.getAnnotation(SecurityRequirement.class));
+        assertTrue(logout.getAnnotation(SecurityRequirements.class) == null);
+
+        Method verificar = Arrays.stream(AutenticacionControlador.class.getDeclaredMethods())
+                .filter(method -> method.getName().equals("verificarCorreo"))
+                .findFirst().orElseThrow();
+        assertNotNull(verificar.getAnnotation(SecurityRequirements.class));
     }
 
     @Test

@@ -23,6 +23,7 @@ import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.util.HexFormat;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -33,12 +34,14 @@ class RecuperacionContrasenaHashTest {
     @Mock RolRepository rolRepository;
     @Mock UsuarioRolRepository usuarioRolRepository;
     @Mock TokenRecuperacionRepository tokenRepository;
+    @Mock TokenVerificacionCorreoRepository tokenVerificacionCorreoRepository;
     @Mock PasswordEncoder passwordEncoder;
     @Mock JwtService jwtService;
     @Mock AuthenticationManager authenticationManager;
     @Mock UserDetailsService userDetailsService;
     @Mock UsuarioMapper usuarioMapper;
     @Mock CorreoServicio correoServicio;
+    @Mock SesionUsuarioServicio sesionUsuarioServicio;
     @InjectMocks AutenticacionServicio service;
 
     private Usuario usuario;
@@ -46,6 +49,7 @@ class RecuperacionContrasenaHashTest {
     @BeforeEach
     void setup() {
         usuario = Usuario.builder().correoElectronico("usuario@example.test").contrasena("hash-anterior").build();
+        ReflectionTestUtils.setField(usuario, "id", UUID.randomUUID());
         ReflectionTestUtils.setField(service, "resetPasswordUrl", "https://app.example.test/restablecer");
     }
 
@@ -75,6 +79,7 @@ class RecuperacionContrasenaHashTest {
         String plano = "token-plano-valido";
         TokenRecuperacion token = token(plano, false, LocalDateTime.now().plusMinutes(5));
         when(tokenRepository.findByToken(hash(plano))).thenReturn(Optional.of(token));
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
         when(passwordEncoder.encode("NuevaSegura1!")).thenReturn("nuevo-hash");
 
         service.restablecerContrasena(request(plano));
@@ -83,6 +88,7 @@ class RecuperacionContrasenaHashTest {
         assertTrue(token.isUtilizado());
         verify(usuarioRepository).save(usuario);
         verify(tokenRepository).save(token);
+        verify(sesionUsuarioServicio).revocarSesionesActivas(usuario.getId());
     }
 
     @Test

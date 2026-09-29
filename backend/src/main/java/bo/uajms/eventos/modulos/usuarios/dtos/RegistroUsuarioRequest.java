@@ -55,6 +55,6 @@ public class RegistroUsuarioRequest {
     private String confirmacionContrasena;
 
     @NotNull(message = "El tipo de usuario es obligatorio")
-    @Schema(example = "UAJMS")
+    @Schema(description = "INTERNO para comunidad UAJMS; EXTERNO para participantes externos", example = "INTERNO")
     private TipoUsuario tipoUsuario;
 }

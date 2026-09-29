@@ -117,6 +117,18 @@ public class ManejadorGlobalExcepciones {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ServicioNoDisponibleException.class)
+    public ResponseEntity<ErrorRespuesta> manejarServicioNoDisponible(
+            ServicioNoDisponibleException ex, WebRequest request) {
+        ErrorRespuesta error = ErrorRespuesta.builder()
+                .codigo(ex.getCodigo())
+                .mensaje(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .ruta(request.getDescription(false))
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorRespuesta> manejarExcepcionGlobal(Exception ex, WebRequest request) {
         log.error("Error inesperado procesando {}", request.getDescription(false), ex);

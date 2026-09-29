@@ -146,6 +146,7 @@ public class DatosInicialesSeed implements CommandLineRunner {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(correo)
                 .map(existente -> {
                     existente.setContrasena(passwordEncoder.encode(demoPassword));
+                    existente.setCorreoVerificado(true);
                     return usuarioRepository.save(existente);
                 })
                 .orElseGet(() -> usuarioRepository.save(Usuario.builder()
@@ -156,6 +157,7 @@ public class DatosInicialesSeed implements CommandLineRunner {
                         .ci(ci)
                         .ru(ru)
                         .celular("70000000")
+                        .correoVerificado(true)
                         .tipoUsuario(tipoUsuario)
                         .build()));
         var rolesActuales = usuarioRolRepository.findByUsuarioId(usuario.getId());

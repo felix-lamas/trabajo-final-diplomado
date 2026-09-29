@@ -32,6 +32,7 @@ class UsuarioServicioTest {
     private PasswordEncoder passwordEncoder;
     private UsuarioAutenticadoService usuarioAutenticadoService;
     private UsuarioServicio servicio;
+    private SesionUsuarioServicio sesionUsuarioServicio;
     private Usuario usuario;
     private Usuario administrador;
 
@@ -42,8 +43,9 @@ class UsuarioServicioTest {
         rolRepository = mock(RolRepository.class);
         passwordEncoder = mock(PasswordEncoder.class);
         usuarioAutenticadoService = mock(UsuarioAutenticadoService.class);
+        sesionUsuarioServicio = mock(SesionUsuarioServicio.class);
         servicio = new UsuarioServicio(usuarioRepository, usuarioRolRepository, rolRepository,
-                new UsuarioMapper(), passwordEncoder, usuarioAutenticadoService);
+                new UsuarioMapper(), passwordEncoder, usuarioAutenticadoService, sesionUsuarioServicio);
         usuario = usuario("usuario@ejemplo.test");
         administrador = usuario("admin@ejemplo.test");
     }
@@ -79,6 +81,7 @@ class UsuarioServicioTest {
     @Test
     void cambiaContrasenaDelUsuarioAutenticado() {
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("Actual9!", "hash-actual")).thenReturn(true);
         when(passwordEncoder.encode("NuevaClave9!")).thenReturn("hash-nuevo");
         usuario.setContrasena("hash-actual");
@@ -87,11 +90,13 @@ class UsuarioServicioTest {
 
         assertEquals("hash-nuevo", usuario.getContrasena());
         verify(usuarioRepository).save(usuario);
+        verify(sesionUsuarioServicio).revocarSesionesActivas(usuario.getId());
     }
 
     @Test
     void rechazaContrasenaActualIncorrectaSinPersistir() {
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
         usuario.setContrasena("hash-actual");
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 

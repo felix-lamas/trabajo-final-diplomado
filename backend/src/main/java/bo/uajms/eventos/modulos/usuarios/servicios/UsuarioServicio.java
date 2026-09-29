@@ -37,6 +37,7 @@ public class UsuarioServicio {
     private final UsuarioMapper usuarioMapper;
     private final PasswordEncoder passwordEncoder;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
+    private final SesionUsuarioServicio sesionUsuarioServicio;
 
     @Transactional(readOnly = true)
     public List<UsuarioDto> listarTodos() {
@@ -72,7 +73,9 @@ public class UsuarioServicio {
 
     @Transactional
     public void cambiarContrasena(CambioContrasenaRequest request) {
-        Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        Usuario usuario = usuarioRepository.findByIdForUpdate(usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario", usuarioId));
 
         if (!passwordEncoder.matches(request.getContrasenaActual(), usuario.getContrasena())) {
             throw new NegocioException(CodigosError.PASSWORD_INVALID, "La contraseña actual es incorrecta");
@@ -84,6 +87,7 @@ public class UsuarioServicio {
 
         usuario.setContrasena(passwordEncoder.encode(request.getNuevaContrasena()));
         usuarioRepository.save(usuario);
+        sesionUsuarioServicio.revocarSesionesActivas(usuario.getId());
     }
 
     @Transactional

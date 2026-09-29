@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -26,18 +27,27 @@ public class JwtService {
         return extraerClaim(token, Claims::getSubject);
     }
 
+    public UUID extraerIdSesion(String token) {
+        String identificador = extraerClaim(token, Claims::getId);
+        if (identificador == null || identificador.isBlank()) {
+            throw new IllegalArgumentException("El JWT no contiene identificador de sesion");
+        }
+        return UUID.fromString(identificador);
+    }
+
     public <T> T extraerClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extraerTodosLosClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public String generarToken(UserDetails userDetails) {
-        return generarToken(new HashMap<>(), userDetails);
+    public String generarToken(UserDetails userDetails, UUID sesionId) {
+        return generarToken(new HashMap<>(), userDetails, sesionId);
     }
 
-    public String generarToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generarToken(Map<String, Object> extraClaims, UserDetails userDetails, UUID sesionId) {
         return Jwts.builder()
                 .claims(extraClaims)
+                .id(sesionId.toString())
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + propiedades.getExpiracionMs()))

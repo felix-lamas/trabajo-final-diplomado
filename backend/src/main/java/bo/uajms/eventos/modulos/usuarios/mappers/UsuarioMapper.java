@@ -31,6 +31,7 @@ public class UsuarioMapper {
         dto.setNombres(usuario.getNombres());
         dto.setApellidos(usuario.getApellidos());
         dto.setCorreoElectronico(usuario.getCorreoElectronico());
+        dto.setCorreoVerificado(usuario.isCorreoVerificado());
         dto.setCi(usuario.getCi());
         dto.setRu(usuario.getRu());
         dto.setCelular(usuario.getCelular());
@@ -47,6 +48,7 @@ public class UsuarioMapper {
                 .nombres(usuario.getNombres())
                 .apellidos(usuario.getApellidos())
                 .correoElectronico(usuario.getCorreoElectronico())
+                .correoVerificado(usuario.isCorreoVerificado())
                 .ci(usuario.getCi())
                 .ru(usuario.getRu())
                 .celular(usuario.getCelular())

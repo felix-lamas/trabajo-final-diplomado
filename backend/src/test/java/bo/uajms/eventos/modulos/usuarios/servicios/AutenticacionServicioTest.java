@@ -4,13 +4,16 @@ import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.seguridad.JwtService;
 import bo.uajms.eventos.modulos.usuarios.dtos.LoginRequest;
 import bo.uajms.eventos.modulos.usuarios.dtos.LoginResponse;
+import bo.uajms.eventos.modulos.usuarios.dtos.RegistroResponse;
 import bo.uajms.eventos.modulos.usuarios.dtos.RegistroUsuarioRequest;
 import bo.uajms.eventos.modulos.usuarios.entidades.Rol;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import bo.uajms.eventos.modulos.usuarios.entidades.UsuarioRol;
+import bo.uajms.eventos.modulos.usuarios.entidades.SesionUsuario;
 import bo.uajms.eventos.modulos.usuarios.mappers.UsuarioMapper;
 import bo.uajms.eventos.modulos.usuarios.repositorios.RolRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.TokenRecuperacionRepository;
+import bo.uajms.eventos.modulos.usuarios.repositorios.TokenVerificacionCorreoRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRolRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +48,8 @@ class AutenticacionServicioTest {
     private UserDetailsService userDetailsService;
     private AutenticacionServicio servicio;
     private Rol rolUsuario;
+    private TokenVerificacionCorreoRepository tokenVerificacionCorreoRepository;
+    private SesionUsuarioServicio sesionUsuarioServicio;
 
     @BeforeEach
     void configurar() {
@@ -55,6 +60,8 @@ class AutenticacionServicioTest {
         jwtService = mock(JwtService.class);
         authenticationManager = mock(AuthenticationManager.class);
         userDetailsService = mock(UserDetailsService.class);
+        tokenVerificacionCorreoRepository = mock(TokenVerificacionCorreoRepository.class);
+        sesionUsuarioServicio = mock(SesionUsuarioServicio.class);
         rolUsuario = rol("USUARIO");
 
         servicio = new AutenticacionServicio(
@@ -62,13 +69,16 @@ class AutenticacionServicioTest {
                 rolRepository,
                 usuarioRolRepository,
                 mock(TokenRecuperacionRepository.class),
+                tokenVerificacionCorreoRepository,
                 passwordEncoder,
                 jwtService,
                 authenticationManager,
                 userDetailsService,
                 new UsuarioMapper(),
-                mock(CorreoServicio.class)
+                mock(CorreoServicio.class),
+                sesionUsuarioServicio
         );
+        ReflectionTestUtils.setField(servicio, "verifyEmailUrl", "https://app.example.test/verificar");
     }
 
     @Test
@@ -76,7 +86,7 @@ class AutenticacionServicioTest {
         RegistroUsuarioRequest request = registroInterno();
         prepararRegistroExitoso();
 
-        LoginResponse response = servicio.registrar(request);
+        RegistroResponse response = servicio.registrar(request);
 
         ArgumentCaptor<Usuario> usuarioCaptor = ArgumentCaptor.forClass(Usuario.class);
         verify(usuarioRepository).save(usuarioCaptor.capture());
@@ -86,7 +96,8 @@ class AutenticacionServicioTest {
         ArgumentCaptor<UsuarioRol> rolCaptor = ArgumentCaptor.forClass(UsuarioRol.class);
         verify(usuarioRolRepository).save(rolCaptor.capture());
         assertEquals("USUARIO", rolCaptor.getValue().getRol().getNombre());
-        assertEquals(List.of("USUARIO"), response.getUsuario().getRoles());
+        assertFalse(response.isCorreoVerificado());
+        verify(jwtService, never()).generarToken(any(), any());
     }
 
     @Test
@@ -163,14 +174,18 @@ class AutenticacionServicioTest {
         LoginRequest request = new LoginRequest();
         request.setCorreoElectronico(" Usuario@Ejemplo.Test ");
         request.setContrasena("Clave9!Segura");
-        when(usuarioRepository.findByCorreoElectronicoIgnoreCase("usuario@ejemplo.test"))
+        when(usuarioRepository.findByCorreoElectronicoIgnoreCaseForUpdate("usuario@ejemplo.test"))
                 .thenReturn(Optional.of(usuario));
         when(usuarioRolRepository.findByUsuarioId(usuario.getId()))
                 .thenReturn(List.of(UsuarioRol.builder().usuario(usuario).rol(rol).build()));
         UserDetails details = User.withUsername(usuario.getCorreoElectronico())
                 .password("hash").authorities("ROLE_" + nombreRol).build();
         when(userDetailsService.loadUserByUsername("usuario@ejemplo.test")).thenReturn(details);
-        when(jwtService.generarToken(details)).thenReturn("jwt-demo");
+        UUID sesionId = UUID.randomUUID();
+        SesionUsuario sesion = SesionUsuario.builder().usuario(usuario).build();
+        ReflectionTestUtils.setField(sesion, "id", sesionId);
+        when(sesionUsuarioServicio.crearSesionUnica(usuario)).thenReturn(sesion);
+        when(jwtService.generarToken(details, sesionId)).thenReturn("jwt-demo");
 
         LoginResponse response = servicio.login(request);
 
@@ -187,7 +202,23 @@ class AutenticacionServicioTest {
                 .thenThrow(new BadCredentialsException("credenciales invalidas"));
 
         assertThrows(BadCredentialsException.class, () -> servicio.login(request));
-        verify(jwtService, never()).generarToken(any(UserDetails.class));
+        verify(jwtService, never()).generarToken(any(UserDetails.class), any(UUID.class));
+    }
+
+    @Test
+    void loginRechazaUsuarioNoVerificadoSinCrearSesion() {
+        LoginRequest request = new LoginRequest();
+        request.setCorreoElectronico("usuario@ejemplo.test");
+        request.setContrasena("Clave9!Segura");
+        Usuario noVerificado = usuario();
+        noVerificado.setCorreoVerificado(false);
+        when(usuarioRepository.findByCorreoElectronicoIgnoreCaseForUpdate("usuario@ejemplo.test"))
+                .thenReturn(Optional.of(noVerificado));
+
+        NegocioException error = assertThrows(NegocioException.class, () -> servicio.login(request));
+
+        assertEquals("EMAIL_NOT_VERIFIED", error.getCodigo());
+        verify(sesionUsuarioServicio, never()).crearSesionUnica(any());
     }
 
     private void prepararRegistroExitoso() {
@@ -198,10 +229,7 @@ class AutenticacionServicioTest {
             ReflectionTestUtils.setField(usuario, "id", UUID.randomUUID());
             return usuario;
         });
-        UserDetails details = User.withUsername("usuario@ejemplo.test")
-                .password("hash").authorities("ROLE_USUARIO").build();
-        when(userDetailsService.loadUserByUsername("usuario@ejemplo.test")).thenReturn(details);
-        when(jwtService.generarToken(details)).thenReturn("jwt-demo");
+        when(tokenVerificacionCorreoRepository.existsByTokenHash(anyString())).thenReturn(false);
     }
 
     private RegistroUsuarioRequest registroInterno() {
@@ -223,6 +251,7 @@ class AutenticacionServicioTest {
                 .correoElectronico("usuario@ejemplo.test")
                 .contrasena("hash")
                 .nombres("Usuario").apellidos("Prueba").ci("CI-12345")
+                .correoVerificado(true)
                 .tipoUsuario(Usuario.TipoUsuario.INTERNO).build();
         ReflectionTestUtils.setField(usuario, "id", UUID.randomUUID());
         return usuario;

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.mail.MailException;
+import bo.uajms.eventos.core.excepciones.CodigosError;
+import bo.uajms.eventos.core.excepciones.ServicioNoDisponibleException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,17 +22,7 @@ public class CorreoServicio {
     private String remitente;
 
     public void enviarRecuperacionContrasena(String destinatario, String enlace) {
-        JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
-        if (mailSender == null) {
-            log.info("Enlace de recuperacion para {}: {}", destinatario, enlace);
-            return;
-        }
-
-        SimpleMailMessage mensaje = new SimpleMailMessage();
-        mensaje.setFrom(remitente);
-        mensaje.setTo(destinatario);
-        mensaje.setSubject("Recuperacion de contrasena - Plataforma Eventos UAJMS");
-        mensaje.setText("""
+        enviar(destinatario, "Recuperacion de contrasena - Plataforma Eventos UAJMS", """
                 Recibimos una solicitud para restablecer tu contrasena.
 
                 Ingresa al siguiente enlace para crear una nueva contrasena:
@@ -38,7 +31,43 @@ public class CorreoServicio {
                 El enlace expira en 30 minutos y solo puede utilizarse una vez.
                 Si no solicitaste este cambio, ignora este mensaje.
                 """.formatted(enlace));
+    }
 
-        mailSender.send(mensaje);
+    public void enviarVerificacionCorreo(String destinatario, String enlace) {
+        enviar(destinatario, "Verifica tu correo - Vidia", """
+                Confirma tu correo para activar tu cuenta en Vidia.
+
+                Abre el siguiente enlace:
+                %s
+
+                El enlace expira en 24 horas y solo puede utilizarse una vez.
+                Si no creaste esta cuenta, ignora este mensaje.
+                """.formatted(enlace));
+    }
+
+    private void enviar(String destinatario, String asunto, String contenido) {
+        JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+        if (mailSender == null) {
+            log.error("Servicio SMTP no configurado; no fue posible enviar el correo solicitado");
+            throw correoNoDisponible();
+        }
+
+        SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setFrom(remitente);
+        mensaje.setTo(destinatario);
+        mensaje.setSubject(asunto);
+        mensaje.setText(contenido);
+
+        try {
+            mailSender.send(mensaje);
+        } catch (MailException ex) {
+            log.error("Fallo seguro al enviar correo mediante SMTP: {}", ex.getClass().getSimpleName());
+            throw correoNoDisponible();
+        }
+    }
+
+    private ServicioNoDisponibleException correoNoDisponible() {
+        return new ServicioNoDisponibleException(CodigosError.MAIL_SERVICE_UNAVAILABLE,
+                "El servicio de correo no esta disponible temporalmente");
     }
 }

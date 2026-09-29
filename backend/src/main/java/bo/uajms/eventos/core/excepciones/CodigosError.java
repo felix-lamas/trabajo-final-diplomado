@@ -7,6 +7,12 @@ public final class CodigosError {
     public static final String AUTH_REQUIRED = "AUTH_REQUIRED";
     public static final String AUTH_INVALID_TOKEN = "AUTH_INVALID_TOKEN";
     public static final String AUTH_INVALID_CREDENTIALS = "AUTH_INVALID_CREDENTIALS";
+    public static final String AUTH_INVALID_SESSION = "AUTH_INVALID_SESSION";
+    public static final String EMAIL_NOT_VERIFIED = "EMAIL_NOT_VERIFIED";
+    public static final String EMAIL_VERIFICATION_TOKEN_INVALID = "EMAIL_VERIFICATION_TOKEN_INVALID";
+    public static final String EMAIL_VERIFICATION_TOKEN_EXPIRED = "EMAIL_VERIFICATION_TOKEN_EXPIRED";
+    public static final String EMAIL_VERIFICATION_TOKEN_USED = "EMAIL_VERIFICATION_TOKEN_USED";
+    public static final String MAIL_SERVICE_UNAVAILABLE = "MAIL_SERVICE_UNAVAILABLE";
     public static final String ACCESS_DENIED = "ACCESS_DENIED";
     public static final String RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND";
     public static final String CONFLICT = "CONFLICT";

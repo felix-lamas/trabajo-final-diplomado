@@ -10,6 +10,7 @@ public class UsuarioDto {
     private String nombres;
     private String apellidos;
     private String correoElectronico;
+    private boolean correoVerificado;
     private String ci;
     private String ru;
     private String celular;

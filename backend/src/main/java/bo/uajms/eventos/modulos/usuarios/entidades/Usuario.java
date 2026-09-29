@@ -40,6 +40,10 @@ public class Usuario extends EntidadBase {
     @Column(name = "celular", length = 20)
     private String celular;
 
+    @Column(name = "correo_verificado", nullable = false)
+    @Builder.Default
+    private boolean correoVerificado = false;
+
     @Column(name = "fotografia_url", length = 255)
     private String fotografiaUrl;
 
