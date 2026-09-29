@@ -48,17 +48,15 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/**",
                                 "/api/v1/auth/**",
-                                "/api/verificacion-certificados/**",
                                 "/api/v1/verificacion-certificados/**",
-                                "/api/certificados/verificar/**",
                                 "/api/v1/certificados/verificar/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/api/v1/api-docs/**",
-                                "/api/v1/swagger-ui.html"
+                                "/api/v1/swagger-ui.html",
+                                "/api/v1/swagger-ui/**"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,
