@@ -53,6 +53,8 @@ El login solo admite cuentas verificadas. Cada login bloquea la fila del usuario
 
 El cambio de contrasena conserva `POST` porque es el contrato implementado y no existe un consumidor de un supuesto `PATCH`. El registro canonico permanece en `/auth/registro`; no existe `POST /usuarios` en el backend real.
 
+`GET /usuarios/perfil` y `PUT /usuarios/perfil` operan exclusivamente sobre el usuario identificado por el JWT y no reciben un ID. La actualizacion permite solamente `nombres`, `apellidos` y `celular`; email, CI, RU, roles, contrasena, estado de organizador y verificacion de correo son inmutables desde este contrato. `POST /usuarios/cambiar-contrasena` exige la clave actual, una nueva clave segura y diferente, y confirmacion coincidente. Al completarse revoca todas las sesiones, incluido el JWT utilizado en la operacion.
+
 ## Persistencia pendiente de migracion
 
 Esta fase no activa Flyway. Para una migracion productiva futura deben declararse y reconciliarse de forma explicita:

@@ -139,6 +139,39 @@ describe('AuthService identity contract', () => {
     expect(service.roles()).toEqual(['USUARIO', 'ORGANIZADOR']);
     expect(service.token()).toBe(token);
   });
+
+  it('actualiza perfil y publica inmediatamente el usuario recibido', () => {
+    service.setSession(loginResponse);
+    const actualizado = { ...usuario, nombres: 'Maria', apellidos: 'Rojas', celular: '71111111' };
+
+    service.actualizarPerfil({ nombres: 'Maria', apellidos: 'Rojas', celular: '71111111' }).subscribe();
+    const request = http.expectOne(`${environment.apiUrl}/usuarios/perfil`);
+    expect(request.request.method).toBe('PUT');
+    expect(request.request.body).toEqual({ nombres: 'Maria', apellidos: 'Rojas', celular: '71111111' });
+    request.flush(actualizado);
+
+    expect(service.usuarioActual()).toEqual(actualizado);
+    expect(JSON.parse(localStorage.getItem('usuario')!)).toEqual(actualizado);
+  });
+
+  it('cambio autenticado de contrasena limpia sesion despues del exito', () => {
+    service.setSession(loginResponse);
+    const body = {
+      contrasenaActual: 'Actual9!',
+      nuevaContrasena: 'NuevaClave9!',
+      confirmacion: 'NuevaClave9!'
+    };
+
+    service.cambiarContrasena(body).subscribe();
+    const request = http.expectOne(`${environment.apiUrl}/usuarios/cambiar-contrasena`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual(body);
+    request.flush(null);
+
+    expect(service.autenticado()).toBe(false);
+    expect(service.usuarioActual()).toBeNull();
+    expect(localStorage.getItem('token')).toBeNull();
+  });
 });
 
 function createToken(payload: object): string {

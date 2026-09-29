@@ -45,6 +45,18 @@ export interface LoginResponse {
   usuario: AuthUser;
 }
 
+export interface ActualizarPerfilRequest {
+  nombres: string;
+  apellidos: string;
+  celular: string;
+}
+
+export interface CambioContrasenaRequest {
+  contrasenaActual: string;
+  nuevaContrasena: string;
+  confirmacion: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly tokenKey = 'token';
@@ -131,6 +143,25 @@ export class AuthService {
           this.userState.set(usuario);
           this.storage?.setItem(this.userKey, JSON.stringify(usuario));
         })
+      )
+    );
+  }
+
+  actualizarPerfil(request: ActualizarPerfilRequest): Observable<AuthUser> {
+    return this.trackRequest(
+      this.http.put<AuthUser>(`${environment.apiUrl}/usuarios/perfil`, request).pipe(
+        tap((usuario) => {
+          this.userState.set(usuario);
+          this.storage?.setItem(this.userKey, JSON.stringify(usuario));
+        })
+      )
+    );
+  }
+
+  cambiarContrasena(request: CambioContrasenaRequest): Observable<void> {
+    return this.trackRequest(
+      this.http.post<void>(`${environment.apiUrl}/usuarios/cambiar-contrasena`, request).pipe(
+        tap(() => this.clearLocalSession())
       )
     );
   }

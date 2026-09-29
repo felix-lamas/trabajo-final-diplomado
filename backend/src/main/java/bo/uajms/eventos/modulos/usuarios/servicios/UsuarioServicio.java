@@ -63,9 +63,9 @@ public class UsuarioServicio {
     public PerfilResponse actualizarPerfil(ActualizarPerfilRequest request) {
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
 
-        usuario.setNombres(request.getNombres());
-        usuario.setApellidos(request.getApellidos());
-        usuario.setCelular(request.getCelular());
+        usuario.setNombres(request.getNombres().trim());
+        usuario.setApellidos(request.getApellidos().trim());
+        usuario.setCelular(request.getCelular().trim());
 
         usuarioRepository.save(usuario);
         return usuarioMapper.aPerfilResponse(usuario, obtenerRolesNombres(usuario.getId()));
@@ -82,7 +82,13 @@ public class UsuarioServicio {
         }
 
         if (!request.getNuevaContrasena().equals(request.getConfirmacion())) {
-            throw new NegocioException("La nueva contraseña y su confirmación no coinciden");
+            throw new NegocioException(CodigosError.PASSWORD_INVALID,
+                    "La nueva contraseña y su confirmación no coinciden");
+        }
+
+        if (passwordEncoder.matches(request.getNuevaContrasena(), usuario.getContrasena())) {
+            throw new NegocioException(CodigosError.PASSWORD_INVALID,
+                    "La nueva contraseña debe ser diferente de la actual");
         }
 
         usuario.setContrasena(passwordEncoder.encode(request.getNuevaContrasena()));

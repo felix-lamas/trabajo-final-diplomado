@@ -2,101 +2,111 @@
   <div class="app-toolbar">
     <div class="app-toolbar__title">
       <h1 class="app-section-title">Perfil de usuario</h1>
-      <p>Informacion personal y configuracion de acceso.</p>
+      <p>Informacion personal y configuracion segura de acceso.</p>
     </div>
-    <a mat-stroked-button routerLink="/privado/dashboard">Volver al dashboard</a>
+    <a mat-stroked-button routerLink="/eventos">Volver a eventos</a>
   </div>
 
-  <section class="student-profile">
+  <mat-progress-bar *ngIf="loadStatus() === 'loading'" mode="indeterminate"></mat-progress-bar>
+
+  <mat-card *ngIf="loadStatus() === 'error'" class="student-panel" role="alert">
+    <h2>No se pudo cargar el perfil</h2>
+    <p>{{ loadError() }}</p>
+    <button mat-flat-button color="primary" type="button" (click)="cargarPerfil()">Reintentar</button>
+  </mat-card>
+
+  <section *ngIf="loadStatus() === 'ready'" class="student-profile">
     <mat-card class="student-profile__hero">
       <div class="student-profile__avatar">{{ initial }}</div>
       <div>
         <strong>{{ fullName }}</strong>
         <div>{{ email }}</div>
         <div class="student-hero__actions" style="margin-top: 0.75rem;">
-          <span class="app-chip">
-            <mat-icon>verified_user</mat-icon>
-            Acceso institucional
-          </span>
-          <span class="app-chip">
-            <mat-icon>badge</mat-icon>
-            {{ roles[0] || 'Usuario' }}
-          </span>
+          <span class="app-chip"><mat-icon>verified_user</mat-icon> Correo verificado</span>
+          <span class="app-chip"><mat-icon>badge</mat-icon> {{ roles[0] || 'Usuario' }}</span>
         </div>
       </div>
     </mat-card>
 
     <div class="student-split">
       <mat-card class="student-panel">
-        <div class="app-toolbar">
-          <div class="app-toolbar__title">
-            <h2 class="app-section-title">Datos de cuenta</h2>
-            <p>Resumen visible de la sesion activa.</p>
-          </div>
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Datos editables</h2>
+          <p>El correo, CI, RU y roles no se modifican desde este formulario.</p>
         </div>
 
-        <div class="student-grid">
-          <div class="student-card">
-            <div class="student-card__header">
-              <div>
-                <h3>Nombre completo</h3>
-                <p>{{ fullName }}</p>
-              </div>
-              <mat-icon>person</mat-icon>
-            </div>
-          </div>
-          <div class="student-card">
-            <div class="student-card__header">
-              <div>
-                <h3>Correo electronico</h3>
-                <p>{{ email }}</p>
-              </div>
-              <mat-icon>mail</mat-icon>
-            </div>
-          </div>
-          <div class="student-card">
-            <div class="student-card__header">
-              <div>
-                <h3>Rol principal</h3>
-                <p>{{ roles[0] || 'Usuario' }}</p>
-              </div>
-              <mat-icon>admin_panel_settings</mat-icon>
-            </div>
-          </div>
-        </div>
+        <form class="auth-form--auth" [formGroup]="profileForm" (ngSubmit)="guardarPerfil()">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombres</mat-label>
+            <input matInput formControlName="nombres" autocomplete="given-name" />
+            <mat-error *ngIf="profileForm.get('nombres')?.hasError('required')">Los nombres son obligatorios</mat-error>
+            <mat-error *ngIf="profileForm.get('nombres')?.hasError('maxlength')">Maximo 50 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellidos</mat-label>
+            <input matInput formControlName="apellidos" autocomplete="family-name" />
+            <mat-error *ngIf="profileForm.get('apellidos')?.hasError('required')">Los apellidos son obligatorios</mat-error>
+            <mat-error *ngIf="profileForm.get('apellidos')?.hasError('maxlength')">Maximo 50 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Telefono</mat-label>
+            <input matInput formControlName="celular" autocomplete="tel" />
+            <mat-error *ngIf="profileForm.get('celular')?.hasError('required')">El telefono es obligatorio</mat-error>
+            <mat-error *ngIf="profileForm.get('celular')?.hasError('pattern')">Use entre 7 y 20 digitos, espacios, + o -</mat-error>
+          </mat-form-field>
+
+          <p *ngIf="profileMessage()" [attr.role]="profileSubmitStatus() === 'error' ? 'alert' : 'status'">
+            {{ profileMessage() }}
+          </p>
+          <button mat-flat-button color="primary" type="submit"
+            [disabled]="profileForm.invalid || profileSubmitStatus() === 'loading'">
+            {{ profileSubmitStatus() === 'loading' ? 'Guardando...' : 'Guardar perfil' }}
+          </button>
+        </form>
       </mat-card>
 
       <mat-card class="student-panel">
-        <div class="app-toolbar">
-          <div class="app-toolbar__title">
-            <h2 class="app-section-title">Configuracion</h2>
-            <p>Acciones rapidas para la cuenta.</p>
-          </div>
+        <div class="app-toolbar__title">
+          <h2 class="app-section-title">Cambiar contrasena</h2>
+          <p>Este cambio revocara la sesion actual y requerira iniciar sesion nuevamente.</p>
         </div>
 
-        <div class="student-grid">
-          <a class="student-card" routerLink="/auth/recuperar-contrasena">
-            <div class="student-card__header">
-              <div>
-                <h3>Cambiar contrasena</h3>
-                <p>Recuperacion y restablecimiento seguro</p>
-              </div>
-              <mat-icon>lock_reset</mat-icon>
-            </div>
-          </a>
-          <a class="student-card" routerLink="/privado/inscripciones">
-            <div class="student-card__header">
-              <div>
-                <h3>Ver inscripciones</h3>
-                <p>Acceda al historial de eventos</p>
-              </div>
-              <mat-icon>how_to_reg</mat-icon>
-            </div>
-          </a>
-          <button mat-flat-button color="primary" type="button" (click)="cerrarSesion()" [disabled]="loggingOut()">
-            {{ loggingOut() ? 'Cerrando sesion...' : 'Cerrar sesion' }}
+        <form class="auth-form--auth" [formGroup]="passwordForm" (ngSubmit)="cambiarContrasena()">
+          <mat-form-field appearance="outline">
+            <mat-label>Contrasena actual</mat-label>
+            <input matInput type="password" formControlName="contrasenaActual" autocomplete="current-password" />
+            <mat-error *ngIf="passwordForm.get('contrasenaActual')?.hasError('required')">La contrasena actual es obligatoria</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nueva contrasena</mat-label>
+            <input matInput type="password" formControlName="nuevaContrasena" autocomplete="new-password" />
+            <mat-error *ngIf="passwordForm.get('nuevaContrasena')?.hasError('required')">La nueva contrasena es obligatoria</mat-error>
+            <mat-error *ngIf="passwordForm.get('nuevaContrasena')?.hasError('minlength')">Minimo 8 caracteres</mat-error>
+            <mat-error *ngIf="passwordForm.get('nuevaContrasena')?.hasError('pattern')">Incluya mayuscula, minuscula, numero y simbolo</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Confirmar nueva contrasena</mat-label>
+            <input matInput type="password" formControlName="confirmacion" autocomplete="new-password" />
+            <mat-error *ngIf="passwordForm.get('confirmacion')?.hasError('required')">Confirme la nueva contrasena</mat-error>
+          </mat-form-field>
+
+          <p *ngIf="passwordForm.hasError('passwordMismatch') && passwordForm.touched" role="alert">Las contrasenas no coinciden.</p>
+          <p *ngIf="passwordForm.hasError('passwordUnchanged') && passwordForm.touched" role="alert">La nueva contrasena debe ser diferente de la actual.</p>
+          <p *ngIf="passwordMessage()" role="alert">{{ passwordMessage() }}</p>
+
+          <button mat-flat-button color="primary" type="submit"
+            [disabled]="passwordForm.invalid || passwordSubmitStatus() === 'loading'">
+            {{ passwordSubmitStatus() === 'loading' ? 'Actualizando...' : 'Cambiar contrasena' }}
           </button>
-        </div>
+        </form>
+
+        <button mat-stroked-button type="button" (click)="cerrarSesion()" [disabled]="loggingOut()">
+          {{ loggingOut() ? 'Cerrando sesion...' : 'Cerrar sesion' }}
+        </button>
       </mat-card>
     </div>
   </section>

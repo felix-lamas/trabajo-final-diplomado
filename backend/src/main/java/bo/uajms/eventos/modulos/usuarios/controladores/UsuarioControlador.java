@@ -11,6 +11,7 @@ import bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicio;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -42,20 +43,34 @@ public class UsuarioControlador {
     @GetMapping("/perfil")
     @Operation(summary = "Obtener mi perfil",
             description = "Devuelve exclusivamente el perfil asociado al JWT actual.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Perfil autenticado", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "401", description = "JWT o sesion no validos")
+    })
     public ResponseEntity<PerfilResponse> obtenerPerfil() {
         return ResponseEntity.ok(usuarioServicio.obtenerPerfilActual());
     }
 
     @PutMapping("/perfil")
     @Operation(summary = "Actualizar mi perfil",
-            description = "Actualiza los datos editables del propietario del JWT; no permite cambiar roles.")
+            description = "Actualiza nombres, apellidos y celular del propietario del JWT. No permite cambiar email, CI, RU, roles, contrasena, estado de organizador ni verificacion de correo.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Perfil actualizado", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "Datos de perfil invalidos"),
+            @ApiResponse(responseCode = "401", description = "JWT o sesion no validos")
+    })
     public ResponseEntity<PerfilResponse> actualizarPerfil(@Valid @RequestBody ActualizarPerfilRequest request) {
         return ResponseEntity.ok(usuarioServicio.actualizarPerfil(request));
     }
 
     @PostMapping("/cambiar-contrasena")
     @Operation(summary = "Cambiar mi contrasena",
-            description = "Verifica la contrasena actual y cambia la clave del propietario del JWT. El contrato vigente utiliza POST.")
+            description = "Verifica la contrasena actual, exige una clave nueva segura y diferente, actualiza BCrypt y revoca todas las sesiones. El JWT actual deja de ser valido.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Contrasena cambiada y sesiones revocadas"),
+            @ApiResponse(responseCode = "400", description = "Contrasena actual incorrecta, nueva clave invalida, repetida o confirmacion diferente"),
+            @ApiResponse(responseCode = "401", description = "JWT o sesion no validos")
+    })
     public ResponseEntity<Void> cambiarContrasena(@Valid @RequestBody CambioContrasenaRequest request) {
         usuarioServicio.cambiarContrasena(request);
         return ResponseEntity.ok().build();

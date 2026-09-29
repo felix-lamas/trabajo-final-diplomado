@@ -67,15 +67,30 @@ class UsuarioServicioTest {
         when(usuarioRolRepository.findByUsuarioId(usuario.getId()))
                 .thenReturn(List.of(relacion(usuario, "USUARIO")));
         ActualizarPerfilRequest request = new ActualizarPerfilRequest();
-        request.setNombres("Nuevo");
-        request.setApellidos("Nombre");
-        request.setCelular("71111111");
+        String ciOriginal = usuario.getCi();
+        Usuario.TipoUsuario tipoOriginal = usuario.getTipoUsuario();
+        request.setNombres("  Nuevo  ");
+        request.setApellidos("  Nombre  ");
+        request.setCelular("  71111111  ");
 
         servicio.actualizarPerfil(request);
 
         assertEquals("Nuevo", usuario.getNombres());
+        assertEquals("Nombre", usuario.getApellidos());
+        assertEquals("71111111", usuario.getCelular());
         assertEquals("usuario@ejemplo.test", usuario.getCorreoElectronico());
+        assertEquals(ciOriginal, usuario.getCi());
+        assertEquals(tipoOriginal, usuario.getTipoUsuario());
         verify(usuarioRolRepository, never()).save(any());
+    }
+
+    @Test
+    void actualizacionPerfilNoExponeCamposProtegidosNiOtroUsuario() {
+        for (String campo : List.of("id", "usuarioId", "correoElectronico", "ci", "ru", "roles",
+                "contrasena", "estadoSolicitudOrganizador", "correoVerificado")) {
+            assertThrows(NoSuchFieldException.class,
+                    () -> ActualizarPerfilRequest.class.getDeclaredField(campo));
+        }
     }
 
     @Test
@@ -103,6 +118,36 @@ class UsuarioServicioTest {
         assertThrows(NegocioException.class,
                 () -> servicio.cambiarContrasena(cambio("Incorrecta9!", "NuevaClave9!", "NuevaClave9!")));
         verify(usuarioRepository, never()).save(any());
+    }
+
+    @Test
+    void rechazaConfirmacionDiferenteSinPersistirNiRevocar() {
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
+        usuario.setContrasena("hash-actual");
+        when(passwordEncoder.matches("Actual9!", "hash-actual")).thenReturn(true);
+
+        NegocioException error = assertThrows(NegocioException.class,
+                () -> servicio.cambiarContrasena(cambio("Actual9!", "NuevaClave9!", "OtraClave9!")));
+
+        assertEquals("PASSWORD_INVALID", error.getCodigo());
+        verify(usuarioRepository, never()).save(any());
+        verify(sesionUsuarioServicio, never()).revocarSesionesActivas(any());
+    }
+
+    @Test
+    void rechazaReutilizarContrasenaActual() {
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
+        usuario.setContrasena("hash-actual");
+        when(passwordEncoder.matches("Actual9!", "hash-actual")).thenReturn(true);
+
+        NegocioException error = assertThrows(NegocioException.class,
+                () -> servicio.cambiarContrasena(cambio("Actual9!", "Actual9!", "Actual9!")));
+
+        assertEquals("PASSWORD_INVALID", error.getCodigo());
+        verify(usuarioRepository, never()).save(any());
+        verify(sesionUsuarioServicio, never()).revocarSesionesActivas(any());
     }
 
     @Test

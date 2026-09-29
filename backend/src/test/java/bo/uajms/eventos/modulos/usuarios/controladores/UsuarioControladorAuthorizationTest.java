@@ -1,5 +1,7 @@
 package bo.uajms.eventos.modulos.usuarios.controladores;
 
+import bo.uajms.eventos.modulos.usuarios.dtos.ActualizarPerfilRequest;
+import bo.uajms.eventos.modulos.usuarios.dtos.CambioContrasenaRequest;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicio;
 import org.junit.jupiter.api.AfterEach;
@@ -39,6 +41,20 @@ class UsuarioControladorAuthorizationTest {
     void usuarioNoPuedeConsultarPerfilDeOtroUsuario() {
         autenticar("USUARIO");
         assertThrows(AccessDeniedException.class, () -> controlador.buscarPorId(UUID.randomUUID()));
+    }
+
+    @Test
+    void usuarioAutenticadoPuedeGestionarSoloSuPerfilYContrasena() {
+        autenticar("USUARIO");
+        ActualizarPerfilRequest perfil = new ActualizarPerfilRequest();
+        CambioContrasenaRequest contrasena = new CambioContrasenaRequest();
+
+        assertDoesNotThrow(() -> controlador.obtenerPerfil());
+        assertDoesNotThrow(() -> controlador.actualizarPerfil(perfil));
+        assertDoesNotThrow(() -> controlador.cambiarContrasena(contrasena));
+        verify(servicio).obtenerPerfilActual();
+        verify(servicio).actualizarPerfil(perfil);
+        verify(servicio).cambiarContrasena(contrasena);
     }
 
     @Test
