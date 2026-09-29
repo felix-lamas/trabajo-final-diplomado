@@ -2,164 +2,77 @@
   <section class="admin-toolbar">
     <div class="app-toolbar__title">
       <h1 class="app-section-title">{{ esEdicion ? 'Editar' : 'Nuevo' }} evento</h1>
-      <p>Formulario institucional para publicacion y programacion academica.</p>
+      <p>Configure el evento; siempre se guardara como borrador hasta enviarlo a revision.</p>
     </div>
-    <a mat-stroked-button [routerLink]="rutaGestion">
-      <mat-icon>arrow_back</mat-icon>
-      Volver
-    </a>
+    <a mat-stroked-button [routerLink]="rutaGestion"><mat-icon>arrow_back</mat-icon> Volver</a>
   </section>
 
-  <form [formGroup]="eventoForm" (ngSubmit)="guardar()" class="admin-form-shell" [attr.aria-busy]="cargandoEvento || guardando">
+  <mat-card class="admin-surface" *ngIf="error()">
+    <p class="app-error">{{ error() }}</p>
+    <button mat-stroked-button type="button" *ngIf="categorias().length === 0" (click)="cargarCategorias()">Reintentar categorias</button>
+  </mat-card>
+
+  <form [formGroup]="eventoForm" (ngSubmit)="guardar()" class="admin-form-shell" [attr.aria-busy]="cargandoEvento() || guardando()">
     <mat-card class="admin-form-panel">
-      <div class="app-toolbar">
-        <div class="app-toolbar__title">
-          <h2 class="app-section-title">Informacion general</h2>
-          <p>Titulo, categoria y modalidad.</p>
-        </div>
-      </div>
-
+      <h2 class="app-section-title">Informacion general</h2>
       <div class="app-form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Titulo del evento</mat-label>
-          <input matInput formControlName="titulo" required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Categoria</mat-label>
-          <mat-select formControlName="categoriaId" required>
-            <mat-option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Modalidad</mat-label>
-          <mat-select formControlName="modalidad" required>
-            <mat-option value="PRESENCIAL">Presencial</mat-option>
-            <mat-option value="VIRTUAL">Virtual</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Titulo</mat-label><input matInput formControlName="titulo"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Categoria</mat-label><mat-select formControlName="categoriaId"><mat-option *ngFor="let cat of categorias()" [value]="cat.id">{{ cat.nombre }}</mat-option></mat-select><mat-hint *ngIf="cargandoCategorias()">Cargando categorias...</mat-hint></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Audiencia</mat-label><mat-select formControlName="publicoObjetivo"><mat-option value="UAJMS">UAJMS</mat-option><mat-option value="EXTERNA">Externa</mat-option><mat-option value="AMBOS">Ambos</mat-option></mat-select></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Descripcion</mat-label><textarea matInput rows="4" formControlName="descripcion"></textarea></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Objetivos</mat-label><textarea matInput rows="4" formControlName="objetivos"></textarea></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Imagen de portada (URL)</mat-label><input matInput formControlName="imagenPortada"></mat-form-field>
       </div>
     </mat-card>
 
     <mat-card class="admin-form-panel">
-      <div class="app-toolbar">
-        <div class="app-toolbar__title">
-          <h2 class="app-section-title">Fechas y cupos</h2>
-          <p>Programacion y capacidad institucional.</p>
-        </div>
-      </div>
-
+      <h2 class="app-section-title">Fecha y modalidad</h2>
       <div class="app-form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha inicio</mat-label>
-          <input matInput type="date" formControlName="fechaInicio" required>
-        </mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Fecha inicio</mat-label><input matInput type="date" formControlName="fechaInicio"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Hora inicio</mat-label><input matInput type="time" formControlName="horaInicio"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Fecha fin</mat-label><input matInput type="date" formControlName="fechaFin"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Hora fin</mat-label><input matInput type="time" formControlName="horaFin"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Modalidad</mat-label><mat-select formControlName="modalidad"><mat-option value="PRESENCIAL">Presencial</mat-option><mat-option value="VIRTUAL">Virtual</mat-option></mat-select></mat-form-field>
+      </div>
+      <p class="app-error" *ngIf="eventoForm.hasError('rangoTemporal')">La fecha y hora de fin debe ser posterior al inicio.</p>
+      <div class="app-form-grid" *ngIf="esPresencial()">
+        <mat-form-field appearance="outline"><mat-label>Ubicacion</mat-label><input matInput formControlName="ubicacion"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Direccion</mat-label><input matInput formControlName="direccion"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Latitud</mat-label><input matInput type="number" formControlName="latitud"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Longitud</mat-label><input matInput type="number" formControlName="longitud"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Radio de asistencia (m)</mat-label><input matInput type="number" formControlName="radioMetros"></mat-form-field>
+      </div>
+      <mat-form-field appearance="outline" *ngIf="!esPresencial()"><mat-label>Enlace virtual</mat-label><input matInput formControlName="enlaceVirtual"></mat-form-field>
+    </mat-card>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha fin</mat-label>
-          <input matInput type="date" formControlName="fechaFin" required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Hora inicio</mat-label>
-          <input matInput type="time" formControlName="horaInicio">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Hora fin</mat-label>
-          <input matInput type="time" formControlName="horaFin">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Tipo de inscripcion</mat-label>
-          <mat-select formControlName="tipoInscripcion" required>
-            <mat-option value="GRATUITO">Gratuito</mat-option>
-          </mat-select>
-          <mat-hint>Para E2 solo se crean eventos gratuitos.</mat-hint>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Requiere inscripcion</mat-label>
-          <mat-select formControlName="requiereInscripcion" required>
-            <mat-option [value]="true">Si</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Cupo limitado</mat-label>
-          <mat-select formControlName="cupoLimitado" required>
-            <mat-option [value]="true">Si</mat-option>
-            <mat-option [value]="false">No</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" *ngIf="eventoForm.get('cupoLimitado')?.value">
-          <mat-label>Cupo maximo</mat-label>
-          <input matInput type="number" formControlName="cupoMaximo" required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Publico objetivo</mat-label>
-          <mat-select formControlName="publicoObjetivo" required>
-            <mat-option value="UAJMS">Comunidad UAJMS</mat-option>
-            <mat-option value="EXTERNO">Publico externo</mat-option>
-            <mat-option value="AMBOS">Ambos</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Emite certificado</mat-label>
-          <mat-select formControlName="emiteCertificado" required>
-            <mat-option [value]="false">No</mat-option>
-          </mat-select>
-          <mat-hint>Los certificados no forman parte del flujo E2.</mat-hint>
-        </mat-form-field>
+    <mat-card class="admin-form-panel">
+      <h2 class="app-section-title">Inscripcion, capacidad y precio</h2>
+      <div class="app-form-grid">
+        <mat-form-field appearance="outline"><mat-label>Permite inscripcion</mat-label><mat-select formControlName="requiereInscripcion"><mat-option [value]="true">Si</mat-option><mat-option [value]="false">No</mat-option></mat-select></mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="requiereInscripcion()"><mat-label>Capacidad limitada</mat-label><mat-select formControlName="cupoLimitado"><mat-option [value]="true">Si</mat-option><mat-option [value]="false">No</mat-option></mat-select></mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="mostrarCupo()"><mat-label>Capacidad maxima</mat-label><input matInput type="number" formControlName="cupoMaximo"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Precio</mat-label><mat-select formControlName="tipoInscripcion"><mat-option value="GRATUITO">Gratuito</mat-option><mat-option value="PAGO">Pago</mat-option></mat-select></mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="esPagado()"><mat-label>Monto (Bs)</mat-label><input matInput type="number" step="0.01" formControlName="costo"></mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="esPagado()"><mat-label>Instrucciones de pago</mat-label><textarea matInput rows="3" formControlName="instruccionesPago"></textarea></mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="esPagado()"><mat-label>QR de pago (URL)</mat-label><input matInput formControlName="qrPagoUrl"></mat-form-field>
       </div>
     </mat-card>
 
     <mat-card class="admin-form-panel">
-      <div class="app-toolbar">
-        <div class="app-toolbar__title">
-          <h2 class="app-section-title">Ubicacion y contenido</h2>
-          <p>Descripcion, objetivos y enlace virtual.</p>
-        </div>
-      </div>
-
+      <h2 class="app-section-title">Certificado y contacto</h2>
       <div class="app-form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Ubicacion fisica</mat-label>
-          <input matInput formControlName="ubicacion" placeholder="Aula, auditorio, etc.">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Direccion</mat-label>
-          <input matInput formControlName="direccion" placeholder="Direccion de referencia">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Enlace virtual</mat-label>
-          <input matInput formControlName="enlaceVirtual" placeholder="URL de Zoom, Meet, etc.">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Descripcion</mat-label>
-          <textarea matInput formControlName="descripcion" rows="4"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Objetivos</mat-label>
-          <textarea matInput formControlName="objetivos" rows="4"></textarea>
-        </mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Emite certificado</mat-label><mat-select formControlName="emiteCertificado"><mat-option [value]="true">Si</mat-option><mat-option [value]="false">No</mat-option></mat-select></mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="emiteCertificado()"><mat-label>Tipo de certificado</mat-label><mat-select formControlName="tipoCertificado"><mat-option value="CURRICULAR">Curricular</mat-option><mat-option value="NO_CURRICULAR">No curricular</mat-option></mat-select></mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="mostrarHoras()"><mat-label>Horas academicas</mat-label><input matInput type="number" formControlName="horasAcademicas"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Telefono</mat-label><input matInput formControlName="telefonoContacto"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Correo</mat-label><input matInput type="email" formControlName="emailContacto"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>WhatsApp</mat-label><input matInput formControlName="whatsappContacto"></mat-form-field>
       </div>
     </mat-card>
 
     <div class="student-card__footer" style="grid-column: 1 / -1;">
       <button mat-stroked-button type="button" [routerLink]="rutaGestion">Cancelar</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="eventoForm.invalid || cargandoEvento || guardando">
-        <mat-icon>save</mat-icon>
-        {{ guardando ? 'Guardando...' : (cargandoEvento ? 'Cargando...' : 'Guardar evento') }}
-      </button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="eventoForm.invalid || cargandoEvento() || cargandoCategorias() || guardando()"><mat-icon>save</mat-icon> {{ guardando() ? 'Guardando...' : 'Guardar borrador' }}</button>
     </div>
   </form>
 </main>

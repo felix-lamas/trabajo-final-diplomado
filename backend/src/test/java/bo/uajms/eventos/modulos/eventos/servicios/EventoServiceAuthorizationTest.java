@@ -73,6 +73,7 @@ class EventoServiceAuthorizationTest {
                 .apellidos("A")
                 .build();
         organizadorA.setId(organizadorAId);
+        organizadorA.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.APROBADA);
 
         eventoPropio = crearEvento(EstadoEvento.BORRADOR, organizadorA);
     }
@@ -107,11 +108,15 @@ class EventoServiceAuthorizationTest {
     }
 
     @Test
+    void publicoNoPuedeConsultarEventoRechazado() {
+        comprobarEventoNoPublicadoInvisible(EstadoEvento.RECHAZADO);
+    }
+
+    @Test
     void organizadorPuedeConsultarSuEventoNoPublicado() {
         autenticarOrganizadorA();
         EventoDetalleResponse response = EventoDetalleResponse.builder().id(eventoId).build();
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
-                .thenReturn(Optional.of(eventoPropio));
+        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId)).thenReturn(Optional.of(eventoPropio));
         when(eventoMapper.toDetalleResponse(eventoPropio)).thenReturn(response);
 
         assertSame(response, eventoService.buscarPorId(eventoId));
@@ -122,8 +127,7 @@ class EventoServiceAuthorizationTest {
         autenticarOrganizadorA();
         ActualizarEventoRequest request = crearSolicitudActualizacion();
         CategoriaEvento categoria = new CategoriaEvento();
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
-                .thenReturn(Optional.of(eventoPropio));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(eventoPropio));
         categoria.setEstado("ACTIVO");
         when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
         when(eventoRepository.save(eventoPropio)).thenReturn(eventoPropio);
@@ -137,11 +141,12 @@ class EventoServiceAuthorizationTest {
     void organizadorNoPuedeModificarEventoAjeno() {
         autenticarOrganizadorA();
         String tituloOriginal = eventoPropio.getTitulo();
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
-                .thenReturn(Optional.empty());
+        Usuario organizadorB = crearOrganizador("organizador-b@example.test");
+        Evento ajeno = crearEvento(EstadoEvento.BORRADOR, organizadorB);
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(ajeno));
 
         assertThrows(
-                RecursoNoEncontradoException.class,
+                AccessDeniedException.class,
                 () -> eventoService.actualizar(eventoId, crearSolicitudActualizacion())
         );
         assertEquals(tituloOriginal, eventoPropio.getTitulo());
@@ -151,21 +156,19 @@ class EventoServiceAuthorizationTest {
     @Test
     void organizadorNoPuedeEliminarEventoAjeno() {
         autenticarOrganizadorA();
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
-                .thenReturn(Optional.empty());
+        Usuario organizadorB = crearOrganizador("organizador-b@example.test");
+        Evento ajeno = crearEvento(EstadoEvento.BORRADOR, organizadorB);
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(ajeno));
 
-        assertThrows(RecursoNoEncontradoException.class, () -> eventoService.eliminar(eventoId));
+        assertThrows(AccessDeniedException.class, () -> eventoService.eliminar(eventoId));
 
         verify(eventoRepository, never()).delete(eventoPropio);
     }
 
     @Test
     void organizadorNoPuedeCancelarEventoAjenoNiCambiarSuEstado() {
-        autenticarOrganizadorA();
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorAId))
-                .thenReturn(Optional.empty());
-
-        assertThrows(RecursoNoEncontradoException.class, () -> eventoService.cancelar(eventoId, "Motivo"));
+        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
+        assertThrows(AccessDeniedException.class, () -> eventoService.cancelar(eventoId, "Motivo"));
 
         assertEquals(EstadoEvento.BORRADOR, eventoPropio.getEstado());
         verify(eventoRepository, never()).save(eventoPropio);
@@ -196,7 +199,7 @@ class EventoServiceAuthorizationTest {
     void administradorPuedeOperarEventoDeOtroOrganizador() {
         autenticarAdministrador();
         eventoPropio.setEstado(EstadoEvento.PUBLICADO);
-        when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(eventoPropio));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(eventoPropio));
         when(eventoRepository.save(eventoPropio)).thenReturn(eventoPropio);
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizadorA);
 
@@ -211,7 +214,7 @@ class EventoServiceAuthorizationTest {
         autenticarAdministrador();
         eventoPropio.setEstado(EstadoEvento.EN_REVISION);
         completarEvento(eventoPropio);
-        when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(eventoPropio));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(eventoPropio));
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizadorA);
 
         eventoService.publicar(eventoId);
@@ -319,6 +322,10 @@ class EventoServiceAuthorizationTest {
         request.setHoraInicio(LocalTime.of(8, 0));
         request.setHoraFin(LocalTime.of(10, 0));
         request.setUbicacion("Campus universitario");
+        request.setDireccion("Av. Las Americas");
+        request.setLatitud(new BigDecimal("-21.5350000"));
+        request.setLongitud(new BigDecimal("-64.7290000"));
+        request.setRadioMetros(100);
         request.setRequiereInscripcion(true);
         request.setCupoLimitado(true);
         request.setCupoMaximo(20);
@@ -339,5 +346,21 @@ class EventoServiceAuthorizationTest {
         evento.setFechaFin(LocalDate.now().plusDays(1));
         evento.setHoraInicio(LocalTime.of(8, 0));
         evento.setHoraFin(LocalTime.of(10, 0));
+        evento.setUbicacion("Campus universitario");
+        evento.setDireccion("Av. Las Americas");
+        evento.setLatitud(new BigDecimal("-21.5350000"));
+        evento.setLongitud(new BigDecimal("-64.7290000"));
+        evento.setRadioMetros(100);
+        evento.setRequiereInscripcion(false);
+        evento.setCupoLimitado(false);
+        evento.setEmiteCertificado(false);
+        evento.setPublicoObjetivo(PublicoObjetivo.AMBOS);
+    }
+
+    private Usuario crearOrganizador(String correo) {
+        Usuario usuario = Usuario.builder().correoElectronico(correo).nombres("Organizador").apellidos("B").build();
+        usuario.setId(UUID.randomUUID());
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.APROBADA);
+        return usuario;
     }
 }

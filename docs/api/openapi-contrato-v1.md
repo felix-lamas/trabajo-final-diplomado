@@ -96,21 +96,37 @@ No se incorpora Flyway en esta fase y PostgreSQL no se considera validado por la
 
 ### Eventos
 
-- `GET /api/v1/eventos`
-- `GET /api/v1/eventos/publicados`
-- `GET /api/v1/eventos/publicados/buscar`
-- `GET /api/v1/eventos/revision`
-- `GET /api/v1/eventos/{id}`
-- `POST /api/v1/eventos`
-- `PUT /api/v1/eventos/{id}`
-- `DELETE /api/v1/eventos/{id}`
-- `PATCH /api/v1/eventos/{id}/publicar`
-- `PATCH /api/v1/eventos/{id}/enviar-revision`
-- `PATCH /api/v1/eventos/{id}/rechazar`
-- `PATCH /api/v1/eventos/{id}/volver-borrador`
-- `PATCH /api/v1/eventos/{id}/cancelar`
-- `PATCH /api/v1/eventos/{id}/finalizar`
-- `GET /api/v1/eventos/categoria/{id}`
+| Operacion canonica | Acceso | Resultado | Errores relevantes |
+| --- | --- | --- | --- |
+| `GET /api/v1/eventos` | JWT: `ADMINISTRADOR`, `ORGANIZADOR`, `USUARIO` | `200`; todos, propios o publicados segun rol | `401`, `403` |
+| `GET /api/v1/eventos/publicados` | Publico | `200`; solo `PUBLICADO` | `200` con lista vacia |
+| `GET /api/v1/eventos/publicados/buscar` | Publico | `200`; filtros opcionales de texto, categoria, precio y modalidad | `400` por enum/filtro invalido |
+| `GET /api/v1/eventos/revision` | `ADMINISTRADOR` | `200`; solo `EN_REVISION` | `401`, `403` |
+| `GET /api/v1/eventos/{id}` | Publico o JWT | `200`; publico solo `PUBLICADO`, administrador cualquiera, organizador los propios | `404` inexistente o no visible |
+| `POST /api/v1/eventos` | `ADMINISTRADOR`, `ORGANIZADOR` aprobado | `201`; crea `BORRADOR` y deriva ownership del JWT | `400`, `401`, `403`, `404` categoria activa inexistente |
+| `PUT /api/v1/eventos/{id}` | `ADMINISTRADOR`, `ORGANIZADOR` propietario aprobado | `200`; solo `BORRADOR` o `RECHAZADO` | `400`, `401`, `403`, `404`, `409` estado incompatible |
+| `DELETE /api/v1/eventos/{id}` | `ADMINISTRADOR`, `ORGANIZADOR` propietario aprobado | `204`; solo `BORRADOR` | `401`, `403`, `404`, `409` |
+| `PATCH /api/v1/eventos/{id}/enviar-revision` | `ORGANIZADOR` propietario aprobado | `200`; `BORRADOR -> EN_REVISION` | `400` incompleto, `401`, `403`, `404`, `409` |
+| `PATCH /api/v1/eventos/{id}/publicar` | `ADMINISTRADOR` | `200`; `EN_REVISION -> PUBLICADO` | `400` incompleto, `401`, `403`, `404`, `409` |
+| `PATCH /api/v1/eventos/{id}/rechazar` | `ADMINISTRADOR` | `200`; `EN_REVISION -> RECHAZADO`, motivo obligatorio | `400`, `401`, `403`, `404`, `409` |
+| `PATCH /api/v1/eventos/{id}/volver-borrador` | `ORGANIZADOR` propietario aprobado | `200`; `RECHAZADO -> BORRADOR` | `401`, `403`, `404`, `409` |
+| `PATCH /api/v1/eventos/{id}/cancelar` | `ADMINISTRADOR` | `200`; `PUBLICADO -> CANCELADO`, motivo obligatorio | `400`, `401`, `403`, `404`, `409` |
+| `PATCH /api/v1/eventos/{id}/finalizar` | `ADMINISTRADOR` | `200`; `PUBLICADO -> FINALIZADO` tras la fecha/hora fin | `400`, `401`, `403`, `404`, `409` |
+| `GET /api/v1/eventos/categoria/{id}` | Publico | `200`; publicados de la categoria | `200` con lista vacia |
+
+Los DTO de escritura no aceptan `organizadorId`, estado ni auditoria. La API impone ownership con el
+usuario autenticado y bloqueo pesimista en mutaciones; un organizador ajeno recibe `403`, no puede
+publicar, rechazar, cancelar ni finalizar. Los estados validos son exactamente `BORRADOR`, `EN_REVISION`,
+`PUBLICADO`, `RECHAZADO`, `CANCELADO` y `FINALIZADO`. Las audiencias son `UAJMS`, `EXTERNA` y `AMBOS`.
+
+El formulario y el servicio validan el rango temporal, los datos fisicos para `PRESENCIAL`, el enlace
+HTTP(S) para `VIRTUAL`, capacidad positiva solo cuando es limitada, costo positivo y datos de pago para
+`PAGO`, y tipo/horas para certificados curriculares. Estas propiedades solo configuran EVENTO: no crean
+inscripciones, pagos, asistencias ni certificados.
+
+Deuda fisica: el esquema sigue gestionado por `ddl-auto`. Un despliegue con datos que contengan el valor
+historico `EXTERNO` en `eventos.publico_objetivo` debe convertirlo a `EXTERNA` antes de aplicar el enum
+oficial. Esta fase no incorpora Flyway y las pruebas automatizadas no validan PostgreSQL.
 
 ### Inscripciones
 

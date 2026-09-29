@@ -75,6 +75,13 @@ describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
     expect(fixture.nativeElement.querySelector('.public-event-card')).not.toBeNull();
   });
 
+  it('incluye eventos publicados de pago en el catalogo', async () => {
+    responses[0].next([{ ...evento, id: 'pago', titulo: 'Evento pagado', tipoInscripcion: TipoInscripcion.PAGO, costo: 30 }]);
+    responses[0].complete();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).toContain('Evento pagado');
+  });
+
   it('muestra empty inmediatamente cuando HTTP devuelve una lista vacia', async () => {
     responses[0].next([]);
     responses[0].complete();

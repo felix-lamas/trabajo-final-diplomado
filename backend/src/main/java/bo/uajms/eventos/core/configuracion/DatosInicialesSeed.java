@@ -17,6 +17,7 @@ import bo.uajms.eventos.modulos.eventos.entidades.Evento;
 import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
 import bo.uajms.eventos.modulos.eventos.entidades.PublicoObjetivo;
 import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
+import bo.uajms.eventos.modulos.eventos.entidades.TipoCertificadoEvento;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -227,6 +228,12 @@ public class DatosInicialesSeed implements CommandLineRunner {
         crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
                 categorias.get("conferencia"), "Conferencia de Innovación y Tecnología",
                 EstadoEvento.EN_REVISION, Modalidad.VIRTUAL, fechaBase.plusDays(75));
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("cultural"), "Jornada Cultural en Preparacion",
+                EstadoEvento.BORRADOR, Modalidad.PRESENCIAL, fechaBase.plusDays(90));
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("deportivo"), "Encuentro Deportivo por Corregir",
+                EstadoEvento.RECHAZADO, Modalidad.PRESENCIAL, fechaBase.plusDays(105));
     }
 
     private void crearEventoDemoSiNoExiste(Set<String> titulosExistentes, Usuario organizador,
@@ -242,14 +249,20 @@ public class DatosInicialesSeed implements CommandLineRunner {
 
         LocalDateTime fechaEnvioRevision = LocalDateTime.now(ZONA_OFICIAL);
         boolean publicado = estado == EstadoEvento.PUBLICADO;
+        boolean rechazado = estado == EstadoEvento.RECHAZADO;
+        boolean pagado = titulo.startsWith("Curso");
+        boolean certificado = titulo.startsWith("Congreso");
+        boolean sinCupo = titulo.startsWith("Conferencia");
+        PublicoObjetivo audiencia = certificado ? PublicoObjetivo.AMBOS
+                : modalidad == Modalidad.VIRTUAL ? PublicoObjetivo.EXTERNA : PublicoObjetivo.UAJMS;
         Evento evento = Evento.builder()
                 .titulo(titulo)
                 .descripcion("Evento ficticio de demostración para el flujo E2 de la plataforma UAJMS.")
                 .objetivos("Demostrar el flujo de revisión, publicación e inscripción gratuita.")
                 .categoria(categoria)
                 .modalidad(modalidad)
-                .tipoInscripcion(TipoInscripcion.GRATUITO)
-                .costo(BigDecimal.ZERO)
+                .tipoInscripcion(pagado ? TipoInscripcion.PAGO : TipoInscripcion.GRATUITO)
+                .costo(pagado ? new BigDecimal("50.00") : BigDecimal.ZERO)
                 .fechaInicio(fechaInicio)
                 .fechaFin(fechaInicio.plusDays(1))
                 .horaInicio(LocalTime.of(9, 0))
@@ -261,18 +274,22 @@ public class DatosInicialesSeed implements CommandLineRunner {
                 .radioMetros(modalidad == Modalidad.PRESENCIAL ? 100 : null)
                 .enlaceVirtual(modalidad == Modalidad.VIRTUAL ? "https://demo.local/eventos/virtual" : null)
                 .requiereInscripcion(true)
-                .cupoLimitado(true)
-                .cupoMaximo(100)
-                .cupoDisponible(100)
-                .emiteCertificado(false)
-                .publicoObjetivo(PublicoObjetivo.AMBOS)
+                .cupoLimitado(!sinCupo)
+                .cupoMaximo(sinCupo ? null : 100)
+                .cupoDisponible(sinCupo ? null : 100)
+                .emiteCertificado(certificado)
+                .tipoCertificado(certificado ? TipoCertificadoEvento.CURRICULAR : null)
+                .horasAcademicas(certificado ? 20 : null)
+                .publicoObjetivo(audiencia)
                 .telefonoContacto("70000000")
                 .emailContacto("eventos@demo.local")
                 .whatsappContacto("70000000")
+                .instruccionesPago(pagado ? "Transferencia ficticia para demostracion; no realizar pagos reales." : null)
                 .estado(estado)
-                .fechaEnvioRevision(fechaEnvioRevision)
-                .fechaResolucion(publicado ? fechaEnvioRevision : null)
-                .resueltoPor(publicado ? administrador : null)
+                .fechaEnvioRevision(estado == EstadoEvento.BORRADOR ? null : fechaEnvioRevision)
+                .fechaResolucion(publicado || rechazado ? fechaEnvioRevision : null)
+                .resueltoPor(publicado || rechazado ? administrador : null)
+                .motivoRechazo(rechazado ? "Evento demo pendiente de correccion." : null)
                 .organizador(organizador)
                 .build();
         eventoRepository.save(evento);

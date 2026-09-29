@@ -40,5 +40,5 @@ public abstract class EventoDatosRequest {
     @Pattern(regexp = "^[0-9+() -]{7,20}$") private String whatsappContacto;
     @Size(max = 500) private String imagenPortada;
     @Size(max = 500) private String qrPagoUrl;
-    private String instruccionesPago;
+    @Size(max = 2000) private String instruccionesPago;
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
@@ -14,14 +15,24 @@ import { AuthService } from '../../../../core/services/auth.service';
   standalone: false
 })
 export class EventoListComponent implements OnInit {
-  private readonly viewState = signal({ eventos: [] as Evento[], loading: true });
-  get eventos(): Evento[] { return this.viewState().eventos; }
-  private set eventos(value: Evento[]) { this.viewState.update((state) => ({ ...state, eventos: value })); }
+  private readonly destroyRef = inject(DestroyRef);
+  readonly eventos = signal<Evento[]>([]);
+  readonly loading = signal(true);
+  readonly error = signal(false);
+  readonly busqueda = signal('');
+  readonly estadoFiltro = signal('TODOS');
+  readonly eventosFiltrados = computed(() => {
+    const texto = this.busqueda().trim().toLowerCase();
+    return this.eventos().filter((evento) => {
+      const coincideBusqueda = !texto || evento.titulo.toLowerCase().includes(texto)
+        || evento.categoriaNombre.toLowerCase().includes(texto) || (evento.descripcion || '').toLowerCase().includes(texto);
+      return coincideBusqueda && (this.estadoFiltro() === 'TODOS' || evento.estado === this.estadoFiltro());
+    });
+  });
+  readonly totalEventos = computed(() => this.eventos().length);
+  readonly totalPublicados = computed(() => this.eventos().filter((e) => e.estado === 'PUBLICADO').length);
+  readonly totalBorradores = computed(() => this.eventos().filter((e) => e.estado === 'BORRADOR').length);
   displayedColumns: string[] = ['titulo', 'categoria', 'fecha', 'cupo', 'estado', 'acciones'];
-  busqueda = '';
-  estadoFiltro = 'TODOS';
-  get loading(): boolean { return this.viewState().loading; }
-  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
 
   constructor(
     private eventoService: EventoService,
@@ -35,41 +46,16 @@ export class EventoListComponent implements OnInit {
   }
 
   cargarEventos(): void {
-    this.loading = true;
-    const eventos$ = this.esAdministrador
-      ? this.eventoService.listarEnRevision()
-      : this.eventoService.listar();
+    this.loading.set(true);
+    this.error.set(false);
+    const eventos$ = this.eventoService.listar();
 
     eventos$
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => this.eventos = data,
-        error: () => this.toast.error('Error al cargar eventos')
+        next: (data) => this.eventos.set(data),
+        error: () => { this.error.set(true); this.eventos.set([]); this.toast.error('Error al cargar eventos'); }
       });
-  }
-
-  get eventosFiltrados(): Evento[] {
-    const busqueda = this.busqueda.trim().toLowerCase();
-    return this.eventos.filter((evento) => {
-      const coincideBusqueda = !busqueda
-        || evento.titulo.toLowerCase().includes(busqueda)
-        || evento.categoriaNombre.toLowerCase().includes(busqueda)
-        || evento.descripcion.toLowerCase().includes(busqueda);
-      const coincideEstado = this.estadoFiltro === 'TODOS' || evento.estado === this.estadoFiltro;
-      return coincideBusqueda && coincideEstado;
-    });
-  }
-
-  get totalEventos(): number {
-    return this.eventos.length;
-  }
-
-  get totalPublicados(): number {
-    return this.eventos.filter((evento) => evento.estado === 'PUBLICADO').length;
-  }
-
-  get totalBorradores(): number {
-    return this.eventos.filter((evento) => evento.estado === 'BORRADOR').length;
   }
 
   get esOrganizador(): boolean {
@@ -81,7 +67,7 @@ export class EventoListComponent implements OnInit {
   }
 
   cambiarFiltro(estado: string): void {
-    this.estadoFiltro = estado;
+    this.estadoFiltro.set(estado);
   }
 
   getEstadoClass(estado: string): string {
@@ -117,10 +103,10 @@ export class EventoListComponent implements OnInit {
         confirmText: 'Eliminar',
         tone: 'danger'
       }
-    }).afterClosed().subscribe((confirmed) => {
+    }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((confirmed) => {
       if (!confirmed) return;
 
-      this.eventoService.eliminar(evento.id).subscribe({
+      this.eventoService.eliminar(evento.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.toast.success('Evento eliminado correctamente');
           this.cargarEventos();

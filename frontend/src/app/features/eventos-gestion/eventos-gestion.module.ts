@@ -21,6 +21,7 @@ import { EventoDetailComponent } from '../admin/eventos/evento-detail/evento-det
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
+import { EventoMotivoDialogComponent } from '../admin/eventos/evento-motivo-dialog.component';
 
 @NgModule({
   declarations: [EventoListComponent, EventoFormComponent, EventoDetailComponent],
@@ -43,7 +44,8 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
     MatTooltipModule,
     ConfirmDialogComponent,
     EmptyStateComponent,
-    SkeletonComponent
+    SkeletonComponent,
+    EventoMotivoDialogComponent
   ],
   exports: [EventoListComponent, EventoFormComponent, EventoDetailComponent]
 })

@@ -5,6 +5,7 @@ import { CategoriaListComponent } from './categorias/categoria-list/categoria-li
 import { CategoriaFormComponent } from './categorias/categoria-form/categoria-form.component';
 import { EventoListComponent } from './eventos/evento-list/evento-list.component';
 import { EventoDetailComponent } from './eventos/evento-detail/evento-detail.component';
+import { EventoFormComponent } from './eventos/evento-form/evento-form.component';
 import { ValidarPagosListComponent } from './pagos/validar-pagos-list/validar-pagos-list.component';
 import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
 
@@ -26,6 +27,8 @@ const routes: Routes = [
     path: 'eventos',
     children: [
       { path: '', component: EventoListComponent },
+      { path: 'nuevo', component: EventoFormComponent },
+      { path: 'editar/:id', component: EventoFormComponent },
       { path: ':id', component: EventoDetailComponent }
     ]
   },

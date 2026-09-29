@@ -48,6 +48,14 @@ export class EventoService {
     return this.http.patch<void>(`${this.apiUrl}/${id}/enviar-revision`, {});
   }
 
+  rechazar(id: string, motivo: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/rechazar`, { motivo });
+  }
+
+  volverABorrador(id: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/volver-borrador`, {});
+  }
+
   cancelar(id: string, motivo: string): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}/cancelar`, { motivo });
   }

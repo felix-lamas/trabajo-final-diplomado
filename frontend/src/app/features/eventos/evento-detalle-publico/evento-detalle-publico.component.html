@@ -89,15 +89,17 @@
                 <mat-icon>groups</mat-icon>
                 <div>
                   <span>Cupos</span>
-                  <strong>{{ evento.cupoDisponible }} de {{ evento.cupoMaximo }}</strong>
+                  <strong>{{ evento.cupoLimitado ? ((evento.cupoDisponible ?? 0) + ' de ' + (evento.cupoMaximo ?? 0)) : 'Sin limite' }}</strong>
                 </div>
               </div>
             </div>
 
             <div class="public-aside-card__actions">
-              <a mat-flat-button color="primary" *ngIf="evento.tipoInscripcion === 'GRATUITO'" [routerLink]="['/eventos', evento.id, 'inscripcion']" [class.disabled]="(evento.cupoLimitado && (evento.cupoDisponible ?? 0) <= 0) || evento.estado !== 'PUBLICADO'">
+              <a mat-flat-button color="primary" *ngIf="evento.requiereInscripcion && evento.tipoInscripcion === 'GRATUITO'" [routerLink]="['/eventos', evento.id, 'inscripcion']" [class.disabled]="(evento.cupoLimitado && (evento.cupoDisponible ?? 0) <= 0) || evento.estado !== 'PUBLICADO'">
                 Inscribirme ahora
               </a>
+              <p class="app-muted" *ngIf="evento.requiereInscripcion && evento.tipoInscripcion === 'PAGO'">La inscripcion de pago se habilitara en su fase correspondiente.</p>
+              <p class="app-muted" *ngIf="!evento.requiereInscripcion">Este evento no requiere inscripcion.</p>
             </div>
           </mat-card>
         </aside>

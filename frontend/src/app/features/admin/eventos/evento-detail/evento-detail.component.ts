@@ -1,13 +1,15 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { EventoService } from '../../../../core/services/evento.service';
 import { Evento } from '../../../../core/models/evento.model';
-import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { finalize } from 'rxjs';
 import { ToastService } from '../../../../shared/ui/toast.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { apiErrorMessage } from '../../../../core/utils/api-error.util';
+import { EventoMotivoDialogComponent } from '../evento-motivo-dialog.component';
 
 @Component({
   selector: 'app-evento-detail',
@@ -15,9 +17,11 @@ import { apiErrorMessage } from '../../../../core/utils/api-error.util';
   standalone: false
 })
 export class EventoDetailComponent implements OnInit {
-  private readonly eventoState = signal<Evento | undefined>(undefined);
-  get evento(): Evento | undefined { return this.eventoState(); }
-  private set evento(value: Evento | undefined) { this.eventoState.set(value); }
+  private readonly destroyRef = inject(DestroyRef);
+  readonly evento = signal<Evento | undefined>(undefined);
+  readonly loading = signal(true);
+  readonly error = signal(false);
+  readonly procesando = signal(false);
 
   constructor(
     private eventoService: EventoService,
@@ -35,31 +39,45 @@ export class EventoDetailComponent implements OnInit {
   }
 
   cargarEvento(id: string): void {
-    this.eventoService.obtenerPorId(id).subscribe({
-      next: (data) => this.evento = data,
-      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al cargar detalle'))
+    this.loading.set(true);
+    this.error.set(false);
+    this.eventoService.obtenerPorId(id).pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => this.evento.set(data),
+      error: (err) => { this.error.set(true); this.toast.error(apiErrorMessage(err, 'Error al cargar detalle')); }
     });
   }
 
   publicar(): void {
-    if (!this.evento) return;
-    this.eventoService.publicar(this.evento.id).subscribe({
-      next: () => {
-        this.toast.success('Evento publicado con exito');
-        this.cargarEvento(this.evento!.id);
-      },
-      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al publicar'))
-    });
+    if (!this.evento()) return;
+    this.procesar(this.eventoService.publicar(this.evento()!.id), 'Evento publicado con exito', 'Error al publicar');
+  }
+
+  rechazar(): void {
+    const evento = this.evento();
+    if (!evento) return;
+    this.solicitarMotivo('Rechazar evento', 'Indique la correccion requerida al organizador', (motivo) =>
+      this.procesar(this.eventoService.rechazar(evento.id, motivo), 'Evento rechazado', 'Error al rechazar'));
+  }
+
+  volverABorrador(): void {
+    if (!this.evento()) return;
+    this.procesar(this.eventoService.volverABorrador(this.evento()!.id), 'Evento devuelto a borrador', 'Error al volver a borrador');
   }
 
   enviarARevision(): void {
-    if (!this.evento) return;
-    this.eventoService.enviarARevision(this.evento.id).subscribe({
+    if (!this.evento()) return;
+    this.procesar(this.eventoService.enviarARevision(this.evento()!.id), 'Evento enviado a revision', 'Error al enviar a revision');
+  }
+
+  private procesar(operacion$: ReturnType<EventoService['publicar']>, exito: string, error: string): void {
+    if (this.procesando()) return;
+    this.procesando.set(true);
+    operacion$.pipe(finalize(() => this.procesando.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.toast.success('Evento enviado a revision');
-        this.cargarEvento(this.evento!.id);
+        this.toast.success(exito);
+        this.cargarEvento(this.evento()!.id);
       },
-      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al enviar a revision'))
+      error: (err) => this.toast.error(apiErrorMessage(err, error))
     });
   }
 
@@ -76,37 +94,19 @@ export class EventoDetailComponent implements OnInit {
   }
 
   cancelar(): void {
-    if (!this.evento) return;
-
-    this.dialog.open(ConfirmDialogComponent, {
-      width: 'min(440px, 92vw)',
-      data: {
-        title: 'Cancelar evento',
-        message: 'Esta accion no se puede deshacer y detendra la operacion del evento.',
-        confirmText: 'Cancelar evento',
-        tone: 'danger'
-      }
-    }).afterClosed().subscribe((confirmed) => {
-      if (!confirmed || !this.evento) return;
-
-      this.eventoService.cancelar(this.evento.id, 'Cancelado desde el panel web').subscribe({
-        next: () => {
-          this.toast.warning('Evento cancelado');
-          this.cargarEvento(this.evento!.id);
-        },
-        error: (err) => this.toast.error(apiErrorMessage(err, 'Error al cancelar'))
-      });
-    });
+    const evento = this.evento();
+    if (!evento) return;
+    this.solicitarMotivo('Cancelar evento', 'Esta transicion es definitiva. Indique el motivo', (motivo) =>
+      this.procesar(this.eventoService.cancelar(evento.id, motivo), 'Evento cancelado', 'Error al cancelar'));
   }
 
   finalizar(): void {
-    if (!this.evento) return;
-    this.eventoService.finalizar(this.evento.id).subscribe({
-      next: () => {
-        this.toast.success('Evento finalizado correctamente');
-        this.cargarEvento(this.evento!.id);
-      },
-      error: (err) => this.toast.error(apiErrorMessage(err, 'Error al finalizar'))
-    });
+    if (!this.evento()) return;
+    this.procesar(this.eventoService.finalizar(this.evento()!.id), 'Evento finalizado correctamente', 'Error al finalizar');
+  }
+
+  private solicitarMotivo(titulo: string, mensaje: string, aceptar: (motivo: string) => void): void {
+    this.dialog.open(EventoMotivoDialogComponent, { width: 'min(520px, 92vw)', data: { titulo, mensaje } })
+      .afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((motivo?: string) => { if (motivo) aceptar(motivo); });
   }
 }

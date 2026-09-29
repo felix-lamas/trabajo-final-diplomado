@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EventoService } from '../../../core/services/evento.service';
 import { Evento } from '../../../core/models/evento.model';
@@ -9,6 +10,7 @@ import { Evento } from '../../../core/models/evento.model';
   standalone: false
 })
 export class CatalogoEventosPublicoComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly viewState = signal({
     eventos: [] as Evento[],
     filtrados: [] as Evento[],
@@ -40,15 +42,15 @@ export class CatalogoEventosPublicoComponent implements OnInit {
   ngOnInit(): void {
     this.cargarEventos();
 
-    this.filtros.valueChanges.subscribe(() => this.aplicarFiltros());
+    this.filtros.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.aplicarFiltros());
   }
 
   cargarEventos(): void {
     this.loading = true;
     this.errorCarga = false;
-    this.eventoService.listarPublicados().subscribe({
+    this.eventoService.listarPublicados().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
-        this.eventos = data.filter((evento) => evento.tipoInscripcion === 'GRATUITO');
+        this.eventos = data;
         this.loading = false;
         this.aplicarFiltros();
       },

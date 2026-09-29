@@ -1,162 +1,165 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventoService } from '../../../../core/services/evento.service';
-import { CategoriaEventoService } from '../../../../core/services/categoria-evento.service';
-import { CategoriaEvento } from '../../../../core/models/categoria-evento.model';
-import { CrearEventoRequest, Modalidad, PublicoObjetivo, TipoInscripcion } from '../../../../core/models/evento.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 import { finalize } from 'rxjs';
 
-@Component({
-  selector: 'app-evento-form',
-  templateUrl: './evento-form.component.html',
-  standalone: false
-})
+import { CategoriaEvento } from '../../../../core/models/categoria-evento.model';
+import { CrearEventoRequest, Modalidad, PublicoObjetivo, TipoCertificadoEvento, TipoInscripcion } from '../../../../core/models/evento.model';
+import { CategoriaEventoService } from '../../../../core/services/categoria-evento.service';
+import { EventoService } from '../../../../core/services/evento.service';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
+
+@Component({ selector: 'app-evento-form', templateUrl: './evento-form.component.html', standalone: false })
 export class EventoFormComponent implements OnInit {
-  eventoForm: FormGroup;
+  private readonly destroyRef = inject(DestroyRef);
+  readonly categorias = signal<CategoriaEvento[]>([]);
+  readonly cargandoCategorias = signal(true);
+  readonly cargandoEvento = signal(false);
+  readonly guardando = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly modalidad = signal(Modalidad.PRESENCIAL);
+  readonly tipoInscripcion = signal(TipoInscripcion.GRATUITO);
+  readonly requiereInscripcion = signal(true);
+  readonly cupoLimitado = signal(true);
+  readonly emiteCertificado = signal(false);
+  readonly tipoCertificado = signal<TipoCertificadoEvento | null>(null);
+  readonly esPresencial = computed(() => this.modalidad() === Modalidad.PRESENCIAL);
+  readonly esPagado = computed(() => this.tipoInscripcion() === TipoInscripcion.PAGO);
+  readonly mostrarCupo = computed(() => this.requiereInscripcion() && this.cupoLimitado());
+  readonly mostrarHoras = computed(() => this.emiteCertificado() && this.tipoCertificado() === TipoCertificadoEvento.CURRICULAR);
+
+  readonly eventoForm: FormGroup;
   esEdicion = false;
   id: string | null = null;
-  private readonly viewState = signal({ categorias: [] as CategoriaEvento[], cargandoEvento: false, guardando: false });
-  get categorias(): CategoriaEvento[] { return this.viewState().categorias; }
-  private set categorias(value: CategoriaEvento[]) { this.viewState.update((state) => ({ ...state, categorias: value })); }
-  get cargandoEvento(): boolean { return this.viewState().cargandoEvento; }
-  private set cargandoEvento(value: boolean) { this.viewState.update((state) => ({ ...state, cargandoEvento: value })); }
-  get guardando(): boolean { return this.viewState().guardando; }
-  private set guardando(value: boolean) { this.viewState.update((state) => ({ ...state, guardando: value })); }
 
   constructor(
-    private fb: FormBuilder,
-    private eventoService: EventoService,
-    private categoriaService: CategoriaEventoService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private readonly fb: FormBuilder,
+    private readonly eventoService: EventoService,
+    private readonly categoriaService: CategoriaEventoService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly snackBar: MatSnackBar
   ) {
     this.eventoForm = this.fb.group({
-      titulo: ['', [Validators.required, Validators.maxLength(200)]],
-      descripcion: ['', Validators.required],
-      objetivos: ['', Validators.required],
-      categoriaId: ['', Validators.required],
-      modalidad: [Modalidad.PRESENCIAL, Validators.required],
-      tipoInscripcion: [TipoInscripcion.GRATUITO, Validators.required],
-      costo: [0, [Validators.required, Validators.min(0)]],
-      fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
-      horaInicio: ['', Validators.required],
-      horaFin: ['', Validators.required],
-      ubicacion: ['', Validators.required],
-      direccion: [''],
-      enlaceVirtual: [''],
-      requiereInscripcion: [true, Validators.required],
-      cupoLimitado: [true, Validators.required],
-      cupoMaximo: [100, [Validators.required, Validators.min(1)]],
-      emiteCertificado: [false, Validators.required],
+      titulo: ['', [Validators.required, Validators.maxLength(200)]], descripcion: ['', Validators.required],
+      objetivos: ['', Validators.required], categoriaId: ['', Validators.required],
+      modalidad: [Modalidad.PRESENCIAL, Validators.required], tipoInscripcion: [TipoInscripcion.GRATUITO, Validators.required],
+      costo: [0], fechaInicio: ['', Validators.required], fechaFin: ['', Validators.required],
+      horaInicio: ['', Validators.required], horaFin: ['', Validators.required], ubicacion: [''], direccion: [''],
+      latitud: [null], longitud: [null], radioMetros: [null], enlaceVirtual: [''],
+      requiereInscripcion: [true, Validators.required], cupoLimitado: [true, Validators.required], cupoMaximo: [100],
+      emiteCertificado: [false, Validators.required], tipoCertificado: [null], horasAcademicas: [null],
       publicoObjetivo: [PublicoObjetivo.AMBOS, Validators.required],
-      imagenPortada: ['']
-    });
-
-    // Validar costo según tipo de inscripción
-    this.eventoForm.get('tipoInscripcion')?.valueChanges.subscribe(tipo => {
-      const costoControl = this.eventoForm.get('costo');
-      if (tipo === TipoInscripcion.GRATUITO) {
-        costoControl?.setValue(0);
-        costoControl?.disable();
-      } else {
-        costoControl?.enable();
-      }
-    });
-
-    this.eventoForm.get('modalidad')?.valueChanges.subscribe(() => this.actualizarValidadoresModalidad());
-    this.eventoForm.get('cupoLimitado')?.valueChanges.subscribe(() => this.actualizarValidadorCupo());
+      telefonoContacto: ['', Validators.pattern(/^[0-9+() -]{7,20}$/)], emailContacto: ['', Validators.email],
+      whatsappContacto: ['', Validators.pattern(/^[0-9+() -]{7,20}$/)],
+      imagenPortada: ['', Validators.pattern(/^https?:\/\/.+/i)], qrPagoUrl: ['', Validators.pattern(/^https?:\/\/.+/i)],
+      instruccionesPago: ['']
+    }, { validators: this.rangoTemporalValido });
+    this.conectarEstadoCondicional();
   }
 
   ngOnInit(): void {
+    this.actualizarValidadores();
     this.cargarCategorias();
     this.id = this.route.snapshot.paramMap.get('id');
-    if (this.id) {
-      this.esEdicion = true;
-      this.cargarEvento(this.id);
-    }
+    if (this.id) { this.esEdicion = true; this.cargarEvento(this.id); }
   }
 
   cargarCategorias(): void {
-    this.categoriaService.listarActivas().subscribe({
-      next: (data) => this.categorias = data,
-      error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al cargar categorias activas'), 'Cerrar', { duration: 4500 })
+    this.cargandoCategorias.set(true);
+    this.categoriaService.listarActivas().pipe(
+      finalize(() => this.cargandoCategorias.set(false)), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (data) => this.categorias.set(data),
+      error: (err) => this.error.set(apiErrorMessage(err, 'Error al cargar categorias activas'))
     });
   }
 
   cargarEvento(id: string): void {
-    this.cargandoEvento = true;
-    this.eventoService.obtenerPorId(id)
-      .pipe(finalize(() => this.cargandoEvento = false))
-      .subscribe({
-      next: (ev) => this.eventoForm.patchValue(ev),
-      error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al cargar evento'), 'Cerrar', { duration: 4500 })
+    this.cargandoEvento.set(true);
+    this.eventoService.obtenerPorId(id).pipe(
+      finalize(() => this.cargandoEvento.set(false)), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (evento) => { this.eventoForm.patchValue(evento); this.sincronizarSignals(); this.actualizarValidadores(); },
+      error: (err) => this.error.set(apiErrorMessage(err, 'Error al cargar evento'))
     });
   }
 
   guardar(): void {
-    if (this.eventoForm.invalid || this.guardando) return;
-
-    this.guardando = true;
-
+    this.eventoForm.markAllAsTouched();
+    if (this.eventoForm.invalid || this.guardando()) return;
+    this.guardando.set(true);
+    this.error.set(null);
     const raw = this.eventoForm.getRawValue();
+    const presencial = raw.modalidad === Modalidad.PRESENCIAL;
+    const pagado = raw.tipoInscripcion === TipoInscripcion.PAGO;
+    const certificado = Boolean(raw.emiteCertificado);
+    const curricular = certificado && raw.tipoCertificado === TipoCertificadoEvento.CURRICULAR;
+    const limitado = Boolean(raw.requiereInscripcion && raw.cupoLimitado);
     const request: CrearEventoRequest = {
-      ...raw,
-      costo: 0,
-      cupoMaximo: raw.cupoLimitado ? raw.cupoMaximo : null,
-      emiteCertificado: false
+      ...raw, costo: pagado ? Number(raw.costo) : 0,
+      ubicacion: presencial ? raw.ubicacion : undefined, direccion: presencial ? raw.direccion : undefined,
+      latitud: presencial ? Number(raw.latitud) : null, longitud: presencial ? Number(raw.longitud) : null,
+      radioMetros: presencial ? Number(raw.radioMetros) : null, enlaceVirtual: presencial ? undefined : raw.enlaceVirtual,
+      cupoLimitado: limitado, cupoMaximo: limitado ? Number(raw.cupoMaximo) : null,
+      tipoCertificado: certificado ? raw.tipoCertificado : null, horasAcademicas: curricular ? Number(raw.horasAcademicas) : null,
+      qrPagoUrl: pagado ? raw.qrPagoUrl : undefined, instruccionesPago: pagado ? raw.instruccionesPago : undefined
     };
-
-    if (this.esEdicion && this.id) {
-      this.eventoService.actualizar(this.id, request)
-        .pipe(finalize(() => this.guardando = false))
-        .subscribe({
-        next: () => {
-          this.snackBar.open('Evento actualizado', 'Cerrar', { duration: 3000 });
-          this.router.navigate([this.rutaGestion]);
-        },
-        error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al actualizar'), 'Cerrar', { duration: 4500 })
-      });
-    } else {
-      this.eventoService.crear(request)
-        .pipe(finalize(() => this.guardando = false))
-        .subscribe({
-        next: () => {
-          this.snackBar.open('Evento creado correctamente', 'Cerrar', { duration: 3000 });
-          this.router.navigate([this.rutaGestion]);
-        },
-        error: (err) => this.snackBar.open(apiErrorMessage(err, 'Error al crear'), 'Cerrar', { duration: 4500 })
-      });
-    }
+    const operacion$ = this.esEdicion && this.id ? this.eventoService.actualizar(this.id, request) : this.eventoService.crear(request);
+    operacion$.pipe(finalize(() => this.guardando.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.snackBar.open(this.esEdicion ? 'Evento actualizado' : 'Evento creado correctamente', 'Cerrar', { duration: 3000 });
+        this.router.navigate([this.rutaGestion]);
+      },
+      error: (err) => this.error.set(apiErrorMessage(err, this.esEdicion ? 'Error al actualizar' : 'Error al crear'))
+    });
   }
 
-  get rutaGestion(): string {
-    return this.router.url.startsWith('/organizador') ? '/organizador/eventos' : '/admin/eventos';
+  get rutaGestion(): string { return this.router.url.startsWith('/organizador') ? '/organizador/eventos' : '/admin/eventos'; }
+
+  private conectarEstadoCondicional(): void {
+    const observar = (control: string, actualizar: (valor: any) => void) => this.eventoForm.get(control)?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe((valor) => { actualizar(valor); this.actualizarValidadores(); });
+    observar('modalidad', (v) => this.modalidad.set(v));
+    observar('tipoInscripcion', (v) => this.tipoInscripcion.set(v));
+    observar('requiereInscripcion', (v) => this.requiereInscripcion.set(Boolean(v)));
+    observar('cupoLimitado', (v) => this.cupoLimitado.set(Boolean(v)));
+    observar('emiteCertificado', (v) => this.emiteCertificado.set(Boolean(v)));
+    observar('tipoCertificado', (v) => this.tipoCertificado.set(v));
   }
 
-  private actualizarValidadoresModalidad(): void {
-    const presencial = this.eventoForm.get('modalidad')?.value === Modalidad.PRESENCIAL;
-    const ubicacion = this.eventoForm.get('ubicacion');
-    const enlaceVirtual = this.eventoForm.get('enlaceVirtual');
-
-    presencial ? ubicacion?.setValidators([Validators.required]) : ubicacion?.clearValidators();
-    presencial ? enlaceVirtual?.clearValidators() : enlaceVirtual?.setValidators([Validators.required]);
-    ubicacion?.updateValueAndValidity({ emitEvent: false });
-    enlaceVirtual?.updateValueAndValidity({ emitEvent: false });
+  private sincronizarSignals(): void {
+    this.modalidad.set(this.eventoForm.get('modalidad')?.value); this.tipoInscripcion.set(this.eventoForm.get('tipoInscripcion')?.value);
+    this.requiereInscripcion.set(Boolean(this.eventoForm.get('requiereInscripcion')?.value));
+    this.cupoLimitado.set(Boolean(this.eventoForm.get('cupoLimitado')?.value));
+    this.emiteCertificado.set(Boolean(this.eventoForm.get('emiteCertificado')?.value));
+    this.tipoCertificado.set(this.eventoForm.get('tipoCertificado')?.value);
   }
 
-  private actualizarValidadorCupo(): void {
-    const cupo = this.eventoForm.get('cupoMaximo');
-    if (this.eventoForm.get('cupoLimitado')?.value) {
-      cupo?.setValidators([Validators.required, Validators.min(1)]);
-    } else {
-      cupo?.clearValidators();
-      cupo?.setValue(null, { emitEvent: false });
-    }
-    cupo?.updateValueAndValidity({ emitEvent: false });
+  private actualizarValidadores(): void {
+    this.definir('ubicacion', this.esPresencial(), [Validators.required, Validators.maxLength(255)]);
+    this.definir('direccion', this.esPresencial(), [Validators.required, Validators.maxLength(500)]);
+    this.definir('latitud', this.esPresencial(), [Validators.required, Validators.min(-90), Validators.max(90)]);
+    this.definir('longitud', this.esPresencial(), [Validators.required, Validators.min(-180), Validators.max(180)]);
+    this.definir('radioMetros', this.esPresencial(), [Validators.required, Validators.min(1), Validators.max(500)]);
+    this.definir('enlaceVirtual', !this.esPresencial(), [Validators.required, Validators.pattern(/^https?:\/\/.+/i)]);
+    this.definir('costo', this.esPagado(), [Validators.required, Validators.min(0.01)]);
+    this.definir('instruccionesPago', this.esPagado(), [Validators.required, Validators.maxLength(2000)]);
+    this.definir('cupoMaximo', this.mostrarCupo(), [Validators.required, Validators.min(1)]);
+    this.definir('tipoCertificado', this.emiteCertificado(), [Validators.required]);
+    this.definir('horasAcademicas', this.mostrarHoras(), [Validators.required, Validators.min(1)]);
+  }
+
+  private definir(nombre: string, requerido: boolean, validadores: any[]): void {
+    const control = this.eventoForm.get(nombre); control?.setValidators(requerido ? validadores : []);
+    control?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private rangoTemporalValido(group: AbstractControl): ValidationErrors | null {
+    const inicio = `${group.get('fechaInicio')?.value || ''}T${group.get('horaInicio')?.value || ''}`;
+    const fin = `${group.get('fechaFin')?.value || ''}T${group.get('horaFin')?.value || ''}`;
+    return inicio.length > 2 && fin.length > 2 && inicio >= fin ? { rangoTemporal: true } : null;
   }
 }

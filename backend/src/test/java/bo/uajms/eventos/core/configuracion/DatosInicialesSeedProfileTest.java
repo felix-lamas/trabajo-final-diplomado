@@ -244,14 +244,20 @@ class DatosInicialesSeedProfileTest {
         assertEquals("USUARIO", rolesPorCorreo.get("usuario@demo.local"));
 
         ArgumentCaptor<Evento> eventoCaptor = ArgumentCaptor.forClass(Evento.class);
-        verify(eventoRepository, times(6)).save(eventoCaptor.capture());
+        verify(eventoRepository, times(8)).save(eventoCaptor.capture());
         List<Evento> eventos = eventoCaptor.getAllValues();
         assertEquals(3, eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.PUBLICADO).count());
         assertEquals(3, eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.EN_REVISION).count());
+        assertEquals(1, eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.BORRADOR).count());
+        assertEquals(1, eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.RECHAZADO).count());
         assertTrue(eventos.stream().allMatch(evento -> evento.getOrganizador() == organizadorAprobado));
-        assertTrue(eventos.stream().allMatch(evento -> evento.getTipoInscripcion() == TipoInscripcion.GRATUITO));
+        assertTrue(eventos.stream().anyMatch(evento -> evento.getTipoInscripcion() == TipoInscripcion.PAGO
+                && evento.getCosto().signum() > 0 && evento.getInstruccionesPago() != null));
+        assertTrue(eventos.stream().anyMatch(evento -> evento.getTipoInscripcion() == TipoInscripcion.GRATUITO));
         assertTrue(eventos.stream().allMatch(evento -> Boolean.TRUE.equals(evento.getRequiereInscripcion())));
-        assertTrue(eventos.stream().allMatch(evento -> Boolean.FALSE.equals(evento.getEmiteCertificado())));
+        assertTrue(eventos.stream().anyMatch(evento -> Boolean.TRUE.equals(evento.getEmiteCertificado())
+                && evento.getHorasAcademicas() != null));
+        assertTrue(eventos.stream().anyMatch(evento -> Boolean.FALSE.equals(evento.getCupoLimitado())));
         assertTrue(eventos.stream().allMatch(evento -> evento.getFechaInicio().isBefore(evento.getFechaFin())));
         assertTrue(eventos.stream().allMatch(evento -> evento.getFechaInicio().isAfter(java.time.LocalDate.now())));
         assertTrue(eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.PUBLICADO)
@@ -268,7 +274,9 @@ class DatosInicialesSeedProfileTest {
                         "Jornada de Emprendimiento Universitario",
                         "Seminario de Inteligencia Artificial",
                         "Curso de Gestión de Proyectos",
-                        "Conferencia de Innovación y Tecnología"),
+                        "Conferencia de Innovación y Tecnología",
+                        "Jornada Cultural en Preparacion",
+                        "Encuentro Deportivo por Corregir"),
                 eventos.stream().map(Evento::getTitulo).collect(Collectors.toSet()));
     }
 
@@ -282,7 +290,9 @@ class DatosInicialesSeedProfileTest {
                 eventoExistente("Jornada de Emprendimiento Universitario"),
                 eventoExistente("Seminario de Inteligencia Artificial"),
                 eventoExistente("Curso de Gestión de Proyectos"),
-                eventoExistente("Conferencia de Innovación y Tecnología"));
+                eventoExistente("Conferencia de Innovación y Tecnología"),
+                eventoExistente("Jornada Cultural en Preparacion"),
+                eventoExistente("Encuentro Deportivo por Corregir"));
         when(categoriaEventoRepository.findAll()).thenReturn(categoriasDemo());
         when(eventoRepository.findAll()).thenReturn(existentes);
 
@@ -328,7 +338,9 @@ class DatosInicialesSeedProfileTest {
                 categoria("Conferencia"),
                 categoria("Taller"),
                 categoria("Curso"),
-                categoria("Seminario"));
+                categoria("Seminario"),
+                categoria("Cultural"),
+                categoria("Deportivo"));
     }
 
     private CategoriaEvento categoria(String nombre) {

@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class EventoControllerSecurityContractTest {
 
     @Test
-    void crearEstaReservadoAlOrganizador() throws Exception {
-        assertEquals("hasRole('ORGANIZADOR')", regla("crear", CrearEventoRequest.class));
+    void crearEstaReservadoAlAdministradorUOrganizador() throws Exception {
+        assertEquals("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')", regla("crear", CrearEventoRequest.class));
     }
 
     @Test
@@ -37,6 +37,12 @@ class EventoControllerSecurityContractTest {
     @Test
     void finalizarEstaReservadoAlAdministrador() throws Exception {
         assertEquals("hasRole('ADMINISTRADOR')", regla("finalizar", UUID.class));
+    }
+
+    @Test
+    void cancelarEstaReservadoAlAdministrador() throws Exception {
+        assertEquals("hasRole('ADMINISTRADOR')", regla("cancelar", UUID.class,
+                bo.uajms.eventos.modulos.eventos.dtos.EventoCancelacionRequest.class));
     }
 
     @Test

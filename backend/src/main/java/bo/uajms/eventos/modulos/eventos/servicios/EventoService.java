@@ -1,5 +1,7 @@
 package bo.uajms.eventos.modulos.eventos.servicios;
 
+import bo.uajms.eventos.core.excepciones.CodigosError;
+import bo.uajms.eventos.core.excepciones.ConflictoException;
 import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -88,10 +92,9 @@ public class EventoService {
 
     @Transactional
     public EventoDetalleResponse crear(CrearEventoRequest request) {
-        exigirOrganizador();
+        Usuario organizador = exigirCreadorEvento();
         CategoriaEvento categoria = obtenerCategoriaActiva(request.getCategoriaId());
         validarDatos(request, false);
-        Usuario organizador = usuarioAutenticadoService.obtenerUsuario();
         Evento evento = Evento.builder().categoria(categoria).organizador(organizador)
                 .estado(EstadoEvento.BORRADOR).build();
         aplicarDatos(evento, request, 0);
@@ -114,8 +117,8 @@ public class EventoService {
 
     @Transactional
     public void enviarARevision(UUID id) {
-        exigirOrganizador();
-        Evento evento = obtenerEventoPropio(id);
+        exigirOrganizadorAprobado();
+        Evento evento = obtenerEventoGestionable(id);
         exigirEstado(evento, EstadoEvento.BORRADOR, "enviar a revision");
         validarEventoCompleto(evento);
         evento.setEstado(EstadoEvento.EN_REVISION);
@@ -126,7 +129,7 @@ public class EventoService {
     @Transactional
     public void publicar(UUID id) {
         exigirAdministrador();
-        Evento evento = obtenerEventoGlobal(id);
+        Evento evento = obtenerEventoGlobalParaActualizar(id);
         exigirEstado(evento, EstadoEvento.EN_REVISION, "publicar");
         validarEventoCompleto(evento);
         resolver(evento, EstadoEvento.PUBLICADO, null);
@@ -136,15 +139,15 @@ public class EventoService {
     public void rechazar(UUID id, String motivo) {
         exigirAdministrador();
         validarMotivo(motivo, "rechazo");
-        Evento evento = obtenerEventoGlobal(id);
+        Evento evento = obtenerEventoGlobalParaActualizar(id);
         exigirEstado(evento, EstadoEvento.EN_REVISION, "rechazar");
         resolver(evento, EstadoEvento.RECHAZADO, motivo.trim());
     }
 
     @Transactional
     public void volverABorrador(UUID id) {
-        exigirOrganizador();
-        Evento evento = obtenerEventoPropio(id);
+        exigirOrganizadorAprobado();
+        Evento evento = obtenerEventoGestionable(id);
         exigirEstado(evento, EstadoEvento.RECHAZADO, "volver a borrador");
         evento.setEstado(EstadoEvento.BORRADOR);
         eventoRepository.save(evento);
@@ -152,8 +155,9 @@ public class EventoService {
 
     @Transactional
     public void cancelar(UUID id, String motivo) {
+        exigirAdministrador();
         validarMotivo(motivo, "cancelacion");
-        Evento evento = obtenerEventoGestionable(id);
+        Evento evento = obtenerEventoGlobalParaActualizar(id);
         exigirEstado(evento, EstadoEvento.PUBLICADO, "cancelar");
         evento.setEstado(EstadoEvento.CANCELADO);
         evento.setMotivoCancelacion(motivo.trim());
@@ -165,7 +169,7 @@ public class EventoService {
     @Transactional
     public void finalizar(UUID id) {
         exigirAdministrador();
-        Evento evento = obtenerEventoGlobal(id);
+        Evento evento = obtenerEventoGlobalParaActualizar(id);
         exigirEstado(evento, EstadoEvento.PUBLICADO, "finalizar");
         LocalDateTime fin = LocalDateTime.of(evento.getFechaFin(), evento.getHoraFin());
         if (LocalDateTime.now(ZONA_OFICIAL).isBefore(fin)) {
@@ -183,8 +187,8 @@ public class EventoService {
 
     private void aplicarDatos(Evento evento, EventoDatosRequest request, int ocupados) {
         evento.setTitulo(request.getTitulo().trim());
-        evento.setDescripcion(request.getDescripcion());
-        evento.setObjetivos(request.getObjetivos());
+        evento.setDescripcion(limpiar(request.getDescripcion()));
+        evento.setObjetivos(limpiar(request.getObjetivos()));
         evento.setModalidad(request.getModalidad());
         evento.setTipoInscripcion(request.getTipoInscripcion());
         evento.setCosto(request.getTipoInscripcion() == TipoInscripcion.GRATUITO
@@ -193,12 +197,13 @@ public class EventoService {
         evento.setFechaFin(request.getFechaFin());
         evento.setHoraInicio(request.getHoraInicio());
         evento.setHoraFin(request.getHoraFin());
-        evento.setUbicacion(request.getUbicacion());
-        evento.setDireccion(request.getDireccion());
-        evento.setLatitud(request.getLatitud());
-        evento.setLongitud(request.getLongitud());
-        evento.setRadioMetros(request.getRadioMetros());
-        evento.setEnlaceVirtual(request.getEnlaceVirtual());
+        boolean presencial = request.getModalidad() == Modalidad.PRESENCIAL;
+        evento.setUbicacion(presencial ? limpiar(request.getUbicacion()) : null);
+        evento.setDireccion(presencial ? limpiar(request.getDireccion()) : null);
+        evento.setLatitud(presencial ? request.getLatitud() : null);
+        evento.setLongitud(presencial ? request.getLongitud() : null);
+        evento.setRadioMetros(presencial ? request.getRadioMetros() : null);
+        evento.setEnlaceVirtual(presencial ? null : limpiar(request.getEnlaceVirtual()));
         evento.setRequiereInscripcion(request.getRequiereInscripcion());
         boolean limitado = Boolean.TRUE.equals(request.getRequiereInscripcion())
                 && Boolean.TRUE.equals(request.getCupoLimitado());
@@ -217,14 +222,16 @@ public class EventoService {
         evento.setTipoCertificado(Boolean.TRUE.equals(request.getEmiteCertificado())
                 ? request.getTipoCertificado() : null);
         evento.setHorasAcademicas(Boolean.TRUE.equals(request.getEmiteCertificado())
+                && request.getTipoCertificado() == TipoCertificadoEvento.CURRICULAR
                 ? request.getHorasAcademicas() : null);
         evento.setPublicoObjetivo(request.getPublicoObjetivo());
-        evento.setTelefonoContacto(request.getTelefonoContacto());
-        evento.setEmailContacto(request.getEmailContacto());
-        evento.setWhatsappContacto(request.getWhatsappContacto());
-        evento.setImagenPortada(request.getImagenPortada());
-        evento.setQrPagoUrl(request.getQrPagoUrl());
-        evento.setInstruccionesPago(request.getInstruccionesPago());
+        evento.setTelefonoContacto(limpiar(request.getTelefonoContacto()));
+        evento.setEmailContacto(limpiar(request.getEmailContacto()));
+        evento.setWhatsappContacto(limpiar(request.getWhatsappContacto()));
+        evento.setImagenPortada(limpiar(request.getImagenPortada()));
+        boolean pagado = request.getTipoInscripcion() == TipoInscripcion.PAGO;
+        evento.setQrPagoUrl(pagado ? limpiar(request.getQrPagoUrl()) : null);
+        evento.setInstruccionesPago(pagado ? limpiar(request.getInstruccionesPago()) : null);
     }
 
     private void validarDatos(EventoDatosRequest request, boolean completo) {
@@ -241,12 +248,18 @@ public class EventoService {
             throw new NegocioException("La fecha y hora de inicio debe ser anterior al fin");
         }
         validarCosto(request.getTipoInscripcion(), request.getCosto());
-        if (request.getModalidad() == Modalidad.PRESENCIAL && esVacio(request.getUbicacion())) {
-            throw new NegocioException("Un evento PRESENCIAL requiere ubicacion");
+        if (request.getModalidad() == Modalidad.PRESENCIAL
+                && (esVacio(request.getUbicacion()) || esVacio(request.getDireccion())
+                || request.getLatitud() == null || request.getLongitud() == null
+                || request.getRadioMetros() == null)) {
+            throw new NegocioException("Un evento PRESENCIAL requiere ubicacion, direccion, coordenadas y radio");
         }
         if (request.getModalidad() == Modalidad.VIRTUAL && esVacio(request.getEnlaceVirtual())) {
             throw new NegocioException("Un evento VIRTUAL requiere enlace de acceso");
         }
+        if (request.getModalidad() == Modalidad.VIRTUAL) validarUrl(request.getEnlaceVirtual(), "enlace virtual");
+        validarUrl(request.getImagenPortada(), "imagen de portada");
+        if (request.getTipoInscripcion() == TipoInscripcion.PAGO) validarUrl(request.getQrPagoUrl(), "QR de pago");
         if ((request.getLatitud() == null) != (request.getLongitud() == null)) {
             throw new NegocioException("Latitud y longitud deben informarse juntas");
         }
@@ -271,6 +284,10 @@ public class EventoService {
                 throw new NegocioException("Un certificado CURRICULAR requiere horas academicas mayores a cero");
             }
         }
+        if (request.getTipoInscripcion() == TipoInscripcion.PAGO
+                && esVacio(request.getInstruccionesPago()) && esVacio(request.getQrPagoUrl())) {
+            throw new NegocioException("Un evento de PAGO requiere instrucciones o QR de pago");
+        }
         if (completo && (esVacio(request.getDescripcion()) || esVacio(request.getObjetivos()))) {
             throw new NegocioException("El evento requiere descripcion y objetivos para revision");
         }
@@ -281,12 +298,45 @@ public class EventoService {
                 || evento.getCategoria() == null || !CATEGORIA_ACTIVA.equalsIgnoreCase(evento.getCategoria().getEstado())
                 || evento.getModalidad() == null || evento.getTipoInscripcion() == null
                 || evento.getFechaInicio() == null || evento.getFechaFin() == null
-                || evento.getHoraInicio() == null || evento.getHoraFin() == null) {
+                || evento.getHoraInicio() == null || evento.getHoraFin() == null
+                || evento.getRequiereInscripcion() == null || evento.getCupoLimitado() == null
+                || evento.getEmiteCertificado() == null || evento.getPublicoObjetivo() == null) {
             throw new NegocioException("El evento no tiene todos los datos obligatorios para revision");
         }
         if (!LocalDateTime.of(evento.getFechaInicio(), evento.getHoraInicio())
                 .isBefore(LocalDateTime.of(evento.getFechaFin(), evento.getHoraFin()))) {
             throw new NegocioException("La fecha y hora de inicio debe ser anterior al fin");
+        }
+        if (evento.getModalidad() == Modalidad.PRESENCIAL
+                && (esVacio(evento.getUbicacion()) || esVacio(evento.getDireccion())
+                || evento.getLatitud() == null || evento.getLongitud() == null || evento.getRadioMetros() == null)) {
+            throw new NegocioException("El evento PRESENCIAL no tiene ubicacion completa");
+        }
+        if (evento.getModalidad() == Modalidad.PRESENCIAL
+                && (evento.getRadioMetros() <= 0 || evento.getRadioMetros() > 500)) {
+            throw new NegocioException("El radio permitido debe estar entre 1 y 500 metros");
+        }
+        if (evento.getModalidad() == Modalidad.VIRTUAL && esVacio(evento.getEnlaceVirtual())) {
+            throw new NegocioException("El evento VIRTUAL no tiene enlace de acceso");
+        }
+        if (evento.getModalidad() == Modalidad.VIRTUAL) validarUrl(evento.getEnlaceVirtual(), "enlace virtual");
+        validarUrl(evento.getImagenPortada(), "imagen de portada");
+        validarCosto(evento.getTipoInscripcion(), evento.getCosto());
+        if (evento.getTipoInscripcion() == TipoInscripcion.PAGO
+                && esVacio(evento.getInstruccionesPago()) && esVacio(evento.getQrPagoUrl())) {
+            throw new NegocioException("El evento de PAGO no tiene instrucciones ni QR de pago");
+        }
+        if (evento.getTipoInscripcion() == TipoInscripcion.PAGO) validarUrl(evento.getQrPagoUrl(), "QR de pago");
+        if (Boolean.TRUE.equals(evento.getRequiereInscripcion()) && Boolean.TRUE.equals(evento.getCupoLimitado())
+                && (evento.getCupoMaximo() == null || evento.getCupoMaximo() <= 0)) {
+            throw new NegocioException("El evento con cupo limitado no tiene capacidad valida");
+        }
+        if (Boolean.TRUE.equals(evento.getEmiteCertificado()) && evento.getTipoCertificado() == null) {
+            throw new NegocioException("El evento no tiene tipo de certificado");
+        }
+        if (evento.getTipoCertificado() == TipoCertificadoEvento.CURRICULAR
+                && (evento.getHorasAcademicas() == null || evento.getHorasAcademicas() <= 0)) {
+            throw new NegocioException("El certificado CURRICULAR requiere horas academicas");
         }
     }
 
@@ -325,8 +375,15 @@ public class EventoService {
     }
 
     private Evento obtenerEventoGestionable(UUID id) {
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) return obtenerEventoGlobal(id);
-        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) return obtenerEventoPropio(id);
+        Evento evento = obtenerEventoGlobalParaActualizar(id);
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) return evento;
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            Usuario usuario = exigirOrganizadorAprobado();
+            if (!evento.getOrganizador().getId().equals(usuario.getId())) {
+                throw new AccessDeniedException("El evento pertenece a otro organizador");
+            }
+            return evento;
+        }
         throw new AccessDeniedException("El rol no permite gestionar eventos");
     }
 
@@ -341,6 +398,11 @@ public class EventoService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
     }
 
+    private Evento obtenerEventoGlobalParaActualizar(UUID id) {
+        return eventoRepository.findByIdForUpdate(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+    }
+
     private void resolver(Evento evento, EstadoEvento estado, String motivo) {
         evento.setEstado(estado);
         evento.setMotivoRechazo(motivo);
@@ -351,7 +413,8 @@ public class EventoService {
 
     private void exigirEstado(Evento evento, EstadoEvento esperado, String accion) {
         if (evento.getEstado() != esperado) {
-            throw new NegocioException("No se puede " + accion + " un evento en estado " + evento.getEstado());
+            throw new ConflictoException(CodigosError.EVENT_INVALID_STATE,
+                    "No se puede " + accion + " un evento en estado " + evento.getEstado());
         }
     }
 
@@ -360,9 +423,22 @@ public class EventoService {
             throw new AccessDeniedException("Se requiere rol ADMINISTRADOR");
     }
 
-    private void exigirOrganizador() {
-        if (!usuarioAutenticadoService.tieneRol("ORGANIZADOR"))
+    private Usuario exigirOrganizadorAprobado() {
+        if (!usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
             throw new AccessDeniedException("Se requiere rol ORGANIZADOR");
+        }
+        Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
+        if (usuario.getEstadoSolicitudOrganizador() != Usuario.EstadoSolicitudOrganizador.APROBADA) {
+            throw new AccessDeniedException("La solicitud de organizador debe estar APROBADA");
+        }
+        return usuario;
+    }
+
+    private Usuario exigirCreadorEvento() {
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
+            return usuarioAutenticadoService.obtenerUsuario();
+        }
+        return exigirOrganizadorAprobado();
     }
 
     private void validarMotivo(String motivo, String tipo) {
@@ -371,5 +447,22 @@ public class EventoService {
 
     private boolean esVacio(String valor) {
         return valor == null || valor.isBlank();
+    }
+
+    private String limpiar(String valor) {
+        return esVacio(valor) ? null : valor.trim();
+    }
+
+    private void validarUrl(String valor, String campo) {
+        if (esVacio(valor)) return;
+        try {
+            URI uri = new URI(valor.trim());
+            if (!("https".equalsIgnoreCase(uri.getScheme()) || "http".equalsIgnoreCase(uri.getScheme()))
+                    || uri.getHost() == null) {
+                throw new NegocioException("El " + campo + " debe ser una URL HTTP(S) valida");
+            }
+        } catch (URISyntaxException ex) {
+            throw new NegocioException("El " + campo + " debe ser una URL HTTP(S) valida");
+        }
     }
 }

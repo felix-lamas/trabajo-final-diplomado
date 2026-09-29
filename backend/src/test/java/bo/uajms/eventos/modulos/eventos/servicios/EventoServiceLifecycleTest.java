@@ -70,6 +70,7 @@ class EventoServiceLifecycleTest {
 
     @Test
     void usuarioNoPuedeCrearEvento() {
+        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
         when(usuarioAutenticadoService.tieneRol("ORGANIZADOR")).thenReturn(false);
         assertThrows(AccessDeniedException.class, () -> service.crear(solicitudValida(new CrearEventoRequest())));
         verify(eventoRepository, never()).save(any());
@@ -79,7 +80,7 @@ class EventoServiceLifecycleTest {
     void organizadorEditaEventoRechazadoPropio() {
         autenticarOrganizador();
         Evento evento = eventoCompleto(EstadoEvento.RECHAZADO);
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizador.getId())).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
         when(eventoRepository.save(evento)).thenReturn(evento);
 
@@ -95,7 +96,7 @@ class EventoServiceLifecycleTest {
     void noEditaEstadosBloqueados(EstadoEvento estado) {
         autenticarOrganizador();
         Evento evento = eventoCompleto(estado);
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizador.getId())).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         assertThrows(NegocioException.class,
                 () -> service.actualizar(eventoId, solicitudValida(new ActualizarEventoRequest())));
         verify(eventoRepository, never()).save(any());
@@ -105,7 +106,7 @@ class EventoServiceLifecycleTest {
     void borradorCompletoPasaARevision() {
         autenticarOrganizador();
         Evento evento = eventoCompleto(EstadoEvento.BORRADOR);
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizador.getId())).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         service.enviarARevision(eventoId);
         assertEquals(EstadoEvento.EN_REVISION, evento.getEstado());
         assertNotNull(evento.getFechaEnvioRevision());
@@ -116,7 +117,7 @@ class EventoServiceLifecycleTest {
         autenticarOrganizador();
         Evento evento = eventoCompleto(EstadoEvento.BORRADOR);
         evento.setObjetivos(null);
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizador.getId())).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         assertThrows(NegocioException.class, () -> service.enviarARevision(eventoId));
         assertEquals(EstadoEvento.BORRADOR, evento.getEstado());
         verify(eventoRepository, never()).save(any());
@@ -126,7 +127,7 @@ class EventoServiceLifecycleTest {
     void administradorPublicaEventoEnRevision() {
         autenticarAdministrador();
         Evento evento = eventoCompleto(EstadoEvento.EN_REVISION);
-        when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         service.publicar(eventoId);
         assertEquals(EstadoEvento.PUBLICADO, evento.getEstado());
         assertSame(administrador, evento.getResueltoPor());
@@ -137,7 +138,7 @@ class EventoServiceLifecycleTest {
     void administradorNoPublicaEstadoInvalido(EstadoEvento estado) {
         autenticarAdministradorSinUsuario();
         Evento evento = eventoCompleto(estado);
-        when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         assertThrows(NegocioException.class, () -> service.publicar(eventoId));
         verify(eventoRepository, never()).save(any());
     }
@@ -153,7 +154,7 @@ class EventoServiceLifecycleTest {
     void administradorRechazaConMotivo() {
         autenticarAdministrador();
         Evento evento = eventoCompleto(EstadoEvento.EN_REVISION);
-        when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         service.rechazar(eventoId, "Falta respaldo institucional");
         assertEquals(EstadoEvento.RECHAZADO, evento.getEstado());
         assertEquals("Falta respaldo institucional", evento.getMotivoRechazo());
@@ -170,16 +171,16 @@ class EventoServiceLifecycleTest {
     void rechazadoVuelveABorradorPorSuOrganizador() {
         autenticarOrganizador();
         Evento evento = eventoCompleto(EstadoEvento.RECHAZADO);
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizador.getId())).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         service.volverABorrador(eventoId);
         assertEquals(EstadoEvento.BORRADOR, evento.getEstado());
     }
 
     @Test
     void publicadoSeCancelaConMotivo() {
-        autenticarOrganizador();
+        autenticarAdministrador();
         Evento evento = eventoCompleto(EstadoEvento.PUBLICADO);
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizador.getId())).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         service.cancelar(eventoId, "Fuerza mayor");
         assertEquals(EstadoEvento.CANCELADO, evento.getEstado());
         assertEquals("Fuerza mayor", evento.getMotivoCancelacion());
@@ -187,9 +188,9 @@ class EventoServiceLifecycleTest {
 
     @Test
     void canceladoNoPuedeReactivarseNiCancelarseOtraVez() {
-        autenticarOrganizador();
+        autenticarAdministradorSinUsuario();
         Evento evento = eventoCompleto(EstadoEvento.CANCELADO);
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizador.getId())).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         assertThrows(NegocioException.class, () -> service.cancelar(eventoId, "Otra vez"));
         assertEquals(EstadoEvento.CANCELADO, evento.getEstado());
     }
@@ -200,7 +201,7 @@ class EventoServiceLifecycleTest {
         Evento evento = eventoCompleto(EstadoEvento.PUBLICADO);
         evento.setFechaInicio(LocalDate.now().minusDays(2));
         evento.setFechaFin(LocalDate.now().minusDays(1));
-        when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         service.finalizar(eventoId);
         assertEquals(EstadoEvento.FINALIZADO, evento.getEstado());
     }
@@ -209,7 +210,7 @@ class EventoServiceLifecycleTest {
     void administradorNoFinalizaAntesDelFin() {
         autenticarAdministradorSinUsuario();
         Evento evento = eventoCompleto(EstadoEvento.PUBLICADO);
-        when(eventoRepository.findById(eventoId)).thenReturn(Optional.of(evento));
+        when(eventoRepository.findByIdForUpdate(eventoId)).thenReturn(Optional.of(evento));
         assertThrows(NegocioException.class, () -> service.finalizar(eventoId));
         assertEquals(EstadoEvento.PUBLICADO, evento.getEstado());
     }
@@ -223,6 +224,40 @@ class EventoServiceLifecycleTest {
         request.setEnlaceVirtual(null);
         when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
         assertThrows(NegocioException.class, () -> service.crear(request));
+    }
+
+    @Test
+    void eventoPresencialRequiereDatosFisicosCompletos() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setLatitud(null);
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        assertThrows(NegocioException.class, () -> service.crear(request));
+    }
+
+    @Test
+    void rangoTemporalInvalidoEsRechazado() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setHoraInicio(LocalTime.of(12, 0));
+        request.setHoraFin(LocalTime.of(8, 0));
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        assertThrows(NegocioException.class, () -> service.crear(request));
+    }
+
+    @Test
+    void eventoGratuitoPuedeNoTenerCapacidadLimitada() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setCupoLimitado(false);
+        request.setCupoMaximo(null);
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        when(eventoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        service.crear(request);
+        Evento guardado = capturarGuardado();
+        assertEquals(TipoInscripcion.GRATUITO, guardado.getTipoInscripcion());
+        assertFalse(guardado.getCupoLimitado());
+        assertNull(guardado.getCupoMaximo());
     }
 
     @Test
@@ -264,6 +299,97 @@ class EventoServiceLifecycleTest {
         verify(eventoRepository, never()).save(any());
     }
 
+    @Test
+    void administradorPuedeCrearBorrador() {
+        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(true);
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(administrador);
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        when(eventoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        service.crear(solicitudValida(new CrearEventoRequest()));
+        Evento guardado = capturarGuardado();
+        assertSame(administrador, guardado.getOrganizador());
+        assertEquals(EstadoEvento.BORRADOR, guardado.getEstado());
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Usuario.EstadoSolicitudOrganizador.class, names = {"PENDIENTE", "RECHAZADA", "NINGUNA"})
+    void organizadorNoAprobadoNoPuedeCrear(Usuario.EstadoSolicitudOrganizador estado) {
+        organizador.setEstadoSolicitudOrganizador(estado);
+        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
+        when(usuarioAutenticadoService.tieneRol("ORGANIZADOR")).thenReturn(true);
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizador);
+        assertThrows(AccessDeniedException.class, () -> service.crear(solicitudValida(new CrearEventoRequest())));
+        verify(eventoRepository, never()).save(any());
+    }
+
+    @Test
+    void eventoVirtualValidoLimpiaDatosPresenciales() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setModalidad(Modalidad.VIRTUAL);
+        request.setEnlaceVirtual("https://meet.example.test/evento");
+        request.setLatitud(null);
+        request.setLongitud(null);
+        request.setRadioMetros(null);
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        when(eventoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        service.crear(request);
+        Evento guardado = capturarGuardado();
+        assertNull(guardado.getUbicacion());
+        assertNull(guardado.getLatitud());
+        assertEquals("https://meet.example.test/evento", guardado.getEnlaceVirtual());
+    }
+
+    @Test
+    void eventoPagadoValidoConservaConfiguracionEconomica() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setTipoInscripcion(TipoInscripcion.PAGO);
+        request.setCosto(new BigDecimal("25.50"));
+        request.setInstruccionesPago("Transferir a la cuenta demo");
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        when(eventoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        service.crear(request);
+        Evento guardado = capturarGuardado();
+        assertEquals(new BigDecimal("25.50"), guardado.getCosto());
+        assertEquals("Transferir a la cuenta demo", guardado.getInstruccionesPago());
+    }
+
+    @Test
+    void eventoNoCurricularNoExigeNiConservaHoras() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setEmiteCertificado(true);
+        request.setTipoCertificado(TipoCertificadoEvento.NO_CURRICULAR);
+        request.setHorasAcademicas(10);
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        when(eventoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        service.crear(request);
+        assertNull(capturarGuardado().getHorasAcademicas());
+    }
+
+    @Test
+    void eventoCurricularValidoConservaHoras() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setEmiteCertificado(true);
+        request.setTipoCertificado(TipoCertificadoEvento.CURRICULAR);
+        request.setHorasAcademicas(20);
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        when(eventoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        service.crear(request);
+        assertEquals(20, capturarGuardado().getHorasAcademicas());
+    }
+
+    @Test
+    void urlConEsquemaInseguroEsRechazada() {
+        autenticarOrganizador();
+        CrearEventoRequest request = solicitudValida(new CrearEventoRequest());
+        request.setImagenPortada("file:///etc/passwd");
+        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
+        assertThrows(NegocioException.class, () -> service.crear(request));
+    }
+
     private <T extends bo.uajms.eventos.modulos.eventos.dtos.EventoDatosRequest> T solicitudValida(T request) {
         request.setTitulo("Jornadas universitarias");
         request.setDescripcion("Descripcion completa");
@@ -277,6 +403,10 @@ class EventoServiceLifecycleTest {
         request.setHoraInicio(LocalTime.of(8, 0));
         request.setHoraFin(LocalTime.of(12, 0));
         request.setUbicacion("Campus UAJMS");
+        request.setDireccion("Av. Las Americas");
+        request.setLatitud(new BigDecimal("-21.5350000"));
+        request.setLongitud(new BigDecimal("-64.7290000"));
+        request.setRadioMetros(100);
         request.setRequiereInscripcion(true);
         request.setCupoLimitado(true);
         request.setCupoMaximo(100);
@@ -292,7 +422,9 @@ class EventoServiceLifecycleTest {
                 .tipoInscripcion(TipoInscripcion.GRATUITO).costo(BigDecimal.ZERO)
                 .fechaInicio(LocalDate.now().plusDays(2)).fechaFin(LocalDate.now().plusDays(2))
                 .horaInicio(LocalTime.of(8, 0)).horaFin(LocalTime.of(12, 0))
-                .ubicacion("Campus UAJMS").requiereInscripcion(true).cupoLimitado(true)
+                .ubicacion("Campus UAJMS").direccion("Av. Las Americas")
+                .latitud(new BigDecimal("-21.5350000")).longitud(new BigDecimal("-64.7290000")).radioMetros(100)
+                .requiereInscripcion(true).cupoLimitado(true)
                 .cupoMaximo(100).cupoDisponible(100).emiteCertificado(false)
                 .publicoObjetivo(PublicoObjetivo.AMBOS).estado(estado).organizador(organizador).build();
         evento.setId(eventoId);
@@ -301,6 +433,7 @@ class EventoServiceLifecycleTest {
 
     private Usuario usuario(String correo) {
         Usuario usuario = Usuario.builder().correoElectronico(correo).nombres("Nombre").apellidos("Apellido").build();
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.APROBADA);
         usuario.setId(UUID.randomUUID());
         return usuario;
     }
