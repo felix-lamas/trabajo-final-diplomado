@@ -1,6 +1,12 @@
 package bo.uajms.eventos.core.configuracion;
 
+import bo.uajms.eventos.modulos.categorias.entidades.CategoriaEvento;
 import bo.uajms.eventos.modulos.categorias.repositorios.CategoriaEventoRepository;
+import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
+import bo.uajms.eventos.modulos.eventos.entidades.Evento;
+import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
+import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
+import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Permiso;
 import bo.uajms.eventos.modulos.usuarios.entidades.Rol;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
@@ -25,6 +31,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,6 +62,7 @@ class DatosInicialesSeedProfileTest {
     @Mock private UsuarioRolRepository usuarioRolRepository;
     @Mock private RolPermisoRepository rolPermisoRepository;
     @Mock private CategoriaEventoRepository categoriaEventoRepository;
+    @Mock private EventoRepository eventoRepository;
     @Mock private PasswordEncoder passwordEncoder;
 
     private DatosInicialesSeed seed;
@@ -67,7 +75,8 @@ class DatosInicialesSeedProfileTest {
     @BeforeEach
     void configurarSeed() {
         seed = new DatosInicialesSeed(rolRepository, permisoRepository, usuarioRepository,
-                usuarioRolRepository, rolPermisoRepository, categoriaEventoRepository, passwordEncoder);
+                usuarioRolRepository, rolPermisoRepository, categoriaEventoRepository, eventoRepository,
+                passwordEncoder);
         demoPassword = UUID.randomUUID().toString();
         contrasenaCodificada = UUID.randomUUID().toString();
         ReflectionTestUtils.setField(seed, "demoPassword", demoPassword);
@@ -180,6 +189,8 @@ class DatosInicialesSeedProfileTest {
         });
         when(rolPermisoRepository.findByRolId(any(UUID.class))).thenReturn(List.of());
         when(categoriaEventoRepository.existsByNombreIgnoreCase(anyString())).thenReturn(true);
+        when(categoriaEventoRepository.findAll()).thenReturn(categoriasDemo());
+        when(eventoRepository.findAll()).thenReturn(List.of());
         when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());
         when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocacion -> {
             Usuario usuario = invocacion.getArgument(0);
@@ -231,6 +242,53 @@ class DatosInicialesSeedProfileTest {
         assertEquals("ORGANIZADOR", rolesPorCorreo.get("organizador1@demo.local"));
         assertEquals("USUARIO", rolesPorCorreo.get("organizador2@demo.local"));
         assertEquals("USUARIO", rolesPorCorreo.get("usuario@demo.local"));
+
+        ArgumentCaptor<Evento> eventoCaptor = ArgumentCaptor.forClass(Evento.class);
+        verify(eventoRepository, times(6)).save(eventoCaptor.capture());
+        List<Evento> eventos = eventoCaptor.getAllValues();
+        assertEquals(3, eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.PUBLICADO).count());
+        assertEquals(3, eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.EN_REVISION).count());
+        assertTrue(eventos.stream().allMatch(evento -> evento.getOrganizador() == organizadorAprobado));
+        assertTrue(eventos.stream().allMatch(evento -> evento.getTipoInscripcion() == TipoInscripcion.GRATUITO));
+        assertTrue(eventos.stream().allMatch(evento -> Boolean.TRUE.equals(evento.getRequiereInscripcion())));
+        assertTrue(eventos.stream().allMatch(evento -> Boolean.FALSE.equals(evento.getEmiteCertificado())));
+        assertTrue(eventos.stream().allMatch(evento -> evento.getFechaInicio().isBefore(evento.getFechaFin())));
+        assertTrue(eventos.stream().allMatch(evento -> evento.getFechaInicio().isAfter(java.time.LocalDate.now())));
+        assertTrue(eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.PUBLICADO)
+                .allMatch(evento -> evento.getResueltoPor() == administrador && evento.getFechaResolucion() != null));
+        assertTrue(eventos.stream().filter(evento -> evento.getEstado() == EstadoEvento.EN_REVISION)
+                .allMatch(evento -> evento.getResueltoPor() == null && evento.getFechaResolucion() == null));
+        assertTrue(eventos.stream().filter(evento -> evento.getModalidad() == Modalidad.PRESENCIAL)
+                .allMatch(evento -> evento.getUbicacion() != null && evento.getEnlaceVirtual() == null));
+        assertTrue(eventos.stream().filter(evento -> evento.getModalidad() == Modalidad.VIRTUAL)
+                .allMatch(evento -> evento.getEnlaceVirtual() != null && evento.getUbicacion() == null));
+        assertEquals(Set.of(
+                        "Congreso de Innovación Tecnológica UAJMS",
+                        "Taller de Desarrollo Web",
+                        "Jornada de Emprendimiento Universitario",
+                        "Seminario de Inteligencia Artificial",
+                        "Curso de Gestión de Proyectos",
+                        "Conferencia de Innovación y Tecnología"),
+                eventos.stream().map(Evento::getTitulo).collect(Collectors.toSet()));
+    }
+
+    @Test
+    void noDebeDuplicarNiModificarEventosDemoExistentes() {
+        Usuario organizador = usuarioExistente();
+        Usuario administrador = usuarioExistente();
+        List<Evento> existentes = List.of(
+                eventoExistente("Congreso de Innovación Tecnológica UAJMS"),
+                eventoExistente("Taller de Desarrollo Web"),
+                eventoExistente("Jornada de Emprendimiento Universitario"),
+                eventoExistente("Seminario de Inteligencia Artificial"),
+                eventoExistente("Curso de Gestión de Proyectos"),
+                eventoExistente("Conferencia de Innovación y Tecnología"));
+        when(categoriaEventoRepository.findAll()).thenReturn(categoriasDemo());
+        when(eventoRepository.findAll()).thenReturn(existentes);
+
+        ReflectionTestUtils.invokeMethod(seed, "cargarEventosDemo", organizador, administrador);
+
+        verify(eventoRepository, never()).save(any(Evento.class));
     }
 
     private boolean esCandidatoConPerfil(String perfil) {
@@ -263,5 +321,25 @@ class DatosInicialesSeedProfileTest {
                 .build();
         ReflectionTestUtils.setField(usuario, "id", UUID.randomUUID());
         return usuario;
+    }
+
+    private List<CategoriaEvento> categoriasDemo() {
+        return List.of(
+                categoria("Conferencia"),
+                categoria("Taller"),
+                categoria("Curso"),
+                categoria("Seminario"));
+    }
+
+    private CategoriaEvento categoria(String nombre) {
+        CategoriaEvento categoria = CategoriaEvento.builder().nombre(nombre).estado("ACTIVO").build();
+        ReflectionTestUtils.setField(categoria, "id", UUID.randomUUID());
+        return categoria;
+    }
+
+    private Evento eventoExistente(String titulo) {
+        Evento evento = Evento.builder().titulo(titulo).build();
+        ReflectionTestUtils.setField(evento, "id", UUID.randomUUID());
+        return evento;
     }
 }

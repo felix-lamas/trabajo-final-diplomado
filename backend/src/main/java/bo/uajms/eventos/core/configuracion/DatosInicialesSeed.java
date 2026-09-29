@@ -12,6 +12,12 @@ import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRolRepository;
 import bo.uajms.eventos.modulos.categorias.entidades.CategoriaEvento;
 import bo.uajms.eventos.modulos.categorias.repositorios.CategoriaEventoRepository;
+import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
+import bo.uajms.eventos.modulos.eventos.entidades.Evento;
+import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
+import bo.uajms.eventos.modulos.eventos.entidades.PublicoObjetivo;
+import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
+import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -20,14 +26,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @Profile("demo")
 @RequiredArgsConstructor
 public class DatosInicialesSeed implements CommandLineRunner {
+
+    private static final ZoneId ZONA_OFICIAL = ZoneId.of("America/La_Paz");
 
     @Value("${app.seed.demo-password}")
     private String demoPassword;
@@ -38,6 +54,7 @@ public class DatosInicialesSeed implements CommandLineRunner {
     private final UsuarioRolRepository usuarioRolRepository;
     private final RolPermisoRepository rolPermisoRepository;
     private final CategoriaEventoRepository categoriaEventoRepository;
+    private final EventoRepository eventoRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -64,6 +81,8 @@ public class DatosInicialesSeed implements CommandLineRunner {
                 Usuario.TipoUsuario.EXTERNO, roles.get("USUARIO"));
         configurarSolicitudOrganizadorDemo(participante,
                 Usuario.EstadoSolicitudOrganizador.NINGUNA, null);
+
+        cargarEventosDemo(organizadorAprobado, administrador);
     }
 
     private void cargarCategoriasDemo() {
@@ -171,5 +190,87 @@ public class DatosInicialesSeed implements CommandLineRunner {
         }
 
         usuarioRepository.save(usuario);
+    }
+
+    private void cargarEventosDemo(Usuario organizador, Usuario administrador) {
+        Map<String, CategoriaEvento> categorias = categoriaEventoRepository.findAll().stream()
+                .filter(categoria -> "ACTIVO".equalsIgnoreCase(categoria.getEstado()))
+                .collect(Collectors.toMap(categoria -> categoria.getNombre().trim().toLowerCase(Locale.ROOT),
+                        Function.identity(), (primera, segunda) -> primera));
+        Set<String> titulosExistentes = eventoRepository.findAll().stream()
+                .map(Evento::getTitulo)
+                .filter(titulo -> titulo != null)
+                .map(titulo -> titulo.trim().toLowerCase(Locale.ROOT))
+                .collect(Collectors.toSet());
+        LocalDate fechaBase = LocalDate.now(ZONA_OFICIAL).plusDays(30);
+
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("conferencia"), "Congreso de Innovación Tecnológica UAJMS",
+                EstadoEvento.PUBLICADO, Modalidad.PRESENCIAL, fechaBase);
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("taller"), "Taller de Desarrollo Web",
+                EstadoEvento.PUBLICADO, Modalidad.VIRTUAL, fechaBase.plusDays(15));
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("curso"), "Jornada de Emprendimiento Universitario",
+                EstadoEvento.PUBLICADO, Modalidad.PRESENCIAL, fechaBase.plusDays(30));
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("seminario"), "Seminario de Inteligencia Artificial",
+                EstadoEvento.EN_REVISION, Modalidad.VIRTUAL, fechaBase.plusDays(45));
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("curso"), "Curso de Gestión de Proyectos",
+                EstadoEvento.EN_REVISION, Modalidad.PRESENCIAL, fechaBase.plusDays(60));
+        crearEventoDemoSiNoExiste(titulosExistentes, organizador, administrador,
+                categorias.get("conferencia"), "Conferencia de Innovación y Tecnología",
+                EstadoEvento.EN_REVISION, Modalidad.VIRTUAL, fechaBase.plusDays(75));
+    }
+
+    private void crearEventoDemoSiNoExiste(Set<String> titulosExistentes, Usuario organizador,
+                                            Usuario administrador, CategoriaEvento categoria, String titulo,
+                                            EstadoEvento estado, Modalidad modalidad, LocalDate fechaInicio) {
+        String tituloNormalizado = titulo.toLowerCase(Locale.ROOT);
+        if (titulosExistentes.contains(tituloNormalizado)) {
+            return;
+        }
+        if (categoria == null) {
+            throw new IllegalStateException("No existe la categoria demo requerida para " + titulo);
+        }
+
+        LocalDateTime fechaEnvioRevision = LocalDateTime.now(ZONA_OFICIAL);
+        boolean publicado = estado == EstadoEvento.PUBLICADO;
+        Evento evento = Evento.builder()
+                .titulo(titulo)
+                .descripcion("Evento ficticio de demostración para el flujo E2 de la plataforma UAJMS.")
+                .objetivos("Demostrar el flujo de revisión, publicación e inscripción gratuita.")
+                .categoria(categoria)
+                .modalidad(modalidad)
+                .tipoInscripcion(TipoInscripcion.GRATUITO)
+                .costo(BigDecimal.ZERO)
+                .fechaInicio(fechaInicio)
+                .fechaFin(fechaInicio.plusDays(1))
+                .horaInicio(LocalTime.of(9, 0))
+                .horaFin(LocalTime.of(17, 0))
+                .ubicacion(modalidad == Modalidad.PRESENCIAL ? "Campus Universitario UAJMS" : null)
+                .direccion(modalidad == Modalidad.PRESENCIAL ? "Zona universitaria, Tarija" : null)
+                .latitud(modalidad == Modalidad.PRESENCIAL ? new BigDecimal("-21.5350000") : null)
+                .longitud(modalidad == Modalidad.PRESENCIAL ? new BigDecimal("-64.7290000") : null)
+                .radioMetros(modalidad == Modalidad.PRESENCIAL ? 100 : null)
+                .enlaceVirtual(modalidad == Modalidad.VIRTUAL ? "https://demo.local/eventos/virtual" : null)
+                .requiereInscripcion(true)
+                .cupoLimitado(true)
+                .cupoMaximo(100)
+                .cupoDisponible(100)
+                .emiteCertificado(false)
+                .publicoObjetivo(PublicoObjetivo.AMBOS)
+                .telefonoContacto("70000000")
+                .emailContacto("eventos@demo.local")
+                .whatsappContacto("70000000")
+                .estado(estado)
+                .fechaEnvioRevision(fechaEnvioRevision)
+                .fechaResolucion(publicado ? fechaEnvioRevision : null)
+                .resueltoPor(publicado ? administrador : null)
+                .organizador(organizador)
+                .build();
+        eventoRepository.save(evento);
+        titulosExistentes.add(tituloNormalizado);
     }
 }
