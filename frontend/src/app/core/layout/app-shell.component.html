@@ -26,7 +26,7 @@
     <nav class="shell__nav">
       <a
         mat-list-item
-        *ngFor="let item of navItems"
+        *ngFor="let item of navItems()"
         [routerLink]="item.route"
         routerLinkActive="shell__active"
         [class.shell__nav-item--collapsed]="collapsed() && !mobile()"
@@ -42,7 +42,8 @@
         <strong>{{ userName() }}</strong>
         <span>{{ userRole() }}</span>
       </div>
-      <button mat-stroked-button color="primary" type="button" (click)="cerrarSesion()" [attr.aria-label]="'Cerrar sesion'">
+      <button mat-stroked-button color="primary" type="button" (click)="cerrarSesion()"
+        [disabled]="loggingOut()" [attr.aria-label]="'Cerrar sesion'">
         <mat-icon>logout</mat-icon>
         <span *ngIf="!collapsed() || mobile()">Cerrar sesion</span>
       </button>
@@ -62,7 +63,7 @@
         <div class="shell__quick-actions" aria-label="Acciones rapidas">
           <a
             mat-icon-button
-            *ngFor="let action of quickActions"
+            *ngFor="let action of quickActions()"
             [routerLink]="action.route"
             [matTooltip]="action.label"
             [attr.aria-label]="action.label">

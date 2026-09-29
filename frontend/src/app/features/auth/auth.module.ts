@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { RecuperarContrasenaComponent } from './recuperar-contrasena/recuperar-contrasena.component';
 import { ResetContrasenaComponent } from './reset-contrasena/reset-contrasena.component';
 import { RegistroComponent } from './registro/registro.component';
+import { VerificarCorreoComponent } from './verificar-correo/verificar-correo.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -26,7 +27,7 @@ const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'recuperar-contrasena', component: RecuperarContrasenaComponent },
   { path: 'restablecer-contrasena', component: ResetContrasenaComponent },
-  { path: 'resetear-contrasena', component: ResetContrasenaComponent }
+  { path: 'verificar-correo', component: VerificarCorreoComponent }
 ];
 
 @NgModule({
@@ -34,7 +35,8 @@ const routes: Routes = [
     LoginComponent,
     RegistroComponent,
     RecuperarContrasenaComponent,
-    ResetContrasenaComponent
+    ResetContrasenaComponent,
+    VerificarCorreoComponent
   ],
   imports: [
     CommonModule,

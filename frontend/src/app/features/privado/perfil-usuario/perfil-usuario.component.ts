@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,8 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './perfil-usuario.component.html'
 })
 export class PerfilUsuarioComponent {
+  readonly loggingOut = signal(false);
+
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router
@@ -41,7 +43,13 @@ export class PerfilUsuarioComponent {
   }
 
   cerrarSesion(): void {
-    this.authService.logout();
-    this.router.navigate(['/auth/login']);
+    if (this.loggingOut()) {
+      return;
+    }
+    this.loggingOut.set(true);
+    this.authService.logout().subscribe({
+      next: () => void this.router.navigate(['/auth/login']),
+      error: () => void this.router.navigate(['/auth/login'])
+    });
   }
 }

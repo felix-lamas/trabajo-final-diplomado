@@ -1,0 +1,60 @@
+<main class="auth-page auth-page--compact">
+  <mat-card class="auth-card auth-card--auth auth-card--compact">
+    <div class="auth-card__header--auth">
+      <div class="auth-card__meta">
+        <div class="app-chip"><mat-icon>mark_email_read</mat-icon> Verificacion</div>
+        <div class="app-chip"><mat-icon>security</mat-icon> Enlace de un solo uso</div>
+      </div>
+      <h1>Verificar correo electronico</h1>
+      <p>La cuenta debe verificarse antes de iniciar sesion.</p>
+    </div>
+
+    <div *ngIf="estado() === 'loading'" class="auth-compact-copy" role="status">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <strong>Verificando correo...</strong>
+      <span>Espere mientras validamos el enlace.</span>
+    </div>
+
+    <div *ngIf="estado() === 'success'" class="auth-success" role="status">
+      <mat-icon>check_circle</mat-icon>
+      <h2>Correo verificado</h2>
+      <p>Su cuenta ya esta habilitada. Ahora puede iniciar sesion.</p>
+      <a mat-flat-button color="primary" routerLink="/auth/login">Ir al login</a>
+    </div>
+
+    <div *ngIf="estado() === 'error'" class="auth-compact-copy" role="alert">
+      <strong>No se pudo verificar el correo</strong>
+      <span>{{ mensajeError() }}</span>
+      <button mat-stroked-button type="button" (click)="verificar()">Reintentar</button>
+    </div>
+
+    <div *ngIf="estado() === 'instructions'" class="auth-compact-copy" role="status">
+      <strong>Revise su bandeja de entrada</strong>
+      <span>Enviamos un enlace de verificacion al correo registrado. Tambien revise correo no deseado.</span>
+    </div>
+
+    <form *ngIf="estado() !== 'loading' && estado() !== 'success'" class="auth-form--auth"
+      [formGroup]="reenvioForm" (ngSubmit)="reenviar()">
+      <h2>Reenviar enlace</h2>
+      <p class="auth-field-help">Por seguridad, la respuesta es la misma exista o no la cuenta.</p>
+      <mat-form-field appearance="outline">
+        <mat-label>Correo electronico</mat-label>
+        <input matInput type="email" formControlName="correoElectronico" autocomplete="email" />
+        <mat-error *ngIf="reenvioForm.get('correoElectronico')?.hasError('required')">El correo es obligatorio</mat-error>
+        <mat-error *ngIf="reenvioForm.get('correoElectronico')?.hasError('email')">Ingrese un correo valido</mat-error>
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit"
+        [disabled]="reenvioForm.invalid || reenvioEstado() === 'loading'">
+        {{ reenvioEstado() === 'loading' ? 'Procesando...' : 'Reenviar verificacion' }}
+      </button>
+      <p *ngIf="reenvioEstado() === 'success'" class="auth-field-help" role="status">
+        Si la cuenta existe y requiere verificacion, recibira un nuevo enlace.
+      </p>
+      <p *ngIf="reenvioEstado() === 'error'" class="auth-field-help" role="alert">{{ reenvioError() }}</p>
+    </form>
+
+    <div class="auth-actions__row">
+      <a mat-button routerLink="/auth/login">Volver al inicio de sesion</a>
+    </div>
+  </mat-card>
+</main>

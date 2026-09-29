@@ -90,10 +90,12 @@ export class RegistroComponent {
     };
 
     this.authService.registro(request).subscribe({
-      next: () => {
+      next: (response) => {
         this.loading = false;
-        this.snackBar.open('Registro completado correctamente', 'Cerrar', { duration: 3500 });
-        this.router.navigate(['/eventos']);
+        this.snackBar.open('Cuenta creada. Verifique su correo para poder ingresar.', 'Cerrar', { duration: 4500 });
+        this.router.navigate(['/auth/verificar-correo'], {
+          queryParams: { correo: response.correoElectronico }
+        });
       },
       error: (err) => {
         this.loading = false;

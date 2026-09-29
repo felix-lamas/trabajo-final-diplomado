@@ -93,8 +93,8 @@
               <mat-icon>how_to_reg</mat-icon>
             </div>
           </a>
-          <button mat-flat-button color="primary" type="button" (click)="cerrarSesion()">
-            Cerrar sesion
+          <button mat-flat-button color="primary" type="button" (click)="cerrarSesion()" [disabled]="loggingOut()">
+            {{ loggingOut() ? 'Cerrando sesion...' : 'Cerrar sesion' }}
           </button>
         </div>
       </mat-card>

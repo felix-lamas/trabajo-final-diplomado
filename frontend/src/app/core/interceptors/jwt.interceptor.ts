@@ -1,56 +1,57 @@
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { HttpInterceptorFn } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, throwError } from 'rxjs';
 
-const authPaths = [
-  '/auth/login',
-  '/auth/registro',
-  '/auth/recuperar-contrasena',
-  '/auth/restablecer-contrasena',
-  '/auth/resetear-contrasena'
-];
+const publicAuthUrls = new Set([
+  `${environment.apiUrl}/auth/login`,
+  `${environment.apiUrl}/auth/registro`,
+  `${environment.apiUrl}/auth/verificar-correo`,
+  `${environment.apiUrl}/auth/reenviar-verificacion`,
+  `${environment.apiUrl}/auth/recuperar-contrasena`,
+  `${environment.apiUrl}/auth/restablecer-contrasena`
+]);
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
-  const apiBase = environment.apiUrl.replace(/\/v1$/, '');
   const authService = inject(AuthService);
   const router = inject(Router);
   const snackBar = inject(MatSnackBar);
+  const isCanonicalApiRequest = req.url === environment.apiUrl || req.url.startsWith(`${environment.apiUrl}/`);
 
-  if (!req.url.startsWith(apiBase)) {
+  if (!isCanonicalApiRequest || publicAuthUrls.has(req.url)) {
     return next(req);
   }
 
-  if (authPaths.some((path) => req.url.includes(path))) {
-    return next(req);
-  }
+  const token = authService.getToken();
+  const request = token
+    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    : req;
 
-  const handleErrors = (response: ReturnType<typeof next>) => response.pipe(
-    catchError((error) => {
+  return next(request).pipe(
+    catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        authService.logout();
-        snackBar.open('La sesion expiro o no es valida. Inicie sesion nuevamente.', 'Cerrar', { duration: 5000 });
-        void router.navigate(['/auth/login']);
+        const isLogout = req.url === `${environment.apiUrl}/auth/logout`;
+        authService.clearLocalSession(true);
+
+        if (!isLogout) {
+          const code = error.error?.codigo as string | undefined;
+          const message = code === 'AUTH_INVALID_SESSION'
+            ? 'Su sesion fue revocada. Inicie sesion nuevamente.'
+            : 'La sesion expiro o no es valida. Inicie sesion nuevamente.';
+          snackBar.open(message, 'Cerrar', { duration: 5000 });
+          void router.navigate(['/auth/login']);
+        }
       } else if (error.status === 403) {
-        snackBar.open(error.error?.mensaje || 'No tiene permisos para realizar esta operacion.', 'Cerrar', { duration: 5000 });
+        snackBar.open(
+          error.error?.mensaje || 'No tiene permisos para realizar esta operacion.',
+          'Cerrar',
+          { duration: 5000 }
+        );
       }
       return throwError(() => error);
     })
   );
-
-  const token = authService.getToken();
-  if (!token) {
-    return handleErrors(next(req));
-  }
-
-  return handleErrors(next(
-    req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-  ));
 };

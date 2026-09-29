@@ -57,6 +57,15 @@
 
       <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
+      <div class="auth-compact-copy" *ngIf="correoNoVerificado" role="alert">
+        <strong>Correo pendiente de verificacion</strong>
+        <span>Verifique su bandeja de entrada antes de iniciar sesion.</span>
+        <span *ngIf="reenvioEnviado">Si la cuenta existe y requiere verificacion, recibira un nuevo enlace.</span>
+        <button mat-stroked-button type="button" (click)="reenviarVerificacion()" [disabled]="reenviando">
+          {{ reenviando ? 'Procesando...' : 'Reenviar verificacion' }}
+        </button>
+      </div>
+
       <form class="auth-form--auth" [formGroup]="form" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline">
           <mat-label>Correo electronico</mat-label>
@@ -76,7 +85,7 @@
           <a mat-button routerLink="/auth/registro">Crear cuenta</a>
         </div>
 
-        <button mat-flat-button color="primary" type="submit" [disabled]="loading || form.invalid">
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading || reenviando || form.invalid">
           {{ loading ? 'Ingresando...' : 'Ingresar' }}
         </button>
       </form>

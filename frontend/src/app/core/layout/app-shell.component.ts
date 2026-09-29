@@ -56,33 +56,31 @@ export class AppShellComponent implements OnInit {
   readonly darkMode = signal(false);
   readonly breadcrumbs = signal<BreadcrumbItem[]>([]);
   readonly currentSection = computed(() => this.breadcrumbs().at(-1)?.label ?? 'Inicio');
-  readonly navItems: NavItem[] = [
+  readonly navItems = computed(() => [
     { label: 'Panel administrativo', icon: 'space_dashboard', route: '/admin', roles: ['ADMINISTRADOR'] },
     { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
     { label: 'Mis eventos', icon: 'event', route: '/organizador/eventos', roles: ['ORGANIZADOR'] },
     { label: 'Eventos publicados', icon: 'explore', route: '/eventos', roles: ['USUARIO'] },
     { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] }
-  ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles));
-  readonly quickActions: NavItem[] = [
+  ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles)));
+  readonly quickActions = computed(() => [
     { label: 'Nuevo evento', icon: 'add_circle', route: '/organizador/eventos/nuevo', roles: ['ORGANIZADOR'] },
     { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
     { label: 'Explorar eventos', icon: 'explore', route: '/eventos', roles: ['USUARIO'] }
-  ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles));
+  ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles)));
 
-  readonly userName = signal('Usuario');
-  readonly userRole = signal('Acceso institucional');
+  readonly userName = computed(() => {
+    const user = this.authService.usuarioActual();
+    return user ? `${user.nombres} ${user.apellidos}`.trim() : 'Usuario';
+  });
+  readonly userRole = computed(() => this.authService.roles()[0] ?? 'Acceso institucional');
+  readonly loggingOut = signal(false);
 
   ngOnInit(): void {
     const savedTheme = localStorage.getItem('app-theme');
     const isDark = savedTheme === 'dark';
     this.darkMode.set(isDark);
     document.documentElement.dataset['theme'] = isDark ? 'dark' : 'light';
-
-    const user = this.authService.getUser();
-    if (user) {
-      this.userName.set(`${user.nombres} ${user.apellidos}`.trim());
-      this.userRole.set(user.roles?.[0] ?? 'Usuario');
-    }
 
     this.breakpointObserver
       .observe(['(max-width: 1024px)'])
@@ -100,8 +98,14 @@ export class AppShellComponent implements OnInit {
   }
 
   cerrarSesion(): void {
-    this.authService.logout();
-    this.router.navigate(['/auth/login']);
+    if (this.loggingOut()) {
+      return;
+    }
+    this.loggingOut.set(true);
+    this.authService.logout().subscribe({
+      next: () => void this.router.navigate(['/auth/login']),
+      error: () => void this.router.navigate(['/auth/login'])
+    });
   }
 
   toggleDrawer(): void {
