@@ -1,0 +1,57 @@
+<main class="app-page admin-portal">
+  <section class="admin-module-header">
+    <div class="app-toolbar__title">
+      <span class="app-chip"><mat-icon>manage_accounts</mat-icon> Administracion</span>
+      <h1>Solicitudes de organizador</h1>
+      <p>Revise solicitudes y ejecute una unica transicion de aprobacion o rechazo.</p>
+    </div>
+  </section>
+
+  <mat-card class="admin-surface admin-table-wrap">
+    <div class="admin-toolbar">
+      <div class="app-toolbar__title">
+        <h2 class="app-section-title">Bandeja de solicitudes</h2>
+        <p>El filtro predeterminado muestra solicitudes pendientes.</p>
+      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Estado</mat-label>
+        <mat-select [value]="filtro()" (selectionChange)="cambiarFiltro($event.value)">
+          <mat-option *ngFor="let estado of estados" [value]="estado">{{ estado }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
+
+    <div *ngIf="error() && !loading()" role="alert" class="admin-kanban__empty">
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" type="button" (click)="cargar()">Reintentar</button>
+    </div>
+
+    <div *ngIf="!loading() && !error() && solicitudes().length" class="admin-payment-stack">
+      <article class="admin-payment-card" *ngFor="let solicitud of solicitudes()">
+        <div>
+          <strong>{{ solicitud.nombres }} {{ solicitud.apellidos }}</strong>
+          <span>{{ solicitud.correoElectronico }}</span>
+          <span>Solicitud: {{ solicitud.fechaSolicitud | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span *ngIf="solicitud.motivoRechazo">Motivo: {{ solicitud.motivoRechazo }}</span>
+        </div>
+        <div class="student-card__meta">
+          <span class="app-badge app-badge--warning">{{ solicitud.estado }}</span>
+          <ng-container *ngIf="solicitud.estado === 'PENDIENTE'">
+            <button mat-flat-button color="primary" type="button" (click)="aprobar(solicitud)"
+              [disabled]="procesandoId() === solicitud.usuarioId">Aprobar</button>
+            <button mat-stroked-button color="warn" type="button" (click)="rechazar(solicitud)"
+              [disabled]="procesandoId() === solicitud.usuarioId">Rechazar</button>
+          </ng-container>
+        </div>
+      </article>
+    </div>
+
+    <app-empty-state *ngIf="!loading() && !error() && solicitudes().length === 0"
+      icon="manage_accounts"
+      title="Sin solicitudes"
+      [message]="'No existen solicitudes en estado ' + filtro() + '.'">
+    </app-empty-state>
+  </mat-card>
+</main>

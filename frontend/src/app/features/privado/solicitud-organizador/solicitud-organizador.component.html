@@ -1,0 +1,63 @@
+<main class="app-page student-portal">
+  <div class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Solicitud de organizador</h1>
+      <p>Consulte su estado y solicite acceso para gestionar eventos universitarios.</p>
+    </div>
+    <a mat-stroked-button routerLink="/privado/perfil">Volver al perfil</a>
+  </div>
+
+  <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
+
+  <mat-card *ngIf="!loading()" class="student-panel">
+    <div *ngIf="loadError()" role="alert">
+      <h2>No se pudo consultar el estado</h2>
+      <p>{{ loadError() }}</p>
+      <button mat-flat-button color="primary" type="button" (click)="actualizarEstado()">Reintentar</button>
+    </div>
+
+    <ng-container *ngIf="!loadError()">
+      <div class="student-card__header">
+        <div>
+          <h2>Estado actual</h2>
+          <p>El rol cambia únicamente después de una aprobación administrativa.</p>
+        </div>
+        <span class="app-badge"
+          [class.app-badge--warning]="estado() === 'PENDIENTE'"
+          [class.app-badge--success]="estado() === 'APROBADA'"
+          [class.app-badge--danger]="estado() === 'RECHAZADA'">
+          {{ estado() }}
+        </span>
+      </div>
+
+      <div class="auth-compact-copy" *ngIf="estado() === 'NINGUNA'">
+        <strong>Puede solicitar acceso de organizador</strong>
+        <span>Mientras la solicitud no sea aprobada continuará con rol USUARIO y no podrá crear eventos.</span>
+      </div>
+      <div class="auth-compact-copy" *ngIf="estado() === 'PENDIENTE'" role="status">
+        <strong>Solicitud en revisión</strong>
+        <span>No puede enviar otra solicitud ni crear eventos mientras permanezca pendiente.</span>
+      </div>
+      <div class="auth-compact-copy" *ngIf="estado() === 'APROBADA'" role="status">
+        <strong>Solicitud aprobada</strong>
+        <span>Su perfil ya tiene rol ORGANIZADOR y puede acceder al módulo de gestión de eventos.</span>
+        <a mat-flat-button color="primary" routerLink="/organizador/eventos">Ir a mis eventos</a>
+      </div>
+      <div class="auth-compact-copy" *ngIf="estado() === 'RECHAZADA'" role="status">
+        <strong>Solicitud rechazada</strong>
+        <span>El contrato actual permite presentar una nueva solicitud sin periodo de espera.</span>
+      </div>
+
+      <p *ngIf="message()" [attr.role]="requestStatus() === 'error' ? 'alert' : 'status'">{{ message() }}</p>
+      <div class="auth-actions__row">
+        <button mat-flat-button color="primary" type="button" (click)="solicitar()"
+          [disabled]="!puedeSolicitar()">
+          {{ requestStatus() === 'loading' ? 'Enviando...' : 'Solicitar ser organizador' }}
+        </button>
+        <button mat-stroked-button type="button" (click)="actualizarEstado()" [disabled]="loading()">
+          Actualizar estado
+        </button>
+      </div>
+    </ng-container>
+  </mat-card>
+</main>

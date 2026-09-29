@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Rechazar solicitud</h2>
+<mat-dialog-content>
+  <p>Indique el motivo para rechazar la solicitud de {{ data.nombre }}.</p>
+  <form [formGroup]="form" (ngSubmit)="confirmar()">
+    <mat-form-field appearance="outline">
+      <mat-label>Motivo</mat-label>
+      <textarea matInput rows="4" formControlName="motivo"></textarea>
+      <mat-error *ngIf="form.get('motivo')?.hasError('required')">El motivo es obligatorio</mat-error>
+      <mat-error *ngIf="form.get('motivo')?.hasError('maxlength')">Maximo 500 caracteres</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" [mat-dialog-close]="null">Cancelar</button>
+  <button mat-flat-button color="warn" type="button" (click)="confirmar()" [disabled]="form.invalid">Rechazar</button>
+</mat-dialog-actions>

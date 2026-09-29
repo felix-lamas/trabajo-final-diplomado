@@ -89,8 +89,13 @@ public class UsuarioControlador {
     @PostMapping("/solicitud-organizador")
     @PreAuthorize("hasRole('USUARIO')")
     @Operation(summary = "Solicitar rol de organizador",
-            description = "Crea una solicitud PENDIENTE para el usuario autenticado con rol USUARIO.")
-    @ApiResponse(responseCode = "400", description = "Ya existe una solicitud pendiente o aprobada")
+            description = "Crea una solicitud PENDIENTE exclusivamente para el propietario del JWT con rol USUARIO. Una solicitud RECHAZADA puede volver a presentarse sin periodo de espera.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Solicitud creada", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "Ya existe una solicitud pendiente o aprobada"),
+            @ApiResponse(responseCode = "401", description = "JWT o sesion no validos"),
+            @ApiResponse(responseCode = "403", description = "Requiere rol USUARIO")
+    })
     public ResponseEntity<SolicitudOrganizadorResponse> solicitarSerOrganizador() {
         return ResponseEntity.ok(usuarioServicio.solicitarSerOrganizador());
     }
@@ -98,7 +103,13 @@ public class UsuarioControlador {
     @GetMapping("/solicitudes-organizador")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Listar solicitudes de organizador",
-            description = "Consulta administrativa filtrada por estado de solicitud.")
+            description = "Consulta exclusiva de ADMINISTRADOR filtrada por NINGUNA, PENDIENTE, APROBADA o RECHAZADA. El valor predeterminado es PENDIENTE.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Solicitudes filtradas", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "Estado de filtro invalido"),
+            @ApiResponse(responseCode = "401", description = "JWT o sesion no validos"),
+            @ApiResponse(responseCode = "403", description = "Requiere rol ADMINISTRADOR")
+    })
     public ResponseEntity<List<SolicitudOrganizadorResponse>> listarSolicitudesOrganizador(
             @Parameter(description = "Estado de la solicitud", example = "PENDIENTE")
             @RequestParam(defaultValue = "PENDIENTE") Usuario.EstadoSolicitudOrganizador estado) {
@@ -108,8 +119,14 @@ public class UsuarioControlador {
     @PatchMapping("/solicitudes-organizador/{usuarioId}/aprobar")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Aprobar solicitud de organizador",
-            description = "Convierte al solicitante elegible de USUARIO a ORGANIZADOR. Operacion exclusiva de ADMINISTRADOR.")
-    @ApiResponse(responseCode = "404", description = "Usuario o solicitud pendiente inexistente")
+            description = "Transicion atomica exclusiva de ADMINISTRADOR. Reemplaza USUARIO por ORGANIZADOR en una solicitud PENDIENTE y registra fecha y resolutor.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Solicitud aprobada", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "La solicitud no esta pendiente o el usuario no es elegible"),
+            @ApiResponse(responseCode = "401", description = "JWT o sesion no validos"),
+            @ApiResponse(responseCode = "403", description = "Requiere rol ADMINISTRADOR"),
+            @ApiResponse(responseCode = "404", description = "Usuario inexistente")
+    })
     public ResponseEntity<SolicitudOrganizadorResponse> aprobarSolicitudOrganizador(
             @Parameter(description = "Identificador del usuario solicitante") @PathVariable UUID usuarioId) {
         return ResponseEntity.ok(usuarioServicio.aprobarSolicitudOrganizador(usuarioId));
@@ -118,8 +135,14 @@ public class UsuarioControlador {
     @PatchMapping("/solicitudes-organizador/{usuarioId}/rechazar")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Rechazar solicitud de organizador",
-            description = "Rechaza una solicitud PENDIENTE con motivo. Operacion exclusiva de ADMINISTRADOR.")
-    @ApiResponse(responseCode = "404", description = "Usuario o solicitud pendiente inexistente")
+            description = "Transicion atomica exclusiva de ADMINISTRADOR. Rechaza una solicitud PENDIENTE, conserva el rol USUARIO y registra motivo, fecha y resolutor.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Solicitud rechazada", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "Solicitud no pendiente o motivo invalido"),
+            @ApiResponse(responseCode = "401", description = "JWT o sesion no validos"),
+            @ApiResponse(responseCode = "403", description = "Requiere rol ADMINISTRADOR"),
+            @ApiResponse(responseCode = "404", description = "Usuario inexistente")
+    })
     public ResponseEntity<SolicitudOrganizadorResponse> rechazarSolicitudOrganizador(
             @Parameter(description = "Identificador del usuario solicitante") @PathVariable UUID usuarioId,
             @Valid @RequestBody RechazarSolicitudOrganizadorRequest request) {

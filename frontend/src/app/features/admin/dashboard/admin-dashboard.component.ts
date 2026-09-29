@@ -113,7 +113,8 @@ export class AdminDashboardComponent implements OnInit {
     return [
       { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', description: 'Revision y publicacion administrativa.' },
       { label: 'Validar pagos', icon: 'verified', route: '/admin/pagos/validar', description: 'Revision rapida de comprobantes.' },
-      { label: 'Categorias', icon: 'label', route: '/admin/categorias', description: 'Clasificacion de eventos.' }
+      { label: 'Categorias', icon: 'label', route: '/admin/categorias', description: 'Clasificacion de eventos.' },
+      { label: 'Solicitudes de organizador', icon: 'manage_accounts', route: '/admin/solicitudes-organizador', description: 'Aprobacion y rechazo de nuevos organizadores.' }
     ];
   }
 

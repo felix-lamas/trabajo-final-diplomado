@@ -72,6 +72,13 @@ class UsuarioControladorAuthorizationTest {
     }
 
     @Test
+    void usuarioNoPuedeRechazarSolicitudes() {
+        autenticar("USUARIO");
+        assertThrows(AccessDeniedException.class,
+                () -> controlador.rechazarSolicitudOrganizador(UUID.randomUUID(), null));
+    }
+
+    @Test
     void administradorPuedeConsultarYAprobarSolicitudes() {
         autenticar("ADMINISTRADOR");
         when(servicio.listarSolicitudesOrganizador(Usuario.EstadoSolicitudOrganizador.PENDIENTE))
@@ -79,6 +86,7 @@ class UsuarioControladorAuthorizationTest {
 
         assertDoesNotThrow(() -> controlador.listarSolicitudesOrganizador(
                 Usuario.EstadoSolicitudOrganizador.PENDIENTE));
+        assertDoesNotThrow(() -> controlador.aprobarSolicitudOrganizador(UUID.randomUUID()));
     }
 
     @Test

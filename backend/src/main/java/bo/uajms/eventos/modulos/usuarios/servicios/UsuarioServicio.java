@@ -99,7 +99,9 @@ public class UsuarioServicio {
     @Transactional
     @PreAuthorize("hasRole('USUARIO')")
     public SolicitudOrganizadorResponse solicitarSerOrganizador() {
-        Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        Usuario usuario = usuarioRepository.findByIdForUpdate(usuarioId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario", usuarioId));
         if (!usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "USUARIO")
                 || usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ORGANIZADOR")
                 || usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ADMINISTRADOR")) {
@@ -169,7 +171,7 @@ public class UsuarioServicio {
     }
 
     private Usuario obtenerSolicitudPendiente(UUID usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
+        Usuario usuario = usuarioRepository.findByIdForUpdate(usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario", usuarioId));
         if (usuario.getEstadoSolicitudOrganizador() != Usuario.EstadoSolicitudOrganizador.PENDIENTE) {
             throw new NegocioException("El usuario no tiene una solicitud pendiente");

@@ -59,7 +59,9 @@ export class AppShellComponent implements OnInit {
   readonly navItems = computed(() => [
     { label: 'Panel administrativo', icon: 'space_dashboard', route: '/admin', roles: ['ADMINISTRADOR'] },
     { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
+    { label: 'Solicitudes de organizador', icon: 'manage_accounts', route: '/admin/solicitudes-organizador', roles: ['ADMINISTRADOR'] },
     { label: 'Mis eventos', icon: 'event', route: '/organizador/eventos', roles: ['ORGANIZADOR'] },
+    { label: 'Estado de organizador', icon: 'workspace_premium', route: '/privado/solicitud-organizador', roles: ['USUARIO', 'ORGANIZADOR'] },
     { label: 'Eventos publicados', icon: 'explore', route: '/eventos', roles: ['USUARIO'] },
     { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] }
   ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles)));
@@ -92,9 +94,13 @@ export class AppShellComponent implements OnInit {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe((event) => this.breadcrumbs.set(this.buildBreadcrumbs(event.urlAfterRedirects)));
+      .subscribe((event) => {
+        this.breadcrumbs.set(this.buildBreadcrumbs(event.urlAfterRedirects));
+        this.refrescarIdentidad();
+      });
 
     this.breadcrumbs.set(this.buildBreadcrumbs(this.router.url));
+    this.refrescarIdentidad();
   }
 
   cerrarSesion(): void {
@@ -154,7 +160,8 @@ export class AppShellComponent implements OnInit {
       generador: 'Generador',
       nuevo: 'Nuevo',
       editar: 'Editar',
-      verificacion: 'Verificacion'
+      verificacion: 'Verificacion',
+      'solicitudes-organizador': 'Solicitudes de organizador'
     };
 
     const iconByRoot: Record<string, string> = {
@@ -182,5 +189,9 @@ export class AppShellComponent implements OnInit {
     return value
       .replace(/-/g, ' ')
       .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  }
+
+  private refrescarIdentidad(): void {
+    this.authService.refrescarPerfil().subscribe({ error: () => undefined });
   }
 }

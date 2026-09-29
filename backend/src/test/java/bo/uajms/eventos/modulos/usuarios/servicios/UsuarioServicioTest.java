@@ -165,11 +165,38 @@ class UsuarioServicioTest {
 
         assertEquals("PENDIENTE", response.getEstado());
         assertNotNull(usuario.getFechaSolicitudOrganizador());
+        verify(usuarioRepository).findByIdForUpdate(usuario.getId());
+    }
+
+    @Test
+    void solicitudPendienteNoPuedeDuplicarse() {
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.PENDIENTE);
+        autenticarUsuario();
+
+        assertThrows(NegocioException.class, () -> servicio.solicitarSerOrganizador());
+        verify(usuarioRepository, never()).save(any());
+    }
+
+    @Test
+    void solicitudRechazadaPuedePresentarseNuevamenteSinEspera() {
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.RECHAZADA);
+        usuario.setMotivoRechazoOrganizador("Informacion incompleta");
+        autenticarUsuario();
+        when(usuarioRepository.save(usuario)).thenReturn(usuario);
+
+        var response = servicio.solicitarSerOrganizador();
+
+        assertEquals("PENDIENTE", response.getEstado());
+        assertNull(response.getMotivoRechazo());
+        assertNull(response.getFechaResolucion());
     }
 
     @Test
     void organizadorNoPuedeSolicitarNuevamente() {
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
+        when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "USUARIO"))
+                .thenReturn(true);
         when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ORGANIZADOR"))
                 .thenReturn(true);
 
@@ -200,6 +227,51 @@ class UsuarioServicioTest {
         verify(usuarioRolRepository).deleteByUsuarioId(usuario.getId());
         verify(usuarioRolRepository).save(argThat(relacion ->
                 relacion.getRol().getNombre().equals("ORGANIZADOR")));
+        verify(usuarioRepository).findByIdForUpdate(usuario.getId());
+    }
+
+    @Test
+    void aprobarSolicitudInexistenteFalla() {
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(administrador);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> servicio.aprobarSolicitudOrganizador(usuario.getId()));
+        verify(usuarioRolRepository, never()).save(any());
+    }
+
+    @Test
+    void aprobarSolicitudNoPendienteFalla() {
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.RECHAZADA);
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(administrador);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
+
+        assertThrows(NegocioException.class, () -> servicio.aprobarSolicitudOrganizador(usuario.getId()));
+        verify(usuarioRolRepository, never()).save(any());
+    }
+
+    @Test
+    void dosAprobacionesSoloPermitenUnaTransicion() {
+        prepararSolicitudPendiente();
+        when(rolRepository.findByNombre("ORGANIZADOR")).thenReturn(Optional.of(rol("ORGANIZADOR")));
+        when(usuarioRepository.save(usuario)).thenReturn(usuario);
+
+        servicio.aprobarSolicitudOrganizador(usuario.getId());
+
+        assertThrows(NegocioException.class, () -> servicio.aprobarSolicitudOrganizador(usuario.getId()));
+        verify(usuarioRolRepository, times(1)).deleteByUsuarioId(usuario.getId());
+    }
+
+    @Test
+    void aprobarYRechazarSoloPermitenLaPrimeraTransicion() {
+        prepararSolicitudPendiente();
+        when(rolRepository.findByNombre("ORGANIZADOR")).thenReturn(Optional.of(rol("ORGANIZADOR")));
+        when(usuarioRepository.save(usuario)).thenReturn(usuario);
+
+        servicio.aprobarSolicitudOrganizador(usuario.getId());
+
+        assertThrows(NegocioException.class,
+                () -> servicio.rechazarSolicitudOrganizador(usuario.getId(), "Rechazo tardio"));
+        assertEquals(Usuario.EstadoSolicitudOrganizador.APROBADA, usuario.getEstadoSolicitudOrganizador());
     }
 
     @Test
@@ -226,6 +298,7 @@ class UsuarioServicioTest {
 
     private void autenticarUsuario() {
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
         when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "USUARIO"))
                 .thenReturn(true);
     }
@@ -233,7 +306,7 @@ class UsuarioServicioTest {
     private void prepararSolicitudPendiente() {
         usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.PENDIENTE);
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(administrador);
-        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.findByIdForUpdate(usuario.getId())).thenReturn(Optional.of(usuario));
         when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "USUARIO"))
                 .thenReturn(true);
     }

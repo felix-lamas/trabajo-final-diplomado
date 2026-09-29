@@ -49,6 +49,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/privado/perfil-usuario/perfil-usuario.component').then((m) => m.PerfilUsuarioComponent)
       },
       {
+        path: 'privado/solicitud-organizador',
+        canMatch: [authGuard, roleGuard],
+        data: { roles: ['USUARIO', 'ORGANIZADOR'] },
+        loadComponent: () => import('./features/privado/solicitud-organizador/solicitud-organizador.component').then((m) => m.SolicitudOrganizadorComponent)
+      },
+      {
         path: 'privado/inscripciones',
         canMatch: [authGuard],
         loadChildren: () => import('./features/privado/privado.module').then((m) => m.PrivadoInscripcionesModule)

@@ -34,6 +34,11 @@ const routes: Routes = [
     children: [
       { path: 'validar', component: ValidarPagosListComponent }
     ]
+  },
+  {
+    path: 'solicitudes-organizador',
+    loadComponent: () => import('./usuarios/solicitudes-organizador/solicitudes-organizador.component')
+      .then((m) => m.SolicitudesOrganizadorComponent)
   }
 ];
 
