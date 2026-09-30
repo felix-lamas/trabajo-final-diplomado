@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EventoDatosRequestValidationTest {
@@ -53,6 +54,11 @@ class EventoDatosRequestValidationTest {
         CrearEventoRequest request = solicitudValida(); request.setTelefonoContacto("+591 70000000"); request.setEmailContacto("evento@example.test");
         assertFalse(tieneError(request, "telefonoContacto"));
         assertFalse(tieneError(request, "emailContacto"));
+    }
+
+    @Test void audienciaUsaExactamenteLosValoresOficiales() {
+        assertArrayEquals(new PublicoObjetivo[]{PublicoObjetivo.UAJMS, PublicoObjetivo.EXTERNO, PublicoObjetivo.AMBOS},
+                PublicoObjetivo.values());
     }
 
     private boolean tieneError(CrearEventoRequest request, String campo) {

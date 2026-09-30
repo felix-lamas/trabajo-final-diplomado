@@ -103,7 +103,7 @@ No se incorpora Flyway en esta fase y PostgreSQL no se considera validado por la
 | `GET /api/v1/eventos/publicados/buscar` | Publico | `200`; filtros opcionales de texto, categoria, precio y modalidad | `400` por enum/filtro invalido |
 | `GET /api/v1/eventos/revision` | `ADMINISTRADOR` | `200`; solo `EN_REVISION` | `401`, `403` |
 | `GET /api/v1/eventos/{id}` | Publico o JWT | `200`; publico solo `PUBLICADO`, administrador cualquiera, organizador los propios | `404` inexistente o no visible |
-| `POST /api/v1/eventos` | `ADMINISTRADOR`, `ORGANIZADOR` aprobado | `201`; crea `BORRADOR` y deriva ownership del JWT | `400`, `401`, `403`, `404` categoria activa inexistente |
+| `POST /api/v1/eventos` | `ORGANIZADOR` aprobado | `201`; crea `BORRADOR` y deriva ownership del JWT | `400`, `401`, `403`, `404` categoria activa inexistente |
 | `PUT /api/v1/eventos/{id}` | `ADMINISTRADOR`, `ORGANIZADOR` propietario aprobado | `200`; solo `BORRADOR` o `RECHAZADO` | `400`, `401`, `403`, `404`, `409` estado incompatible |
 | `DELETE /api/v1/eventos/{id}` | `ADMINISTRADOR`, `ORGANIZADOR` propietario aprobado | `204`; solo `BORRADOR` | `401`, `403`, `404`, `409` |
 | `PATCH /api/v1/eventos/{id}/enviar-revision` | `ORGANIZADOR` propietario aprobado | `200`; `BORRADOR -> EN_REVISION` | `400` incompleto, `401`, `403`, `404`, `409` |
@@ -117,7 +117,7 @@ No se incorpora Flyway en esta fase y PostgreSQL no se considera validado por la
 Los DTO de escritura no aceptan `organizadorId`, estado ni auditoria. La API impone ownership con el
 usuario autenticado y bloqueo pesimista en mutaciones; un organizador ajeno recibe `403`, no puede
 publicar, rechazar, cancelar ni finalizar. Los estados validos son exactamente `BORRADOR`, `EN_REVISION`,
-`PUBLICADO`, `RECHAZADO`, `CANCELADO` y `FINALIZADO`. Las audiencias son `UAJMS`, `EXTERNA` y `AMBOS`.
+`PUBLICADO`, `RECHAZADO`, `CANCELADO` y `FINALIZADO`. Las audiencias son `UAJMS`, `EXTERNO` y `AMBOS`.
 
 El formulario y el servicio validan el rango temporal, los datos fisicos para `PRESENCIAL`, el enlace
 HTTP(S) para `VIRTUAL`, capacidad positiva solo cuando es limitada, costo positivo y datos de pago para
@@ -125,7 +125,7 @@ HTTP(S) para `VIRTUAL`, capacidad positiva solo cuando es limitada, costo positi
 inscripciones, pagos, asistencias ni certificados.
 
 Deuda fisica: el esquema sigue gestionado por `ddl-auto`. Un despliegue con datos que contengan el valor
-historico `EXTERNO` en `eventos.publico_objetivo` debe convertirlo a `EXTERNA` antes de aplicar el enum
+historico `EXTERNA` en `eventos.publico_objetivo` debe convertirlo a `EXTERNO` antes de aplicar el enum
 oficial. Esta fase no incorpora Flyway y las pruebas automatizadas no validan PostgreSQL.
 
 ### Inscripciones

@@ -254,7 +254,7 @@ public class DatosInicialesSeed implements CommandLineRunner {
         boolean certificado = titulo.startsWith("Congreso");
         boolean sinCupo = titulo.startsWith("Conferencia");
         PublicoObjetivo audiencia = certificado ? PublicoObjetivo.AMBOS
-                : modalidad == Modalidad.VIRTUAL ? PublicoObjetivo.EXTERNA : PublicoObjetivo.UAJMS;
+                : modalidad == Modalidad.VIRTUAL ? PublicoObjetivo.EXTERNO : PublicoObjetivo.UAJMS;
         Evento evento = Evento.builder()
                 .titulo(titulo)
                 .descripcion("Evento ficticio de demostración para el flujo E2 de la plataforma UAJMS.")

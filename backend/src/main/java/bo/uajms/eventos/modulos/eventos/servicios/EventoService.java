@@ -72,16 +72,7 @@ public class EventoService {
 
     @Transactional(readOnly = true)
     public List<EventoResponse> listarPorCategoria(UUID categoriaId) {
-        List<Evento> eventos;
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
-            eventos = eventoRepository.findByCategoriaId(categoriaId);
-        } else if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
-            eventos = eventoRepository.findByCategoriaIdAndOrganizadorId(
-                    categoriaId, usuarioAutenticadoService.obtenerUsuario().getId());
-        } else {
-            eventos = eventoRepository.findByCategoriaIdAndEstado(categoriaId, EstadoEvento.PUBLICADO);
-        }
-        return mapear(eventos);
+        return mapear(eventoRepository.findByCategoriaIdAndEstado(categoriaId, EstadoEvento.PUBLICADO));
     }
 
     @Transactional(readOnly = true)
@@ -92,7 +83,7 @@ public class EventoService {
 
     @Transactional
     public EventoDetalleResponse crear(CrearEventoRequest request) {
-        Usuario organizador = exigirCreadorEvento();
+        Usuario organizador = exigirOrganizadorAprobado();
         CategoriaEvento categoria = obtenerCategoriaActiva(request.getCategoriaId());
         validarDatos(request, false);
         Evento evento = Evento.builder().categoria(categoria).organizador(organizador)
@@ -432,13 +423,6 @@ public class EventoService {
             throw new AccessDeniedException("La solicitud de organizador debe estar APROBADA");
         }
         return usuario;
-    }
-
-    private Usuario exigirCreadorEvento() {
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
-            return usuarioAutenticadoService.obtenerUsuario();
-        }
-        return exigirOrganizadorAprobado();
     }
 
     private void validarMotivo(String motivo, String tipo) {

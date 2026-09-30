@@ -27,7 +27,7 @@ const routes: Routes = [
     path: 'eventos',
     children: [
       { path: '', component: EventoListComponent },
-      { path: 'nuevo', component: EventoFormComponent },
+      { path: 'nuevo', pathMatch: 'full', redirectTo: '' },
       { path: 'editar/:id', component: EventoFormComponent },
       { path: ':id', component: EventoDetailComponent }
     ]

@@ -16,6 +16,7 @@ describe('EventoListComponent', () => {
   let component: EventoListComponent;
   let response: Subject<Evento[]>;
   let confirmar: boolean;
+  let rolActual: 'ORGANIZADOR' | 'ADMINISTRADOR';
   let service: { listar: ReturnType<typeof vi.fn>; eliminar: ReturnType<typeof vi.fn> };
   const evento: Evento = {
     id: 'evt', titulo: 'Borrador propio', descripcion: 'Descripcion', objetivos: '', categoriaId: 'cat', categoriaNombre: 'Taller',
@@ -27,14 +28,14 @@ describe('EventoListComponent', () => {
   };
 
   beforeEach(async () => {
-    response = new Subject<Evento[]>(); confirmar = false;
+    response = new Subject<Evento[]>(); confirmar = false; rolActual = 'ORGANIZADOR';
     service = { listar: vi.fn(() => response.asObservable()), eliminar: vi.fn(() => of(void 0)) };
     await TestBed.configureTestingModule({
       imports: [EventosGestionModule],
       providers: [
         provideZonelessChangeDetection(), provideNoopAnimations(), provideRouter([]),
         { provide: EventoService, useValue: service },
-        { provide: AuthService, useValue: { hasAnyRole: (roles: string[]) => roles.includes('ORGANIZADOR') } },
+        { provide: AuthService, useValue: { hasAnyRole: (roles: string[]) => roles.includes(rolActual) } },
         { provide: MatDialog, useValue: { open: vi.fn(() => ({ afterClosed: () => of(confirmar) })) } },
         { provide: ToastService, useValue: { success: vi.fn(), error: vi.fn() } }
       ]
@@ -52,6 +53,11 @@ describe('EventoListComponent', () => {
   it('muestra empty cuando no existen eventos', async () => {
     response.next([]); response.complete(); await fixture.whenStable();
     expect(fixture.nativeElement.textContent).toContain('No hay eventos para mostrar');
+  });
+
+  it('no ofrece crear evento al administrador', async () => {
+    rolActual = 'ADMINISTRADOR'; response.next([]); response.complete(); await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).not.toContain('Nuevo evento');
   });
 
   it('muestra error y permite reintentar', async () => {

@@ -8,7 +8,7 @@
       <h1>{{ esAdministrador ? 'Gestion de eventos' : 'Mis eventos' }}</h1>
       <p>{{ esAdministrador ? 'Revise, publique, cancele y finalice eventos.' : 'Cree y envie sus eventos a revision administrativa.' }}</p>
     </div>
-    <a mat-flat-button color="primary" routerLink="nuevo" *ngIf="esOrganizador || esAdministrador">
+    <a mat-flat-button color="primary" routerLink="nuevo" *ngIf="esOrganizador">
       <mat-icon>add</mat-icon>
       Nuevo evento
     </a>
@@ -89,8 +89,8 @@
       icon="event_busy"
       title="No hay eventos para mostrar"
       message="Ajuste los filtros o cree un evento para activar el catalogo institucional."
-      [actionLabel]="esOrganizador || esAdministrador ? 'Nuevo evento' : undefined"
-      [actionRoute]="esOrganizador || esAdministrador ? 'nuevo' : undefined">
+      [actionLabel]="esOrganizador ? 'Nuevo evento' : undefined"
+      [actionRoute]="esOrganizador ? 'nuevo' : undefined">
     </app-empty-state>
 
     <div class="admin-table-scroll" *ngIf="eventosFiltrados().length > 0">

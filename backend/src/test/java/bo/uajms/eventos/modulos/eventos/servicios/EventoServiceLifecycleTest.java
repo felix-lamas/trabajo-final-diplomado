@@ -70,7 +70,6 @@ class EventoServiceLifecycleTest {
 
     @Test
     void usuarioNoPuedeCrearEvento() {
-        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
         when(usuarioAutenticadoService.tieneRol("ORGANIZADOR")).thenReturn(false);
         assertThrows(AccessDeniedException.class, () -> service.crear(solicitudValida(new CrearEventoRequest())));
         verify(eventoRepository, never()).save(any());
@@ -300,22 +299,17 @@ class EventoServiceLifecycleTest {
     }
 
     @Test
-    void administradorPuedeCrearBorrador() {
-        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(true);
-        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(administrador);
-        when(categoriaRepository.findByIdAndEstado(categoriaId, "ACTIVO")).thenReturn(Optional.of(categoria));
-        when(eventoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-        service.crear(solicitudValida(new CrearEventoRequest()));
-        Evento guardado = capturarGuardado();
-        assertSame(administrador, guardado.getOrganizador());
-        assertEquals(EstadoEvento.BORRADOR, guardado.getEstado());
+    void administradorNoPuedeCrearBorrador() {
+        when(usuarioAutenticadoService.tieneRol("ORGANIZADOR")).thenReturn(false);
+        assertThrows(AccessDeniedException.class,
+                () -> service.crear(solicitudValida(new CrearEventoRequest())));
+        verify(eventoRepository, never()).save(any());
     }
 
     @ParameterizedTest
     @EnumSource(value = Usuario.EstadoSolicitudOrganizador.class, names = {"PENDIENTE", "RECHAZADA", "NINGUNA"})
     void organizadorNoAprobadoNoPuedeCrear(Usuario.EstadoSolicitudOrganizador estado) {
         organizador.setEstadoSolicitudOrganizador(estado);
-        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
         when(usuarioAutenticadoService.tieneRol("ORGANIZADOR")).thenReturn(true);
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(organizador);
         assertThrows(AccessDeniedException.class, () -> service.crear(solicitudValida(new CrearEventoRequest())));

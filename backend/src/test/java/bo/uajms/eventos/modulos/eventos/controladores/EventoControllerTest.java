@@ -58,10 +58,10 @@ class EventoControllerTest {
                 .andExpect(status().isCreated()).andExpect(jsonPath("$.id").value(id.toString()));
     }
 
-    @Test @WithMockUser(roles = "ADMINISTRADOR") void administradorCreaEvento() throws Exception {
-        when(service.crear(any())).thenReturn(EventoDetalleResponse.builder().id(id).build());
+    @Test @WithMockUser(roles = "ADMINISTRADOR") void administradorNoCreaEvento() throws Exception {
         mockMvc.perform(post("/api/v1/eventos").contentType(MediaType.APPLICATION_JSON).content(jsonValido()))
-                .andExpect(status().isCreated());
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(service);
     }
 
     @Test @WithMockUser(roles = "ORGANIZADOR") void organizadorNoPublica() throws Exception {
@@ -79,7 +79,7 @@ class EventoControllerTest {
         verify(service).publicar(id);
     }
 
-    @Test @WithMockUser(roles = "ADMINISTRADOR") void requestInvalidoUsaErrorEstandar() throws Exception {
+    @Test @WithMockUser(roles = "ORGANIZADOR") void requestInvalidoUsaErrorEstandar() throws Exception {
         mockMvc.perform(post("/api/v1/eventos").contentType(MediaType.APPLICATION_JSON).content("{}"))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.codigo").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.detalles[0]").exists());

@@ -90,10 +90,10 @@ public class EventoController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
+    @PreAuthorize("hasRole('ORGANIZADOR')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Crear evento",
-            description = "Requiere ADMINISTRADOR u ORGANIZADOR aprobado. Crea un BORRADOR propiedad del usuario autenticado; nunca publica directamente.")
+            description = "Requiere ORGANIZADOR aprobado. Crea un BORRADOR propiedad del usuario autenticado; nunca publica directamente.")
     @ApiResponse(responseCode = "201", description = "Evento creado en BORRADOR", useReturnTypeSchema = true)
     @ApiResponse(responseCode = "404", description = "Categoria activa inexistente")
     @ApiResponse(responseCode = "400", description = "Datos o combinacion funcional invalida")

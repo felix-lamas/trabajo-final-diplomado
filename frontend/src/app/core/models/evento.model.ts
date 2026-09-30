@@ -19,7 +19,7 @@ export enum TipoInscripcion {
 
 export enum PublicoObjetivo {
   UAJMS = 'UAJMS',
-  EXTERNA = 'EXTERNA',
+  EXTERNO = 'EXTERNO',
   AMBOS = 'AMBOS'
 }
 

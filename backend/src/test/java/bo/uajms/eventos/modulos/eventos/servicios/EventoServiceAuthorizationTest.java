@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -266,13 +267,14 @@ class EventoServiceAuthorizationTest {
     }
 
     @Test
-    void organizadorListaSusEventosYLosPublicadosDeLaCategoria() {
-        autenticarOrganizadorA();
-        when(eventoRepository.findByCategoriaIdAndOrganizadorId(categoriaId, organizadorAId)).thenReturn(List.of());
+    void filtroPublicoPorCategoriaNoDependeDelRolAutenticado() {
+        when(eventoRepository.findByCategoriaIdAndEstado(categoriaId, EstadoEvento.PUBLICADO)).thenReturn(List.of());
 
         eventoService.listarPorCategoria(categoriaId);
 
-        verify(eventoRepository).findByCategoriaIdAndOrganizadorId(categoriaId, organizadorAId);
+        verify(eventoRepository).findByCategoriaIdAndEstado(categoriaId, EstadoEvento.PUBLICADO);
+        verify(eventoRepository, never()).findByCategoriaIdAndOrganizadorId(categoriaId, organizadorAId);
+        verifyNoInteractions(usuarioAutenticadoService);
     }
 
     private void comprobarEventoNoPublicadoInvisible(EstadoEvento estado) {
