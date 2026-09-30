@@ -18,6 +18,8 @@ import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
 import bo.uajms.eventos.modulos.sesiones.repositorios.SesionEventoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,8 +81,8 @@ class CertificadoServiceTest {
         lenient().when(clock.getZone()).thenReturn(ZoneId.of("America/La_Paz"));
         lenient().when(certificadoRepository.findByInscripcionId(inscripcionId)).thenReturn(Optional.empty());
         lenient().when(certificadoRepository.existsByCodigoCertificado(anyString())).thenReturn(false);
-        lenient().when(sesionEventoRepository.countByEventoIdAndRequiereAsistenciaTrue(evento.getId())).thenReturn(0L);
-        lenient().when(asistenciaRepository.countSesionesRequeridasAsistidas(inscripcionId, evento.getId())).thenReturn(0L);
+        lenient().when(sesionEventoRepository.countByEventoIdAndRequiereAsistenciaTrue(evento.getId())).thenReturn(1L);
+        lenient().when(asistenciaRepository.countSesionesRequeridasAsistidas(inscripcionId, evento.getId())).thenReturn(1L);
         lenient().when(certificadoRepository.save(any(Certificado.class))).thenAnswer(invocation -> {
             Certificado certificado = invocation.getArgument(0);
             if (certificado.getId() == null) certificado.setId(UUID.randomUUID());
@@ -94,16 +96,16 @@ class CertificadoServiceTest {
     }
 
     @Test
-    void certificadoNoCurricularValidoExigeTodasLasSesionesRequeridas() {
+    void certificadoNoCurricularValidoExigeAsistenciaPeroNoOchentaPorCiento() {
         when(sesionEventoRepository.countByEventoIdAndRequiereAsistenciaTrue(evento.getId())).thenReturn(3L);
-        when(asistenciaRepository.countSesionesRequeridasAsistidas(inscripcionId, evento.getId())).thenReturn(3L);
+        when(asistenciaRepository.countSesionesRequeridasAsistidas(inscripcionId, evento.getId())).thenReturn(1L);
 
         var respuesta = service.generarCertificado(inscripcionId);
 
         assertEquals("NO_CURRICULAR", respuesta.getTipoCertificado());
-        assertEquals(new BigDecimal("100.00"), respuesta.getPorcentajeAsistencia());
+        assertEquals(new BigDecimal("33.33"), respuesta.getPorcentajeAsistencia());
         assertTrue(respuesta.getUrlVerificacion().startsWith(
-                "http://localhost:8080/api/v1/certificados/verificar/UAJMS-"));
+                "http://localhost:4200/verificar-certificado/UAJMS-"));
     }
 
     @Test
@@ -159,6 +161,13 @@ class CertificadoServiceTest {
     }
 
     @Test
+    void eventoQueNoEmiteCertificadosEsRechazado() {
+        evento.setEmiteCertificado(false);
+        assertThrows(NegocioException.class, () -> service.generarCertificado(inscripcionId));
+        verify(certificadoRepository, never()).save(any());
+    }
+
+    @Test
     void curricularExigeHorasAcademicasPositivas() {
         evento.setTipoCertificado(TipoCertificadoEvento.CURRICULAR);
         evento.setHorasAcademicas(0);
@@ -184,11 +193,21 @@ class CertificadoServiceTest {
     }
 
     @Test
-    void eventoSinSesionesRequeridasCumpleSinDividirPorCero() {
+    void eventoSinSesionesRequeridasNoPuedeAcreditarAsistencia() {
         evento.setTipoCertificado(TipoCertificadoEvento.CURRICULAR);
         evento.setHorasAcademicas(10);
-        var respuesta = service.generarCertificado(inscripcionId);
-        assertEquals(new BigDecimal("100.00"), respuesta.getPorcentajeAsistencia());
+        when(sesionEventoRepository.countByEventoIdAndRequiereAsistenciaTrue(evento.getId())).thenReturn(0L);
+        when(asistenciaRepository.countSesionesRequeridasAsistidas(inscripcionId, evento.getId())).thenReturn(0L);
+        assertThrows(NegocioException.class, () -> service.generarCertificado(inscripcionId));
+        verify(certificadoRepository, never()).save(any());
+    }
+
+    @Test
+    void eventoConSesionesPeroSinAsistenciaEsRechazado() {
+        when(sesionEventoRepository.countByEventoIdAndRequiereAsistenciaTrue(evento.getId())).thenReturn(2L);
+        when(asistenciaRepository.countSesionesRequeridasAsistidas(inscripcionId, evento.getId())).thenReturn(0L);
+        assertThrows(NegocioException.class, () -> service.generarCertificado(inscripcionId));
+        verify(certificadoRepository, never()).save(any());
     }
 
     @Test
@@ -241,6 +260,18 @@ class CertificadoServiceTest {
         UUID idAjeno = UUID.randomUUID();
         when(certificadoRepository.findByIdAndUsuarioId(idAjeno, participante.getId())).thenReturn(Optional.empty());
         assertThrows(RecursoNoEncontradoException.class, () -> service.obtenerPorId(idAjeno));
+        verify(certificadoRepository, never()).findById(idAjeno);
+    }
+
+    @Test
+    void usuarioNoDescargaPdfDeCertificadoAjeno() {
+        autenticarUsuario(participante);
+        UUID idAjeno = UUID.randomUUID();
+        when(certificadoRepository.findByIdAndUsuarioId(idAjeno, participante.getId())).thenReturn(Optional.empty());
+
+        assertThrows(RecursoNoEncontradoException.class, () -> service.descargarPdf(idAjeno));
+
+        verify(documentoService, never()).generarPdf(any());
         verify(certificadoRepository, never()).findById(idAjeno);
     }
 
@@ -328,6 +359,20 @@ class CertificadoServiceTest {
             Field field = Certificado.class.getDeclaredField(campo);
             assertFalse(field.getAnnotation(JoinColumn.class).updatable());
         }
+        for (String campo : List.of("codigoCertificado", "fechaEmision", "urlVerificacion",
+                "tipoCertificado", "horasAcademicas", "porcentajeAsistencia")) {
+            Field field = Certificado.class.getDeclaredField(campo);
+            assertFalse(field.getAnnotation(Column.class).updatable());
+        }
+    }
+
+    @Test
+    void baseDeDatosImpideDuplicarInscripcionYCodigo() {
+        Table table = Certificado.class.getAnnotation(Table.class);
+        assertTrue(List.of(table.uniqueConstraints()).stream()
+                .anyMatch(unique -> List.of(unique.columnNames()).contains("inscripcion_id")));
+        assertTrue(List.of(table.uniqueConstraints()).stream()
+                .anyMatch(unique -> List.of(unique.columnNames()).contains("codigo_certificado")));
     }
 
     private void autenticarOrganizador() {

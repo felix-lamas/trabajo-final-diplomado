@@ -39,7 +39,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CertificadoService {
 
-    private static final String INSTITUCION = "Universidad Autonoma Juan Misael Saracho";
+    private static final String INSTITUCION = "Universidad Autónoma Juan Misael Saracho - UAJMS";
 
     private final CertificadoRepository certificadoRepository;
     private final InscripcionRepository inscripcionRepository;
@@ -51,8 +51,8 @@ public class CertificadoService {
     private final CertificadoDocumentoService documentoService;
     private final Clock clock;
 
-    @Value("${app.certificados.verificacion-base-url:http://localhost:8080/api/v1/certificados/verificar}")
-    private String verificacionBaseUrl = "http://localhost:8080/api/v1/certificados/verificar";
+    @Value("${app.certificados.verificacion-base-url:http://localhost:4200/verificar-certificado}")
+    private String verificacionBaseUrl = "http://localhost:4200/verificar-certificado";
 
     @Transactional
     public CertificadoResponse generarCertificado(UUID inscripcionId) {
@@ -188,8 +188,10 @@ public class CertificadoService {
         long requeridas = sesionEventoRepository.countByEventoIdAndRequiereAsistenciaTrue(evento.getId());
         long asistidas = asistenciaRepository.countSesionesRequeridasAsistidas(inscripcion.getId(), evento.getId());
         if (asistidas > requeridas) throw new NegocioException("Los datos de asistencia son inconsistentes");
-        BigDecimal porcentaje = requeridas == 0 ? new BigDecimal("100.00")
-                : BigDecimal.valueOf(asistidas).multiply(BigDecimal.valueOf(100))
+        if (requeridas == 0 || asistidas == 0)
+            throw new NegocioException(CodigosError.CERTIFICATE_NOT_AVAILABLE,
+                    "Debe existir asistencia registrada en una sesion requerida");
+        BigDecimal porcentaje = BigDecimal.valueOf(asistidas).multiply(BigDecimal.valueOf(100))
                 .divide(BigDecimal.valueOf(requeridas), 2, RoundingMode.HALF_UP);
         return new CalculoAsistencia(requeridas, asistidas, porcentaje);
     }
@@ -203,8 +205,7 @@ public class CertificadoService {
                 throw new NegocioException("No se alcanza el 80% de asistencia requerido");
             return;
         }
-        if (calculo.requeridas() > 0 && calculo.asistidas() < calculo.requeridas())
-            throw new NegocioException("Faltan asistencias en sesiones requeridas");
+        // El certificado no curricular exige participacion real, no un porcentaje minimo adicional.
     }
 
     private Certificado.TipoCertificado resolverTipo(Evento evento) {
@@ -247,7 +248,7 @@ public class CertificadoService {
     private CertificadoResponse mapear(Certificado certificado) {
         Usuario usuario = certificado.getUsuario();
         return CertificadoResponse.builder().id(certificado.getId())
-                .nombreCompleto(usuario.getNombres() + " " + usuario.getApellidos()).ci(usuario.getCi())
+                .nombreCompleto(usuario.getNombres() + " " + usuario.getApellidos()).ru(usuario.getRu()).ci(usuario.getCi())
                 .evento(certificado.getEvento().getTitulo()).cargaHoraria(certificado.getEvento().getHorasAcademicas())
                 .tipoCertificado(certificado.getTipoCertificado().name())
                 .horasAcademicas(certificado.getHorasAcademicas())

@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -97,9 +98,13 @@ class OpenApiContractTest {
     }
 
     @Test
-    void verificacionLegacySeConservaOcultaPorCompatibilidad() throws Exception {
-        Method legacy = CertificadoController.class.getMethod("verificarPublicoLegacy", String.class);
-        assertNotNull(legacy.getAnnotation(Hidden.class));
+    void certificadoExponeSoloVerificacionPublicaCanonica() {
+        assertTrue(Arrays.stream(CertificadoController.class.getDeclaredMethods())
+                .noneMatch(method -> method.getName().toLowerCase().contains("legacy")));
+        assertTrue(Arrays.stream(CertificadoController.class.getDeclaredMethods())
+                .filter(method -> method.getAnnotation(GetMapping.class) != null)
+                .flatMap(method -> Arrays.stream(method.getAnnotation(GetMapping.class).value()))
+                .noneMatch(path -> path.contains("verificacion-certificados")));
     }
 
     private List<String> rutas(RequestMapping mapping) {

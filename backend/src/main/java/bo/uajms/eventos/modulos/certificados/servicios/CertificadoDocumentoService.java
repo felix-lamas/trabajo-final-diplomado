@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class CertificadoDocumentoService {
 
-    private static final String INSTITUCION = "Universidad Autonoma Juan Misael Saracho";
+    private static final String INSTITUCION = "Universidad Autónoma Juan Misael Saracho";
 
     public byte[] generarPdf(Certificado certificado) {
         try (ByteArrayOutputStream salida = new ByteArrayOutputStream()) {
@@ -30,9 +30,13 @@ public class CertificadoDocumentoService {
             try (Document documento = new Document(pdf)) {
                 Usuario usuario = certificado.getUsuario();
                 documento.add(new Paragraph(INSTITUCION).setBold().setFontSize(18));
+                documento.add(new Paragraph("UAJMS").setBold());
                 documento.add(new Paragraph("CERTIFICADO").setBold().setFontSize(16));
                 documento.add(new Paragraph("Participante: " + usuario.getNombres() + " " + usuario.getApellidos()));
-                documento.add(new Paragraph(identificadorParticipante(usuario)));
+                if (usuario.getRu() != null && !usuario.getRu().isBlank()) {
+                    documento.add(new Paragraph("RU: " + usuario.getRu()));
+                }
+                documento.add(new Paragraph("CI: " + usuario.getCi()));
                 documento.add(new Paragraph("Evento: " + certificado.getEvento().getTitulo()));
                 documento.add(new Paragraph("Tipo: " + certificado.getTipoCertificado().name()));
                 if (certificado.getHorasAcademicas() != null) {
@@ -64,10 +68,4 @@ public class CertificadoDocumentoService {
         }
     }
 
-    private String identificadorParticipante(Usuario usuario) {
-        if (usuario.getRu() != null && !usuario.getRu().isBlank()) {
-            return "RU: " + usuario.getRu();
-        }
-        return "CI: " + usuario.getCi();
-    }
 }

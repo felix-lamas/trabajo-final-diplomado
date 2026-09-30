@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -87,17 +86,11 @@ public class CertificadoController {
     @SecurityRequirements
     @Operation(summary = "Verificar certificado publicamente",
             description = "Comprueba por codigo unico si el certificado existe y es valido, sin exponer datos sensibles adicionales.")
-    @ApiResponse(responseCode = "404", description = "Codigo de certificado inexistente")
+    @ApiResponse(responseCode = "200", description = "Resultado publico de verificacion; un codigo no registrado devuelve valido=false")
     public ResponseEntity<VerificacionCertificadoResponse> verificarPublico(
             @Parameter(description = "Codigo publico del certificado", example = "UAJMS-1234567890ABCDEF")
             @PathVariable String codigo) {
         return ResponseEntity.ok(certificadoService.verificarCertificadoPublico(codigo));
     }
 
-    @Hidden
-    @GetMapping("/verificacion-certificados/{codigo}")
-    @SecurityRequirements
-    public ResponseEntity<VerificacionCertificadoResponse> verificarPublicoLegacy(@PathVariable String codigo) {
-        return ResponseEntity.ok(certificadoService.verificarCertificadoPublico(codigo));
-    }
 }

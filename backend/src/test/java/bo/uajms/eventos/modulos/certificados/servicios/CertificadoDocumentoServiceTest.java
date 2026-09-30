@@ -30,9 +30,11 @@ class CertificadoDocumentoServiceTest {
         assertTrue(bytes.length > 1000);
         try (PdfDocument pdf = new PdfDocument(new PdfReader(new ByteArrayInputStream(bytes)))) {
             String texto = PdfTextExtractor.getTextFromPage(pdf.getPage(1));
-            assertTrue(texto.contains("Universidad Autonoma Juan Misael Saracho"));
+            assertTrue(texto.contains("Universidad Autónoma Juan Misael Saracho"));
+            assertTrue(texto.contains("UAJMS"));
             assertTrue(texto.contains("Ana Perez"));
             assertTrue(texto.contains("RU: 20260001"));
+            assertTrue(texto.contains("CI: 1234567"));
             assertTrue(texto.contains("Jornadas Academicas"));
             assertTrue(texto.contains("CURRICULAR"));
             assertTrue(texto.contains("40"));
@@ -42,11 +44,13 @@ class CertificadoDocumentoServiceTest {
 
     @Test
     void qrDelCertificadoApuntaAVerificacionPublica() throws Exception {
-        String url = "https://eventos.example.test/api/v1/certificados/verificar/UAJMS-ABC123";
+        String url = "https://eventos.example.test/verificar-certificado/UAJMS-ABC123";
         byte[] png = service.generarQrVerificacion(url);
         var imagen = ImageIO.read(new ByteArrayInputStream(png));
         var bitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(imagen)));
         assertEquals(url, new MultiFormatReader().decode(bitmap).getText());
+        assertFalse(url.toLowerCase().contains("jwt"));
+        assertFalse(url.toLowerCase().contains("password"));
     }
 
     private Certificado certificado() {
@@ -55,7 +59,7 @@ class CertificadoDocumentoServiceTest {
         return Certificado.builder().usuario(usuario).evento(evento).codigoCertificado("UAJMS-ABC123")
                 .tipoCertificado(Certificado.TipoCertificado.CURRICULAR).horasAcademicas(40)
                 .fechaEmision(LocalDateTime.of(2026, 9, 23, 12, 0))
-                .urlVerificacion("/api/v1/certificados/verificar/UAJMS-ABC123")
+                .urlVerificacion("https://eventos.example.test/verificar-certificado/UAJMS-ABC123")
                 .estado(Certificado.EstadoCertificado.GENERADO).build();
     }
 }

@@ -1,8 +1,15 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-
-// Service & Model
+import { finalize } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CertificadoService } from '../../../core/services/certificado.service';
 import { VerificacionCertificadoResponse } from '../../../core/models/certificado.model';
 
@@ -10,60 +17,55 @@ import { VerificacionCertificadoResponse } from '../../../core/models/certificad
   selector: 'app-validacion-publica',
   templateUrl: './validacion-publica.component.html',
   styleUrls: [],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule,
+    MatIconModule, MatInputModule, MatProgressSpinnerModule]
 })
 export class ValidacionPublicaComponent implements OnInit {
-  valForm: FormGroup;
-  private readonly viewState = signal<{
-    resultado: VerificacionCertificadoResponse | null;
-    loading: boolean;
-  }>({ resultado: null, loading: false });
-  get resultado(): VerificacionCertificadoResponse | null { return this.viewState().resultado; }
-  private set resultado(value: VerificacionCertificadoResponse | null) { this.viewState.update((state) => ({ ...state, resultado: value })); }
-  get loading(): boolean { return this.viewState().loading; }
-  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  private readonly destroyRef = inject(DestroyRef);
+  readonly resultado = signal<VerificacionCertificadoResponse | null>(null);
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly valForm;
 
   constructor(
-    private fb: FormBuilder,
-    private certificadoService: CertificadoService,
-    private route: ActivatedRoute
+    formBuilder: FormBuilder,
+    private readonly certificadoService: CertificadoService,
+    private readonly route: ActivatedRoute
   ) {
-    this.valForm = this.fb.group({
-      codigo: ['', Validators.required]
-    });
+    this.valForm = formBuilder.nonNullable.group({ codigo: ['', [Validators.required, Validators.maxLength(50)]] });
   }
 
   ngOnInit(): void {
-    // Si viene el código por la URL (escaneo de QR directo)
-    const codigoUrl = this.route.snapshot.paramMap.get('codigo');
-    if (codigoUrl) {
-      this.valForm.patchValue({ codigo: codigoUrl });
-      this.verificar(codigoUrl);
+    const codigo = this.route.snapshot.paramMap.get('codigo')?.trim();
+    if (codigo) {
+      this.valForm.setValue({ codigo });
+      this.verificar(codigo);
     }
   }
 
   onSubmit(): void {
-    if (this.valForm.invalid) return;
-    this.verificar(this.valForm.value.codigo);
+    if (this.valForm.invalid || this.loading()) return;
+    this.verificar(this.valForm.controls.codigo.value);
   }
 
   verificar(codigo: string): void {
-    this.loading = true;
-    this.resultado = null;
-
-    this.certificadoService.verificarPublicamente(codigo).subscribe({
-      next: (res) => {
-        this.resultado = res;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
+    const codigoNormalizado = codigo.trim();
+    if (!codigoNormalizado) return;
+    this.loading.set(true);
+    this.error.set(null);
+    this.resultado.set(null);
+    this.certificadoService.verificarPublicamente(codigoNormalizado)
+      .pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (resultado) => this.resultado.set(resultado),
+        error: () => this.error.set('No fue posible consultar el certificado. Intente nuevamente.')
+      });
   }
 
   limpiar(): void {
-    this.resultado = null;
+    this.resultado.set(null);
+    this.error.set(null);
     this.valForm.reset();
   }
 }

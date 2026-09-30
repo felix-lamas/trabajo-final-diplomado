@@ -1,9 +1,13 @@
 export interface CertificadoResponse {
   id: string;
   nombreCompleto: string;
+  ru: string | null;
   ci: string;
   evento: string;
-  cargaHoraria: number;
+  cargaHoraria: number | null;
+  tipoCertificado: 'CURRICULAR' | 'NO_CURRICULAR';
+  horasAcademicas: number | null;
+  porcentajeAsistencia: number;
   codigoCertificado: string;
   fechaEmision: string;
   urlVerificacion: string;
@@ -14,11 +18,13 @@ export interface CertificadoResponse {
 export interface VerificacionCertificadoResponse {
   valido: boolean;
   mensaje: string;
-  nombreCompleto: string;
-  ci: string;
-  evento: string;
-  cargaHoraria: number;
-  fechaEmision: string;
+  institucion: string;
+  nombreCompleto: string | null;
+  evento: string | null;
+  tipoCertificado: 'CURRICULAR' | 'NO_CURRICULAR' | null;
+  horasAcademicas: number | null;
+  porcentajeAsistencia: number | null;
+  fechaEmision: string | null;
   codigoCertificado: string;
   estado: string;
 }

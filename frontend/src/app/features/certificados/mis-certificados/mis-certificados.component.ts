@@ -1,9 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
-
-// Material
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// Service & Model
 import { CertificadoService } from '../../../core/services/certificado.service';
 import { CertificadoResponse } from '../../../core/models/certificado.model';
 
@@ -14,22 +12,17 @@ import { CertificadoResponse } from '../../../core/models/certificado.model';
   standalone: false
 })
 export class MisCertificadosComponent implements OnInit {
-  private readonly viewState = signal<{
-    certificados: CertificadoResponse[];
-    loading: boolean;
-    certificadoSeleccionado: CertificadoResponse | null;
-  }>({ certificados: [], loading: false, certificadoSeleccionado: null });
-  get certificados(): CertificadoResponse[] { return this.viewState().certificados; }
-  private set certificados(value: CertificadoResponse[]) { this.viewState.update((state) => ({ ...state, certificados: value })); }
-  get loading(): boolean { return this.viewState().loading; }
-  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
-  get certificadoSeleccionado(): CertificadoResponse | null { return this.viewState().certificadoSeleccionado; }
-  private set certificadoSeleccionado(value: CertificadoResponse | null) { this.viewState.update((state) => ({ ...state, certificadoSeleccionado: value })); }
-  displayedColumns: string[] = ['codigo', 'evento', 'horas', 'fecha', 'estado', 'acciones'];
+  private readonly destroyRef = inject(DestroyRef);
+  readonly certificados = signal<CertificadoResponse[]>([]);
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly certificadoSeleccionado = signal<CertificadoResponse | null>(null);
+  readonly descargandoId = signal<string | null>(null);
+  readonly displayedColumns = ['codigo', 'evento', 'horas', 'fecha', 'estado', 'acciones'];
 
   constructor(
-    private certificadoService: CertificadoService,
-    private snackBar: MatSnackBar
+    private readonly certificadoService: CertificadoService,
+    private readonly snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -37,38 +30,41 @@ export class MisCertificadosComponent implements OnInit {
   }
 
   cargarCertificados(): void {
-    this.loading = true;
-    this.certificadoService.listarMisCertificados().subscribe({
-      next: (data) => {
-        this.certificados = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.snackBar.open('Error al recuperar certificados personales', 'Cerrar', { duration: 3000 });
-        this.loading = false;
-      }
-    });
+    this.loading.set(true);
+    this.error.set(null);
+    this.certificadoService.listarMisCertificados()
+      .pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => this.certificados.set(data),
+        error: () => this.error.set('No fue posible recuperar sus certificados.')
+      });
   }
 
-  verVistaPrevia(cert: CertificadoResponse): void {
-    this.certificadoSeleccionado = cert;
+  verVistaPrevia(certificado: CertificadoResponse): void {
+    this.certificadoSeleccionado.set(certificado);
   }
 
-  descargar(cert: CertificadoResponse): void {
-    this.certificadoService.descargar(cert.id).subscribe({
-      next: (res) => {
-        this.snackBar.open('Certificado descargado correctamente', 'Cerrar', { duration: 2000 });
-        // Simular descarga de archivo abriendo en pestaña nueva
-        window.open(res.archivoPdfUrl, '_blank');
-        this.cargarCertificados(); // Actualizar estado a DESCARGADO
-      },
-      error: () => {
-        this.snackBar.open('Error al procesar la descarga', 'Cerrar', { duration: 3000 });
-      }
-    });
+  descargar(certificado: CertificadoResponse): void {
+    if (this.descargandoId() !== null) return;
+    this.descargandoId.set(certificado.id);
+    this.certificadoService.descargar(certificado.id)
+      .pipe(finalize(() => this.descargandoId.set(null)), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (pdf) => {
+          const url = URL.createObjectURL(pdf);
+          const enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.download = `certificado-${certificado.codigoCertificado}.pdf`;
+          enlace.click();
+          URL.revokeObjectURL(url);
+          this.snackBar.open('Certificado descargado correctamente', 'Cerrar', { duration: 2000 });
+          this.cargarCertificados();
+        },
+        error: () => this.snackBar.open('No fue posible descargar el certificado', 'Cerrar', { duration: 3000 })
+      });
   }
 
   cerrarVistaPrevia(): void {
-    this.certificadoSeleccionado = null;
+    this.certificadoSeleccionado.set(null);
   }
 }

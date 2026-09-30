@@ -13,6 +13,14 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.module').then((m) => m.AuthModule)
   },
   {
+    path: 'verificar-certificado',
+    loadComponent: () => import('./features/certificados/validacion-publica/validacion-publica.component').then((m) => m.ValidacionPublicaComponent)
+  },
+  {
+    path: 'verificar-certificado/:codigo',
+    loadComponent: () => import('./features/certificados/validacion-publica/validacion-publica.component').then((m) => m.ValidacionPublicaComponent)
+  },
+  {
     path: '',
     loadComponent: () => import('./core/layout/app-shell.component').then((m) => m.AppShellComponent),
     children: [

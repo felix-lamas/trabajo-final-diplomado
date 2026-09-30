@@ -19,6 +19,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -70,6 +72,19 @@ class CertificadoControllerAuthorizationTest {
         when(service.verificarCertificadoPublico("CODIGO"))
                 .thenReturn(VerificacionCertificadoResponse.builder().valido(true).build());
         assertTrue(controller.verificarPublico("CODIGO").getBody().isValido());
+    }
+
+    @Test
+    void descargaAutorizadaDevuelvePdfComoAdjunto() {
+        autenticar("USUARIO");
+        UUID id = UUID.randomUUID();
+        when(service.descargarPdf(id)).thenReturn(new byte[]{1, 2, 3});
+
+        var respuesta = controller.descargar(id);
+
+        assertEquals(MediaType.APPLICATION_PDF, respuesta.getHeaders().getContentType());
+        assertTrue(respuesta.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION).startsWith("attachment;"));
+        assertArrayEquals(new byte[]{1, 2, 3}, respuesta.getBody());
     }
 
     private void autenticar(String rol) {

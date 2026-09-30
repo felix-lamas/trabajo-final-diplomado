@@ -9,7 +9,7 @@ import { CertificadoResponse, VerificacionCertificadoResponse } from '../models/
 })
 export class CertificadoService {
   private apiUrl = `${environment.apiUrl}/certificados`;
-  private publicUrl = `${environment.apiUrl}/verificacion-certificados`;
+  private publicUrl = `${environment.apiUrl}/certificados/verificar`;
 
   constructor(private http: HttpClient) {}
 
@@ -25,11 +25,11 @@ export class CertificadoService {
     return this.http.get<CertificadoResponse[]>(`${this.apiUrl}/mis-certificados`);
   }
 
-  descargar(id: string): Observable<CertificadoResponse> {
-    return this.http.get<CertificadoResponse>(`${this.apiUrl}/${id}/descargar`);
+  descargar(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${id}/descargar`, { responseType: 'blob' });
   }
 
   verificarPublicamente(codigo: string): Observable<VerificacionCertificadoResponse> {
-    return this.http.get<VerificacionCertificadoResponse>(`${this.publicUrl}/${codigo}`);
+    return this.http.get<VerificacionCertificadoResponse>(`${this.publicUrl}/${encodeURIComponent(codigo)}`);
   }
 }

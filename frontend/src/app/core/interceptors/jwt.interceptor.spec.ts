@@ -55,6 +55,13 @@ describe('jwtInterceptor', () => {
     request.flush(null);
   });
 
+  it('no anade JWT a la verificacion publica de certificados', () => {
+    client.get(`${environment.apiUrl}/certificados/verificar/UAJMS-CODIGO`).subscribe();
+    const request = http.expectOne(`${environment.apiUrl}/certificados/verificar/UAJMS-CODIGO`);
+    expect(request.request.headers.has('Authorization')).toBe(false);
+    request.flush({ valido: false });
+  });
+
   it('un 401 protegido limpia sesion, navega una sola vez y no reintenta', () => {
     client.get(`${environment.apiUrl}/usuarios/perfil`).subscribe({ error: () => undefined });
     const request = http.expectOne(`${environment.apiUrl}/usuarios/perfil`);

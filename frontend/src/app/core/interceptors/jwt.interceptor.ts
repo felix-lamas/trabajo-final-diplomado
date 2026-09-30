@@ -20,8 +20,9 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const snackBar = inject(MatSnackBar);
   const isCanonicalApiRequest = req.url === environment.apiUrl || req.url.startsWith(`${environment.apiUrl}/`);
+  const isPublicCertificateVerification = req.url.startsWith(`${environment.apiUrl}/certificados/verificar/`);
 
-  if (!isCanonicalApiRequest || publicAuthUrls.has(req.url)) {
+  if (!isCanonicalApiRequest || publicAuthUrls.has(req.url) || isPublicCertificateVerification) {
     return next(req);
   }
 

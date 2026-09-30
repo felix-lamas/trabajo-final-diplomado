@@ -16,6 +16,9 @@ import java.math.BigDecimal;
 @Table(name = "certificados", uniqueConstraints = {
         @UniqueConstraint(name = "uk_certificado_inscripcion", columnNames = "inscripcion_id"),
         @UniqueConstraint(name = "uk_certificado_codigo", columnNames = "codigo_certificado")
+}, indexes = {
+        @Index(name = "idx_certificado_usuario", columnList = "usuario_id"),
+        @Index(name = "idx_certificado_evento", columnList = "evento_id")
 })
 @Getter
 @Setter
@@ -38,14 +41,14 @@ public class Certificado extends EntidadBase {
     @JoinColumn(name = "inscripcion_id", nullable = false, unique = true, updatable = false)
     private Inscripcion inscripcion;
 
-    @Column(name = "codigo_certificado", nullable = false, unique = true, length = 50)
+    @Column(name = "codigo_certificado", nullable = false, unique = true, length = 50, updatable = false)
     private String codigoCertificado;
 
-    @Column(name = "fecha_emision", nullable = false)
+    @Column(name = "fecha_emision", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime fechaEmision = LocalDateTime.now();
 
-    @Column(name = "url_verificacion", length = 255)
+    @Column(name = "url_verificacion", nullable = false, length = 255, updatable = false)
     private String urlVerificacion;
 
     @Enumerated(EnumType.STRING)
@@ -57,14 +60,14 @@ public class Certificado extends EntidadBase {
     private String archivoPdfUrl;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_certificado", nullable = false, length = 20)
+    @Column(name = "tipo_certificado", nullable = false, length = 20, updatable = false)
     @Builder.Default
     private TipoCertificado tipoCertificado = TipoCertificado.NO_CURRICULAR;
 
-    @Column(name = "horas_academicas")
+    @Column(name = "horas_academicas", updatable = false)
     private Integer horasAcademicas;
 
-    @Column(name = "porcentaje_asistencia", precision = 5, scale = 2)
+    @Column(name = "porcentaje_asistencia", nullable = false, precision = 5, scale = 2, updatable = false)
     private BigDecimal porcentajeAsistencia;
 
     public enum EstadoCertificado {

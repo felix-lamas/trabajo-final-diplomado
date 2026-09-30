@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class CertificadoResponse {
     private UUID id;
     private String nombreCompleto;
+    private String ru;
     private String ci;
     private String evento;
     private Integer cargaHoraria;

@@ -54,7 +54,6 @@ public class SecurityConfig {
                                 "/api/v1/auth/restablecer-contrasena",
                                 "/api/v1/auth/verificar-correo",
                                 "/api/v1/auth/reenviar-verificacion",
-                                "/api/v1/verificacion-certificados/**",
                                 "/api/v1/certificados/verificar/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",

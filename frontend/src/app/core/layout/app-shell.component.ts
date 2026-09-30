@@ -68,7 +68,8 @@ export class AppShellComponent implements OnInit {
     { label: 'Estado de organizador', icon: 'workspace_premium', route: '/privado/solicitud-organizador', roles: ['USUARIO', 'ORGANIZADOR'] },
     { label: 'Eventos publicados', icon: 'explore', route: '/eventos', roles: ['USUARIO'] },
     { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] },
-    { label: 'Mis pagos', icon: 'payments', route: '/privado/pagos', roles: ['USUARIO'] }
+    { label: 'Mis pagos', icon: 'payments', route: '/privado/pagos', roles: ['USUARIO'] },
+    { label: 'Mis certificados', icon: 'workspace_premium', route: '/certificados/mis-certificados', roles: ['USUARIO'] }
   ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles)));
   readonly quickActions = computed(() => [
     { label: 'Nuevo evento', icon: 'add_circle', route: '/organizador/eventos/nuevo', roles: ['ORGANIZADOR'] },
