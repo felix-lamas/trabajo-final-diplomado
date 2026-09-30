@@ -62,7 +62,8 @@ export const routes: Routes = [
       },
       {
         path: 'privado/pagos',
-        canMatch: [authGuard],
+        canMatch: [authGuard, roleGuard],
+        data: { roles: ['USUARIO'] },
         loadChildren: () => import('./features/privado/pagos/pagos.module').then((m) => m.PrivadoPagosModule)
       },
       {

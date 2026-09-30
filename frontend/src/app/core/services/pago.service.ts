@@ -45,4 +45,8 @@ export class PagoService {
     formData.append('archivo', archivo);
     return this.http.post<Pago>(`${this.apiUrl}/${id}/comprobante`, formData);
   }
+
+  descargarComprobante(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${id}/comprobante`, { responseType: 'blob' });
+  }
 }

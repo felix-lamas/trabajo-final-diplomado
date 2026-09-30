@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { EventoDetailComponent } from '../admin/eventos/evento-detail/evento-detail.component';
 import { EventoFormComponent } from '../admin/eventos/evento-form/evento-form.component';
 import { EventoListComponent } from '../admin/eventos/evento-list/evento-list.component';
+import { ValidarPagosListComponent } from '../admin/pagos/validar-pagos-list/validar-pagos-list.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'eventos' },
@@ -13,6 +14,12 @@ const routes: Routes = [
       { path: 'nuevo', component: EventoFormComponent },
       { path: 'editar/:id', component: EventoFormComponent },
       { path: ':id', component: EventoDetailComponent }
+    ]
+  },
+  {
+    path: 'pagos',
+    children: [
+      { path: 'validar', component: ValidarPagosListComponent }
     ]
   }
 ];

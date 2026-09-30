@@ -27,7 +27,6 @@ import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-d
 // Components
 import { CategoriaListComponent } from './categorias/categoria-list/categoria-list.component';
 import { CategoriaFormComponent } from './categorias/categoria-form/categoria-form.component';
-import { ValidarPagosListComponent } from './pagos/validar-pagos-list/validar-pagos-list.component';
 import { EventosGestionModule } from '../eventos-gestion/eventos-gestion.module';
 
 // Routing
@@ -36,8 +35,7 @@ import { AdminRoutingModule } from './admin-routing.module';
 @NgModule({
   declarations: [
     CategoriaListComponent,
-    CategoriaFormComponent,
-    ValidarPagosListComponent
+    CategoriaFormComponent
   ],
   imports: [
     CommonModule,

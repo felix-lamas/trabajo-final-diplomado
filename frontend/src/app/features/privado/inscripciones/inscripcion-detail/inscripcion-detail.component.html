@@ -73,6 +73,10 @@
 
         <div class="student-card__footer">
           <span>Codigo {{ inscripcion.codigoInscripcion || (inscripcion.id | slice:0:8) }}</span>
+          <a mat-flat-button color="primary" *ngIf="inscripcion.estado === 'PENDIENTE_PAGO'"
+            [routerLink]="['/privado/pagos/registrar']" [queryParams]="{ inscripcionId: inscripcion.id }">
+            Presentar comprobante
+          </a>
           <button mat-flat-button color="warn" *ngIf="inscripcion.estado !== 'CANCELADA'" [disabled]="procesando" (click)="cancelar()">
             {{ procesando ? 'Cancelando...' : 'Cancelar inscripcion' }}
           </button>

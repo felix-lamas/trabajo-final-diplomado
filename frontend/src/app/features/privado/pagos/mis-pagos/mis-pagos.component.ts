@@ -1,7 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { PagoService } from '../../../../core/services/pago.service';
-import { Pago, EstadoPago } from '../../../../core/models/pago.model';
+import { EstadoPago, Pago } from '../../../../core/models/pago.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-mis-pagos',
@@ -9,9 +10,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: false
 })
 export class MisPagosComponent implements OnInit {
-  private readonly pagosState = signal<Pago[]>([]);
-  get pagos(): Pago[] { return this.pagosState(); }
-  private set pagos(value: Pago[]) { this.pagosState.set(value); }
+  private readonly viewState = signal({ pagos: [] as Pago[], loading: true, error: '' });
+  get pagos(): Pago[] { return this.viewState().pagos; }
+  private set pagos(value: Pago[]) { this.viewState.update((state) => ({ ...state, pagos: value })); }
+  get loading(): boolean { return this.viewState().loading; }
+  get error(): string { return this.viewState().error; }
   displayedColumns: string[] = ['evento', 'monto', 'fecha', 'estado', 'acciones'];
   estadoFiltro = 'TODOS';
 
@@ -25,9 +28,12 @@ export class MisPagosComponent implements OnInit {
   }
 
   cargarPagos(): void {
-    this.pagoService.listarMisPagos().subscribe({
+    this.viewState.update((state) => ({ ...state, loading: true, error: '' }));
+    this.pagoService.listarMisPagos().pipe(
+      finalize(() => this.viewState.update((state) => ({ ...state, loading: false })))
+    ).subscribe({
       next: (data) => this.pagos = data,
-      error: () => this.snackBar.open('Error al cargar tus pagos', 'Cerrar', { duration: 3000 })
+      error: () => this.viewState.update((state) => ({ ...state, error: 'No fue posible cargar sus pagos.' }))
     });
   }
 
@@ -44,11 +50,12 @@ export class MisPagosComponent implements OnInit {
   }
 
   get totalValidados(): number {
-    return this.pagos.filter((pago) => pago.estado === 'VALIDADO').length;
+    return this.pagos.filter((pago) => pago.estado === EstadoPago.APROBADO).length;
   }
 
   get totalPendientes(): number {
-    return this.pagos.filter((pago) => pago.estado === 'PENDIENTE').length;
+    return this.pagos.filter((pago) =>
+      pago.estado === EstadoPago.PENDIENTE_PAGO || pago.estado === EstadoPago.PENDIENTE_VALIDACION).length;
   }
 
   cambiarFiltro(estado: string): void {
@@ -57,8 +64,9 @@ export class MisPagosComponent implements OnInit {
 
   getEstadoClass(estado: string): string {
     switch (estado) {
-      case 'VALIDADO': return 'bg-green-100 text-green-800';
-      case 'PENDIENTE': return 'bg-yellow-100 text-yellow-800';
+      case 'APROBADO': return 'bg-green-100 text-green-800';
+      case 'PENDIENTE_PAGO':
+      case 'PENDIENTE_VALIDACION': return 'bg-yellow-100 text-yellow-800';
       case 'RECHAZADO': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -66,8 +74,9 @@ export class MisPagosComponent implements OnInit {
 
   getEstadoLabel(estado: string): string {
     switch (estado) {
-      case 'VALIDADO': return 'Validado';
-      case 'PENDIENTE': return 'Pendiente';
+      case 'APROBADO': return 'Aprobado';
+      case 'PENDIENTE_PAGO': return 'Pendiente de pago';
+      case 'PENDIENTE_VALIDACION': return 'Pendiente de validación';
       case 'RECHAZADO': return 'Rechazado';
       default: return estado;
     }
@@ -75,7 +84,18 @@ export class MisPagosComponent implements OnInit {
 
   verComprobante(pago: Pago): void {
     if (pago.comprobante) {
-      window.open(pago.comprobante.urlArchivo, '_blank');
+      this.pagoService.descargarComprobante(pago.id).subscribe({
+        next: (archivo) => {
+          const url = URL.createObjectURL(archivo);
+          window.open(url, '_blank', 'noopener,noreferrer');
+          setTimeout(() => URL.revokeObjectURL(url), 60_000);
+        },
+        error: () => this.snackBar.open('No fue posible descargar el comprobante', 'Cerrar')
+      });
     }
+  }
+
+  puedePresentar(pago: Pago): boolean {
+    return pago.estado === EstadoPago.PENDIENTE_PAGO || pago.estado === EstadoPago.RECHAZADO;
   }
 }

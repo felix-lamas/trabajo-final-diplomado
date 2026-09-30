@@ -1,8 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PagoService } from '../../../../core/services/pago.service';
+import { finalize, forkJoin, Observable, of, switchMap } from 'rxjs';
+import { EstadoInscripcion } from '../../../../core/models/inscripcion.model';
+import { EstadoPago, Pago } from '../../../../core/models/pago.model';
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
+import { PagoService } from '../../../../core/services/pago.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -11,93 +13,101 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: false
 })
 export class RegistrarPagoComponent implements OnInit {
-  pagoForm: FormGroup;
+  private static readonly MAX_FILE_SIZE = 5 * 1024 * 1024;
+  private static readonly ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'application/pdf']);
+
   inscripcionId = '';
-  private readonly viewState = signal({ eventoTitulo: '', montoSugerido: 0, enviando: false });
-  get eventoTitulo(): string { return this.viewState().eventoTitulo; }
-  private set eventoTitulo(value: string) { this.viewState.update((state) => ({ ...state, eventoTitulo: value })); }
-  get montoSugerido(): number { return this.viewState().montoSugerido; }
-  private set montoSugerido(value: number) { this.viewState.update((state) => ({ ...state, montoSugerido: value })); }
   archivoComprobante: File | null = null;
+  private pago?: Pago;
+  private readonly viewState = signal({
+    eventoTitulo: '', monto: 0, loading: true, enviando: false, error: ''
+  });
+  get eventoTitulo(): string { return this.viewState().eventoTitulo; }
+  get monto(): number { return this.viewState().monto; }
+  get loading(): boolean { return this.viewState().loading; }
   get enviando(): boolean { return this.viewState().enviando; }
-  private set enviando(value: boolean) { this.viewState.update((state) => ({ ...state, enviando: value })); }
+  get error(): string { return this.viewState().error; }
+  get motivoRechazo(): string | undefined { return this.pago?.motivoRechazo; }
 
   constructor(
-    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private pagoService: PagoService,
     private inscripcionService: InscripcionService,
     private snackBar: MatSnackBar
-  ) {
-    this.pagoForm = this.fb.group({
-      monto: [0, [Validators.required, Validators.min(0.01)]],
-      observacion: ['']
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.inscripcionId = this.route.snapshot.queryParams['inscripcionId'] || '';
-    if (this.inscripcionId) {
-      this.cargarDetalleInscripcion();
-    } else {
-      this.router.navigate(['/privado/inscripciones']);
+    if (!this.inscripcionId) {
+      void this.router.navigate(['/privado/inscripciones']);
+      return;
     }
+    this.cargarContexto();
   }
 
-  cargarDetalleInscripcion(): void {
-    this.inscripcionService.obtenerPorId(this.inscripcionId).subscribe({
-      next: (ins) => {
-        this.eventoTitulo = ins.eventoTitulo;
+  cargarContexto(): void {
+    this.patchState({ loading: true, error: '' });
+    forkJoin({
+      inscripcion: this.inscripcionService.obtenerPorId(this.inscripcionId),
+      comprobanteInscripcion: this.inscripcionService.obtenerComprobante(this.inscripcionId),
+      pagos: this.pagoService.listarMisPagos()
+    }).pipe(finalize(() => this.patchState({ loading: false }))).subscribe({
+      next: ({ inscripcion, comprobanteInscripcion, pagos }) => {
+        this.pago = pagos.find((pago) => pago.inscripcionId === this.inscripcionId);
+        const estadoPagoValido = !this.pago
+          || this.pago.estado === EstadoPago.PENDIENTE_PAGO
+          || this.pago.estado === EstadoPago.RECHAZADO;
+        if (inscripcion.estado !== EstadoInscripcion.PENDIENTE_PAGO || !estadoPagoValido) {
+          this.patchState({ error: 'Esta inscripción no admite una nueva presentación de comprobante.' });
+          return;
+        }
+        this.patchState({ eventoTitulo: inscripcion.eventoTitulo, monto: this.pago?.monto ?? comprobanteInscripcion.monto });
       },
-      error: () => this.snackBar.open('Error al cargar datos de la inscripcion', 'Cerrar')
+      error: () => this.patchState({ error: 'No fue posible cargar el pago asociado a la inscripción.' })
     });
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.archivoComprobante = file;
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+    if (!file) return;
+    if (!RegistrarPagoComponent.ALLOWED_TYPES.has(file.type)) {
+      this.archivoComprobante = null;
+      input.value = '';
+      this.snackBar.open('Solo se permiten archivos JPG, PNG o PDF', 'Cerrar');
+      return;
     }
+    if (file.size > RegistrarPagoComponent.MAX_FILE_SIZE) {
+      this.archivoComprobante = null;
+      input.value = '';
+      this.snackBar.open('El archivo supera el tamaño máximo de 5 MB', 'Cerrar');
+      return;
+    }
+    this.archivoComprobante = file;
   }
 
   guardar(): void {
-    if (this.pagoForm.invalid || !this.archivoComprobante) {
-      this.snackBar.open('Por favor complete el formulario y suba un comprobante', 'Cerrar');
-      return;
-    }
-
-    this.enviando = true;
-    const request = {
-      inscripcionId: this.inscripcionId,
-      monto: this.pagoForm.value.monto,
-      observacion: this.pagoForm.value.observacion
-    };
-
-    this.pagoService.registrarPago(request).subscribe({
-      next: (pago) => {
-        this.subirArchivo(pago.id);
+    if (this.enviando || !this.archivoComprobante || this.error) return;
+    this.patchState({ enviando: true });
+    const archivo = this.archivoComprobante;
+    this.obtenerOCrearPago().pipe(
+      switchMap((pago) => this.pagoService.subirComprobante(pago.id, archivo)),
+      finalize(() => this.patchState({ enviando: false }))
+    ).subscribe({
+      next: () => {
+        this.snackBar.open('Comprobante presentado para validación', 'Cerrar', { duration: 3000 });
+        void this.router.navigate(['/privado/pagos']);
       },
-      error: (err) => {
-        this.enviando = false;
-        this.snackBar.open(err.error?.mensaje || 'Error al registrar el pago', 'Cerrar');
-      }
+      error: (err) => this.snackBar.open(err.error?.mensaje || 'No fue posible presentar el comprobante', 'Cerrar')
     });
   }
 
-  subirArchivo(pagoId: string): void {
-    if (this.archivoComprobante) {
-      this.pagoService.subirComprobante(pagoId, this.archivoComprobante).subscribe({
-        next: () => {
-          this.snackBar.open('Pago y comprobante registrados correctamente', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/privado/pagos']);
-        },
-        error: () => {
-          this.enviando = false;
-          this.snackBar.open('El pago se registro pero hubo un error al subir el archivo', 'Cerrar');
-          this.router.navigate(['/privado/pagos']);
-        }
-      });
-    }
+  private obtenerOCrearPago(): Observable<Pago> {
+    return this.pago ? of(this.pago) : this.pagoService.registrarPago({ inscripcionId: this.inscripcionId });
+  }
+
+  private patchState(patch: Partial<ReturnType<typeof this.viewState>>): void {
+    this.viewState.update((state) => ({ ...state, ...patch }));
   }
 }

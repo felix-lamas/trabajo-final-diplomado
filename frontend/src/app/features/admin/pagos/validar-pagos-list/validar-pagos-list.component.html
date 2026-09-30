@@ -12,7 +12,11 @@
 
   <app-skeleton *ngIf="loading" variant="dashboard" [count]="3"></app-skeleton>
 
-  <section class="admin-kanban" *ngIf="!loading">
+  <app-empty-state *ngIf="!loading && error" icon="error_outline" title="No se pudieron cargar los pagos"
+    [message]="error" actionLabel="Reintentar" (action)="cargarPendientes()">
+  </app-empty-state>
+
+  <section class="admin-kanban" *ngIf="!loading && !error">
     <article class="admin-kanban__column admin-kanban__column--active">
       <header>
         <span>Pendientes</span>
@@ -58,7 +62,7 @@
     </article>
   </section>
 
-  <mat-card class="admin-surface admin-table-wrap admin-data-center" *ngIf="!loading">
+  <mat-card class="admin-surface admin-table-wrap admin-data-center" *ngIf="!loading && !error">
     <div class="admin-toolbar">
       <div class="app-toolbar__title">
         <h2 class="app-section-title">Comprobantes pendientes</h2>
@@ -104,10 +108,10 @@
               <button mat-icon-button color="primary" *ngIf="pago.comprobante" (click)="verComprobante(pago)" matTooltip="Ver comprobante">
                 <mat-icon>file_present</mat-icon>
               </button>
-              <button mat-icon-button color="accent" (click)="validar(pago)" matTooltip="Validar pago">
+              <button mat-icon-button color="accent" [disabled]="!!procesandoId" (click)="validar(pago)" matTooltip="Validar pago">
                 <mat-icon>check_circle</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="rechazar(pago)" matTooltip="Rechazar pago">
+              <button mat-icon-button color="warn" [disabled]="!!procesandoId" (click)="rechazar(pago)" matTooltip="Rechazar pago">
                 <mat-icon>cancel</mat-icon>
               </button>
             </div>

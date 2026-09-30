@@ -190,6 +190,7 @@ class PagoServiceFlowTest {
         autenticarUsuario();
         pago.setEstado(EstadoPago.RECHAZADO);
         pago.setIntentosComprobante(1);
+        pago.setMotivoRechazo("Comprobante ilegible");
         inscripcion.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
         when(pagoRepository.findByIdAndUsuarioForUpdate(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
         when(archivoSeguroServicio.guardarComprobante(any(), eq("comprobantes")))
@@ -201,6 +202,26 @@ class PagoServiceFlowTest {
         assertEquals(pagoId, pago.getId());
         assertEquals(2, pago.getIntentosComprobante());
         assertEquals(EstadoPago.PENDIENTE_VALIDACION, pago.getEstado());
+        assertEquals("Comprobante ilegible", pago.getMotivoRechazo());
+    }
+
+    @Test
+    void aprobacionPosteriorConservaUltimoMotivoDeRechazoComoHistorial() {
+        autenticarOrganizador();
+        pago.setEstado(EstadoPago.PENDIENTE_VALIDACION);
+        pago.setComprobanteUrl("comprobantes/nuevo.pdf");
+        pago.setFechaCargaComprobante(LocalDateTime.of(2026, 9, 23, 9, 30));
+        pago.setMotivoRechazo("Comprobante anterior ilegible");
+        inscripcion.setEstado(EstadoInscripcion.PENDIENTE_VALIDACION);
+        when(pagoRepository.findByIdAndOrganizadorForUpdate(pagoId, organizador.getId()))
+                .thenReturn(Optional.of(pago));
+        when(pagoRepository.save(pago)).thenReturn(pago);
+
+        service.validarPago(pagoId, new ValidarPagoRequest());
+
+        assertEquals(EstadoPago.APROBADO, pago.getEstado());
+        assertEquals(EstadoInscripcion.CONFIRMADA, inscripcion.getEstado());
+        assertEquals("Comprobante anterior ilegible", pago.getMotivoRechazo());
     }
 
     private void autenticarUsuario() {

@@ -61,9 +61,12 @@ export class AppShellComponent implements OnInit {
     { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
     { label: 'Solicitudes de organizador', icon: 'manage_accounts', route: '/admin/solicitudes-organizador', roles: ['ADMINISTRADOR'] },
     { label: 'Mis eventos', icon: 'event', route: '/organizador/eventos', roles: ['ORGANIZADOR'] },
+    { label: 'Validar pagos', icon: 'fact_check', route: '/organizador/pagos/validar', roles: ['ORGANIZADOR'] },
+    { label: 'Validar pagos', icon: 'fact_check', route: '/admin/pagos/validar', roles: ['ADMINISTRADOR'] },
     { label: 'Estado de organizador', icon: 'workspace_premium', route: '/privado/solicitud-organizador', roles: ['USUARIO', 'ORGANIZADOR'] },
     { label: 'Eventos publicados', icon: 'explore', route: '/eventos', roles: ['USUARIO'] },
-    { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] }
+    { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] },
+    { label: 'Mis pagos', icon: 'payments', route: '/privado/pagos', roles: ['USUARIO'] }
   ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles)));
   readonly quickActions = computed(() => [
     { label: 'Nuevo evento', icon: 'add_circle', route: '/organizador/eventos/nuevo', roles: ['ORGANIZADOR'] },

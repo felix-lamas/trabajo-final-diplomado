@@ -61,7 +61,7 @@ public class PagoService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Inscripcion", request.getInscripcionId()));
         validarInscripcionPagadaPendiente(inscripcion);
         if (pagoRepository.findByInscripcionId(inscripcion.getId()).isPresent())
-            throw new NegocioException("Ya existe un pago para esta inscripcion");
+            throw new ConflictoException(CodigosError.CONFLICT, "Ya existe un pago para esta inscripcion");
 
         Pago pago = crearPagoPendiente(inscripcion, request.getObservacion(), LocalDateTime.now(clock));
         return pagoMapper.toResponse(pagoRepository.save(pago));
@@ -118,7 +118,6 @@ public class PagoService {
         Usuario resolutor = usuarioAutenticadoService.obtenerUsuario();
         pago.setEstado(EstadoPago.APROBADO);
         pago.setObservacion(request == null ? null : request.getObservacion());
-        pago.setMotivoRechazo(null);
         pago.setFechaResolucion(LocalDateTime.now(clock));
         pago.setResueltoPor(resolutor);
         pago.getInscripcion().setEstado(EstadoInscripcion.CONFIRMADA);
@@ -154,7 +153,7 @@ public class PagoService {
         if (inscripcion.getEvento().getTipoInscripcion() != TipoInscripcion.PAGO
                 || inscripcion.getEstado() != EstadoInscripcion.PENDIENTE_PAGO
                 || (pago.getEstado() != EstadoPago.PENDIENTE_PAGO && pago.getEstado() != EstadoPago.RECHAZADO))
-            throw new NegocioException(CodigosError.PAYMENT_INVALID_STATE,
+            throw new ConflictoException(CodigosError.PAYMENT_INVALID_STATE,
                     "El pago no admite carga de comprobante en su estado actual");
     }
 
@@ -168,7 +167,7 @@ public class PagoService {
     private void validarPendienteConComprobante(Pago pago) {
         if (pago.getEstado() != EstadoPago.PENDIENTE_VALIDACION
                 || pago.getInscripcion().getEstado() != EstadoInscripcion.PENDIENTE_VALIDACION)
-            throw new NegocioException(CodigosError.PAYMENT_INVALID_STATE,
+            throw new ConflictoException(CodigosError.PAYMENT_INVALID_STATE,
                     "El pago no esta pendiente de validacion");
         if (pago.getComprobanteUrl() == null || pago.getFechaCargaComprobante() == null)
             throw new NegocioException(CodigosError.PAYMENT_RECEIPT_REQUIRED,

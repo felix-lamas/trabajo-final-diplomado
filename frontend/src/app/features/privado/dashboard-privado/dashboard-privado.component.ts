@@ -17,7 +17,7 @@ import { PagoService } from '../../../core/services/pago.service';
 import { CredencialService } from '../../../core/services/credencial.service';
 import { Evento } from '../../../core/models/evento.model';
 import { Inscripcion } from '../../../core/models/inscripcion.model';
-import { Pago } from '../../../core/models/pago.model';
+import { EstadoPago, Pago } from '../../../core/models/pago.model';
 import { Credencial } from '../../../core/models/credencial.model';
 import { DashboardEjecutivoResponse } from '../../../core/models/dashboard.model';
 
@@ -102,11 +102,12 @@ export class DashboardPrivadoComponent implements OnInit {
   }
 
   get pagosValidados(): number {
-    return this.pagos.filter((pago) => pago.estado === 'VALIDADO').length;
+    return this.pagos.filter((pago) => pago.estado === EstadoPago.APROBADO).length;
   }
 
   get pagosPendientes(): number {
-    return this.pagos.filter((pago) => pago.estado === 'PENDIENTE').length;
+    return this.pagos.filter((pago) =>
+      pago.estado === EstadoPago.PENDIENTE_PAGO || pago.estado === EstadoPago.PENDIENTE_VALIDACION).length;
   }
 
   get siguienteEvento(): Evento | undefined {
