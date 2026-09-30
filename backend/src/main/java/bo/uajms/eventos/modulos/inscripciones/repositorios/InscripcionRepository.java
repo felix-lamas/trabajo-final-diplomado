@@ -3,6 +3,7 @@ package bo.uajms.eventos.modulos.inscripciones.repositorios;
 import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
 import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -16,8 +17,11 @@ import java.util.UUID;
 @Repository
 public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> {
     boolean existsByUsuarioIdAndEventoId(UUID usuarioId, UUID eventoId);
+    @EntityGraph(attributePaths = "evento")
     List<Inscripcion> findByUsuarioId(UUID usuarioId);
+    @EntityGraph(attributePaths = {"evento", "usuario"})
     List<Inscripcion> findByEventoId(UUID eventoId);
+    @EntityGraph(attributePaths = {"evento", "usuario"})
     List<Inscripcion> findByEventoOrganizadorId(UUID organizadorId);
     long countByEventoOrganizadorId(UUID organizadorId);
 
@@ -31,6 +35,9 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> 
     Optional<Inscripcion> findByCodigoParticipanteAndEventoOrganizadorId(String codigoParticipante, UUID organizadorId);
     Optional<Inscripcion> findByUsuarioCiAndEventoId(String ci, UUID eventoId);
     Optional<Inscripcion> findByUsuarioCi(String ci);
+
+    @Query("SELECT i.evento.id FROM Inscripcion i WHERE i.id = :id AND i.usuario.id = :usuarioId")
+    Optional<UUID> findEventoIdByIdAndUsuarioId(@Param("id") UUID id, @Param("usuarioId") UUID usuarioId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT i FROM Inscripcion i WHERE i.id = :id AND i.usuario.id = :usuarioId")

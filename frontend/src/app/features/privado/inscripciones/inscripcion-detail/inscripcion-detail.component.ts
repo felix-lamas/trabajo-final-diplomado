@@ -1,12 +1,14 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
-import { DetalleInscripcion } from '../../../../core/models/inscripcion.model';
+import { ComprobanteInscripcion, DetalleInscripcion } from '../../../../core/models/inscripcion.model';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ToastService } from '../../../../shared/ui/toast.service';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-inscripcion-detail',
@@ -14,11 +16,21 @@ import { ToastService } from '../../../../shared/ui/toast.service';
   standalone: false
 })
 export class InscripcionDetailComponent implements OnInit {
-  private readonly viewState = signal<{ inscripcion?: DetalleInscripcion; loading: boolean }>({ loading: true });
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly viewState = signal<{
+    inscripcion?: DetalleInscripcion;
+    comprobante?: ComprobanteInscripcion;
+    loading: boolean;
+    procesando: boolean;
+  }>({ loading: true, procesando: false });
   get inscripcion(): DetalleInscripcion | undefined { return this.viewState().inscripcion; }
   private set inscripcion(value: DetalleInscripcion | undefined) { this.viewState.update((state) => ({ ...state, inscripcion: value })); }
   get loading(): boolean { return this.viewState().loading; }
   private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get comprobante(): ComprobanteInscripcion | undefined { return this.viewState().comprobante; }
+  private set comprobante(value: ComprobanteInscripcion | undefined) { this.viewState.update((state) => ({ ...state, comprobante: value })); }
+  get procesando(): boolean { return this.viewState().procesando; }
+  private set procesando(value: boolean) { this.viewState.update((state) => ({ ...state, procesando: value })); }
 
   constructor(
     private route: ActivatedRoute,
@@ -37,19 +49,24 @@ export class InscripcionDetailComponent implements OnInit {
 
   cargarDetalle(id: string): void {
     this.loading = true;
-    this.inscripcionService.obtenerPorId(id)
-      .pipe(finalize(() => this.loading = false))
+    forkJoin({
+      inscripcion: this.inscripcionService.obtenerPorId(id),
+      comprobante: this.inscripcionService.obtenerComprobante(id)
+    }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading = false))
       .subscribe({
-        next: (data) => this.inscripcion = data,
-        error: () => {
-          this.toast.error('Error al cargar el detalle de la inscripcion');
+        next: ({ inscripcion, comprobante }) => {
+          this.inscripcion = inscripcion;
+          this.comprobante = comprobante;
+        },
+        error: (err) => {
+          this.toast.error(apiErrorMessage(err, 'Error al cargar el detalle de la inscripcion'));
           this.router.navigate(['/privado/inscripciones']);
         }
       });
   }
 
   cancelar(): void {
-    if (!this.inscripcion) return;
+    if (!this.inscripcion || this.procesando) return;
 
     this.dialog.open(ConfirmDialogComponent, {
       width: 'min(440px, 92vw)',
@@ -59,10 +76,14 @@ export class InscripcionDetailComponent implements OnInit {
         confirmText: 'Cancelar inscripcion',
         tone: 'danger'
       }
-    }).afterClosed().subscribe((confirmed) => {
+    }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((confirmed) => {
       if (!confirmed || !this.inscripcion) return;
 
-      this.inscripcionService.cancelar(this.inscripcion.id).subscribe({
+      this.procesando = true;
+      this.inscripcionService.cancelar(this.inscripcion.id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.procesando = false)
+      ).subscribe({
         next: () => {
           this.toast.success('Inscripcion cancelada correctamente');
           this.cargarDetalle(this.inscripcion!.id);

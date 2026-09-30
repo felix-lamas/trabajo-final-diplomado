@@ -6,7 +6,7 @@
         CRM academico
       </span>
       <h1>Gestion de participantes</h1>
-      <p>Historial y estado de sus inscripciones a eventos gratuitos.</p>
+      <p>Historial y estado de sus inscripciones a eventos gratuitos y pagados.</p>
     </div>
     <a mat-flat-button color="primary" routerLink="/eventos">
       <mat-icon>explore</mat-icon>
@@ -31,13 +31,13 @@
 
   <app-skeleton *ngIf="loading" variant="list" [count]="4"></app-skeleton>
 
-  <section class="admin-surface admin-crm-board" *ngIf="!loading">
+  <section class="admin-surface admin-crm-board" *ngIf="!loading && !error">
     <div class="admin-toolbar">
       <div class="admin-filters">
         <button mat-stroked-button type="button" (click)="cambiarFiltro('TODAS')" [disabled]="estadoFiltro === 'TODAS'">Todas</button>
         <button mat-stroked-button type="button" (click)="cambiarFiltro('CONFIRMADA')" [disabled]="estadoFiltro === 'CONFIRMADA'">Confirmadas</button>
         <button mat-stroked-button type="button" (click)="cambiarFiltro('PENDIENTE_PAGO')" [disabled]="estadoFiltro === 'PENDIENTE_PAGO'">Pendientes</button>
-        <button mat-stroked-button type="button" (click)="cambiarFiltro('ASISTIO')" [disabled]="estadoFiltro === 'ASISTIO'">Asistidas</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('PENDIENTE_VALIDACION')" [disabled]="estadoFiltro === 'PENDIENTE_VALIDACION'">En validacion</button>
       </div>
       <span class="app-badge app-badge--info">{{ inscripcionesFiltradas.length }} participantes</span>
     </div>
@@ -63,10 +63,9 @@
               <p>Registrado el {{ ins.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p>
             </div>
             <span class="app-badge"
-              [class.app-badge--success]="ins.estado === 'CONFIRMADA' || ins.estado === 'ASISTIO'"
+              [class.app-badge--success]="ins.estado === 'CONFIRMADA'"
               [class.app-badge--warning]="ins.estado === 'PENDIENTE_PAGO' || ins.estado === 'PENDIENTE_VALIDACION'"
-              [class.app-badge--danger]="ins.estado === 'CANCELADA' || ins.estado === 'RECHAZADA'"
-              [class.app-badge--info]="ins.estado === 'ASISTIO'">
+              [class.app-badge--danger]="ins.estado === 'CANCELADA'">
               {{ getEstadoLabel(ins.estado) }}
             </span>
           </div>
@@ -77,11 +76,17 @@
           <div class="student-card__footer">
             <div class="student-card__meta">
               <a mat-stroked-button [routerLink]="['/privado/inscripciones', ins.id]">Detalle</a>
-              <button mat-stroked-button color="warn" *ngIf="puedeCancelar(ins.estado)" (click)="cancelar(ins)">Cancelar</button>
+              <button mat-stroked-button color="warn" *ngIf="puedeCancelar(ins.estado)" [disabled]="!!procesandoId" (click)="cancelar(ins)">
+                {{ procesandoId === ins.id ? 'Cancelando...' : 'Cancelar' }}
+              </button>
             </div>
           </div>
         </div>
       </article>
     </div>
   </section>
+
+  <app-empty-state *ngIf="!loading && error" icon="error_outline" title="No se pudieron cargar las inscripciones"
+    [message]="error" actionLabel="Reintentar" (action)="cargarInscripciones()">
+  </app-empty-state>
 </main>

@@ -10,6 +10,7 @@ import bo.uajms.eventos.modulos.eventos.entidades.Evento;
 import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.dtos.CrearInscripcionRequest;
+import bo.uajms.eventos.modulos.inscripciones.dtos.ComprobanteInscripcionResponse;
 import bo.uajms.eventos.modulos.inscripciones.dtos.DetalleInscripcionResponse;
 import bo.uajms.eventos.modulos.inscripciones.dtos.InscripcionResponse;
 import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
@@ -23,7 +24,9 @@ import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.AccessDeniedException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Clock;
 import java.util.List;
@@ -44,6 +47,7 @@ public class InscripcionService {
 
     @Transactional
     public DetalleInscripcionResponse inscribir(CrearInscripcionRequest request) {
+        exigirUsuario();
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
         Evento evento = eventoRepository.findByIdForUpdate(request.getEventoId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Evento", request.getEventoId()));
@@ -84,6 +88,7 @@ public class InscripcionService {
         Inscripcion inscripcion = Inscripcion.builder()
                 .usuario(usuario)
                 .evento(evento)
+                .codigoParticipante(generarCodigoInscripcion())
                 .fechaInscripcion(LocalDateTime.now(clock))
                 .estado(estadoInicial)
                 .build();
@@ -106,6 +111,7 @@ public class InscripcionService {
 
     @Transactional(readOnly = true)
     public List<InscripcionResponse> listarMisInscripciones() {
+        exigirUsuario();
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
         return inscripcionRepository.findByUsuarioId(usuario.getId()).stream()
                 .map(inscripcionMapper::toResponse)
@@ -144,24 +150,73 @@ public class InscripcionService {
 
     @Transactional
     public void cancelar(UUID id) {
+        exigirUsuario();
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
+        // Un pago asociado se bloquea primero para que una carga/validación concurrente
+        // no pueda sobrescribir el estado CANCELADA de la inscripción.
+        pagoRepository.findByInscripcionIdAndUsuarioIdForUpdate(id, usuario.getId());
+        UUID eventoId = inscripcionRepository.findEventoIdByIdAndUsuarioId(id, usuario.getId())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", id));
+        Evento evento = eventoRepository.findByIdForUpdate(eventoId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", eventoId));
         Inscripcion inscripcion = inscripcionRepository.findByIdAndUsuarioForUpdate(id, usuario.getId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", id));
 
-        if (inscripcion.getEstado() == EstadoInscripcion.CANCELADA || inscripcion.getEstado() == EstadoInscripcion.RECHAZADA) {
-            throw new NegocioException("La inscripción ya se encuentra en estado: " + inscripcion.getEstado());
+        if (!evento.getId().equals(inscripcion.getEvento().getId())) {
+            throw new ConflictoException(CodigosError.CONFLICT,
+                    "La inscripción cambió durante la cancelación");
+        }
+        if (evento.getEstado() != EstadoEvento.PUBLICADO) {
+            throw new NegocioException("Solo se pueden cancelar inscripciones de eventos publicados");
+        }
+        if (inscripcion.getEstado() == EstadoInscripcion.CANCELADA) {
+            throw new ConflictoException(CodigosError.CONFLICT,
+                    "La inscripción ya se encuentra cancelada");
         }
 
         inscripcion.setEstado(EstadoInscripcion.CANCELADA);
-        
-        // Devolver cupo
-        Evento evento = inscripcion.getEvento();
         if (Boolean.TRUE.equals(evento.getCupoLimitado())) {
+            if (evento.getCupoDisponible() == null || evento.getCupoMaximo() == null
+                    || evento.getCupoDisponible() >= evento.getCupoMaximo()) {
+                throw new ConflictoException(CodigosError.CONFLICT,
+                        "El cupo del evento no admite una devolución adicional");
+            }
             evento.setCupoDisponible(evento.getCupoDisponible() + 1);
             eventoRepository.save(evento);
         }
 
         inscripcionRepository.save(inscripcion);
+    }
+
+    @Transactional(readOnly = true)
+    public ComprobanteInscripcionResponse obtenerComprobantePropio(UUID id) {
+        exigirUsuario();
+        Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
+        Inscripcion inscripcion = inscripcionRepository.findByIdAndUsuarioId(id, usuario.getId())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Inscripción", id));
+        Evento evento = inscripcion.getEvento();
+        Optional<Pago> pago = pagoRepository.findByInscripcionId(id);
+        BigDecimal monto = evento.getTipoInscripcion() == TipoInscripcion.GRATUITO
+                ? BigDecimal.ZERO
+                : pago.map(Pago::getMonto).orElse(evento.getCosto());
+        String estadoPago = evento.getTipoInscripcion() == TipoInscripcion.GRATUITO
+                ? "NO_APLICA"
+                : pago.map(p -> p.getEstado().name()).orElse(EstadoPago.PENDIENTE_PAGO.name());
+
+        return ComprobanteInscripcionResponse.builder()
+                .inscripcionId(inscripcion.getId())
+                .codigoInscripcion(inscripcion.getCodigoParticipante())
+                .eventoId(evento.getId())
+                .eventoTitulo(evento.getTitulo())
+                .participante(usuario.getNombres() + " " + usuario.getApellidos())
+                .ci(usuario.getCi())
+                .ru(usuario.getRu())
+                .monto(monto)
+                .fechaInscripcion(inscripcion.getFechaInscripcion())
+                .estadoInscripcion(inscripcion.getEstado())
+                .estadoPago(estadoPago)
+                .codigoVerificacion(inscripcion.getCodigoParticipante())
+                .build();
     }
 
     private Optional<Inscripcion> obtenerInscripcionVisible(UUID id) {
@@ -175,5 +230,15 @@ public class InscripcionService {
         }
 
         return inscripcionRepository.findByIdAndUsuarioId(id, usuarioId);
+    }
+
+    private void exigirUsuario() {
+        if (!usuarioAutenticadoService.tieneRol("USUARIO")) {
+            throw new AccessDeniedException("La operación corresponde exclusivamente al participante");
+        }
+    }
+
+    private String generarCodigoInscripcion() {
+        return "INS-" + UUID.randomUUID().toString().replace("-", "").substring(0, 24).toUpperCase();
     }
 }

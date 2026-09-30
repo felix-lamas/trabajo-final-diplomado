@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
@@ -7,6 +7,7 @@ import { Inscripcion } from '../../../../core/models/inscripcion.model';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ToastService } from '../../../../shared/ui/toast.service';
 import { apiErrorMessage } from '../../../../core/utils/api-error.util';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-mis-inscripciones',
@@ -14,13 +15,20 @@ import { apiErrorMessage } from '../../../../core/utils/api-error.util';
   standalone: false
 })
 export class MisInscripcionesComponent implements OnInit {
-  private readonly viewState = signal({ inscripciones: [] as Inscripcion[], loading: true });
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly viewState = signal({
+    inscripciones: [] as Inscripcion[], loading: true, error: '', procesandoId: ''
+  });
   get inscripciones(): Inscripcion[] { return this.viewState().inscripciones; }
   private set inscripciones(value: Inscripcion[]) { this.viewState.update((state) => ({ ...state, inscripciones: value })); }
   displayedColumns: string[] = ['evento', 'fecha', 'estado', 'acciones'];
   estadoFiltro = 'TODAS';
   get loading(): boolean { return this.viewState().loading; }
   private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
+  get error(): string { return this.viewState().error; }
+  private set error(value: string) { this.viewState.update((state) => ({ ...state, error: value })); }
+  get procesandoId(): string { return this.viewState().procesandoId; }
+  private set procesandoId(value: string) { this.viewState.update((state) => ({ ...state, procesandoId: value })); }
 
   constructor(
     private inscripcionService: InscripcionService,
@@ -34,11 +42,15 @@ export class MisInscripcionesComponent implements OnInit {
 
   cargarInscripciones(): void {
     this.loading = true;
+    this.error = '';
     this.inscripcionService.listarMisInscripciones()
-      .pipe(finalize(() => this.loading = false))
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading = false))
       .subscribe({
         next: (data) => this.inscripciones = data,
-        error: (err) => this.toast.error(apiErrorMessage(err, 'Error al cargar tus inscripciones'))
+        error: (err) => {
+          this.error = apiErrorMessage(err, 'Error al cargar tus inscripciones');
+          this.toast.error(this.error);
+        }
       });
   }
 
@@ -68,7 +80,6 @@ export class MisInscripcionesComponent implements OnInit {
       case 'PENDIENTE_PAGO': return 'bg-yellow-100 text-yellow-800';
       case 'PENDIENTE_VALIDACION': return 'bg-blue-100 text-blue-800';
       case 'CANCELADA': return 'bg-red-100 text-red-800';
-      case 'RECHAZADA': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   }
@@ -83,13 +94,12 @@ export class MisInscripcionesComponent implements OnInit {
       case 'PENDIENTE_PAGO': return 'Pendiente de pago';
       case 'PENDIENTE_VALIDACION': return 'Pendiente de validacion';
       case 'CANCELADA': return 'Cancelada';
-      case 'RECHAZADA': return 'Rechazada';
-      case 'ASISTIO': return 'Asistio';
       default: return estado;
     }
   }
 
   cancelar(inscripcion: Inscripcion): void {
+    if (this.procesandoId) return;
     this.dialog.open(ConfirmDialogComponent, {
       width: 'min(440px, 92vw)',
       data: {
@@ -98,10 +108,14 @@ export class MisInscripcionesComponent implements OnInit {
         confirmText: 'Cancelar inscripcion',
         tone: 'danger'
       }
-    }).afterClosed().subscribe((confirmed) => {
+    }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((confirmed) => {
       if (!confirmed) return;
 
-      this.inscripcionService.cancelar(inscripcion.id).subscribe({
+      this.procesandoId = inscripcion.id;
+      this.inscripcionService.cancelar(inscripcion.id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.procesandoId = '')
+      ).subscribe({
         next: () => {
           this.toast.success('Inscripcion cancelada correctamente');
           this.cargarInscripciones();

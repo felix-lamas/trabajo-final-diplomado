@@ -36,9 +36,10 @@
 
         <mat-card class="public-enroll__form">
           <div class="public-enroll__step">
-            <span class="app-badge app-badge--info">Paso 1 de 1</span>
+            <span class="app-badge app-badge--info">Confirmacion</span>
             <strong>Confirmacion visual</strong>
-            <p>La inscripcion gratuita se registrara y quedara confirmada inmediatamente.</p>
+            <p *ngIf="evento.tipoInscripcion === 'GRATUITO'">La inscripcion gratuita quedara confirmada inmediatamente.</p>
+            <p *ngIf="evento.tipoInscripcion === 'PAGO'">La inscripcion quedara pendiente de pago con el monto oficial del evento.</p>
           </div>
 
           <mat-divider></mat-divider>
@@ -71,7 +72,7 @@
         <mat-card class="public-enroll__done">
           <mat-icon>check_circle</mat-icon>
           <h2>Inscripcion realizada correctamente</h2>
-          <p>Estado: <strong>{{ estadoInscripcion }}</strong>. Sera redirigido al detalle.</p>
+          <p>Estado: <strong>{{ estadoInscripcion }}</strong>. Abriendo el detalle de la inscripcion.</p>
         </mat-card>
       </ng-template>
     </ng-container>

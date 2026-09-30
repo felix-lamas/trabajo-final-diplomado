@@ -45,7 +45,7 @@ class OpenApiContractTest {
     );
 
     @Test
-    void contratoCanonicoContiene77OperacionesDocumentadas() {
+    void contratoCanonicoContiene78OperacionesDocumentadas() {
         int operaciones = 0;
         for (Class<?> controller : CONTROLLERS) {
             for (Method method : controller.getDeclaredMethods()) {
@@ -71,7 +71,7 @@ class OpenApiContractTest {
                 }
             }
         }
-        assertEquals(77, operaciones);
+        assertEquals(78, operaciones);
     }
 
     @Test

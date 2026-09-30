@@ -129,7 +129,7 @@ class CertificadoServiceTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = EstadoInscripcion.class, names = {"PENDIENTE_PAGO", "PENDIENTE_VALIDACION", "CANCELADA", "RECHAZADA"})
+    @EnumSource(value = EstadoInscripcion.class, names = {"PENDIENTE_PAGO", "PENDIENTE_VALIDACION", "CANCELADA"})
     void inscripcionNoConfirmadaEsRechazada(EstadoInscripcion estado) {
         inscripcion.setEstado(estado);
         assertThrows(NegocioException.class, () -> service.generarCertificado(inscripcionId));

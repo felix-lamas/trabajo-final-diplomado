@@ -31,8 +31,9 @@ public class InscripcionMapper {
                 .eventoTitulo(inscripcion.getEvento().getTitulo())
                 .fechaInscripcion(inscripcion.getFechaInscripcion())
                 .estado(inscripcion.getEstado())
+                .codigoInscripcion(inscripcion.getCodigoParticipante())
                 .observacion(inscripcion.getObservacion())
-                .modalidalEvento(inscripcion.getEvento().getModalidad().toString())
+                .modalidadEvento(inscripcion.getEvento().getModalidad().toString())
                 .ubicacionEvento(inscripcion.getEvento().getUbicacion())
                 .build();
     }

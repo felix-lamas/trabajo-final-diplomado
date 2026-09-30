@@ -7,6 +7,7 @@ import bo.uajms.eventos.modulos.eventos.entidades.Evento;
 import bo.uajms.eventos.modulos.eventos.entidades.TipoInscripcion;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.dtos.CrearInscripcionRequest;
+import bo.uajms.eventos.modulos.inscripciones.dtos.ComprobanteInscripcionResponse;
 import bo.uajms.eventos.modulos.inscripciones.dtos.DetalleInscripcionResponse;
 import bo.uajms.eventos.modulos.inscripciones.dtos.InscripcionResponse;
 import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
@@ -15,15 +16,20 @@ import bo.uajms.eventos.modulos.inscripciones.mappers.InscripcionMapper;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import bo.uajms.eventos.modulos.pagos.repositorios.PagoRepository;
+import bo.uajms.eventos.modulos.pagos.entidades.EstadoPago;
+import bo.uajms.eventos.modulos.pagos.entidades.Pago;
+import org.springframework.security.access.AccessDeniedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 import java.time.Clock;
@@ -38,6 +44,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.inOrder;
 
 @ExtendWith(MockitoExtension.class)
 class InscripcionServiceAuthorizationTest {
@@ -150,6 +157,9 @@ class InscripcionServiceAuthorizationTest {
     @Test
     void usuarioPuedeCancelarSuInscripcion() {
         autenticarUsuario(usuarioA);
+        when(inscripcionRepository.findEventoIdByIdAndUsuarioId(inscripcionAId, usuarioA.getId()))
+                .thenReturn(Optional.of(eventoAId));
+        when(eventoRepository.findByIdForUpdate(eventoAId)).thenReturn(Optional.of(eventoA));
         when(inscripcionRepository.findByIdAndUsuarioForUpdate(inscripcionAId, usuarioA.getId()))
                 .thenReturn(Optional.of(inscripcionA));
 
@@ -159,6 +169,10 @@ class InscripcionServiceAuthorizationTest {
         assertEquals(6, eventoA.getCupoDisponible());
         verify(eventoRepository).save(eventoA);
         verify(inscripcionRepository).save(inscripcionA);
+        InOrder bloqueos = inOrder(pagoRepository, eventoRepository, inscripcionRepository);
+        bloqueos.verify(pagoRepository).findByInscripcionIdAndUsuarioIdForUpdate(inscripcionAId, usuarioA.getId());
+        bloqueos.verify(eventoRepository).findByIdForUpdate(eventoAId);
+        bloqueos.verify(inscripcionRepository).findByIdAndUsuarioForUpdate(inscripcionAId, usuarioA.getId());
     }
 
     @Test
@@ -166,7 +180,7 @@ class InscripcionServiceAuthorizationTest {
         autenticarUsuario(usuarioA);
         EstadoInscripcion estadoOriginal = inscripcionB.getEstado();
         int cupoOriginal = eventoB.getCupoDisponible();
-        when(inscripcionRepository.findByIdAndUsuarioForUpdate(inscripcionBId, usuarioA.getId()))
+        when(inscripcionRepository.findEventoIdByIdAndUsuarioId(inscripcionBId, usuarioA.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(RecursoNoEncontradoException.class, () -> inscripcionService.cancelar(inscripcionBId));
@@ -244,6 +258,54 @@ class InscripcionServiceAuthorizationTest {
         verify(inscripcionRepository).findByEventoId(eventoBId);
     }
 
+    @Test
+    void administradorNoPuedeUsarFlujoPersonalDeInscripcion() {
+        autenticarAdministrador();
+
+        assertThrows(AccessDeniedException.class,
+                () -> inscripcionService.inscribir(new CrearInscripcionRequest(eventoAId)));
+        assertThrows(AccessDeniedException.class, () -> inscripcionService.listarMisInscripciones());
+        assertThrows(AccessDeniedException.class, () -> inscripcionService.cancelar(inscripcionAId));
+    }
+
+    @Test
+    void comprobantePropioUsaMontoYEstadoOficialDelPago() {
+        autenticarUsuario(usuarioA);
+        usuarioA.setNombres("Ana");
+        usuarioA.setApellidos("Mendez");
+        usuarioA.setCi("1234567");
+        usuarioA.setRu("20260001");
+        eventoA.setTipoInscripcion(TipoInscripcion.PAGO);
+        eventoA.setCosto(new BigDecimal("80.00"));
+        inscripcionA.setCodigoParticipante("INS-ABC123");
+        Pago pago = Pago.builder().inscripcion(inscripcionA).monto(new BigDecimal("80.00"))
+                .estado(EstadoPago.PENDIENTE_VALIDACION).build();
+        when(inscripcionRepository.findByIdAndUsuarioId(inscripcionAId, usuarioA.getId()))
+                .thenReturn(Optional.of(inscripcionA));
+        when(pagoRepository.findByInscripcionId(inscripcionAId)).thenReturn(Optional.of(pago));
+
+        ComprobanteInscripcionResponse comprobante =
+                inscripcionService.obtenerComprobantePropio(inscripcionAId);
+
+        assertEquals("Ana Mendez", comprobante.getParticipante());
+        assertEquals("1234567", comprobante.getCi());
+        assertEquals("20260001", comprobante.getRu());
+        assertEquals("INS-ABC123", comprobante.getCodigoVerificacion());
+        assertEquals("PENDIENTE_VALIDACION", comprobante.getEstadoPago());
+        assertEquals(0, new BigDecimal("80.00").compareTo(comprobante.getMonto()));
+    }
+
+    @Test
+    void comprobanteAjenoNoSeExpone() {
+        autenticarUsuario(usuarioA);
+        when(inscripcionRepository.findByIdAndUsuarioId(inscripcionBId, usuarioA.getId()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(RecursoNoEncontradoException.class,
+                () -> inscripcionService.obtenerComprobantePropio(inscripcionBId));
+        verify(pagoRepository, never()).findByInscripcionId(any());
+    }
+
     private void autenticarParticipante(Usuario usuario) {
         when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(false);
         when(usuarioAutenticadoService.tieneRol("ORGANIZADOR")).thenReturn(false);
@@ -257,10 +319,12 @@ class InscripcionServiceAuthorizationTest {
     }
 
     private void autenticarAdministrador() {
-        when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(true);
+        org.mockito.Mockito.lenient().when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(false);
+        org.mockito.Mockito.lenient().when(usuarioAutenticadoService.tieneRol("ADMINISTRADOR")).thenReturn(true);
     }
 
     private void autenticarUsuario(Usuario usuario) {
+        org.mockito.Mockito.lenient().when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(true);
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
     }
 

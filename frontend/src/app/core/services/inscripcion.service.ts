@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Inscripcion, DetalleInscripcion, CrearInscripcionRequest } from '../models/inscripcion.model';
+import { Inscripcion, DetalleInscripcion, CrearInscripcionRequest, ComprobanteInscripcion } from '../models/inscripcion.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,10 @@ export class InscripcionService {
 
   cancelar(id: string): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}/cancelar`, {});
+  }
+
+  obtenerComprobante(id: string): Observable<ComprobanteInscripcion> {
+    return this.http.get<ComprobanteInscripcion>(`${this.apiUrl}/${id}/comprobante`);
   }
 
   listarInscritosEvento(eventoId: string): Observable<Inscripcion[]> {

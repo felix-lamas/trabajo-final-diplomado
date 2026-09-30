@@ -18,6 +18,11 @@ public interface PagoRepository extends JpaRepository<Pago, UUID> {
     
     Optional<Pago> findByInscripcionId(UUID inscripcionId);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Pago p WHERE p.inscripcion.id = :inscripcionId AND p.inscripcion.usuario.id = :usuarioId")
+    Optional<Pago> findByInscripcionIdAndUsuarioIdForUpdate(@Param("inscripcionId") UUID inscripcionId,
+                                                            @Param("usuarioId") UUID usuarioId);
+
     Optional<Pago> findByIdAndInscripcionUsuarioId(UUID id, UUID usuarioId);
 
     Optional<Pago> findByIdAndInscripcionEventoOrganizadorId(UUID id, UUID organizadorId);

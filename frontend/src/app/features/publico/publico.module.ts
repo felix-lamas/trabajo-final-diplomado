@@ -23,12 +23,19 @@ import { LandingPublicoComponent } from './landing-publico/landing-publico.compo
 import { CatalogoEventosPublicoComponent } from './catalogo-eventos-publico/catalogo-eventos-publico.component';
 import { EventoDetallePublicoComponent } from '../eventos/evento-detalle-publico/evento-detalle-publico.component';
 import { InscripcionPublicaComponent } from './inscripcion-publica/inscripcion-publica.component';
+import { authGuard } from '../../core/guards/auth.guard';
+import { roleGuard } from '../../core/guards/role.guard';
 
 const routes: Routes = [
   { path: '', component: LandingPublicoComponent },
   { path: 'eventos', component: CatalogoEventosPublicoComponent },
   { path: 'eventos/:id', component: EventoDetallePublicoComponent },
-  { path: 'eventos/:id/inscripcion', component: InscripcionPublicaComponent }
+  {
+    path: 'eventos/:id/inscripcion',
+    component: InscripcionPublicaComponent,
+    canMatch: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] }
+  }
 ];
 
 @NgModule({

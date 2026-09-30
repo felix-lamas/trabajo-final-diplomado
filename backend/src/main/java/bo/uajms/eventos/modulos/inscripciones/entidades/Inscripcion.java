@@ -11,9 +11,14 @@ import org.hibernate.annotations.SQLRestriction;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "inscripciones", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"usuario_id", "evento_id"})
-})
+@Table(name = "inscripciones",
+        uniqueConstraints = @UniqueConstraint(name = "uk_inscripcion_usuario_evento",
+                columnNames = {"usuario_id", "evento_id"}),
+        indexes = {
+                @Index(name = "idx_inscripcion_usuario", columnList = "usuario_id"),
+                @Index(name = "idx_inscripcion_evento", columnList = "evento_id"),
+                @Index(name = "idx_inscripcion_estado", columnList = "estado")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

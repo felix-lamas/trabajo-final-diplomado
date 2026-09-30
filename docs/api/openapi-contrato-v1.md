@@ -130,11 +130,27 @@ oficial. Esta fase no incorpora Flyway y las pruebas automatizadas no validan Po
 
 ### Inscripciones
 
-- `POST /api/v1/inscripciones`
-- `GET /api/v1/inscripciones/mis-inscripciones`
-- `GET /api/v1/inscripciones/{id}`
-- `PATCH /api/v1/inscripciones/{id}/cancelar`
-- `GET /api/v1/inscripciones/evento/{eventoId}`
+| Operacion | Autorizacion y alcance | Respuestas relevantes |
+|---|---|---|
+| `POST /api/v1/inscripciones` | Solo `USUARIO`; el propietario se obtiene del JWT y el request solo admite `eventoId`. | `201`, `400` por evento/configuracion no elegible, `401`, `403`, `404`, `409` por duplicado. |
+| `GET /api/v1/inscripciones/mis-inscripciones` | Solo `USUARIO`; devuelve exclusivamente registros propios. | `200`, `401`, `403`. |
+| `GET /api/v1/inscripciones/{id}` | `USUARIO` ve la propia; `ORGANIZADOR` solo la perteneciente a un evento propio; `ADMINISTRADOR` posee lectura administrativa. | `200`, `401`, `403`, `404` para recurso inexistente o fuera del alcance. |
+| `GET /api/v1/inscripciones/{id}/comprobante` | Solo `USUARIO` propietario. Constancia no tributaria, no factura, proforma ni certificado. | `200`, `401`, `403`, `404`. |
+| `PATCH /api/v1/inscripciones/{id}/cancelar` | Solo `USUARIO` propietario y evento `PUBLICADO`; libera cupo bajo bloqueo transaccional. | `200`, `400`, `401`, `403`, `404`, `409`. |
+| `GET /api/v1/inscripciones/evento/{eventoId}` | `ORGANIZADOR` solo para evento propio; `ADMINISTRADOR` con lectura administrativa. | `200`, `401`, `403`, `404`. |
+
+Los estados propios de INSCRIPCION son `PENDIENTE_PAGO`, `PENDIENTE_VALIDACION`, `CONFIRMADA` y
+`CANCELADA`. Asistencia y rechazo/aprobacion del pago no se representan como estados adicionales de
+inscripcion. Un evento gratuito crea directamente una inscripcion `CONFIRMADA` sin `PAGO`; uno pagado
+crea `PENDIENTE_PAGO` y un registro de pago con el monto oficial del evento. Al cancelar se bloquea
+primero el pago asociado, si existe, para impedir que una carga o validacion concurrente sobrescriba
+el estado `CANCELADA`; el pago se conserva como historial y sus mutaciones quedan invalidadas por ese estado.
+
+La combinacion `usuario_id + evento_id` posee restriccion unica. El alta bloquea pesimistamente la fila
+del evento antes de comprobar duplicidad y descontar cupo; la cancelacion usa el orden de bloqueo
+`PAGO (si existe) -> EVENTO -> INSCRIPCION` antes de devolverlo. Esto evita exceder el ultimo cupo, perder incrementos por
+cancelaciones concurrentes en una base que respete `PESSIMISTIC_WRITE`. Las pruebas automatizadas usan
+H2/mocks y no constituyen validacion de concurrencia real sobre PostgreSQL.
 
 ### Pagos
 

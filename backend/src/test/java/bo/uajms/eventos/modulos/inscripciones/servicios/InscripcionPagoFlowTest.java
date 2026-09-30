@@ -59,6 +59,7 @@ class InscripcionPagoFlowTest {
         evento.setId(UUID.randomUUID());
         request = new CrearInscripcionRequest();
         request.setEventoId(evento.getId());
+        when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(true);
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
         when(eventoRepository.findByIdForUpdate(evento.getId())).thenReturn(Optional.of(evento));
         lenient().when(clock.instant()).thenReturn(Instant.parse("2026-09-23T14:00:00Z"));

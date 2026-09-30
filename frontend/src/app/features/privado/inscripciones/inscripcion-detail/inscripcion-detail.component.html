@@ -23,9 +23,9 @@
             <p>Registrado el {{ inscripcion.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p>
           </div>
           <span class="app-badge"
-            [class.app-badge--success]="inscripcion.estado === 'CONFIRMADA' || inscripcion.estado === 'ASISTIO'"
+            [class.app-badge--success]="inscripcion.estado === 'CONFIRMADA'"
             [class.app-badge--warning]="inscripcion.estado === 'PENDIENTE_PAGO' || inscripcion.estado === 'PENDIENTE_VALIDACION'"
-            [class.app-badge--danger]="inscripcion.estado === 'CANCELADA' || inscripcion.estado === 'RECHAZADA'">
+            [class.app-badge--danger]="inscripcion.estado === 'CANCELADA'">
             {{ inscripcion.estado }}
           </span>
         </div>
@@ -37,7 +37,7 @@
             <div class="student-card__header">
               <div>
                 <h3>Modalidad</h3>
-                <p>{{ inscripcion.modalidalEvento }}</p>
+                <p>{{ inscripcion.modalidadEvento }}</p>
               </div>
               <mat-icon>event</mat-icon>
             </div>
@@ -72,10 +72,24 @@
         </div>
 
         <div class="student-card__footer">
-          <span>ID {{ inscripcion.id | slice:0:8 }}</span>
-          <button mat-flat-button color="warn" *ngIf="inscripcion.estado !== 'CANCELADA' && inscripcion.estado !== 'RECHAZADA' && inscripcion.estado !== 'ASISTIO'" (click)="cancelar()">
-            Cancelar inscripcion
+          <span>Codigo {{ inscripcion.codigoInscripcion || (inscripcion.id | slice:0:8) }}</span>
+          <button mat-flat-button color="warn" *ngIf="inscripcion.estado !== 'CANCELADA'" [disabled]="procesando" (click)="cancelar()">
+            {{ procesando ? 'Cancelando...' : 'Cancelar inscripcion' }}
           </button>
+        </div>
+      </mat-card>
+
+      <mat-card class="student-panel" *ngIf="comprobante">
+        <h2>Comprobante de inscripcion</h2>
+        <p>Constancia no tributaria; no constituye factura, proforma ni certificado.</p>
+        <mat-divider></mat-divider>
+        <div class="student-grid student-grid--2">
+          <div><strong>Participante</strong><p>{{ comprobante.participante }}</p></div>
+          <div><strong>CI / RU</strong><p>{{ comprobante.ci }}<span *ngIf="comprobante.ru"> / {{ comprobante.ru }}</span></p></div>
+          <div><strong>Monto</strong><p>{{ comprobante.monto | currency:'Bs. ' }}</p></div>
+          <div><strong>Estado de pago</strong><p>{{ comprobante.estadoPago }}</p></div>
+          <div><strong>Codigo de verificacion</strong><p>{{ comprobante.codigoVerificacion }}</p></div>
+          <div><strong>Fecha</strong><p>{{ comprobante.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p></div>
         </div>
       </mat-card>
 

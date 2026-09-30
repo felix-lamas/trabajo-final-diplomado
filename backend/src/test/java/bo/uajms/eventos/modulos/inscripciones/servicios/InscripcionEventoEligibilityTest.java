@@ -53,6 +53,7 @@ class InscripcionEventoEligibilityTest {
         usuario.setId(UUID.randomUUID());
         request = new CrearInscripcionRequest();
         request.setEventoId(eventoId);
+        when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(true);
         when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
         lenient().when(clock.instant()).thenReturn(Instant.parse("2026-09-23T14:00:00Z"));
         lenient().when(clock.getZone()).thenReturn(ZoneId.of("America/La_Paz"));

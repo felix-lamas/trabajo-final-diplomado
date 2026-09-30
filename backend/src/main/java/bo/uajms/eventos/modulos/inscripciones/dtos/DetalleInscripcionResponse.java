@@ -17,7 +17,8 @@ public class DetalleInscripcionResponse {
     private String eventoTitulo;
     private LocalDateTime fechaInscripcion;
     private EstadoInscripcion estado;
+    private String codigoInscripcion;
     private String observacion;
-    private String modalidalEvento;
+    private String modalidadEvento;
     private String ubicacionEvento;
 }

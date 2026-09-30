@@ -56,7 +56,8 @@ export const routes: Routes = [
       },
       {
         path: 'privado/inscripciones',
-        canMatch: [authGuard],
+        canMatch: [authGuard, roleGuard],
+        data: { roles: ['USUARIO'] },
         loadChildren: () => import('./features/privado/privado.module').then((m) => m.PrivadoInscripcionesModule)
       },
       {
