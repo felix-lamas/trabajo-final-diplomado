@@ -12,7 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "sesiones_evento")
+@Table(name = "sesiones_evento", indexes =
+        @Index(name = "idx_sesion_evento_evento_fecha", columnList = "evento_id,fecha,hora_inicio"))
 @Getter
 @Setter
 @NoArgsConstructor

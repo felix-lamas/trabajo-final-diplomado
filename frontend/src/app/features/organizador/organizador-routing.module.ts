@@ -21,6 +21,10 @@ const routes: Routes = [
     children: [
       { path: 'validar', component: ValidarPagosListComponent }
     ]
+  },
+  {
+    path: 'asistencias',
+    loadChildren: () => import('../asistencias/asistencias.module').then((m) => m.AsistenciasModule)
   }
 ];
 

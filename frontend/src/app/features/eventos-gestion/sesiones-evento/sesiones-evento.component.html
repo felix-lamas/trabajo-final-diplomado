@@ -1,0 +1,54 @@
+<section class="admin-surface" style="margin-top: 1.5rem;">
+  <div class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h2 class="app-section-title">Sesiones y asistencia</h2>
+      <p>Cada sesion administra su propio QR temporal y su punto de validacion.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="admin-card-grid" style="margin-bottom: 1.5rem;">
+    <mat-form-field appearance="outline"><mat-label>Nombre</mat-label><input matInput formControlName="nombre"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Descripcion</mat-label><input matInput formControlName="descripcion"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Fecha</mat-label><input matInput type="date" formControlName="fecha" [min]="evento.fechaInicio" [max]="evento.fechaFin"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Inicio</mat-label><input matInput type="time" formControlName="horaInicio"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Fin</mat-label><input matInput type="time" formControlName="horaFin"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Radio (m)</mat-label><input matInput type="number" formControlName="radioMetros" min="1" max="500"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Latitud</mat-label><input matInput type="number" formControlName="latitud"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Longitud</mat-label><input matInput type="number" formControlName="longitud"></mat-form-field>
+    <mat-checkbox formControlName="requiereAsistencia">Requiere asistencia</mat-checkbox>
+    <mat-checkbox formControlName="activa">Sesion activa</mat-checkbox>
+    <div>
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
+        <mat-icon>{{ editandoId() ? 'save' : 'add' }}</mat-icon>{{ editandoId() ? 'Guardar cambios' : 'Crear sesion' }}
+      </button>
+      <button mat-button type="button" *ngIf="editandoId()" (click)="cancelarEdicion()">Cancelar</button>
+    </div>
+  </form>
+
+  <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
+  <app-empty-state *ngIf="!loading() && error()" icon="error_outline" title="No se pudieron cargar las sesiones" message="Vuelva a intentar."></app-empty-state>
+  <app-empty-state *ngIf="!loading() && !error() && sesiones().length === 0" icon="event_busy" title="Sin sesiones" message="Cree la primera sesion del evento."></app-empty-state>
+
+  <div class="admin-card-grid" *ngIf="!loading() && sesiones().length">
+    <mat-card class="student-card" *ngFor="let sesion of sesiones()">
+      <div class="student-card__header">
+        <div><h3>{{ sesion.nombre }}</h3><p>{{ sesion.fecha | date:'dd/MM/yyyy' }} · {{ sesion.horaInicio }} - {{ sesion.horaFin }}</p></div>
+        <span>{{ sesion.activa ? 'ACTIVA' : 'INACTIVA' }}</span>
+      </div>
+      <p class="app-muted">{{ sesion.descripcion || 'Sin descripcion' }}</p>
+      <p *ngIf="sesion.requiereAsistencia">GPS: {{ sesion.latitud != null ? (sesion.radioMetros + ' m') : 'no requerido' }}</p>
+      <div class="student-card__footer">
+        <button mat-button type="button" (click)="editar(sesion)" [disabled]="saving() || sesion.historica"><mat-icon>edit</mat-icon> Editar</button>
+        <button mat-button type="button" (click)="cambiarEstado(sesion)" [disabled]="saving() || sesion.historica"><mat-icon>toggle_on</mat-icon> {{ sesion.activa ? 'Desactivar' : 'Activar' }}</button>
+        <button mat-flat-button color="primary" type="button" *ngIf="sesion.requiereAsistencia" (click)="generarQr(sesion)" [disabled]="!!generandoQrId() || !sesion.activa"><mat-icon>qr_code_2</mat-icon> Generar QR</button>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card class="admin-surface" *ngIf="qrActual() as qr" style="text-align:center; margin-top: 1rem;">
+    <h3>QR temporal</h3>
+    <img *ngIf="qrDataUrl()" [src]="qrDataUrl()" alt="QR temporal de asistencia" width="280" height="280">
+    <p>Expira: {{ qr.expiraEn | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+    <p class="app-muted">Al generar uno nuevo, el anterior queda revocado.</p>
+  </mat-card>
+</section>

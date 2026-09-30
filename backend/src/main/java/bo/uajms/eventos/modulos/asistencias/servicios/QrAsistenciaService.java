@@ -40,10 +40,10 @@ public class QrAsistenciaService {
         LocalDateTime ahora = LocalDateTime.now(clock);
         LocalDateTime fin = LocalDateTime.of(sesion.getFecha(), sesion.getHoraFin());
         if (!Boolean.TRUE.equals(sesion.getActiva()) || !Boolean.TRUE.equals(sesion.getRequiereAsistencia())
-                || sesion.getEvento().getEstado() != EstadoEvento.PUBLICADO || ahora.isAfter(fin))
+                || sesion.getEvento().getEstado() != EstadoEvento.PUBLICADO || !ahora.isBefore(fin))
             throw new NegocioException("La sesion no admite emision de QR de asistencia");
 
-        List<QrAsistenciaTemporal> activos = qrRepository.findBySesionEventoIdAndActivoTrue(sesionId);
+        List<QrAsistenciaTemporal> activos = qrRepository.findActivosBySesionIdForUpdate(sesionId);
         activos.forEach(qr -> { qr.setActivo(false); qr.setRevocadoEn(ahora); });
         if (!activos.isEmpty()) qrRepository.saveAll(activos);
 
@@ -65,13 +65,14 @@ public class QrAsistenciaService {
         validarOwnership(sesion);
         QrAsistenciaTemporal qr = qrRepository.findFirstBySesionEventoIdAndActivoTrueOrderByEmitidoEnDesc(sesionId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("QR de asistencia", sesionId));
+        validarVigencia(qr, LocalDateTime.now(clock));
         return mapear(qr, null);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public QrAsistenciaTemporal resolverToken(String token) {
         if (token == null || token.isBlank()) throw new NegocioException(CodigosError.QR_INVALID, "QR invalido");
-        return qrRepository.findByTokenHash(hash(token))
+        return qrRepository.findByTokenHashForUpdate(hash(token))
                 .orElseThrow(() -> new NegocioException(CodigosError.QR_INVALID, "QR invalido"));
     }
 

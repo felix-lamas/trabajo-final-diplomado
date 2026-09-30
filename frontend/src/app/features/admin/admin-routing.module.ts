@@ -39,6 +39,10 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'asistencias',
+    loadChildren: () => import('../asistencias/asistencias.module').then((m) => m.AsistenciasModule)
+  },
+  {
     path: 'solicitudes-organizador',
     loadComponent: () => import('./usuarios/solicitudes-organizador/solicitudes-organizador.component')
       .then((m) => m.SolicitudesOrganizadorComponent)

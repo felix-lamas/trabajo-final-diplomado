@@ -39,7 +39,9 @@ class SesionEventoServiceTest {
     @BeforeEach void setUp() {
         eventoId = UUID.randomUUID(); sesionId = UUID.randomUUID(); organizadorId = UUID.randomUUID();
         organizador = Usuario.builder().correoElectronico("org@test.local").build(); organizador.setId(organizadorId);
-        evento = Evento.builder().estado(EstadoEvento.PUBLICADO).modalidad(Modalidad.PRESENCIAL).organizador(organizador).build(); evento.setId(eventoId);
+        evento = Evento.builder().estado(EstadoEvento.PUBLICADO).modalidad(Modalidad.PRESENCIAL).organizador(organizador)
+                .fechaInicio(ahora.toLocalDate()).fechaFin(ahora.toLocalDate().plusDays(2))
+                .horaInicio(LocalTime.of(8, 0)).horaFin(LocalTime.of(18, 0)).build(); evento.setId(eventoId);
         lenient().when(clock.instant()).thenReturn(ahora.atZone(ZoneId.of("America/La_Paz")).toInstant());
         lenient().when(clock.getZone()).thenReturn(ZoneId.of("America/La_Paz"));
     }
@@ -91,6 +93,21 @@ class SesionEventoServiceTest {
         assertDoesNotThrow(() -> service.crear(eventoId, r));
     }
 
+    @Test void sesionNoPuedeComenzarAntesDelEvento() {
+        var r=requestValido(); r.setFecha(evento.getFechaInicio()); r.setHoraInicio(LocalTime.of(7,59)); prepararCreacion();
+        assertThrows(NegocioException.class, () -> service.crear(eventoId, r));
+    }
+
+    @Test void sesionNoPuedeTerminarDespuesDelEvento() {
+        var r=requestValido(); r.setFecha(evento.getFechaFin()); r.setHoraFin(LocalTime.of(18,1)); prepararCreacion();
+        assertThrows(NegocioException.class, () -> service.crear(eventoId, r));
+    }
+
+    @Test void coordenadasInvalidasSonRechazadasPorElServicio() {
+        var r=requestValido(); r.setLatitud(new BigDecimal("90.01")); prepararCreacion();
+        assertThrows(NegocioException.class, () -> service.crear(eventoId, r));
+    }
+
     @Test void sesionIniciadaNoModificaHorario() {
         SesionEvento s=sesion(ahora.toLocalDate(), LocalTime.of(9,0), LocalTime.of(11,0)); prepararGestion(s);
         assertThrows(NegocioException.class, () -> service.actualizar(sesionId, requestValido())); verify(sesionRepository, never()).save(any());
@@ -107,12 +124,18 @@ class SesionEventoServiceTest {
         assertThrows(NegocioException.class, () -> service.cambiarEstado(sesionId, false)); assertTrue(s.getActiva());
     }
 
+    @Test void eventoCanceladoNoPermiteActivarSesion() {
+        SesionEvento s=sesion(ahora.toLocalDate().plusDays(1), LocalTime.of(9,0), LocalTime.of(11,0));
+        evento.setEstado(EstadoEvento.CANCELADO); prepararGestion(s);
+        assertThrows(NegocioException.class, () -> service.cambiarEstado(sesionId, true));
+    }
+
     private void comprobarEstadoBloqueado(EstadoEvento estado) {
         autenticarOrganizador(); evento.setEstado(estado); when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorId)).thenReturn(Optional.of(evento));
         assertThrows(NegocioException.class, () -> service.crear(eventoId, requestValido()));
     }
     private void prepararCreacion() { autenticarOrganizador(); when(eventoRepository.findByIdAndOrganizadorId(eventoId, organizadorId)).thenReturn(Optional.of(evento)); }
-    private void prepararGestion(SesionEvento s) { autenticarOrganizador(); when(sesionRepository.findByIdAndEventoOrganizadorId(sesionId, organizadorId)).thenReturn(Optional.of(s)); }
+    private void prepararGestion(SesionEvento s) { autenticarOrganizador(); when(sesionRepository.findByIdAndEventoOrganizadorIdForUpdate(sesionId, organizadorId)).thenReturn(Optional.of(s)); }
     private void autenticarOrganizador() { lenient().when(auth.tieneRol("ADMINISTRADOR")).thenReturn(false); lenient().when(auth.tieneRol("ORGANIZADOR")).thenReturn(true); lenient().when(auth.obtenerUsuario()).thenReturn(organizador); }
     private SesionEventoRequest requestValido() { var r=new SesionEventoRequest(); r.setNombre("Sesion 1"); r.setFecha(ahora.toLocalDate().plusDays(1)); r.setHoraInicio(LocalTime.of(9,0)); r.setHoraFin(LocalTime.of(11,0)); r.setRequiereAsistencia(true); r.setLatitud(new BigDecimal("-21.5354900")); r.setLongitud(new BigDecimal("-64.7295600")); r.setRadioMetros(100); r.setActiva(true); return r; }
     private SesionEvento sesion(LocalDate f, LocalTime i, LocalTime fin) { var s=SesionEvento.builder().evento(evento).nombre("Sesion").fecha(f).horaInicio(i).horaFin(fin).requiereAsistencia(true).latitud(new BigDecimal("-21.53549")).longitud(new BigDecimal("-64.72956")).radioMetros(100).activa(true).historica(false).build(); s.setId(sesionId); return s; }

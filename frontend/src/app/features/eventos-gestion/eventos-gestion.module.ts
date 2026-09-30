@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { EventoListComponent } from '../admin/eventos/evento-list/evento-list.component';
 import { EventoFormComponent } from '../admin/eventos/evento-form/evento-form.component';
@@ -22,9 +23,10 @@ import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-d
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { EventoMotivoDialogComponent } from '../admin/eventos/evento-motivo-dialog.component';
+import { SesionesEventoComponent } from './sesiones-evento/sesiones-evento.component';
 
 @NgModule({
-  declarations: [EventoListComponent, EventoFormComponent, EventoDetailComponent],
+  declarations: [EventoListComponent, EventoFormComponent, EventoDetailComponent, SesionesEventoComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -42,6 +44,7 @@ import { EventoMotivoDialogComponent } from '../admin/eventos/evento-motivo-dial
     MatSnackBarModule,
     MatTableModule,
     MatTooltipModule,
+    MatCheckboxModule,
     ConfirmDialogComponent,
     EmptyStateComponent,
     SkeletonComponent,

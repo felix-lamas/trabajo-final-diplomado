@@ -31,7 +31,12 @@ export interface AsistenciaResponse {
   documentoIdentidad: string;
   codigoParticipante: string;
   evento: string;
+  sesionEventoId: string;
+  sesion: string;
   fechaHoraRegistro: string;
-  usuarioControl: string;
-  observacion: string;
+  registradoPor: string;
+  distanciaMetros: number | null;
+  precisionGpsMetros: number | null;
+  resultadoValidacion: string;
+  observacion: string | null;
 }

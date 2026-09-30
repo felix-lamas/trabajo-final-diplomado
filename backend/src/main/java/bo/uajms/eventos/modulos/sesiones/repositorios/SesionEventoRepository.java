@@ -20,4 +20,9 @@ public interface SesionEventoRepository extends JpaRepository<SesionEvento, UUID
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM SesionEvento s WHERE s.id = :id")
     Optional<SesionEvento> findByIdForUpdate(@Param("id") UUID id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT s FROM SesionEvento s WHERE s.id = :id AND s.evento.organizador.id = :organizadorId")
+    Optional<SesionEvento> findByIdAndEventoOrganizadorIdForUpdate(@Param("id") UUID id,
+                                                                    @Param("organizadorId") UUID organizadorId);
 }

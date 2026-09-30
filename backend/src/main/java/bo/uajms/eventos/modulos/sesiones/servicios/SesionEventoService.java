@@ -15,6 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.util.List;
 import java.util.UUID;
@@ -63,6 +64,7 @@ public class SesionEventoService {
     public SesionEventoResponse cambiarEstado(UUID id, boolean activa) {
         SesionEvento sesion = obtenerSesionGestionable(id);
         validarNoIniciada(sesion);
+        validarEventoModificable(sesion.getEvento());
         sesion.setActiva(activa);
         return mapear(sesionRepository.save(sesion));
     }
@@ -76,7 +78,8 @@ public class SesionEventoService {
     }
 
     private void validarDatos(SesionEventoRequest request, Evento evento) {
-        if (request.getFecha() == null || request.getHoraInicio() == null || request.getHoraFin() == null
+        if (request.getNombre() == null || request.getNombre().isBlank() || request.getFecha() == null
+                || request.getHoraInicio() == null || request.getHoraFin() == null
                 || request.getRequiereAsistencia() == null || request.getActiva() == null)
             throw new NegocioException("Faltan datos obligatorios de la sesion");
         if (!request.getHoraInicio().isBefore(request.getHoraFin()))
@@ -86,12 +89,25 @@ public class SesionEventoService {
         boolean algunaCoordenada = request.getLatitud() != null || request.getLongitud() != null;
         if ((request.getLatitud() == null) != (request.getLongitud() == null))
             throw new NegocioException("Latitud y longitud deben informarse juntas");
+        if (request.getLatitud() != null && (request.getLatitud().compareTo(BigDecimal.valueOf(-90)) < 0
+                || request.getLatitud().compareTo(BigDecimal.valueOf(90)) > 0
+                || request.getLongitud().compareTo(BigDecimal.valueOf(-180)) < 0
+                || request.getLongitud().compareTo(BigDecimal.valueOf(180)) > 0))
+            throw new NegocioException("Las coordenadas de la sesion no son validas");
         if (Boolean.TRUE.equals(request.getRequiereAsistencia()) && evento.getModalidad() == Modalidad.PRESENCIAL
                 && (!algunaCoordenada || request.getRadioMetros() == null))
             throw new NegocioException("La sesion presencial requerida necesita punto GPS y radio");
         if (evento.getFechaInicio() != null && evento.getFechaFin() != null
                 && (request.getFecha().isBefore(evento.getFechaInicio()) || request.getFecha().isAfter(evento.getFechaFin())))
             throw new NegocioException("La fecha de la sesion debe estar dentro del evento");
+        if (evento.getFechaInicio() != null && evento.getHoraInicio() != null
+                && LocalDateTime.of(request.getFecha(), request.getHoraInicio())
+                .isBefore(LocalDateTime.of(evento.getFechaInicio(), evento.getHoraInicio())))
+            throw new NegocioException("La sesion no puede comenzar antes del evento");
+        if (evento.getFechaFin() != null && evento.getHoraFin() != null
+                && LocalDateTime.of(request.getFecha(), request.getHoraFin())
+                .isAfter(LocalDateTime.of(evento.getFechaFin(), evento.getHoraFin())))
+            throw new NegocioException("La sesion no puede terminar despues del evento");
     }
 
     private void validarEventoModificable(Evento evento) {
@@ -115,10 +131,10 @@ public class SesionEventoService {
     }
 
     private SesionEvento obtenerSesionGestionable(UUID id) {
-        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) return sesionRepository.findById(id)
+        if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) return sesionRepository.findByIdForUpdate(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Sesion", id));
         if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) return sesionRepository
-                .findByIdAndEventoOrganizadorId(id, usuarioAutenticadoService.obtenerUsuario().getId())
+                .findByIdAndEventoOrganizadorIdForUpdate(id, usuarioAutenticadoService.obtenerUsuario().getId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Sesion", id));
         throw new AccessDeniedException("El rol no permite gestionar sesiones");
     }

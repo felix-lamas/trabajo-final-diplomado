@@ -61,13 +61,15 @@ public class AsistenciaService {
         validarSesion(sesion, ahora);
         qrService.validarVigencia(qr, ahora);
         BigDecimal distancia = validarGps(sesion, request);
+        BigDecimal precision = request.getPrecision() == null ? null
+                : request.getPrecision().setScale(2, RoundingMode.HALF_UP);
         if (asistenciaRepository.existsByInscripcionIdAndSesionEventoId(inscripcion.getId(), sesion.getId()))
             throw new ConflictoException(CodigosError.ATTENDANCE_DUPLICATED,
                     "La asistencia ya fue registrada para esta sesion");
 
         Asistencia asistencia = Asistencia.builder().inscripcion(inscripcion).sesionEvento(sesion)
                 .registradoPor(usuario).fechaHoraRegistro(ahora).distanciaMetros(distancia)
-                .precisionGpsMetros(request.getPrecision().setScale(2, RoundingMode.HALF_UP))
+                .precisionGpsMetros(precision)
                 .resultadoValidacion(Asistencia.ResultadoValidacion.VALIDADA).build();
         try {
             return asistenciaRepository.saveAndFlush(asistencia);
@@ -119,9 +121,9 @@ public class AsistenciaService {
     }
 
     private BigDecimal validarGps(SesionEvento sesion, RegistrarAsistenciaRequest request) {
-        validarRangos(request);
         if (sesion.getEvento().getModalidad() == Modalidad.VIRTUAL
                 && sesion.getLatitud() == null && sesion.getLongitud() == null) return null;
+        validarRangos(request);
         if (request.getPrecision().compareTo(PRECISION_MAXIMA) > 0)
             throw new NegocioException(CodigosError.ATTENDANCE_GPS_ACCURACY_INVALID,
                     "La precision GPS debe ser de 30 metros o mejor");

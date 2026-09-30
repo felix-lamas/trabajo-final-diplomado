@@ -8,6 +8,7 @@ import bo.uajms.eventos.modulos.asistencias.infraestructura.QrAsistenciaTemporal
 import bo.uajms.eventos.modulos.asistencias.repositorios.AsistenciaRepository;
 import bo.uajms.eventos.modulos.eventos.entidades.Evento;
 import bo.uajms.eventos.modulos.eventos.entidades.EstadoEvento;
+import bo.uajms.eventos.modulos.eventos.entidades.Modalidad;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.inscripciones.entidades.*;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
@@ -72,6 +73,13 @@ class AsistenciaRegistroTest {
     @Test void eventoCanceladoRechazaAsistencia(){ evento.setEstado(EstadoEvento.CANCELADO);prepararConInscripcion();assertThrows(NegocioException.class,()->service.registrar(request));sinEscrituras(); }
     @Test void eventoFinalizadoRechazaAsistencia(){ evento.setEstado(EstadoEvento.FINALIZADO);prepararConInscripcion();assertThrows(NegocioException.class,()->service.registrar(request));sinEscrituras(); }
     @Test void eventoBorradorRechazaAsistencia(){ evento.setEstado(EstadoEvento.BORRADOR);prepararConInscripcion();assertThrows(NegocioException.class,()->service.registrar(request));sinEscrituras(); }
+    @Test void eventoVirtualSinPuntoGpsNoExigeUbicacion(){
+        evento.setModalidad(Modalidad.VIRTUAL); sesion.setLatitud(null); sesion.setLongitud(null);
+        request.setLatitud(null); request.setLongitud(null); request.setPrecision(null); prepararValido();
+        when(asistenciaRepository.saveAndFlush(any())).thenAnswer(i->i.getArgument(0));
+        Asistencia asistencia=service.registrar(request);
+        assertNull(asistencia.getDistanciaMetros()); assertNull(asistencia.getPrecisionGpsMetros());
+    }
 
     private void prepararValido(){ prepararConInscripcion(); lenient().when(asistenciaRepository.existsByInscripcionIdAndSesionEventoId(inscripcion.getId(),sesion.getId())).thenReturn(false); }
     private void prepararConInscripcion(){ prepararHastaQr(); when(inscripcionRepository.findByUsuarioIdAndEventoId(usuario.getId(),evento.getId())).thenReturn(Optional.of(inscripcion)); }

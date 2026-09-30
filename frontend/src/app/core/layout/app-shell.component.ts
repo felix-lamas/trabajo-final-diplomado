@@ -63,6 +63,8 @@ export class AppShellComponent implements OnInit {
     { label: 'Mis eventos', icon: 'event', route: '/organizador/eventos', roles: ['ORGANIZADOR'] },
     { label: 'Validar pagos', icon: 'fact_check', route: '/organizador/pagos/validar', roles: ['ORGANIZADOR'] },
     { label: 'Validar pagos', icon: 'fact_check', route: '/admin/pagos/validar', roles: ['ADMINISTRADOR'] },
+    { label: 'Asistencias', icon: 'how_to_reg', route: '/organizador/asistencias', roles: ['ORGANIZADOR'] },
+    { label: 'Asistencias', icon: 'how_to_reg', route: '/admin/asistencias', roles: ['ADMINISTRADOR'] },
     { label: 'Estado de organizador', icon: 'workspace_premium', route: '/privado/solicitud-organizador', roles: ['USUARIO', 'ORGANIZADOR'] },
     { label: 'Eventos publicados', icon: 'explore', route: '/eventos', roles: ['USUARIO'] },
     { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] },

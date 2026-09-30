@@ -20,8 +20,7 @@ import { HistorialAccesoComponent } from './historial-acceso/historial-acceso.co
 import { AsistenciaListComponent } from './asistencia-list/asistencia-list.component';
 
 const routes: Routes = [
-  { path: 'escaneo', component: ControlScannerComponent },
-  { path: 'historial', component: HistorialAccesoComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'lista' },
   { path: 'lista', component: AsistenciaListComponent }
 ];
 

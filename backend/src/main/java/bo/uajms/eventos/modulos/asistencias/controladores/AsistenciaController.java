@@ -32,6 +32,9 @@ public class AsistenciaController {
             description = "Registra la asistencia del usuario autenticado validando inscripcion, sesion, QR temporal, GPS, precision, distancia y duplicado.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Asistencia registrada", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "QR, sesion, inscripcion o ubicacion no validos"),
+            @ApiResponse(responseCode = "401", description = "Autenticacion requerida"),
+            @ApiResponse(responseCode = "403", description = "Rol no autorizado"),
             @ApiResponse(responseCode = "409", description = "La asistencia ya fue registrada")
     })
     public ResponseEntity<AsistenciaResponse> registrar(@Valid @RequestBody RegistrarAsistenciaRequest request) {
@@ -42,7 +45,12 @@ public class AsistenciaController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
     @Operation(summary = "Listar asistencias de un evento",
             description = "El ADMINISTRADOR consulta cualquier evento; el ORGANIZADOR solo eventos propios.")
-    @ApiResponse(responseCode = "404", description = "Evento inexistente o fuera del alcance")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Asistencias del evento", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "401", description = "Autenticacion requerida"),
+            @ApiResponse(responseCode = "403", description = "Rol no autorizado"),
+            @ApiResponse(responseCode = "404", description = "Evento inexistente o fuera del alcance")
+    })
     public ResponseEntity<List<AsistenciaResponse>> listarPorEvento(
             @Parameter(description = "Identificador del evento") @PathVariable UUID id) {
         return ResponseEntity.ok(asistenciaService.obtenerAsistenciasPorEvento(id).stream().map(this::mapear).toList());
@@ -52,6 +60,9 @@ public class AsistenciaController {
     @PreAuthorize("hasRole('USUARIO')")
     @Operation(summary = "Listar mis asistencias",
             description = "Devuelve exclusivamente las asistencias del usuario autenticado.")
+    @ApiResponse(responseCode = "200", description = "Asistencias propias", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "401", description = "Autenticacion requerida")
+    @ApiResponse(responseCode = "403", description = "Rol no autorizado")
     public ResponseEntity<List<AsistenciaResponse>> listarPropias() {
         return ResponseEntity.ok(asistenciaService.obtenerMisAsistencias().stream().map(this::mapear).toList());
     }

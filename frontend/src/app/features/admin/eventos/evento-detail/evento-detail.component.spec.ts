@@ -10,6 +10,7 @@ import { Evento, EstadoEvento, Modalidad, PublicoObjetivo, TipoInscripcion } fro
 import { ToastService } from '../../../../shared/ui/toast.service';
 import { EventosGestionModule } from '../../../eventos-gestion/eventos-gestion.module';
 import { EventoDetailComponent } from './evento-detail.component';
+import { AsistenciaService } from '../../../../core/services/asistencia.service';
 
 describe('EventoDetailComponent', () => {
   let fixture: ComponentFixture<EventoDetailComponent>;
@@ -40,6 +41,7 @@ describe('EventoDetailComponent', () => {
         provideZonelessChangeDetection(), provideNoopAnimations(),
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'evt' } } } },
         { provide: EventoService, useValue: service },
+        { provide: AsistenciaService, useValue: { listarSesiones: vi.fn(() => of([])) } },
         { provide: AuthService, useValue: { hasAnyRole: (esperados: string[]) => esperados.some((r) => roles.includes(r)) } },
         { provide: MatDialog, useValue: { open: vi.fn(() => ({ afterClosed: () => of('Motivo valido') })) } },
         { provide: ToastService, useValue: { success: vi.fn(), warning: vi.fn(), error: vi.fn() } }

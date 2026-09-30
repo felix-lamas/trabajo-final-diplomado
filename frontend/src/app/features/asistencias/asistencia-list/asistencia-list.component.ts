@@ -29,7 +29,7 @@ export class AsistenciaListComponent implements OnInit {
   private set asistencias(value: AsistenciaResponse[]) { this.viewState.update((state) => ({ ...state, asistencias: value })); }
   get loading(): boolean { return this.viewState().loading; }
   private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
-  displayedColumns: string[] = ['indice', 'codigo', 'participante', 'documento', 'fechaHora', 'operador'];
+  displayedColumns: string[] = ['indice', 'codigo', 'participante', 'sesion', 'fechaHora', 'ubicacion', 'operador'];
 
   constructor(
     private fb: FormBuilder,

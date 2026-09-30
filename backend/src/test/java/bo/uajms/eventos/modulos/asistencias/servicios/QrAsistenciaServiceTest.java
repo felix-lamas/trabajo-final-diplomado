@@ -37,25 +37,31 @@ class QrAsistenciaServiceTest {
     }
 
     @Test void generaTokenSeguroHashPersistidoYDuracionDosMinutos(){
-        prepararPropio(); when(qrRepository.findBySesionEventoIdAndActivoTrue(sesionId)).thenReturn(List.of()); when(qrRepository.save(any())).thenAnswer(i->i.getArgument(0));
+        prepararPropio(); when(qrRepository.findActivosBySesionIdForUpdate(sesionId)).thenReturn(List.of()); when(qrRepository.save(any())).thenAnswer(i->i.getArgument(0));
         var r=service.generar(sesionId); var qr=capturar();
         assertNotNull(r.getToken()); assertEquals(ahora.plusMinutes(2),r.getExpiraEn()); assertNotEquals(r.getToken(),qr.getTokenHash()); assertEquals(64,qr.getTokenHash().length()); assertSame(sesion,qr.getSesionEvento());
     }
 
     @Test void nuevoQrRevocaAnterior(){
         prepararPropio(); var anterior=QrAsistenciaTemporal.builder().sesionEvento(sesion).activo(true).build();
-        when(qrRepository.findBySesionEventoIdAndActivoTrue(sesionId)).thenReturn(List.of(anterior)); when(qrRepository.save(any())).thenAnswer(i->i.getArgument(0));
+        when(qrRepository.findActivosBySesionIdForUpdate(sesionId)).thenReturn(List.of(anterior)); when(qrRepository.save(any())).thenAnswer(i->i.getArgument(0));
         service.generar(sesionId); assertFalse(anterior.getActivo()); assertEquals(ahora,anterior.getRevocadoEn()); verify(qrRepository).saveAll(List.of(anterior));
     }
 
     @Test void generacionBloqueaSesionParaEvitarDosActivos(){
-        prepararPropio(); when(qrRepository.findBySesionEventoIdAndActivoTrue(sesionId)).thenReturn(List.of()); when(qrRepository.save(any())).thenAnswer(i->i.getArgument(0));
+        prepararPropio(); when(qrRepository.findActivosBySesionIdForUpdate(sesionId)).thenReturn(List.of()); when(qrRepository.save(any())).thenAnswer(i->i.getArgument(0));
         service.generar(sesionId); verify(sesionRepository).findByIdForUpdate(sesionId);
     }
 
     @Test void usuarioNoGeneraQr(){
         when(auth.tieneRol("ADMINISTRADOR")).thenReturn(false); when(auth.tieneRol("ORGANIZADOR")).thenReturn(false);
         assertThrows(AccessDeniedException.class,()->service.generar(sesionId)); verify(sesionRepository,never()).findByIdForUpdate(any());
+    }
+
+    @Test void noGeneraQrAlFinalExactoDeLaSesion(){
+        sesion.setHoraFin(ahora.toLocalTime()); prepararPropio();
+        assertThrows(NegocioException.class, () -> service.generar(sesionId));
+        verify(qrRepository, never()).save(any());
     }
 
     @Test void organizadorAjenoNoGeneraQr(){
@@ -74,8 +80,22 @@ class QrAsistenciaServiceTest {
     }
 
     @Test void tokenInexistenteEsQrInvalido(){
-        when(qrRepository.findByTokenHash(anyString())).thenReturn(Optional.empty());
+        when(qrRepository.findByTokenHashForUpdate(anyString())).thenReturn(Optional.empty());
         assertThrows(NegocioException.class,()->service.resolverToken("token-inexistente"));
+    }
+
+    @Test void resolverTokenBloqueaFilaParaSerializarRevocacionYRegistro(){
+        var qr=QrAsistenciaTemporal.builder().sesionEvento(sesion).activo(true).build();
+        when(qrRepository.findByTokenHashForUpdate(anyString())).thenReturn(Optional.of(qr));
+        assertSame(qr, service.resolverToken("token-valido"));
+        verify(qrRepository).findByTokenHashForUpdate(anyString());
+    }
+
+    @Test void qrActivoPeroExpiradoNoSeInformaComoVigente(){
+        prepararPropioLectura(); var qr=QrAsistenciaTemporal.builder().sesionEvento(sesion).activo(true)
+                .emitidoEn(ahora.minusMinutes(3)).expiraEn(ahora.minusSeconds(1)).build();
+        when(qrRepository.findFirstBySesionEventoIdAndActivoTrueOrderByEmitidoEnDesc(sesionId)).thenReturn(Optional.of(qr));
+        assertThrows(NegocioException.class, () -> service.obtenerActivo(sesionId));
     }
 
     @Test void tokenPlanoNuncaSeExponeAlConsultarActivo(){
