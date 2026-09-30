@@ -113,7 +113,8 @@ public class DashboardService {
         if ("eventos".equalsIgnoreCase(tipo)) {
             obtenerEventosSegunAlcance().forEach(evento -> filas.add(Map.of(
                     "titulo", evento.getTitulo(), "fecha", evento.getFechaInicio().toString(),
-                    "cupos", evento.getCupoMaximo(), "estado", evento.getEstado().name())));
+                    "cupos", evento.getCupoMaximo() == null ? "Ilimitado" : evento.getCupoMaximo(),
+                    "estado", evento.getEstado().name())));
         } else if ("pagos".equalsIgnoreCase(tipo)) {
             obtenerPagosSegunAlcance().forEach(pago -> filas.add(Map.of(
                     "referencia", pago.getNumeroReferencia(), "monto", pago.getMonto(),

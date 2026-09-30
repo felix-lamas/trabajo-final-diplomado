@@ -76,7 +76,7 @@ describe('RegistrarPagoComponent', () => {
 
   function resolverContexto(): void {
     inscripcionResponse.next({
-      id: 'inscripcion', eventoId: 'evento', eventoTitulo: 'Evento pagado', fechaInscripcion: new Date(),
+      id: 'inscripcion', eventoId: 'evento', eventoTitulo: 'Evento pagado', fechaInscripcion: '2026-09-30T10:00:00',
       estado: EstadoInscripcion.PENDIENTE_PAGO, usuarioId: 'usuario', usuarioNombre: 'Ana',
       codigoInscripcion: 'INS-1', modalidadEvento: 'PRESENCIAL'
     });

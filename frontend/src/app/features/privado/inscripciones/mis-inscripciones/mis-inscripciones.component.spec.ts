@@ -21,7 +21,7 @@ describe('MisInscripcionesComponent', () => {
   const toast = { success: vi.fn(), error: vi.fn() };
   const inscripcion: Inscripcion = {
     id: 'ins', eventoId: 'evento', eventoTitulo: 'Seminario',
-    fechaInscripcion: new Date('2026-09-30T12:00:00Z'), estado: EstadoInscripcion.CONFIRMADA
+    fechaInscripcion: '2026-09-30T12:00:00', estado: EstadoInscripcion.CONFIRMADA
   };
 
   beforeEach(async () => {

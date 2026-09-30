@@ -84,6 +84,12 @@ class OpenApiContractTest {
     }
 
     @Test
+    void dashboardExponeSoloRutasCanonicas() {
+        assertEquals(List.of("/api/v1"),
+                Arrays.asList(DashboardController.class.getAnnotation(RequestMapping.class).value()));
+    }
+
+    @Test
     void logoutEsProtegidoYVerificacionEsPublica() throws Exception {
         Method logout = Arrays.stream(AutenticacionControlador.class.getDeclaredMethods())
                 .filter(method -> method.getName().equals("logout"))

@@ -9,7 +9,7 @@ export interface Inscripcion {
   id: string;
   eventoId: string;
   eventoTitulo: string;
-  fechaInscripcion: Date;
+  fechaInscripcion: string;
   estado: EstadoInscripcion;
 }
 

@@ -69,7 +69,7 @@ describe('InscripcionPublicaComponent', () => {
     await fixture.whenStable();
     fixture.componentInstance.confirmar();
     inscripcionResponse.next({
-      id: 'ins', eventoId: 'evento', eventoTitulo: 'Taller pagado', fechaInscripcion: new Date(),
+      id: 'ins', eventoId: 'evento', eventoTitulo: 'Taller pagado', fechaInscripcion: '2026-09-30T10:00:00',
       estado: EstadoInscripcion.PENDIENTE_PAGO, usuarioId: 'user', usuarioNombre: 'Ana',
       codigoInscripcion: 'INS-ABC', modalidadEvento: 'VIRTUAL'
     });

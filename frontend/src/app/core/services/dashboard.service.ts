@@ -13,7 +13,7 @@ import {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = environment.apiUrl.replace(/\/v1$/, '');
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -33,15 +33,17 @@ export class DashboardService {
     return this.http.get<ReporteDataResponse>(`${this.apiUrl}/reportes/${tipo}`);
   }
 
-  obtenerSatisfaccionEvento(eventoId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/encuestas/estadisticas/${eventoId}`);
+  exportarPdf(tipo: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/reportes/exportar/pdf`, {
+      params: { tipo },
+      responseType: 'blob'
+    });
   }
 
-  exportarPdf(tipo: string): string {
-    return `${this.apiUrl}/reportes/exportar/pdf?tipo=${tipo}`;
-  }
-
-  exportarExcel(tipo: string): string {
-    return `${this.apiUrl}/reportes/exportar/excel?tipo=${tipo}`;
+  exportarExcel(tipo: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/reportes/exportar/excel`, {
+      params: { tipo },
+      responseType: 'blob'
+    });
   }
 }

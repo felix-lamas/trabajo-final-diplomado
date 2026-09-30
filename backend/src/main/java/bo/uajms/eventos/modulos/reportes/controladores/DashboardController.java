@@ -2,6 +2,7 @@ package bo.uajms.eventos.modulos.reportes.controladores;
 
 import bo.uajms.eventos.modulos.reportes.dtos.*;
 import bo.uajms.eventos.modulos.reportes.servicios.DashboardService;
+import bo.uajms.eventos.modulos.reportes.servicios.ReporteArchivoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,14 +18,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping({"/api/v1", "/api"})
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Tag(name = "Dashboards y reportes",
-        description = "Contrato canonico /api/v1. Las rutas equivalentes bajo /api se conservan como aliases legacy.")
+        description = "Dashboards y reportes del contrato canonico /api/v1.")
 @SecurityRequirement(name = "bearerAuth")
 public class DashboardController {
 
     private final DashboardService dashboardService;
+    private final ReporteArchivoService reporteArchivoService;
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
@@ -92,39 +94,37 @@ public class DashboardController {
 
     @GetMapping("/reportes/exportar/pdf")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
-    @Operation(summary = "Exportar reporte con media type PDF",
-            description = "Implementacion provisional: responde application/pdf, pero el contenido actual es texto simulado y no un PDF valido. ORGANIZADOR conserva alcance de eventos propios.")
-    @ApiResponse(responseCode = "200", description = "Contenido simulado con media type application/pdf",
+    @Operation(summary = "Exportar reporte PDF",
+            description = "Genera un documento PDF real con las filas del reporte. ORGANIZADOR conserva alcance de eventos propios.")
+    @ApiResponse(responseCode = "200", description = "Documento PDF generado",
             content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary")))
     public ResponseEntity<byte[]> exportarPdf(
             @Parameter(description = "Tipo soportado: eventos, participantes, pagos o certificados",
                     example = "eventos") @RequestParam String tipo) {
         // Simulación lógica de generación de archivos binarios institucionales
         ReporteDataResponse reporte = dashboardService.generarReporte(tipo);
-        byte[] mockPdf = ("REPORTE_UAJMS_PDF|" + reporte.getTipoReporte() + "|"
-                + reporte.getTotalRegistros()).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] pdf = reporteArchivoService.generarPdf(reporte);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte_" + tipo + ".pdf")
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(mockPdf);
+                .body(pdf);
     }
 
     @GetMapping("/reportes/exportar/excel")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
-    @Operation(summary = "Exportar reporte con media type XLSX",
-            description = "Implementacion provisional: responde con el media type de Excel, pero el contenido actual es texto simulado y no un XLSX valido. ORGANIZADOR conserva alcance de eventos propios.")
-    @ApiResponse(responseCode = "200", description = "Contenido simulado con media type XLSX",
+    @Operation(summary = "Exportar reporte Excel XLSX",
+            description = "Genera un libro XLSX real con las filas del reporte. ORGANIZADOR conserva alcance de eventos propios.")
+    @ApiResponse(responseCode = "200", description = "Libro XLSX generado",
             content = @Content(mediaType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     schema = @Schema(type = "string", format = "binary")))
     public ResponseEntity<byte[]> exportarExcel(
             @Parameter(description = "Tipo soportado: eventos, participantes, pagos o certificados",
                     example = "eventos") @RequestParam String tipo) {
         ReporteDataResponse reporte = dashboardService.generarReporte(tipo);
-        byte[] mockExcel = ("REPORTE_UAJMS_EXCEL|" + reporte.getTipoReporte() + "|"
-                + reporte.getTotalRegistros()).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] excel = reporteArchivoService.generarXlsx(reporte);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte_" + tipo + ".xlsx")
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(mockExcel);
+                .body(excel);
     }
 }

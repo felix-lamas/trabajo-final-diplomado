@@ -56,11 +56,23 @@ export class ReportesPanelComponent implements OnInit {
   }
 
   exportar(formato: 'pdf' | 'excel'): void {
-    const url = formato === 'pdf' 
+    const descarga = formato === 'pdf'
       ? this.dashboardService.exportarPdf(this.tipoActual)
       : this.dashboardService.exportarExcel(this.tipoActual);
-    
-    window.open(url, '_blank');
-    this.toast.info(`Iniciando descarga institucional de ${formato.toUpperCase()}...`, 'Cerrar', 2000);
+
+    descarga.subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = `reporte_${this.tipoActual}.${formato === 'excel' ? 'xlsx' : 'pdf'}`;
+        document.body.appendChild(enlace);
+        enlace.click();
+        enlace.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        this.toast.info(`Descarga de ${formato.toUpperCase()} iniciada`, 'Cerrar', 2000);
+      },
+      error: () => this.toast.error(`No se pudo descargar el reporte ${formato.toUpperCase()}`)
+    });
   }
 }

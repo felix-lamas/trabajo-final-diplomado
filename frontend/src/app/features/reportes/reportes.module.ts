@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EncuestasModule } from '../encuestas/encuestas.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -56,8 +55,7 @@ const routes: Routes = [
     MatProgressBarModule,
     BreadcrumbsComponent,
     SkeletonComponent,
-    EmptyStateComponent,
-    EncuestasModule
+    EmptyStateComponent
   ]
 })
 export class ReportesAnaliticaModule { }
