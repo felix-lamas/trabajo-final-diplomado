@@ -17,9 +17,9 @@ export interface DetalleInscripcion extends Inscripcion {
   usuarioId: string;
   usuarioNombre: string;
   codigoInscripcion: string;
-  observacion?: string;
+  observacion?: string | null;
   modalidadEvento: string;
-  ubicacionEvento?: string;
+  ubicacionEvento?: string | null;
 }
 
 export interface ComprobanteInscripcion {
@@ -29,7 +29,7 @@ export interface ComprobanteInscripcion {
   eventoTitulo: string;
   participante: string;
   ci: string;
-  ru?: string;
+  ru?: string | null;
   monto: number;
   fechaInscripcion: string;
   estadoInscripcion: EstadoInscripcion;

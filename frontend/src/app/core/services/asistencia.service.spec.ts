@@ -39,4 +39,20 @@ describe('AsistenciaService contrato canonico', () => {
     service.generarQr('sesion').subscribe();
     expect(http.expectOne(`${environment.apiUrl}/sesiones/sesion/qr/generar`).request.method).toBe('POST');
   });
+
+  it('consulta asistencia del evento con el DTO oficial, incluido registradoPor nulo', () => {
+    const registrada = vi.fn();
+    service.listarPorEvento('evento').subscribe(registrada);
+    const req = http.expectOne(`${environment.apiUrl}/asistencias/evento/evento`);
+    expect(req.request.method).toBe('GET');
+    req.flush([{
+      id: 'asistencia', nombreParticipante: 'Participante Ficticio', documentoIdentidad: 'CI-FICTICIO',
+      codigoParticipante: 'PART-FICTICIO', evento: 'Evento de prueba', sesionEventoId: 'sesion',
+      sesion: 'Sesión 1', fechaHoraRegistro: '2026-09-30T10:00:00', registradoPor: null,
+      distanciaMetros: null, precisionGpsMetros: null, resultadoValidacion: 'VALIDADO', observacion: null
+    }]);
+    expect(registrada).toHaveBeenCalledWith(expect.arrayContaining([
+      expect.objectContaining({ registradoPor: null })
+    ]));
+  });
 });

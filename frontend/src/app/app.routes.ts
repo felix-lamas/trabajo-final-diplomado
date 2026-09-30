@@ -38,7 +38,8 @@ export const routes: Routes = [
       },
       {
         path: 'certificados',
-        canMatch: [authGuard],
+        canMatch: [authGuard, roleGuard],
+        data: { roles: ['USUARIO'] },
         loadChildren: () => import('./features/certificados/certificados.module').then((m) => m.CertificadosModule)
       },
       {

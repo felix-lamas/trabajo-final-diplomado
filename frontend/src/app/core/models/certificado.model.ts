@@ -7,7 +7,7 @@ export interface CertificadoResponse {
   cargaHoraria: number | null;
   tipoCertificado: 'CURRICULAR' | 'NO_CURRICULAR';
   horasAcademicas: number | null;
-  porcentajeAsistencia: number;
+  porcentajeAsistencia: number | null;
   codigoCertificado: string;
   fechaEmision: string;
   urlVerificacion: string;

@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ValidarQrResponse, ControlAccesoResponse, AsistenciaResponse } from '../models/control-acceso.model';
+import { ValidarQrResponse, ControlAccesoResponse } from '../models/control-acceso.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ControlAccesoService {
   private apiUrl = `${environment.apiUrl}/control-acceso`;
-  private asistenciaUrl = `${environment.apiUrl}/asistencias`;
 
   constructor(private http: HttpClient) {}
 
@@ -37,7 +36,4 @@ export class ControlAccesoService {
     return this.http.get<ValidarQrResponse>(`${this.apiUrl}/documento/${documento}?eventoId=${eventoId}`);
   }
 
-  listarAsistenciasPorEvento(eventoId: string): Observable<AsistenciaResponse[]> {
-    return this.http.get<AsistenciaResponse[]>(`${this.asistenciaUrl}/evento/${eventoId}`);
-  }
 }

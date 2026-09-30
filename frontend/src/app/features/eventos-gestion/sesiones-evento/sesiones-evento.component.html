@@ -36,7 +36,7 @@
         <span>{{ sesion.activa ? 'ACTIVA' : 'INACTIVA' }}</span>
       </div>
       <p class="app-muted">{{ sesion.descripcion || 'Sin descripcion' }}</p>
-      <p *ngIf="sesion.requiereAsistencia">GPS: {{ sesion.latitud != null ? (sesion.radioMetros + ' m') : 'no requerido' }}</p>
+      <p *ngIf="sesion.requiereAsistencia">GPS: {{ sesion.latitud != null && sesion.radioMetros != null ? (sesion.radioMetros + ' m') : 'no requerido' }}</p>
       <div class="student-card__footer">
         <button mat-button type="button" (click)="editar(sesion)" [disabled]="saving() || sesion.historica"><mat-icon>edit</mat-icon> Editar</button>
         <button mat-button type="button" (click)="cambiarEstado(sesion)" [disabled]="saving() || sesion.historica"><mat-icon>toggle_on</mat-icon> {{ sesion.activa ? 'Desactivar' : 'Activar' }}</button>

@@ -24,19 +24,3 @@ export interface ControlAccesoResponse {
   usuarioControl: string;
   observacion: string;
 }
-
-export interface AsistenciaResponse {
-  id: string;
-  nombreParticipante: string;
-  documentoIdentidad: string;
-  codigoParticipante: string;
-  evento: string;
-  sesionEventoId: string;
-  sesion: string;
-  fechaHoraRegistro: string;
-  registradoPor: string;
-  distanciaMetros: number | null;
-  precisionGpsMetros: number | null;
-  resultadoValidacion: string;
-  observacion: string | null;
-}

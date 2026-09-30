@@ -5,9 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Service & Model
-import { ControlAccesoService } from '../../../core/services/control-acceso.service';
+import { AsistenciaService } from '../../../core/services/asistencia.service';
 import { EventoService } from '../../../core/services/evento.service';
-import { AsistenciaResponse } from '../../../core/models/control-acceso.model';
+import { AsistenciaResponse } from '../../../core/models/asistencia.model';
 import { Evento } from '../../../core/models/evento.model';
 
 @Component({
@@ -33,7 +33,7 @@ export class AsistenciaListComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private controlAccesoService: ControlAccesoService,
+    private asistenciaService: AsistenciaService,
     private eventoService: EventoService,
     private snackBar: MatSnackBar
   ) {
@@ -55,7 +55,7 @@ export class AsistenciaListComponent implements OnInit {
     this.loading = true;
     const eventoId = this.filtroForm.value.eventoId;
 
-    this.controlAccesoService.listarAsistenciasPorEvento(eventoId).subscribe({
+    this.asistenciaService.listarPorEvento(eventoId).subscribe({
       next: (data) => {
         this.asistencias = data;
         this.loading = false;

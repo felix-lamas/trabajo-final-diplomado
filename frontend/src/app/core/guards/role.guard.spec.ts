@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Route, Router, UrlTree, provideRouter } from '@angular/router';
-import { Observable, firstValueFrom, isObservable, of } from 'rxjs';
+import { Observable, firstValueFrom, isObservable, of, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { roleGuard } from './role.guard';
 
@@ -54,6 +54,17 @@ describe('roleGuard with refreshed roles', () => {
 
     expect(await execute({ data: { roles: ['ORGANIZADOR'] } })).toBe(true);
     expect(auth.refrescarPerfil).toHaveBeenCalledOnce();
+  });
+
+  it('no usa roles cacheados cuando falla el refresco y conserva sesión local', async () => {
+    currentRoles = ['ADMINISTRADOR'];
+    auth.refrescarPerfil.mockReturnValue(throwError(() => new Error('offline')));
+
+    const result = await execute({ data: { roles: ['ADMINISTRADOR'] } });
+
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(router.serializeUrl(result as UrlTree)).toBe('/eventos');
+    expect(auth.isAuthenticated).not.toHaveReturnedWith(false);
   });
 
   async function execute(route: Route): Promise<boolean | UrlTree> {

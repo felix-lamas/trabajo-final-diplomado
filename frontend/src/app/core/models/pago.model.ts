@@ -8,9 +8,9 @@ export enum EstadoPago {
 export interface ComprobantePago {
   id: string;
   nombreArchivo: string;
-  tipoContenido: string;
-  fechaCarga: string;
-  disponible: boolean;
+  tipoContenido: string | null;
+  fechaCarga: string | null;
+  disponible: boolean | null;
 }
 
 export interface Pago {
@@ -21,11 +21,11 @@ export interface Pago {
   monto: number;
   fechaPago: string;
   estado: EstadoPago;
-  observacion?: string;
-  motivoRechazo?: string;
-  fechaResolucion?: string;
+  observacion?: string | null;
+  motivoRechazo?: string | null;
+  fechaResolucion?: string | null;
   intentosComprobante: number;
-  comprobante?: ComprobantePago;
+  comprobante?: ComprobantePago | null;
 }
 
 export interface RegistrarPagoRequest {

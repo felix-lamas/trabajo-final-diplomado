@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { QrAsistencia, SesionEvento, SesionEventoRequest } from '../models/asistencia.model';
+import { AsistenciaResponse, QrAsistencia, SesionEvento, SesionEventoRequest } from '../models/asistencia.model';
 
 @Injectable({ providedIn: 'root' })
 export class AsistenciaService {
   private readonly apiUrl = environment.apiUrl;
 
   constructor(private readonly http: HttpClient) {}
+
+  listarPorEvento(eventoId: string): Observable<AsistenciaResponse[]> {
+    return this.http.get<AsistenciaResponse[]>(`${this.apiUrl}/asistencias/evento/${eventoId}`);
+  }
 
   listarSesiones(eventoId: string): Observable<SesionEvento[]> {
     return this.http.get<SesionEvento[]>(`${this.apiUrl}/eventos/${eventoId}/sesiones`);

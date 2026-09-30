@@ -27,6 +27,10 @@ export const roleGuard: CanMatchFn = (route: Route, _segments: UrlSegment[]) => 
 
   return authService.refrescarPerfil().pipe(
     map(() => resolveAccess()),
-    catchError(() => of(resolveAccess()))
+    catchError(() => of(
+      authService.isAuthenticated()
+        ? router.createUrlTree(['/eventos'])
+        : router.createUrlTree(['/auth/login'])
+    ))
   );
 };
