@@ -13,6 +13,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
 import { MisCertificadosComponent } from './mis-certificados/mis-certificados.component';
+import { AlertComponent } from '../../shared/ui/alert/alert.component';
+import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
+import { PageHeaderComponent } from '../../shared/ui/page-header/page-header.component';
+import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'mis-certificados' },
@@ -34,7 +38,11 @@ const routes: Routes = [
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatTableModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AlertComponent,
+    EmptyStateComponent,
+    PageHeaderComponent,
+    SkeletonComponent
   ]
 })
 export class CertificadosModule { }

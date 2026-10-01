@@ -157,6 +157,53 @@
             [class.app-badge--warning]="inscripcion.estado === 'PENDIENTE_PAGO' || inscripcion.estado === 'PENDIENTE_VALIDACION'"
             [class.app-badge--danger]="inscripcion.estado === 'CANCELADA'">{{ inscripcion.estado }}</span>
         </div>
+        <button mat-stroked-button type="button"
+          *ngIf="evento.estado === 'FINALIZADO' && evento.emiteCertificado && inscripcion.estado === 'CONFIRMADA'"
+          [disabled]="!!emitiendoCertificadoId()"
+          (click)="emitirCertificado(inscripcion)">
+          {{ emitiendoCertificadoId() === inscripcion.id ? 'Procesando…' : 'Emitir / recuperar certificado' }}
+        </button>
+        <section *ngIf="certificadosEmitidos().get(inscripcion.id) as certificado" class="student-card" aria-live="polite">
+          <p><strong>{{ certificado.tipoCertificado === 'CURRICULAR' ? 'Curricular' : 'No curricular' }}</strong>
+            <span *ngIf="certificado.horasAcademicas != null"> · {{ certificado.horasAcademicas }} horas académicas</span></p>
+          <p>Código: <code>{{ certificado.codigoCertificado }}</code></p>
+          <div class="student-card__meta">
+            <a [href]="certificado.urlVerificacion" target="_blank" rel="noopener noreferrer">Verificación pública</a>
+            <button mat-stroked-button type="button" (click)="descargarCertificado(certificado)" [disabled]="!!descargandoCertificadoId()">
+              {{ descargandoCertificadoId() === certificado.id ? 'Descargando…' : 'Descargar PDF' }}
+            </button>
+          </div>
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <section class="admin-surface" *ngIf="evento.emiteCertificado" aria-labelledby="certificates-heading">
+    <div class="app-toolbar__title">
+      <h2 id="certificates-heading" class="app-section-title">Certificados del evento</h2>
+      <p>Consulta los certificados devueltos por el servicio del evento.</p>
+    </div>
+    <app-skeleton *ngIf="cargandoCertificados()" variant="list" [count]="2"></app-skeleton>
+    <app-empty-state *ngIf="!cargandoCertificados() && errorCertificados()" icon="error_outline"
+      title="No se pudieron cargar los certificados" [message]="errorCertificados()"
+      actionLabel="Reintentar" (action)="cargarEvento(evento.id)"></app-empty-state>
+    <app-empty-state *ngIf="!cargandoCertificados() && !errorCertificados() && certificadosEvento().length === 0"
+      icon="workspace_premium" title="Aún no hay certificados emitidos" message="La emisión depende de las reglas de participación que valida el backend."></app-empty-state>
+    <div class="student-grid student-grid--2" *ngIf="!cargandoCertificados() && !errorCertificados() && certificadosEvento().length > 0">
+      <article class="student-card" *ngFor="let certificado of certificadosEvento()">
+        <div class="student-card__header">
+          <div><h3>{{ certificado.nombreCompleto }}</h3><p>{{ certificado.tipoCertificado === 'CURRICULAR' ? 'Curricular' : 'No curricular' }}</p></div>
+          <span class="app-badge" [class.app-badge--danger]="certificado.estado === 'ANULADO'">{{ certificado.estado }}</span>
+        </div>
+        <p *ngIf="certificado.horasAcademicas != null">{{ certificado.horasAcademicas }} horas académicas</p>
+        <p>Código: <code>{{ certificado.codigoCertificado }}</code></p>
+        <div class="student-card__meta">
+          <a [href]="certificado.urlVerificacion" target="_blank" rel="noopener noreferrer">Verificación pública</a>
+          <button mat-stroked-button type="button" (click)="descargarCertificado(certificado)"
+            [disabled]="certificado.estado === 'ANULADO' || !!descargandoCertificadoId()">
+            {{ descargandoCertificadoId() === certificado.id ? 'Descargando…' : 'Descargar PDF' }}
+          </button>
+        </div>
       </article>
     </div>
   </section>

@@ -12,14 +12,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CertificadoService } from '../../../core/services/certificado.service';
 import { VerificacionCertificadoResponse } from '../../../core/models/certificado.model';
+import { apiErrorMessage } from '../../../core/utils/api-error.util';
+import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-validacion-publica',
   templateUrl: './validacion-publica.component.html',
-  styleUrls: [],
+  styleUrl: './validacion-publica.component.css',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule,
-    MatIconModule, MatInputModule, MatProgressSpinnerModule]
+    MatIconModule, MatInputModule, MatProgressSpinnerModule, EmptyStateComponent]
 })
 export class ValidacionPublicaComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
@@ -59,8 +61,28 @@ export class ValidacionPublicaComponent implements OnInit {
       .pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (resultado) => this.resultado.set(resultado),
-        error: () => this.error.set('No fue posible consultar el certificado. Intente nuevamente.')
+        error: (err) => this.error.set(apiErrorMessage(err, 'No fue posible consultar el servicio de verificación. Inténtalo nuevamente.'))
       });
+  }
+
+  get esNoRegistrado(): boolean {
+    return this.resultado()?.estado === 'NO_REGISTRADO';
+  }
+
+  tipoLabel(tipo: VerificacionCertificadoResponse['tipoCertificado']): string {
+    if (tipo === 'CURRICULAR') return 'Curricular';
+    if (tipo === 'NO_CURRICULAR') return 'No curricular';
+    return '';
+  }
+
+  estadoLabel(estado: string): string {
+    switch (estado) {
+      case 'GENERADO': return 'Generado';
+      case 'DESCARGADO': return 'Descargado';
+      case 'ANULADO': return 'Anulado';
+      case 'NO_REGISTRADO': return 'No registrado';
+      default: return estado;
+    }
   }
 
   limpiar(): void {

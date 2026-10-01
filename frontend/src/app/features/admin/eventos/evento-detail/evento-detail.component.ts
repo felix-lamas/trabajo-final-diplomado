@@ -12,6 +12,8 @@ import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 import { EventoMotivoDialogComponent } from '../evento-motivo-dialog.component';
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
 import { Inscripcion } from '../../../../core/models/inscripcion.model';
+import { CertificadoService } from '../../../../core/services/certificado.service';
+import { CertificadoResponse } from '../../../../core/models/certificado.model';
 
 @Component({
   selector: 'app-evento-detail',
@@ -27,6 +29,12 @@ export class EventoDetailComponent implements OnInit {
   readonly inscripciones = signal<Inscripcion[]>([]);
   readonly cargandoInscripciones = signal(false);
   readonly errorInscripciones = signal('');
+  readonly emitiendoCertificadoId = signal('');
+  readonly descargandoCertificadoId = signal('');
+  readonly certificadosEmitidos = signal(new Map<string, CertificadoResponse>());
+  readonly certificadosEvento = signal<CertificadoResponse[]>([]);
+  readonly cargandoCertificados = signal(false);
+  readonly errorCertificados = signal('');
 
   constructor(
     private eventoService: EventoService,
@@ -34,7 +42,8 @@ export class EventoDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private toast: ToastService,
-    private inscripcionService: InscripcionService
+    private inscripcionService: InscripcionService,
+    private certificadoService: CertificadoService
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +59,10 @@ export class EventoDetailComponent implements OnInit {
     this.eventoService.obtenerPorId(id).pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.evento.set(data);
-        if (this.esAdministrador || this.esOrganizador) this.cargarInscripciones(data.id);
+        if (this.esAdministrador || this.esOrganizador) {
+          this.cargarInscripciones(data.id);
+          if (data.emiteCertificado) this.cargarCertificadosEvento(data.id);
+        }
       },
       error: (err) => { this.error.set(true); this.toast.error(apiErrorMessage(err, 'Error al cargar detalle')); }
     });
@@ -64,6 +76,51 @@ export class EventoDetailComponent implements OnInit {
     ).subscribe({
       next: (data) => this.inscripciones.set(data),
       error: (err) => this.errorInscripciones.set(apiErrorMessage(err, 'No fue posible cargar las inscripciones del evento.'))
+    });
+  }
+
+  private cargarCertificadosEvento(eventoId: string): void {
+    this.cargandoCertificados.set(true);
+    this.errorCertificados.set('');
+    this.certificadoService.listarPorEvento(eventoId).pipe(
+      finalize(() => this.cargandoCertificados.set(false)), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (data) => this.certificadosEvento.set(data),
+      error: (err) => this.errorCertificados.set(apiErrorMessage(err, 'No fue posible cargar los certificados del evento.'))
+    });
+  }
+
+  emitirCertificado(inscripcion: Inscripcion): void {
+    if (this.emitiendoCertificadoId()) return;
+    this.emitiendoCertificadoId.set(inscripcion.id);
+    this.certificadoService.generar(inscripcion.id).pipe(
+      finalize(() => this.emitiendoCertificadoId.set('')), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (certificado) => {
+        this.certificadosEmitidos.update((actuales) => new Map(actuales).set(inscripcion.id, certificado));
+        const existentes = this.certificadosEvento();
+        if (!existentes.some((actual) => actual.id === certificado.id)) this.certificadosEvento.set([...existentes, certificado]);
+        this.toast.success('Certificado emitido o recuperado correctamente.');
+      },
+      error: (err) => this.toast.error(apiErrorMessage(err, 'No fue posible emitir el certificado. Verifica las condiciones del evento y la participación.'))
+    });
+  }
+
+  descargarCertificado(certificado: CertificadoResponse): void {
+    if (this.descargandoCertificadoId()) return;
+    this.descargandoCertificadoId.set(certificado.id);
+    this.certificadoService.descargar(certificado.id).pipe(
+      finalize(() => this.descargandoCertificadoId.set('')), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (pdf) => {
+        const url = URL.createObjectURL(pdf.type ? pdf : new Blob([pdf], { type: 'application/pdf' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `certificado-${certificado.codigoCertificado}.pdf`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      },
+      error: (err) => this.toast.error(apiErrorMessage(err, 'No fue posible descargar el certificado.'))
     });
   }
 

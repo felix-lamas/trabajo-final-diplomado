@@ -1,0 +1,36 @@
+.public-certificate-layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.6fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.public-certificate-form,
+.public-certificate-record { padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+.public-certificate-form h2 { margin: 0 0 var(--space-4); color: var(--color-text-primary); font-size: var(--font-size-h3); }
+.public-certificate-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.public-certificate-result { min-width: 0; }
+.public-certificate-message { display: flex; min-height: 12rem; align-items: center; justify-content: center; gap: var(--space-3); padding: var(--space-5); color: var(--color-text-secondary); }
+.public-certificate-record { overflow: hidden; padding: 0; }
+.public-certificate-record--valid { border-color: var(--color-success); }
+.public-certificate-record--invalid { border-color: var(--color-danger); }
+.public-certificate-record__header { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4) var(--space-5); color: var(--color-danger-text); background: var(--color-danger-bg); }
+.public-certificate-record__header--valid { color: var(--color-success-text); background: var(--color-success-bg); }
+.public-certificate-record__header h2 { margin: 0; font-size: var(--font-size-h3); }
+.public-certificate-record__body { display: grid; gap: var(--space-4); padding: var(--space-5); }
+.public-certificate-record dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); margin: 0; }
+.public-certificate-record dl > div { min-width: 0; }
+.public-certificate-record dt { color: var(--color-text-secondary); font-size: var(--font-size-caption); }
+.public-certificate-record dd { margin: var(--space-1) 0 0; color: var(--color-text-primary); font-weight: var(--font-weight-semibold); overflow-wrap: anywhere; }
+.public-certificate-record__footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); border-top: 1px solid var(--color-border); padding-top: var(--space-3); color: var(--color-text-secondary); }
+.public-certificate-record__footer code { color: var(--color-text-primary); font-family: monospace; overflow-wrap: anywhere; }
+
+@media (max-width: 57.5rem) {
+  .public-certificate-layout { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 40rem) {
+  .public-certificate-form,
+  .public-certificate-record__body { padding: var(--space-4); }
+  .public-certificate-record dl { grid-template-columns: minmax(0, 1fr); }
+}

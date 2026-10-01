@@ -12,6 +12,8 @@ import { EventosGestionModule } from '../../../eventos-gestion/eventos-gestion.m
 import { EventoDetailComponent } from './evento-detail.component';
 import { AsistenciaService } from '../../../../core/services/asistencia.service';
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
+import { CertificadoService } from '../../../../core/services/certificado.service';
+import { EstadoInscripcion } from '../../../../core/models/inscripcion.model';
 
 describe('EventoDetailComponent', () => {
   let fixture: ComponentFixture<EventoDetailComponent>;
@@ -20,6 +22,7 @@ describe('EventoDetailComponent', () => {
   let roles: string[];
   let service: Record<string, ReturnType<typeof vi.fn>>;
   let inscripcionApi: { listarInscritosEvento: ReturnType<typeof vi.fn> };
+  let certificadoApi: { generar: ReturnType<typeof vi.fn>; descargar: ReturnType<typeof vi.fn>; listarPorEvento: ReturnType<typeof vi.fn> };
 
   const evento: Evento = {
     id: 'evt', titulo: 'Evento', descripcion: 'Descripcion', objetivos: 'Objetivos', categoriaId: 'cat', categoriaNombre: 'Taller',
@@ -38,6 +41,10 @@ describe('EventoDetailComponent', () => {
       cancelar: vi.fn(() => of(void 0)), finalizar: vi.fn(() => of(void 0))
     };
     inscripcionApi = { listarInscritosEvento: vi.fn(() => of([])) };
+    certificadoApi = { generar: vi.fn(() => of({
+      id: 'cert', codigoCertificado: 'UAJMS-TEST', tipoCertificado: 'NO_CURRICULAR',
+      horasAcademicas: null, urlVerificacion: '/verificar-certificado/UAJMS-TEST'
+    } as never)), descargar: vi.fn(), listarPorEvento: vi.fn(() => of([])) };
     await TestBed.configureTestingModule({
       imports: [EventosGestionModule],
       providers: [
@@ -46,6 +53,7 @@ describe('EventoDetailComponent', () => {
         { provide: EventoService, useValue: service },
         { provide: AsistenciaService, useValue: { listarSesiones: vi.fn(() => of([])) } },
         { provide: InscripcionService, useValue: inscripcionApi },
+        { provide: CertificadoService, useValue: certificadoApi },
         { provide: AuthService, useValue: { hasAnyRole: (esperados: string[]) => esperados.some((r) => roles.includes(r)) } },
         { provide: MatDialog, useValue: { open: vi.fn(() => ({ afterClosed: () => of('Motivo valido') })) } },
         { provide: ToastService, useValue: { success: vi.fn(), warning: vi.fn(), error: vi.fn() } }
@@ -88,5 +96,14 @@ describe('EventoDetailComponent', () => {
     response.error(new Error('red')); await fixture.whenStable();
     expect(component.error()).toBe(true);
     expect(fixture.nativeElement.textContent).toContain('No fue posible cargar el evento');
+  });
+
+  it('permite solicitar emisión solo al flujo de gestión y usa el endpoint existente', async () => {
+    const eventoFinalizado = { ...evento, estado: EstadoEvento.FINALIZADO, emiteCertificado: true };
+    response.next(eventoFinalizado); response.complete(); await fixture.whenStable();
+    const participante = { id: 'ins', eventoId: 'evt', eventoTitulo: 'Evento', fechaInscripcion: '2026-10-01', estado: EstadoInscripcion.CONFIRMADA };
+    component.emitirCertificado(participante);
+    expect(certificadoApi.generar).toHaveBeenCalledWith('ins');
+    expect(component.certificadosEmitidos().get('ins')?.codigoCertificado).toBe('UAJMS-TEST');
   });
 });

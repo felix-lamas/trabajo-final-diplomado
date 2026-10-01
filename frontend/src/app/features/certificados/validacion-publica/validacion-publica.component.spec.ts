@@ -57,6 +57,9 @@ describe('ValidacionPublicaComponent', () => {
     component.verificar('NO-EXISTE');
 
     expect(component.resultado()?.estado).toBe('NO_REGISTRADO');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Certificado no encontrado');
+    expect(fixture.nativeElement.textContent).not.toContain('CERTIFICACIÓN INVÁLIDA');
   });
 
   it('expone estado de error sin conservar un resultado anterior', () => {

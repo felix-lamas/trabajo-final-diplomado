@@ -14,7 +14,7 @@ export class CertificadoService {
   constructor(private http: HttpClient) {}
 
   generar(inscripcionId: string): Observable<CertificadoResponse> {
-    return this.http.post<CertificadoResponse>(`${this.apiUrl}/generar/${inscripcionId}`, {});
+    return this.http.post<CertificadoResponse>(`${this.apiUrl}/generar/${inscripcionId}`, null);
   }
 
   obtenerPorId(id: string): Observable<CertificadoResponse> {
@@ -23,6 +23,10 @@ export class CertificadoService {
 
   listarMisCertificados(): Observable<CertificadoResponse[]> {
     return this.http.get<CertificadoResponse[]>(`${this.apiUrl}/mis-certificados`);
+  }
+
+  listarPorEvento(eventoId: string): Observable<CertificadoResponse[]> {
+    return this.http.get<CertificadoResponse[]>(`${environment.apiUrl}/eventos/${eventoId}/certificados`);
   }
 
   descargar(id: string): Observable<Blob> {

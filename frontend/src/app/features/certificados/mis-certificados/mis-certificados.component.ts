@@ -4,11 +4,12 @@ import { finalize } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CertificadoService } from '../../../core/services/certificado.service';
 import { CertificadoResponse } from '../../../core/models/certificado.model';
+import { apiErrorMessage } from '../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-mis-certificados',
   templateUrl: './mis-certificados.component.html',
-  styleUrls: [],
+  styleUrl: './mis-certificados.component.css',
   standalone: false
 })
 export class MisCertificadosComponent implements OnInit {
@@ -16,7 +17,7 @@ export class MisCertificadosComponent implements OnInit {
   readonly certificados = signal<CertificadoResponse[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
-  readonly certificadoSeleccionado = signal<CertificadoResponse | null>(null);
+  readonly certificadoSeleccionado = signal<string | null>(null);
   readonly descargandoId = signal<string | null>(null);
   readonly displayedColumns = ['codigo', 'evento', 'horas', 'fecha', 'estado', 'acciones'];
 
@@ -36,12 +37,28 @@ export class MisCertificadosComponent implements OnInit {
       .pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => this.certificados.set(data),
-        error: () => this.error.set('No fue posible recuperar sus certificados.')
+        error: (err) => this.error.set(apiErrorMessage(err, 'No fue posible recuperar tus certificados.'))
       });
   }
 
-  verVistaPrevia(certificado: CertificadoResponse): void {
-    this.certificadoSeleccionado.set(certificado);
+  verDetalle(certificado: CertificadoResponse): void {
+    this.certificadoSeleccionado.update((id) => id === certificado.id ? null : certificado.id);
+  }
+
+  esSeleccionado(certificado: CertificadoResponse): boolean {
+    return this.certificadoSeleccionado() === certificado.id;
+  }
+
+  tipoLabel(tipo: CertificadoResponse['tipoCertificado']): string {
+    return tipo === 'CURRICULAR' ? 'Curricular' : 'No curricular';
+  }
+
+  estadoLabel(estado: CertificadoResponse['estado']): string {
+    switch (estado) {
+      case 'GENERADO': return 'Generado';
+      case 'DESCARGADO': return 'Descargado';
+      case 'ANULADO': return 'Anulado';
+    }
   }
 
   descargar(certificado: CertificadoResponse): void {
@@ -51,16 +68,16 @@ export class MisCertificadosComponent implements OnInit {
       .pipe(finalize(() => this.descargandoId.set(null)), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (pdf) => {
-          const url = URL.createObjectURL(pdf);
+          const url = URL.createObjectURL(pdf.type ? pdf : new Blob([pdf], { type: 'application/pdf' }));
           const enlace = document.createElement('a');
           enlace.href = url;
           enlace.download = `certificado-${certificado.codigoCertificado}.pdf`;
           enlace.click();
-          URL.revokeObjectURL(url);
+          setTimeout(() => URL.revokeObjectURL(url), 60_000);
           this.snackBar.open('Certificado descargado correctamente', 'Cerrar', { duration: 2000 });
           this.cargarCertificados();
         },
-        error: () => this.snackBar.open('No fue posible descargar el certificado', 'Cerrar', { duration: 3000 })
+        error: (err) => this.snackBar.open(apiErrorMessage(err, 'No fue posible descargar el certificado'), 'Cerrar', { duration: 3000 })
       });
   }
 

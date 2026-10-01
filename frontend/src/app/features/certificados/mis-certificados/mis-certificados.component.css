@@ -1,0 +1,67 @@
+.certificates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: var(--space-5);
+}
+
+.certificate-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.certificate-card__header,
+.certificate-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.certificate-card__icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  color: var(--color-primary);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+.certificate-card__eyebrow,
+.certificate-card__holder,
+.certificate-card__facts dt,
+.certificate-card__code span {
+  color: var(--color-text-secondary);
+}
+
+.certificate-card h2,
+.certificate-card h3,
+.certificate-card__facts dd,
+.certificate-card__code code {
+  color: var(--color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.certificate-card h2 { margin: 0; font-size: var(--font-size-h3); }
+.certificate-card__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: 0; }
+.certificate-card__facts dt { font-size: var(--font-size-caption); }
+.certificate-card__facts dd { margin: var(--space-1) 0 0; }
+.certificate-card__code { display: grid; gap: var(--space-1); padding: var(--space-3); background: var(--color-bg-secondary); border-radius: var(--radius-md); }
+.certificate-card__code code { font-size: var(--font-size-body-small); word-break: break-all; }
+.certificate-card__actions { justify-content: flex-start; flex-wrap: wrap; }
+.certificate-card__details { display: grid; gap: var(--space-2); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+.certificate-card__details h3,
+.certificate-card__details p { margin: 0; }
+.certificate-card__details a { color: var(--color-primary); text-underline-offset: .2em; }
+.certificate-card__details a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+
+@media (max-width: 40rem) {
+  .certificate-card { padding: var(--space-4); }
+  .certificate-card__facts { grid-template-columns: 1fr; }
+  .certificate-card__actions > * { flex: 1 1 auto; }
+}

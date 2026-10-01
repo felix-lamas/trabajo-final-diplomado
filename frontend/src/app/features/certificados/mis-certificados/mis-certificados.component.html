@@ -1,141 +1,56 @@
-<main class="app-page admin-portal">
-  <section class="admin-module-header">
-    <div class="app-toolbar__title">
-      <span class="app-chip">
-        <mat-icon>workspace_premium</mat-icon>
-        Biblioteca institucional
-      </span>
-      <h1>Gestion de certificados</h1>
-      <p>Historial oficial de documentos academicos emitidos por la UAJMS.</p>
-    </div>
-  </section>
+<main class="app-page certificates-page">
+  <app-page-header title="Mis certificados" description="Consulta tus documentos emitidos y descarga el PDF verificable.">
+  </app-page-header>
 
-  <section class="admin-library-layout">
-    <div [ngClass]="certificadoSeleccionado() ? 'admin-library-main' : 'admin-library-main admin-library-main--full'">
-      <div *ngIf="loading()" class="public-loading">
-        <mat-spinner diameter="40"></mat-spinner>
+  <app-skeleton *ngIf="loading()" variant="list" [count]="3"></app-skeleton>
+
+  <app-alert *ngIf="!loading() && error()" variant="error" title="No se pudieron cargar tus certificados">
+    <p>{{ error() }}</p>
+    <button mat-stroked-button type="button" (click)="cargarCertificados()">Reintentar</button>
+  </app-alert>
+
+  <app-empty-state *ngIf="!loading() && !error() && certificados().length === 0"
+    icon="workspace_premium" title="No tienes certificados disponibles"
+    message="Los certificados emitidos para ti aparecerán aquí cuando se complete el proceso correspondiente."></app-empty-state>
+
+  <section class="certificates-grid" *ngIf="!loading() && !error() && certificados().length > 0" aria-label="Certificados emitidos">
+    <article class="app-surface certificate-card" *ngFor="let certificado of certificados()">
+      <header class="certificate-card__header">
+        <span class="certificate-card__icon" aria-hidden="true"><mat-icon>school</mat-icon></span>
+        <span class="app-badge" [class.app-badge--success]="certificado.estado !== 'ANULADO'" [class.app-badge--danger]="certificado.estado === 'ANULADO'">
+          {{ estadoLabel(certificado.estado) }}
+        </span>
+      </header>
+      <p class="certificate-card__eyebrow">{{ tipoLabel(certificado.tipoCertificado) }}</p>
+      <h2>{{ certificado.evento }}</h2>
+      <p class="certificate-card__holder">{{ certificado.nombreCompleto }}</p>
+      <dl class="certificate-card__facts">
+        <div *ngIf="certificado.horasAcademicas != null"><dt>Horas académicas</dt><dd>{{ certificado.horasAcademicas }}</dd></div>
+        <div><dt>Fecha de emisión</dt><dd>{{ certificado.fechaEmision | date:'dd/MM/yyyy' }}</dd></div>
+      </dl>
+      <div class="certificate-card__code">
+        <span>Código de verificación</span>
+        <code>{{ certificado.codigoCertificado }}</code>
       </div>
+      <footer class="certificate-card__actions">
+        <button mat-stroked-button type="button" (click)="verDetalle(certificado)" [attr.aria-expanded]="esSeleccionado(certificado)">
+          {{ esSeleccionado(certificado) ? 'Ocultar detalle' : 'Ver detalle' }}
+        </button>
+        <button mat-flat-button color="primary" type="button" (click)="descargar(certificado)"
+          [disabled]="certificado.estado === 'ANULADO' || descargandoId() !== null"
+          [attr.aria-label]="(descargandoId() === certificado.id ? 'Descargando' : 'Descargar PDF de') + ' ' + certificado.evento">
+          {{ descargandoId() === certificado.id ? 'Descargando…' : 'Descargar PDF' }}
+        </button>
+      </footer>
 
-      <p *ngIf="error()" class="app-alert app-alert--error">{{ error() }}</p>
-
-      <mat-card class="admin-surface admin-table-wrap admin-data-center" *ngIf="!loading() && certificados().length > 0">
-        <div class="admin-toolbar">
-          <div class="app-toolbar__title">
-            <h2 class="app-section-title">Certificados emitidos</h2>
-            <p>Documentos verificables con codigo oficial.</p>
-          </div>
-          <span class="app-badge app-badge--success">{{ certificados().length }} documentos</span>
-        </div>
-
-        <div class="admin-table-scroll">
-          <table mat-table [dataSource]="certificados()" class="w-full">
-            <ng-container matColumnDef="codigo">
-              <th mat-header-cell *matHeaderCellDef>Codigo oficial</th>
-              <td mat-cell *matCellDef="let row">
-                <span class="admin-code">{{ row.codigoCertificado }}</span>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="evento">
-              <th mat-header-cell *matHeaderCellDef>Evento academico</th>
-              <td mat-cell *matCellDef="let row">
-                <div class="admin-entity-cell">
-                  <div class="admin-entity-cell__avatar"><mat-icon>school</mat-icon></div>
-                  <div>
-                    <strong>{{ row.evento }}</strong>
-                    <span>{{ row.nombreCompleto }}</span>
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="horas">
-              <th mat-header-cell *matHeaderCellDef>Carga horaria</th>
-              <td mat-cell *matCellDef="let row"><strong>{{ row.horasAcademicas != null ? (row.horasAcademicas + ' hrs') : 'No aplica' }}</strong></td>
-            </ng-container>
-
-            <ng-container matColumnDef="fecha">
-              <th mat-header-cell *matHeaderCellDef>Fecha emision</th>
-              <td mat-cell *matCellDef="let row">{{ row.fechaEmision | date:'dd/MM/yyyy' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="estado">
-              <th mat-header-cell *matHeaderCellDef>Estado</th>
-              <td mat-cell *matCellDef="let row">
-                <span class="admin-status-pill"
-                  [ngClass]="{
-                    'admin-status-pill--success': row.estado === 'GENERADO',
-                    'admin-status-pill--info': row.estado === 'DESCARGADO',
-                    'admin-status-pill--danger': row.estado === 'ANULADO'
-                  }">
-                  {{ row.estado }}
-                </span>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="acciones">
-              <th mat-header-cell *matHeaderCellDef>Acciones</th>
-              <td mat-cell *matCellDef="let row">
-                <div class="student-card__meta">
-                  <button mat-icon-button color="primary" matTooltip="Vista previa institucional" (click)="verVistaPrevia(row)" [disabled]="row.estado === 'ANULADO'">
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button mat-icon-button color="accent" matTooltip="Descargar PDF" (click)="descargar(row)" [disabled]="row.estado === 'ANULADO' || descargandoId() !== null">
-                    <mat-icon>file_download</mat-icon>
-                  </button>
-                </div>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-        </div>
-      </mat-card>
-
-      <div *ngIf="!loading() && !error() && certificados().length === 0" class="student-empty">
-        <mat-icon>school</mat-icon>
-        <strong>Aun no existen certificados emitidos</strong>
-        <p>Los documentos se habilitan cuando se finalizan eventos y se cumplen requisitos de asistencia.</p>
-      </div>
-    </div>
-
-    <aside *ngIf="certificadoSeleccionado() as seleccionado" class="admin-certificate-preview">
-      <mat-card class="admin-certificate-card">
-        <div class="admin-certificate-card__close">
-          <button mat-icon-button (click)="cerrarVistaPrevia()">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-
-        <div class="admin-certificate-document">
-          <div>
-            <strong>Universidad Autónoma Juan Misael Saracho — UAJMS</strong>
-            <span>Tarija - Bolivia</span>
-          </div>
-
-          <section>
-            <p>Otorga el presente Certificado de Acreditacion a:</p>
-            <h2>{{ seleccionado.nombreCompleto }}</h2>
-            <span *ngIf="seleccionado.ru">RU: {{ seleccionado.ru }}</span>
-            <span>Cédula de identidad: {{ seleccionado.ci }}</span>
-            <p>Por su participacion y aprobacion efectiva en el evento academico:</p>
-            <h3>{{ seleccionado.evento }}</h3>
-            <span>Tipo: {{ seleccionado.tipoCertificado }}</span>
-            <span *ngIf="seleccionado.horasAcademicas != null">Horas académicas: {{ seleccionado.horasAcademicas }}</span>
-            <span>Asistencia acreditada: {{ seleccionado.porcentajeAsistencia }} %</span>
-          </section>
-
-          <footer>
-            <div>
-              <small>Código de verificación seguro</small>
-              <strong>{{ seleccionado.codigoCertificado }}</strong>
-              <a [href]="seleccionado.urlVerificacion" target="_blank" rel="noopener noreferrer">Verificar públicamente</a>
-              <span>Emitido el {{ seleccionado.fechaEmision | date:'dd/MM/yyyy HH:mm' }}</span>
-            </div>
-          </footer>
-        </div>
-      </mat-card>
-    </aside>
+      <section class="certificate-card__details" *ngIf="esSeleccionado(certificado)" aria-label="Detalle del certificado">
+        <h3>Información del certificado</h3>
+        <p><strong>Tipo:</strong> {{ tipoLabel(certificado.tipoCertificado) }}</p>
+        <p *ngIf="certificado.cargaHoraria != null"><strong>Carga horaria del evento:</strong> {{ certificado.cargaHoraria }}</p>
+        <p *ngIf="certificado.porcentajeAsistencia != null"><strong>Asistencia registrada:</strong> {{ certificado.porcentajeAsistencia }}%</p>
+        <p *ngIf="certificado.ru"><strong>RU:</strong> {{ certificado.ru }}</p>
+        <a [href]="certificado.urlVerificacion" target="_blank" rel="noopener noreferrer">Abrir verificación pública</a>
+      </section>
+    </article>
   </section>
 </main>

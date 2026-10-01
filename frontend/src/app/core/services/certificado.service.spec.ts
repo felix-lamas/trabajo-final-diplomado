@@ -22,6 +22,21 @@ describe('CertificadoService contrato canónico', () => {
     expect(http.expectOne(`${base}/mis-certificados`).request.method).toBe('GET');
   });
 
+  it('lista certificados usando el endpoint real del evento', () => {
+    service.listarPorEvento('evento').subscribe();
+    const request = http.expectOne(`${environment.apiUrl}/eventos/evento/certificados`);
+    expect(request.request.method).toBe('GET');
+    request.flush([]);
+  });
+
+  it('solicita emisión sin fabricar un request body no definido por el backend', () => {
+    service.generar('inscripcion').subscribe();
+    const request = http.expectOne(`${base}/generar/inscripcion`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toBeNull();
+    request.flush({});
+  });
+
   it('descarga el PDF como blob y no como JSON', () => {
     service.descargar('certificado').subscribe();
     const request = http.expectOne(`${base}/certificado/descargar`);
