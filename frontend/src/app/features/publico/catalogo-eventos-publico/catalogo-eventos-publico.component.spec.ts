@@ -1,16 +1,18 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { Evento, EstadoEvento, Modalidad, PublicoObjetivo, TipoInscripcion } from '../../../core/models/evento.model';
 import { EventoService } from '../../../core/services/evento.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { PublicoModule } from '../publico.module';
 import { CatalogoEventosPublicoComponent } from './catalogo-eventos-publico.component';
 
 describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
   let fixture: ComponentFixture<CatalogoEventosPublicoComponent>;
   let responses: Subject<Evento[]>[];
+  const auth = { isAuthenticated: vi.fn(() => true), logout: vi.fn() };
 
   const evento: Evento = {
     id: '10000000-0000-0000-0000-000000000001',
@@ -39,6 +41,7 @@ describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
 
   beforeEach(async () => {
     responses = [];
+    vi.clearAllMocks();
     const eventoService = {
       listarPublicados: vi.fn(() => {
         const response = new Subject<Evento[]>();
@@ -52,6 +55,7 @@ describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
       providers: [
         provideZonelessChangeDetection(),
         provideRouter([]),
+        { provide: AuthService, useValue: auth },
         { provide: EventoService, useValue: eventoService }
       ]
     }).compileComponents();
@@ -80,6 +84,23 @@ describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
     responses[0].complete();
     await fixture.whenStable();
     expect(fixture.nativeElement.textContent).toContain('Evento pagado');
+  });
+
+  it('el enlace Volver al inicio vuelve al panel sin cerrar la sesión ni ir al login', () => {
+    const inicio = fixture.nativeElement.querySelector('a[routerLink="/privado/dashboard"]') as HTMLAnchorElement;
+    const router = TestBed.inject(Router);
+    const navigation = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    expect(inicio).not.toBeNull();
+    expect(inicio.textContent).toContain('Volver al inicio');
+    expect(inicio.getAttribute('href')).toBe('/privado/dashboard');
+    inicio.click();
+
+    expect(navigation).toHaveBeenCalledOnce();
+    const target = navigation.mock.calls[0][0];
+    expect(typeof target === 'string' ? target : router.serializeUrl(target)).toBe('/privado/dashboard');
+    expect(auth.isAuthenticated()).toBe(true);
+    expect(auth.logout).not.toHaveBeenCalled();
   });
 
   it('inicia con precio Todos y muestra publicados gratuitos y pagados juntos', async () => {
