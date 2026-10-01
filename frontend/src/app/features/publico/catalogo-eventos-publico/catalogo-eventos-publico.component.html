@@ -1,79 +1,91 @@
-<main class="app-page public-portal">
-  <section class="public-section">
-    <div class="app-toolbar">
-      <div class="app-toolbar__title">
-        <h1 class="app-section-title">Catalogo de eventos</h1>
-        <p>Encuentre propuestas academicas, culturales y de extension universitaria.</p>
-      </div>
-      <a mat-stroked-button routerLink="/privado/dashboard">Volver al inicio</a>
+<main class="app-page public-portal vidia-catalog" aria-labelledby="catalog-title">
+  <section class="vidia-catalog__hero">
+    <div class="vidia-catalog__hero-copy">
+      <p class="vidia-catalog__eyebrow"><mat-icon aria-hidden="true">explore</mat-icon> VIDIA · EVENTOS UAJMS</p>
+      <h1 id="catalog-title">Descubre eventos</h1>
+      <p>Encuentra actividades académicas y universitarias para aprender, conectar y participar.</p>
     </div>
+    <a class="vidia-catalog__home-link" routerLink="/privado/dashboard">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      Volver al inicio
+    </a>
+    <div class="vidia-catalog__hero-art" aria-hidden="true">
+      <span></span><span></span><mat-icon>event</mat-icon>
+    </div>
+  </section>
 
-    <mat-card class="public-filters">
-      <div class="public-filters__grid" [formGroup]="filtros">
-        <mat-form-field appearance="outline">
-          <mat-label>Buscar evento</mat-label>
-          <input matInput formControlName="buscar" placeholder="Titulo, descripcion o categoria">
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Categoria</mat-label>
-          <mat-select formControlName="categoria">
-            <mat-option value="TODAS">Todas</mat-option>
-            <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Precio</mat-label>
-          <mat-select formControlName="tipoInscripcion">
-            <mat-option value="TODOS">Todos</mat-option>
-            <mat-option value="GRATUITO">Gratuitos</mat-option>
-            <mat-option value="PAGO">Pagados</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <button mat-stroked-button type="button" (click)="limpiarFiltros()">
-          Limpiar
+  <app-surface class="vidia-catalog__filters" variant="default">
+    <form [formGroup]="filtros" (ngSubmit)="$event.preventDefault()" class="vidia-catalog__filter-form" aria-label="Buscar y filtrar eventos">
+      <mat-form-field appearance="outline" class="vidia-catalog__search-field">
+        <mat-label>Buscar eventos</mat-label>
+        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+        <input matInput formControlName="buscar" placeholder="Título, descripción o categoría" autocomplete="off">
+        <button *ngIf="busqueda" mat-icon-button matSuffix type="button" aria-label="Limpiar búsqueda"
+          (click)="filtros.get('buscar')?.setValue('')">
+          <mat-icon aria-hidden="true">close</mat-icon>
         </button>
-      </div>
-      <div class="public-filters__meta">
-        <span class="app-badge app-badge--info">{{ totalResultados }} resultados</span>
-        <span class="app-badge">{{ pageSize }} por pagina</span>
-      </div>
-    </mat-card>
+      </mat-form-field>
 
-    <app-skeleton *ngIf="loading" variant="card" [count]="6"></app-skeleton>
+      <mat-form-field appearance="outline">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="categoria">
+          <mat-option value="TODAS">Todas las categorías</mat-option>
+          <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <app-empty-state
-      *ngIf="!loading && errorCarga"
-      icon="cloud_off"
-      title="No fue posible cargar los eventos"
-      message="Intenta nuevamente."
-      actionLabel="Reintentar"
-      (action)="cargarEventos()">
-    </app-empty-state>
+      <mat-form-field appearance="outline">
+        <mat-label>Precio</mat-label>
+        <mat-select formControlName="tipoInscripcion">
+          <mat-option value="TODOS">Todos los precios</mat-option>
+          <mat-option value="GRATUITO">Gratuitos</mat-option>
+          <mat-option value="PAGO">Pagados</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <app-empty-state
-      *ngIf="!loading && !errorCarga && paginados.length === 0"
-      icon="search_off"
-      title="No hay eventos publicados disponibles"
-      message="Pruebe con otros filtros o vuelva mas tarde."
-      actionLabel="Limpiar filtros"
-      (action)="limpiarFiltros()">
-    </app-empty-state>
+      <mat-form-field appearance="outline">
+        <mat-label>Modalidad</mat-label>
+        <mat-select formControlName="modalidad">
+          <mat-option value="TODAS">Todas las modalidades</mat-option>
+          <mat-option *ngFor="let opcion of modalidadOpciones" [value]="opcion.value">{{ opcion.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <div class="public-grid public-grid--catalog" *ngIf="!loading && !errorCarga && paginados.length > 0">
-      <app-event-card *ngFor="let evento of paginados" [event]="evento" actionLabel="Ver detalle" [showStatus]="true"></app-event-card>
+      <button class="vidia-catalog__clear" mat-stroked-button type="button" (click)="limpiarFiltros()">
+        <mat-icon aria-hidden="true">filter_alt_off</mat-icon>
+        Limpiar filtros
+      </button>
+    </form>
+    <div class="vidia-catalog__results" aria-live="polite" aria-atomic="true">
+      <p *ngIf="!loading && !errorCarga">{{ totalResultados }} {{ totalResultados === 1 ? 'evento' : 'eventos' }} disponibles</p>
+      <p *ngIf="loading">Buscando eventos…</p>
+      <p *ngIf="errorCarga">No se pudo consultar el catálogo</p>
     </div>
+  </app-surface>
 
-    <mat-paginator
-      *ngIf="!loading && totalResultados > pageSize"
-      [length]="totalResultados"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="[6, 9, 12]"
-      (page)="cambiarPagina($event)">
+  <app-skeleton *ngIf="loading" variant="card" [count]="6"></app-skeleton>
+
+  <app-alert *ngIf="!loading && errorCarga" variant="error" title="No pudimos cargar los eventos">
+    <p>Comprueba tu conexión e inténtalo de nuevo.</p>
+    <button mat-stroked-button type="button" (click)="cargarEventos()">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      Reintentar
+    </button>
+  </app-alert>
+
+  <app-empty-state *ngIf="!loading && !errorCarga && paginados.length === 0"
+    icon="search_off" title="No encontramos eventos"
+    message="Prueba con otros términos o filtros para ver más actividades."
+    actionLabel="Limpiar filtros" (action)="limpiarFiltros()"></app-empty-state>
+
+  <section class="vidia-catalog__results-section" *ngIf="!loading && !errorCarga && paginados.length > 0" aria-label="Resultados de eventos">
+    <div class="vidia-catalog__grid">
+      <app-event-card *ngFor="let evento of paginados" [event]="evento" actionLabel="Ver evento"></app-event-card>
+    </div>
+    <mat-paginator *ngIf="totalResultados > pageSize"
+      aria-label="Paginación de eventos"
+      [length]="totalResultados" [pageSize]="pageSize" [pageIndex]="pageIndex"
+      [pageSizeOptions]="[6, 9, 12]" (page)="cambiarPagina($event)">
     </mat-paginator>
   </section>
 </main>

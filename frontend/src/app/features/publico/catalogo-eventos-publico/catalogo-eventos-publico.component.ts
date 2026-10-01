@@ -2,11 +2,12 @@ import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EventoService } from '../../../core/services/evento.service';
-import { Evento } from '../../../core/models/evento.model';
+import { Evento, Modalidad } from '../../../core/models/evento.model';
 
 @Component({
   selector: 'app-catalogo-eventos-publico',
   templateUrl: './catalogo-eventos-publico.component.html',
+  styleUrl: './catalogo-eventos-publico.component.css',
   standalone: false
 })
 export class CatalogoEventosPublicoComponent implements OnInit {
@@ -36,7 +37,8 @@ export class CatalogoEventosPublicoComponent implements OnInit {
     this.filtros = this.fb.group({
       buscar: [''],
       categoria: ['TODAS'],
-      tipoInscripcion: ['TODOS']
+      tipoInscripcion: ['TODOS'],
+      modalidad: ['TODAS']
     });
   }
 
@@ -77,13 +79,24 @@ export class CatalogoEventosPublicoComponent implements OnInit {
     return this.filtrados.length;
   }
 
+  get busqueda(): string {
+    return String(this.filtros.get('buscar')?.value || '');
+  }
+
+  get modalidadOpciones(): Array<{ value: string; label: string }> {
+    return [
+      { value: Modalidad.PRESENCIAL, label: 'Presencial' },
+      { value: Modalidad.VIRTUAL, label: 'Virtual' }
+    ];
+  }
+
   cambiarPagina(event: { pageIndex: number; pageSize: number }): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
   }
 
   limpiarFiltros(): void {
-    this.filtros.reset({ buscar: '', categoria: 'TODAS', tipoInscripcion: 'TODOS' }, { emitEvent: false });
+    this.filtros.reset({ buscar: '', categoria: 'TODAS', tipoInscripcion: 'TODOS', modalidad: 'TODAS' }, { emitEvent: false });
     this.pageIndex = 0;
     this.aplicarFiltros();
   }
@@ -92,6 +105,7 @@ export class CatalogoEventosPublicoComponent implements OnInit {
     const buscar = String(this.filtros.get('buscar')?.value || '').toLowerCase().trim();
     const categoria = String(this.filtros.get('categoria')?.value || 'TODAS');
     const tipoInscripcion = String(this.filtros.get('tipoInscripcion')?.value || 'TODOS');
+    const modalidad = String(this.filtros.get('modalidad')?.value || 'TODAS');
 
     this.filtrados = this.eventos.filter((evento) => {
       const coincideBusqueda = !buscar ||
@@ -101,7 +115,8 @@ export class CatalogoEventosPublicoComponent implements OnInit {
 
       const coincideCategoria = categoria === 'TODAS' || evento.categoriaNombre === categoria;
       const coincideTipo = tipoInscripcion === 'TODOS' || evento.tipoInscripcion === tipoInscripcion;
-      return coincideBusqueda && coincideCategoria && coincideTipo;
+      const coincideModalidad = modalidad === 'TODAS' || evento.modalidad === modalidad;
+      return coincideBusqueda && coincideCategoria && coincideTipo && coincideModalidad;
     });
 
     this.pageIndex = 0;
