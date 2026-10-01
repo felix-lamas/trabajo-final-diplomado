@@ -1,0 +1,69 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+
+import { AuthService } from '../services/auth.service';
+import { AppShellComponent } from './app-shell.component';
+
+describe('AppShellComponent navigation by role', () => {
+  let fixture: ComponentFixture<AppShellComponent>;
+  const currentRoles = signal<string[]>(['USUARIO']);
+
+  beforeEach(async () => {
+    currentRoles.set(['USUARIO']);
+    await TestBed.configureTestingModule({
+      imports: [AppShellComponent],
+      providers: [
+        provideRouter([]),
+        { provide: BreakpointObserver, useValue: { observe: vi.fn(() => of({ matches: false })) } },
+        {
+          provide: AuthService,
+          useValue: {
+            roles: () => currentRoles(),
+            usuarioActual: () => null,
+            hasAnyRole: (roles: string[]) => roles.some((role) => currentRoles().includes(role)),
+            refrescarPerfil: () => of(null),
+            logout: vi.fn(() => of(void 0))
+          }
+        }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AppShellComponent);
+  });
+
+  it('USUARIO ve Inicio y Buscar eventos, no Eventos publicados', () => {
+    const items = fixture.componentInstance.navItems();
+    const labels = items.map((item) => item.label);
+
+    expect(labels).toEqual([
+      'Inicio',
+      'Buscar eventos',
+      'Solicitar ser organizador',
+      'Mis inscripciones',
+      'Mis pagos',
+      'Mis certificados',
+      'Mi perfil'
+    ]);
+    expect(labels).not.toContain('Eventos publicados');
+    expect(items.find((item) => item.label === 'Inicio')?.route).toBe('/privado/dashboard');
+    expect(items.find((item) => item.label === 'Buscar eventos')?.route).toBe('/eventos');
+  });
+
+  it('ADMINISTRADOR conserva los accesos de gestión de eventos', () => {
+    currentRoles.set(['ADMINISTRADOR']);
+    const labels = fixture.componentInstance.navItems().map((item) => item.label);
+
+    expect(labels).toContain('Revisar eventos');
+    expect(labels).toContain('Panel administrativo');
+  });
+
+  it('ORGANIZADOR conserva el acceso a sus eventos', () => {
+    currentRoles.set(['ORGANIZADOR']);
+    const items = fixture.componentInstance.navItems();
+
+    expect(items.some((item) => item.label === 'Mis eventos' && item.route === '/organizador/eventos')).toBe(true);
+  });
+});
