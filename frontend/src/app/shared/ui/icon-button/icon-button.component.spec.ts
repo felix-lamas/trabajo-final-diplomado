@@ -21,4 +21,13 @@ describe('IconButtonComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('button').disabled).toBe(true);
   });
+
+  it('refleja estado expanded y pressed en el control nativo', () => {
+    fixture.componentInstance.ariaExpanded = true;
+    fixture.componentInstance.ariaPressed = true;
+    fixture.detectChanges();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+  });
 });

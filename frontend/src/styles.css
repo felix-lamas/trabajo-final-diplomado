@@ -325,6 +325,9 @@ select:focus-visible {
   color: var(--app-text);
 }
 
+.shell .mat-drawer-content { display: flex; min-width: 0; flex-direction: column; overflow: auto; }
+.shell .mat-drawer-backdrop { background: color-mix(in srgb, var(--color-bg) 58%, transparent); }
+
 .mat-drawer,
 .mat-sidenav {
   background: var(--color-surface) !important;

@@ -17,6 +17,7 @@ export class ButtonComponent {
   @Input() label = '';
   @Input() icon?: string;
   @Input() iconPosition: 'start' | 'end' = 'start';
+  @Input() fullWidth = false;
   @Input() disabled = false;
   @Input() loading = false;
   @Output() pressed = new EventEmitter<MouseEvent>();

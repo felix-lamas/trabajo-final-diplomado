@@ -21,6 +21,7 @@
 
 .vidia-button__label { min-width: 0; overflow-wrap: anywhere; }
 .vidia-button mat-icon { flex: 0 0 auto; }
+.vidia-button--full-width { width: 100%; }
 
 .vidia-button--primary { color: var(--color-primary-contrast); background: var(--color-primary); }
 .vidia-button--primary:hover:not(:disabled) { background: var(--color-primary-hover); }

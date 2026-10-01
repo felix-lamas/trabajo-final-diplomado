@@ -66,4 +66,14 @@ describe('AppShellComponent navigation by role', () => {
 
     expect(items.some((item) => item.label === 'Mis eventos' && item.route === '/organizador/eventos')).toBe(true);
   });
+
+  it('agrupa las opciones visibles sin cambiar sus rutas y conserva nombre accesible al colapsar', () => {
+    const shell = fixture.componentInstance;
+    expect(shell.navGroups().map((group) => group.label)).toEqual(['Explorar', 'Cuenta', 'Mi actividad']);
+    shell.collapsed.set(true);
+    fixture.detectChanges();
+    const links = Array.from(fixture.nativeElement.querySelectorAll('.shell__nav a')) as HTMLAnchorElement[];
+    expect(links.length).toBeGreaterThan(0);
+    expect(links.every((link) => Boolean(link.getAttribute('aria-label')))).toBe(true);
+  });
 });

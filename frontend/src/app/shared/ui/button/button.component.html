@@ -1,5 +1,6 @@
 <button
   class="vidia-button"
+  [class.vidia-button--full-width]="fullWidth"
   [ngClass]="'vidia-button--' + variant"
   [attr.type]="type"
   [disabled]="unavailable"

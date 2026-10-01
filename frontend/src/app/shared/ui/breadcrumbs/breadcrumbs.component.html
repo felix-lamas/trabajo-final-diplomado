@@ -1,4 +1,4 @@
-<nav class="breadcrumbs" aria-label="Breadcrumb">
+<nav class="breadcrumbs" aria-label="Ruta de navegación">
   <ng-container *ngFor="let item of items; let last = last">
     <a *ngIf="item.route && !last; else currentItem" class="breadcrumbs__item" [routerLink]="item.route">
       <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>

@@ -34,4 +34,10 @@ describe('ButtonComponent', () => {
     expect(fixture.nativeElement.querySelector('button').classList).toContain('vidia-button--danger');
     expect(action).toHaveBeenCalledOnce();
   });
+
+  it('permite ocupar el ancho disponible cuando se usa en una barra lateral', () => {
+    fixture.componentInstance.fullWidth = true;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('button').classList).toContain('vidia-button--full-width');
+  });
 });

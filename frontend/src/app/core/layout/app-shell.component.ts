@@ -16,12 +16,19 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../services/auth.service';
 import { ThemeService } from '../services/theme.service';
 import { BreadcrumbItem, BreadcrumbsComponent } from '../../shared/ui/breadcrumbs/breadcrumbs.component';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
+import { IconButtonComponent } from '../../shared/ui/icon-button/icon-button.component';
 
 interface NavItem {
   label: string;
   icon: string;
   route: string;
   roles?: string[];
+}
+
+interface NavGroup {
+  label: string;
+  items: NavItem[];
 }
 
 @Component({
@@ -39,7 +46,9 @@ interface NavItem {
     MatDividerModule,
     MatIconModule,
     MatTooltipModule,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    ButtonComponent,
+    IconButtonComponent
   ],
   templateUrl: './app-shell.component.html',
   styleUrl: './app-shell.component.css'
@@ -56,6 +65,7 @@ export class AppShellComponent implements OnInit {
   readonly mobile = signal(false);
   readonly collapsed = signal(false);
   readonly darkMode = computed(() => this.themeService.theme() === 'dark');
+  readonly themeActionLabel = computed(() => this.darkMode() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
   readonly breadcrumbs = signal<BreadcrumbItem[]>([]);
   readonly currentSection = computed(() => this.breadcrumbs().at(-1)?.label ?? 'Inicio');
   readonly navItems = computed(() => [
@@ -78,6 +88,25 @@ export class AppShellComponent implements OnInit {
     { label: 'Mis certificados', icon: 'workspace_premium', route: '/certificados/mis-certificados', roles: ['USUARIO'] },
     { label: 'Mi perfil', icon: 'account_circle', route: '/privado/perfil', roles: ['USUARIO', 'ORGANIZADOR', 'ADMINISTRADOR'] }
   ].filter((item) => !item.roles || this.authService.hasAnyRole(item.roles)));
+  readonly navGroups = computed<NavGroup[]>(() => {
+    const groups = new Map<string, NavItem[]>();
+    for (const item of this.navItems()) {
+      const itemRoles = item.roles ?? [];
+      const group = item.route === '/privado/perfil' || item.route === '/privado/solicitud-organizador'
+        ? 'Cuenta'
+        : itemRoles.includes('USUARIO')
+          ? (item.route === '/privado/inscripciones' || item.route === '/privado/pagos' || item.route.startsWith('/certificados/') ? 'Mi actividad' : 'Explorar')
+          : item.route === '/admin' || item.route.startsWith('/admin/eventos') || item.route.startsWith('/admin/categorias') || item.route.startsWith('/admin/solicitudes-organizador')
+            ? 'Administración'
+            : item.route === '/organizador/eventos'
+              ? 'Gestión de eventos'
+              : 'Operaciones';
+      const groupItems = groups.get(group) ?? [];
+      groupItems.push(item);
+      groups.set(group, groupItems);
+    }
+    return Array.from(groups, ([label, items]) => ({ label, items }));
+  });
   readonly quickActions = computed(() => [
     { label: 'Nuevo evento', icon: 'add_circle', route: '/organizador/eventos/nuevo', roles: ['ORGANIZADOR'] },
     { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
@@ -133,6 +162,10 @@ export class AppShellComponent implements OnInit {
 
   toggleTheme(): void {
     this.themeService.toggle();
+  }
+
+  closeDrawerOnMobile(): void {
+    if (this.mobile()) this.drawer?.close();
   }
 
   private buildBreadcrumbs(url: string): BreadcrumbItem[] {

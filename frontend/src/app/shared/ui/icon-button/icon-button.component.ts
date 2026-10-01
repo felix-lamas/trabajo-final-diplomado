@@ -14,5 +14,7 @@ export class IconButtonComponent {
   @Input({ required: true }) icon!: string;
   @Input() tooltip?: string;
   @Input() disabled = false;
+  @Input() ariaExpanded: boolean | null = null;
+  @Input() ariaPressed: boolean | null = null;
   @Output() pressed = new EventEmitter<MouseEvent>();
 }

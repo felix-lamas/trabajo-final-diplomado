@@ -7,33 +7,43 @@
     [class.shell__sidenav--collapsed]="collapsed() && !mobile()"
     [mode]="mobile() ? 'over' : 'side'"
     [opened]="!mobile()"
+    [autoFocus]="mobile()"
   >
     <div class="shell__brand">
       <div class="shell__mark" aria-hidden="true">V</div>
       <div *ngIf="!collapsed() || mobile()">
-        <div class="shell__eyebrow">donde los eventos cobran vida</div>
         <div class="shell__title">Vidia</div>
+        <div class="shell__tagline">donde los eventos cobran vida</div>
       </div>
+      <app-icon-button *ngIf="mobile()" class="shell__drawer-close" icon="close" ariaLabel="Cerrar menú" tooltip="Cerrar menú" (pressed)="closeDrawerOnMobile()"></app-icon-button>
     </div>
 
     <div class="shell__tenant" *ngIf="!collapsed() || mobile()">
-      <span>Tenant institucional</span>
-      <strong>Universidad Autonoma Juan Misael Saracho</strong>
+      <span>Universidad</span>
+      <strong>Universidad Autónoma Juan Misael Saracho</strong>
     </div>
 
     <mat-divider></mat-divider>
 
-    <nav class="shell__nav">
-      <a
-        mat-list-item
-        *ngFor="let item of navItems()"
-        [routerLink]="item.route"
-        routerLinkActive="shell__active"
-        [class.shell__nav-item--collapsed]="collapsed() && !mobile()"
-      >
-        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span matListItemTitle *ngIf="!collapsed() || mobile()">{{ item.label }}</span>
-      </a>
+    <nav class="shell__nav" aria-label="Secciones">
+      <section class="shell__nav-group" *ngFor="let group of navGroups()" [attr.aria-label]="group.label">
+        <h2 class="shell__nav-group-title" *ngIf="!collapsed() || mobile()">{{ group.label }}</h2>
+        <a
+          mat-list-item
+          *ngFor="let item of group.items"
+          [routerLink]="item.route"
+          routerLinkActive="shell__active"
+          ariaCurrentWhenActive="page"
+          [attr.aria-label]="item.label"
+          [matTooltip]="collapsed() && !mobile() ? item.label : ''"
+          matTooltipPosition="after"
+          [class.shell__nav-item--collapsed]="collapsed() && !mobile()"
+          (click)="closeDrawerOnMobile()"
+        >
+          <mat-icon matListItemIcon aria-hidden="true">{{ item.icon }}</mat-icon>
+          <span matListItemTitle *ngIf="!collapsed() || mobile()">{{ item.label }}</span>
+        </a>
+      </section>
     </nav>
 
     <div class="shell__sidebar-footer">
@@ -42,22 +52,26 @@
         <strong>{{ userName() }}</strong>
         <span>{{ userRole() }}</span>
       </div>
-      <button mat-stroked-button color="primary" type="button" (click)="cerrarSesion()"
-        [disabled]="loggingOut()" [attr.aria-label]="'Cerrar sesion'">
-        <mat-icon>logout</mat-icon>
-        <span *ngIf="!collapsed() || mobile()">Cerrar sesion</span>
-      </button>
+      <app-button *ngIf="!collapsed() || mobile()" variant="outline" icon="logout" label="Cerrar sesión" [fullWidth]="true" [disabled]="loggingOut()" (pressed)="cerrarSesion()"></app-button>
+      <app-icon-button *ngIf="collapsed() && !mobile()" icon="logout" ariaLabel="Cerrar sesión" tooltip="Cerrar sesión" [disabled]="loggingOut()" (pressed)="cerrarSesion()"></app-icon-button>
     </div>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <header class="shell__header app-surface">
-      <button mat-icon-button type="button" class="shell__menu" aria-label="Abrir menu" (click)="toggleDrawer()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <div class="shell__headline">
-        <div class="shell__eyebrow">Universidad Autonoma Juan Misael Saracho</div>
-        <h1>Gestion de eventos universitarios</h1>
+      <div class="shell__header-main">
+        <app-icon-button
+          class="shell__menu"
+          icon="menu"
+          [ariaLabel]="mobile() ? 'Abrir menú' : (collapsed() ? 'Expandir navegación' : 'Contraer navegación')"
+          [tooltip]="mobile() ? 'Abrir menú' : (collapsed() ? 'Expandir navegación' : 'Contraer navegación')"
+          [ariaExpanded]="mobile() ? (drawer?.opened ?? false) : !collapsed()"
+          (pressed)="toggleDrawer()">
+        </app-icon-button>
+        <div class="shell__headline">
+          <div class="shell__eyebrow">Vidia · UAJMS</div>
+          <h1>{{ currentSection() }}</h1>
+        </div>
       </div>
       <div class="shell__actions">
         <div class="shell__quick-actions" aria-label="Acciones rapidas">
@@ -70,18 +84,9 @@
             <mat-icon>{{ action.icon }}</mat-icon>
           </a>
         </div>
-        <button mat-icon-button type="button" (click)="toggleTheme()" [attr.aria-label]="darkMode() ? 'Activar tema claro' : 'Activar tema oscuro'">
-          <mat-icon>{{ darkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
-        </button>
-        <span class="app-chip shell__status">
-          <mat-icon>monitor_heart</mat-icon>
-          Operacion estable
-        </span>
-        <button mat-icon-button type="button" aria-label="Notificaciones futuras">
-          <mat-icon>notifications_none</mat-icon>
-        </button>
-        <div class="shell__profile">
-          <div class="shell__avatar">{{ userName().slice(0, 1) }}</div>
+        <app-icon-button class="shell__theme-toggle" [icon]="darkMode() ? 'light_mode' : 'dark_mode'" [ariaLabel]="themeActionLabel()" [tooltip]="themeActionLabel()" [ariaPressed]="darkMode()" (pressed)="toggleTheme()"></app-icon-button>
+        <div class="shell__profile" role="group" [attr.aria-label]="'Sesión de ' + userName() + ', rol ' + userRole()" [title]="userName() + ' · ' + userRole()">
+          <div class="shell__avatar" aria-hidden="true">{{ userName().slice(0, 1) }}</div>
           <div class="shell__profile-copy">
             <strong>{{ userName() }}</strong>
             <span>{{ userRole() }}</span>
@@ -93,15 +98,14 @@
     <main id="app-main" class="shell__main" tabindex="-1">
       <div class="shell__context" *ngIf="breadcrumbs().length">
         <app-breadcrumbs [items]="breadcrumbs()"></app-breadcrumbs>
-        <span class="shell__context-label">{{ currentSection() }}</span>
       </div>
       <router-outlet></router-outlet>
     </main>
 
     <footer class="shell__footer">
       <div>
-        <strong>UAJMS</strong>
-        <span>Plataforma Web para la Gestion Integral de Eventos Universitarios</span>
+        <strong>Vidia</strong>
+        <span>donde los eventos cobran vida · Universidad Autónoma Juan Misael Saracho</span>
       </div>
       <span>Release 1.0</span>
     </footer>

@@ -1,17 +1,21 @@
 .breadcrumbs {
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   align-items: center;
   gap: 0.35rem;
   flex-wrap: wrap;
-  color: var(--app-text-muted);
-  font-size: 0.84rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-caption);
 }
 
 .breadcrumbs__item {
+  min-width: 0;
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.3rem 0.55rem;
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-pill);
   border: 1px solid transparent;
   transition: background-color var(--motion-fast) var(--motion-easing), color var(--motion-fast) var(--motion-easing), border-color var(--motion-fast) var(--motion-easing);
@@ -23,11 +27,18 @@
   border-color: var(--color-border);
 }
 
-.breadcrumbs__item--current {
-  color: var(--app-text-strong);
-  background: var(--app-surface-strong);
-  border-color: var(--app-border);
+.breadcrumbs__item:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
 }
+
+.breadcrumbs__item--current {
+  color: var(--color-text-primary);
+  background: var(--color-surface-raised);
+  border-color: var(--color-border);
+}
+
+.breadcrumbs__item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .breadcrumbs__item mat-icon,
 .breadcrumbs__separator {
@@ -37,5 +48,5 @@
 }
 
 .breadcrumbs__separator {
-  color: var(--app-text-muted);
+  color: var(--color-text-muted);
 }
