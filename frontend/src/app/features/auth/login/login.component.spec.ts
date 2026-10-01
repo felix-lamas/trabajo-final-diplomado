@@ -52,6 +52,20 @@ describe('LoginComponent identity flow', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/organizador/eventos']);
   });
 
+  it('ADMINISTRADOR conserva la navegacion a su panel', () => {
+    fixture.componentInstance.onSubmit();
+    loginResponse.next(successResponse(['ADMINISTRADOR']));
+    loginResponse.complete();
+    expect(router.navigate).toHaveBeenCalledWith(['/admin']);
+  });
+
+  it('USUARIO llega a su panel principal', () => {
+    fixture.componentInstance.onSubmit();
+    loginResponse.next(successResponse(['USUARIO']));
+    loginResponse.complete();
+    expect(router.navigate).toHaveBeenCalledWith(['/privado/dashboard']);
+  });
+
   it('correo no verificado aparece inmediatamente y ofrece reenvio generico', async () => {
     fixture.componentInstance.onSubmit();
     loginResponse.error(new HttpErrorResponse({

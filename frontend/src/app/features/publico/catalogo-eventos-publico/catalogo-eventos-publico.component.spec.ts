@@ -82,6 +82,46 @@ describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
     expect(fixture.nativeElement.textContent).toContain('Evento pagado');
   });
 
+  it('inicia con precio Todos y muestra publicados gratuitos y pagados juntos', async () => {
+    const eventoPagado = {
+      ...evento,
+      id: 'pago',
+      titulo: 'Evento pagado',
+      tipoInscripcion: TipoInscripcion.PAGO,
+      costo: 30
+    };
+    responses[0].next([evento, eventoPagado]);
+    responses[0].complete();
+    await fixture.whenStable();
+
+    expect(fixture.componentInstance.filtros.get('tipoInscripcion')?.value).toBe('TODOS');
+    expect(fixture.nativeElement.textContent).toContain('Evento reactivo');
+    expect(fixture.nativeElement.textContent).toContain('Evento pagado');
+  });
+
+  it('permite filtrar solo gratuitos y luego solo pagados', async () => {
+    const eventoPagado = {
+      ...evento,
+      id: 'pago',
+      titulo: 'Evento pagado',
+      tipoInscripcion: TipoInscripcion.PAGO,
+      costo: 30
+    };
+    responses[0].next([evento, eventoPagado]);
+    responses[0].complete();
+    await fixture.whenStable();
+
+    fixture.componentInstance.filtros.get('tipoInscripcion')?.setValue('GRATUITO');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).toContain('Evento reactivo');
+    expect(fixture.nativeElement.textContent).not.toContain('Evento pagado');
+
+    fixture.componentInstance.filtros.get('tipoInscripcion')?.setValue('PAGO');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).toContain('Evento pagado');
+    expect(fixture.nativeElement.textContent).not.toContain('Evento reactivo');
+  });
+
   it('muestra empty inmediatamente cuando HTTP devuelve una lista vacia', async () => {
     responses[0].next([]);
     responses[0].complete();

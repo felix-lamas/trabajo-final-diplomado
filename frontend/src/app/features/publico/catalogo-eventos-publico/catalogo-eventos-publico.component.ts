@@ -35,7 +35,8 @@ export class CatalogoEventosPublicoComponent implements OnInit {
   ) {
     this.filtros = this.fb.group({
       buscar: [''],
-      categoria: ['TODAS']
+      categoria: ['TODAS'],
+      tipoInscripcion: ['TODOS']
     });
   }
 
@@ -82,7 +83,7 @@ export class CatalogoEventosPublicoComponent implements OnInit {
   }
 
   limpiarFiltros(): void {
-    this.filtros.reset({ buscar: '', categoria: 'TODAS' }, { emitEvent: false });
+    this.filtros.reset({ buscar: '', categoria: 'TODAS', tipoInscripcion: 'TODOS' }, { emitEvent: false });
     this.pageIndex = 0;
     this.aplicarFiltros();
   }
@@ -90,6 +91,7 @@ export class CatalogoEventosPublicoComponent implements OnInit {
   private aplicarFiltros(): void {
     const buscar = String(this.filtros.get('buscar')?.value || '').toLowerCase().trim();
     const categoria = String(this.filtros.get('categoria')?.value || 'TODAS');
+    const tipoInscripcion = String(this.filtros.get('tipoInscripcion')?.value || 'TODOS');
 
     this.filtrados = this.eventos.filter((evento) => {
       const coincideBusqueda = !buscar ||
@@ -98,7 +100,8 @@ export class CatalogoEventosPublicoComponent implements OnInit {
         evento.categoriaNombre.toLowerCase().includes(buscar);
 
       const coincideCategoria = categoria === 'TODAS' || evento.categoriaNombre === categoria;
-      return coincideBusqueda && coincideCategoria;
+      const coincideTipo = tipoInscripcion === 'TODOS' || evento.tipoInscripcion === tipoInscripcion;
+      return coincideBusqueda && coincideCategoria && coincideTipo;
     });
 
     this.pageIndex = 0;

@@ -45,12 +45,14 @@ export const routes: Routes = [
       {
         path: 'privado',
         pathMatch: 'full',
-        redirectTo: '/eventos'
+        redirectTo: '/privado/dashboard'
       },
       {
         path: 'privado/dashboard',
         pathMatch: 'full',
-        redirectTo: '/eventos'
+        canMatch: [authGuard, roleGuard],
+        data: { roles: ['USUARIO'] },
+        loadComponent: () => import('./features/privado/dashboard-privado/dashboard-privado.component').then((m) => m.DashboardPrivadoComponent)
       },
       {
         path: 'privado/perfil',

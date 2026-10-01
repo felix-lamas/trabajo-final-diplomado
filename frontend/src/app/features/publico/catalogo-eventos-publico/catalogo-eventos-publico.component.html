@@ -24,6 +24,15 @@
           </mat-select>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+          <mat-label>Precio</mat-label>
+          <mat-select formControlName="tipoInscripcion">
+            <mat-option value="TODOS">Todos</mat-option>
+            <mat-option value="GRATUITO">Gratuitos</mat-option>
+            <mat-option value="PAGO">Pagados</mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <button mat-stroked-button type="button" (click)="limpiarFiltros()">
           Limpiar
         </button>

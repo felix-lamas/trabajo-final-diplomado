@@ -22,6 +22,9 @@ export const roleGuard: CanMatchFn = (route: Route, _segments: UrlSegment[]) => 
     if (authService.hasAnyRole(['ORGANIZADOR'])) {
       return router.createUrlTree(['/organizador/eventos']);
     }
+    if (authService.hasAnyRole(['USUARIO'])) {
+      return router.createUrlTree(['/privado/dashboard']);
+    }
     return router.createUrlTree(['/eventos']);
   };
 

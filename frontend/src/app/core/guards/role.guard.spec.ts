@@ -31,7 +31,7 @@ describe('roleGuard with refreshed roles', () => {
     const result = await execute({ data: { roles: ['ORGANIZADOR'] } });
 
     expect(result).toBeInstanceOf(UrlTree);
-    expect(router.serializeUrl(result as UrlTree)).toBe('/eventos');
+    expect(router.serializeUrl(result as UrlTree)).toBe('/privado/dashboard');
   });
 
   it('ORGANIZADOR puede acceder a rutas ORGANIZADOR', async () => {

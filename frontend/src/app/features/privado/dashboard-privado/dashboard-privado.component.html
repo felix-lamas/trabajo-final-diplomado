@@ -7,17 +7,16 @@
       </div>
       <h1>Bienvenido, {{ userName }}</h1>
       <p>
-        Gestione sus inscripciones, pagos, credenciales y certificados desde un panel claro,
-        moderno y orientado a la experiencia estudiantil.
+        Explore eventos publicados y consulte sus inscripciones, pagos y certificados.
       </p>
       <div class="student-hero__actions">
-        <a mat-flat-button color="primary" routerLink="/privado/inscripciones">
-          <mat-icon>how_to_reg</mat-icon>
-          Mis inscripciones
+        <a mat-flat-button color="primary" routerLink="/eventos">
+          <mat-icon>search</mat-icon>
+          Buscar eventos
         </a>
         <a mat-stroked-button routerLink="/privado/perfil">
           <mat-icon>badge</mat-icon>
-          Ver perfil
+          Mi perfil
         </a>
       </div>
     </div>
@@ -32,10 +31,6 @@
         <strong>{{ pagosValidados }}</strong>
       </div>
       <div class="student-stat">
-        <span>Credenciales</span>
-        <strong>{{ credenciales.length }}</strong>
-      </div>
-      <div class="student-stat">
         <span>Eventos recomendados</span>
         <strong>{{ recomendados.length }}</strong>
       </div>
@@ -46,25 +41,6 @@
         <mat-spinner diameter="34"></mat-spinner>
       </div>
     </ng-template>
-  </section>
-
-  <section class="student-grid student-grid--3" *ngIf="ejecutivo">
-    <article class="student-card" *ngFor="let item of [
-      { label: 'Eventos', value: ejecutivo.totalEventos, icon: 'event' },
-      { label: 'Participantes', value: ejecutivo.totalParticipantes, icon: 'groups' },
-      { label: 'Satisfaccion', value: ejecutivo.nivelSatisfaccion, icon: 'favorite' }
-    ]">
-      <div class="student-card__header">
-        <div>
-          <h3>{{ item.label }}</h3>
-          <p>Indicador institucional</p>
-        </div>
-        <mat-icon>{{ item.icon }}</mat-icon>
-      </div>
-      <div class="student-stat" style="padding: 0.85rem;">
-        <strong style="font-size: 1.5rem;">{{ item.value }}</strong>
-      </div>
-    </article>
   </section>
 
   <section class="student-split">
@@ -170,18 +146,30 @@
           <div class="student-card__header">
             <div>
               <h3>Mis inscripciones</h3>
-              <p>Ver detalle, cancelar y generar credencial</p>
+              <p>Consultar estados y comprobantes de inscripción</p>
             </div>
             <mat-icon>how_to_reg</mat-icon>
           </div>
         </a>
-        <a class="student-card" routerLink="/privado/credenciales">
+        <a class="student-card" routerLink="/certificados/mis-certificados">
           <div class="student-card__header">
             <div>
-              <h3>Mis credenciales</h3>
-              <p>Descarga y QR de acceso</p>
+              <h3>Mis certificados</h3>
+              <p>Consultar y descargar certificados emitidos</p>
             </div>
-            <mat-icon>badge</mat-icon>
+            <mat-icon>workspace_premium</mat-icon>
+          </div>
+        </a>
+        <a class="student-card" routerLink="/privado/pagos">
+          <div class="student-card__header">
+            <div><h3>Mis pagos</h3><p>Consultar pagos y comprobantes</p></div>
+            <mat-icon>payments</mat-icon>
+          </div>
+        </a>
+        <a class="student-card" routerLink="/privado/solicitud-organizador">
+          <div class="student-card__header">
+            <div><h3>Solicitud de organizador</h3><p>Consultar o solicitar el rol de organizador</p></div>
+            <mat-icon>assignment_ind</mat-icon>
           </div>
         </a>
       </div>

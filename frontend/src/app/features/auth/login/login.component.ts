@@ -56,7 +56,7 @@ export class LoginComponent {
         } else if (roles.includes('ORGANIZADOR')) {
           this.router.navigate(['/organizador/eventos']);
         } else {
-          this.router.navigate(['/eventos']);
+          this.router.navigate(['/privado/dashboard']);
         }
       },
       error: (err: HttpErrorResponse) => {

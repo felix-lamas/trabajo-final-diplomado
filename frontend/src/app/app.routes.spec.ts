@@ -19,4 +19,17 @@ describe('rutas públicas y de certificados propios', () => {
     expect(verificacion?.canMatch).toBeUndefined();
     expect(verificacion?.canActivate).toBeUndefined();
   });
+  it('conecta /privado con el panel exclusivo de USUARIO', () => {
+    const privado = children.find((route) => route.path === 'privado');
+    const dashboard = children.find((route) => route.path === 'privado/dashboard');
+
+    expect(privado?.redirectTo).toBe('/privado/dashboard');
+    expect(dashboard?.data?.['roles']).toEqual(['USUARIO']);
+    expect(dashboard?.loadComponent).toBeDefined();
+  });
+
+  it('mantiene acceso directo publico a /eventos', () => {
+    const publico = routes.find((route) => route.loadChildren !== undefined && route.path === '');
+    expect(publico?.loadChildren).toBeDefined();
+  });
 });
