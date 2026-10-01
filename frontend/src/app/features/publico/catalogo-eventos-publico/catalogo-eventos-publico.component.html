@@ -64,24 +64,7 @@
     </app-empty-state>
 
     <div class="public-grid public-grid--catalog" *ngIf="!loading && !errorCarga && paginados.length > 0">
-      <mat-card *ngFor="let evento of paginados" class="public-event-card">
-        <div class="public-event-card__image">
-          <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?auto=format&fit=crop&w=1200&q=80'" [alt]="evento.titulo">
-          <span class="app-badge app-badge--info">{{ evento.categoriaNombre }}</span>
-        </div>
-        <div class="public-event-card__body">
-          <div class="public-event-card__meta">
-            <span>{{ evento.modalidad }}</span>
-            <span>{{ evento.estado }}</span>
-          </div>
-          <h3>{{ evento.titulo }}</h3>
-          <p>{{ evento.descripcion | slice:0:145 }}...</p>
-          <div class="public-event-card__footer">
-            <span>{{ evento.tipoInscripcion === 'GRATUITO' ? 'Gratis' : (evento.costo | currency:'Bs. ') }}</span>
-            <a mat-flat-button color="primary" [routerLink]="['/eventos', evento.id]">Ver detalle</a>
-          </div>
-        </div>
-      </mat-card>
+      <app-event-card *ngFor="let evento of paginados" [event]="evento" actionLabel="Ver detalle" [showStatus]="true"></app-event-card>
     </div>
 
     <mat-paginator

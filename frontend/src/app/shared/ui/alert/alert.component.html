@@ -1,0 +1,7 @@
+<section class="vidia-alert" [class.vidia-alert--success]="variant === 'success'" [class.vidia-alert--warning]="variant === 'warning'" [class.vidia-alert--error]="variant === 'error'" [class.vidia-alert--info]="variant === 'info'" [attr.role]="role" [attr.aria-live]="live">
+  <mat-icon *ngIf="icon" class="vidia-alert__icon" aria-hidden="true">{{ icon }}</mat-icon>
+  <div class="vidia-alert__content">
+    <strong *ngIf="title">{{ title }}</strong>
+    <ng-content></ng-content>
+  </div>
+</section>

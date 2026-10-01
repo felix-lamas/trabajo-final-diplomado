@@ -1,0 +1,9 @@
+<button
+  class="vidia-icon-button"
+  type="button"
+  [attr.aria-label]="ariaLabel"
+  [matTooltip]="tooltip || ''"
+  [disabled]="disabled"
+  (click)="pressed.emit($event)">
+  <mat-icon aria-hidden="true">{{ icon }}</mat-icon>
+</button>

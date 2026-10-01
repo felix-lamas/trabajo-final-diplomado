@@ -1,0 +1,8 @@
+:host { display: block; min-width: 0; }
+.vidia-alert { display: flex; align-items: flex-start; gap: var(--space-3); min-width: 0; padding: var(--space-4); border: 1px solid var(--color-info); border-radius: var(--radius-md); color: var(--color-info-text); background: var(--color-info-bg); }
+.vidia-alert__icon { flex: 0 0 auto; color: currentColor; }
+.vidia-alert__content { min-width: 0; display: grid; gap: var(--space-1); overflow-wrap: anywhere; }
+.vidia-alert--success { color: var(--color-success-text); background: var(--color-success-bg); border-color: var(--color-success); }
+.vidia-alert--warning { color: var(--color-warning-text); background: var(--color-warning-bg); border-color: var(--color-warning); }
+.vidia-alert--error { color: var(--color-danger-text); background: var(--color-danger-bg); border-color: var(--color-danger); }
+.vidia-alert--info { color: var(--color-info-text); background: var(--color-info-bg); border-color: var(--color-info); }

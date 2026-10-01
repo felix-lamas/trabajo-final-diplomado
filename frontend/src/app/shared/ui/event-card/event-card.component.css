@@ -1,0 +1,32 @@
+:host { display: block; min-width: 0; height: 100%; }
+
+.vidia-event-card { height: 100%; min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-lg); color: var(--color-text-primary); background: var(--color-surface); box-shadow: var(--shadow-sm); transition: transform var(--motion-normal) var(--motion-easing), box-shadow var(--motion-normal) var(--motion-easing), border-color var(--motion-normal) var(--motion-easing); }
+.vidia-event-card:hover { transform: translateY(-2px); border-color: var(--color-border-strong); box-shadow: var(--shadow-md); }
+.vidia-event-card__media { position: relative; min-height: 12rem; aspect-ratio: 16 / 9; overflow: hidden; background: var(--color-bg-tertiary); }
+.vidia-event-card__media img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; }
+.vidia-event-card__placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: var(--color-text-muted); background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-surface-raised)); }
+.vidia-event-card__placeholder mat-icon { width: 3rem; height: 3rem; font-size: 3rem; }
+.vidia-event-card__category { position: absolute; inset-block-start: var(--space-3); inset-inline-start: var(--space-3); max-width: calc(100% - 2 * var(--space-3)); }
+.vidia-event-card__body { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); }
+.vidia-event-card__metadata { width: 100%; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); color: var(--color-text-secondary); font-size: var(--font-size-caption); }
+.vidia-event-card__metadata > span { display: inline-flex; align-items: center; gap: var(--space-1); }
+.vidia-event-card__metadata mat-icon,.vidia-event-card__location mat-icon { width: 1.125rem; height: 1.125rem; font-size: 1.125rem; color: var(--color-primary); }
+.vidia-event-card__body h3 { width: 100%; margin: 0; color: var(--color-text-primary); font-size: var(--font-size-h4); line-height: var(--line-height-heading); overflow-wrap: anywhere; }
+.vidia-event-card__description { width: 100%; margin: 0; color: var(--color-text-secondary); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.vidia-event-card__location { display: flex; align-items: flex-start; gap: var(--space-1); margin: 0; color: var(--color-text-muted); font-size: var(--font-size-body-small); overflow-wrap: anywhere; }
+.vidia-event-card__location mat-icon { flex: 0 0 auto; }
+.vidia-event-card__footer { width: 100%; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: auto; padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
+.vidia-event-card__price { display: grid; gap: var(--space-1); margin-inline-end: auto; }
+.vidia-event-card__eyebrow { color: var(--color-text-muted); font-size: var(--font-size-caption); }
+.vidia-event-card__price strong { color: var(--color-text-primary); font-size: var(--font-size-body-small); }
+.vidia-event-card__availability { color: var(--color-text-secondary); font-size: var(--font-size-caption); }
+.vidia-event-card__footer a { flex: 0 1 auto; max-width: 100%; white-space: normal; }
+.vidia-event-card :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+@media (max-width: 40rem) {
+  .vidia-event-card__media { min-height: 10rem; }
+  .vidia-event-card__footer { align-items: stretch; }
+  .vidia-event-card__footer a { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) { .vidia-event-card { transition: none; } .vidia-event-card:hover { transform: none; } }

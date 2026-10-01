@@ -1,0 +1,10 @@
+<header class="vidia-page-header">
+  <app-breadcrumbs *ngIf="breadcrumbs.length" [items]="breadcrumbs"></app-breadcrumbs>
+  <div class="vidia-page-header__content">
+    <div class="vidia-page-header__copy">
+      <h1>{{ title }}</h1>
+      <p *ngIf="description">{{ description }}</p>
+    </div>
+    <div class="vidia-page-header__actions"><ng-content select="[pageHeaderActions]"></ng-content></div>
+  </div>
+</header>

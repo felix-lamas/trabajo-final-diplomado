@@ -1,0 +1,34 @@
+<article class="vidia-event-card" [attr.aria-labelledby]="'event-title-' + event.id">
+  <div class="vidia-event-card__media">
+    <img *ngIf="event.imagenPortada; else imagePlaceholder" [src]="event.imagenPortada" [alt]="'Imagen de ' + event.titulo" loading="lazy">
+    <ng-template #imagePlaceholder><div class="vidia-event-card__placeholder" aria-hidden="true"><mat-icon>event</mat-icon></div></ng-template>
+    <app-badge class="vidia-event-card__category" variant="info" [label]="event.categoriaNombre"></app-badge>
+  </div>
+
+  <div class="vidia-event-card__body">
+    <div class="vidia-event-card__metadata">
+      <span><mat-icon aria-hidden="true">{{ event.modalidad === 'VIRTUAL' ? 'videocam' : 'location_on' }}</mat-icon>{{ event.modalidad === 'VIRTUAL' ? 'Virtual' : 'Presencial' }}</span>
+      <time [attr.datetime]="event.fechaInicio">{{ event.fechaInicio | date:'dd MMM yyyy' }}</time>
+      <app-badge *ngIf="showStatus" [variant]="statusVariant" [label]="event.estado"></app-badge>
+    </div>
+
+    <h3 [id]="'event-title-' + event.id">{{ event.titulo }}</h3>
+    <p class="vidia-event-card__description">{{ event.descripcion }}</p>
+
+    <p class="vidia-event-card__location" *ngIf="event.modalidad === 'PRESENCIAL' && (event.ubicacion || event.direccion)">
+      <mat-icon aria-hidden="true">place</mat-icon>{{ event.ubicacion || event.direccion }}
+    </p>
+
+    <div class="vidia-event-card__footer">
+      <div class="vidia-event-card__price">
+        <span class="vidia-event-card__eyebrow">Inscripción</span>
+        <strong *ngIf="event.tipoInscripcion === 'GRATUITO'; else paidPrice">Gratis</strong>
+        <ng-template #paidPrice><strong *ngIf="event.costo !== null && event.costo !== undefined">{{ event.costo | currency:'Bs. ' }}</strong></ng-template>
+      </div>
+      <span class="vidia-event-card__availability" *ngIf="event.cupoLimitado && event.cupoDisponible !== null && event.cupoDisponible !== undefined">
+        {{ event.cupoDisponible }} cupos
+      </span>
+      <a mat-flat-button color="primary" [routerLink]="['/eventos', event.id]" [attr.aria-label]="actionLabel + ': ' + event.titulo">{{ actionLabel }}</a>
+    </div>
+  </div>
+</article>

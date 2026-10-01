@@ -1,0 +1,13 @@
+:host { display: block; min-width: 0; }
+
+.vidia-page-header { display: grid; gap: var(--space-4); }
+.vidia-page-header__content { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); min-width: 0; }
+.vidia-page-header__copy { min-width: 0; }
+.vidia-page-header h1 { margin: 0; color: var(--color-text-primary); overflow-wrap: anywhere; }
+.vidia-page-header p { max-width: 68ch; margin: var(--space-2) 0 0; color: var(--color-text-secondary); }
+.vidia-page-header__actions { display: flex; flex: 0 0 auto; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+
+@media (max-width: 40rem) {
+  .vidia-page-header__content { align-items: stretch; flex-direction: column; gap: var(--space-3); }
+  .vidia-page-header__actions { width: 100%; }
+}

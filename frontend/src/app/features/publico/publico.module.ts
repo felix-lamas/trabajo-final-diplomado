@@ -17,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
+import { EventCardComponent } from '../../shared/ui/event-card/event-card.component';
 
 // Components
 import { LandingPublicoComponent } from './landing-publico/landing-publico.component';
@@ -63,7 +64,8 @@ const routes: Routes = [
     MatDividerModule,
     MatCheckboxModule,
     EmptyStateComponent,
-    SkeletonComponent
+    SkeletonComponent,
+    EventCardComponent
   ]
 })
 export class PublicoModule { }

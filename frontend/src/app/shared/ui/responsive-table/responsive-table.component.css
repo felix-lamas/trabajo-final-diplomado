@@ -1,0 +1,12 @@
+:host { display: block; min-width: 0; max-width: 100%; }
+.vidia-responsive-table { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); scrollbar-color: var(--color-border-strong) var(--color-surface); }
+.vidia-responsive-table:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.vidia-responsive-table :where(table) { width: 100%; border-collapse: collapse; color: var(--color-text-primary); }
+.vidia-responsive-table :where(th) { color: var(--color-text-secondary); background: var(--color-surface-raised); text-align: start; }
+.vidia-responsive-table :where(td, th) { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); }
+.vidia-responsive-table :where(tr:hover td) { background: var(--color-surface-hover); }
+
+@media (max-width: 40rem) {
+  .vidia-responsive-table { border-radius: var(--radius-sm); }
+  .vidia-responsive-table :where(table) { min-width: 36rem; }
+}

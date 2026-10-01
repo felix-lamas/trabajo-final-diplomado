@@ -56,24 +56,7 @@
     </div>
 
     <div *ngIf="!loading" class="public-grid public-grid--featured">
-      <mat-card *ngFor="let evento of destacados" class="public-event-card">
-        <div class="public-event-card__image">
-          <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1200&q=80'" [alt]="evento.titulo">
-          <span class="app-badge app-badge--info">{{ evento.categoriaNombre }}</span>
-        </div>
-        <div class="public-event-card__body">
-          <div class="public-event-card__meta">
-            <span>{{ evento.modalidad }}</span>
-            <span>{{ evento.fechaInicio | date:'dd MMM yyyy' }}</span>
-          </div>
-          <h3>{{ evento.titulo }}</h3>
-          <p>{{ evento.descripcion | slice:0:140 }}...</p>
-          <div class="public-event-card__footer">
-            <span>{{ evento.tipoInscripcion === 'GRATUITO' ? 'Gratis' : (evento.costo | currency:'Bs. ') }}</span>
-            <a mat-flat-button color="primary" [routerLink]="['/eventos', evento.id]">Ver detalle</a>
-          </div>
-        </div>
-      </mat-card>
+      <app-event-card *ngFor="let evento of destacados" [event]="evento" actionLabel="Ver detalle"></app-event-card>
     </div>
   </section>
 

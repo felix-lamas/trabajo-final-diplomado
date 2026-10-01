@@ -1,0 +1,15 @@
+<button
+  class="vidia-button"
+  [ngClass]="'vidia-button--' + variant"
+  [attr.type]="type"
+  [disabled]="unavailable"
+  [attr.aria-busy]="loading ? 'true' : null"
+  (click)="pressed.emit($event)">
+  <span *ngIf="loading" class="vidia-button__spinner" aria-hidden="true"></span>
+  <mat-icon *ngIf="icon && !loading && iconPosition === 'start'" aria-hidden="true">{{ icon }}</mat-icon>
+  <span class="vidia-button__label">
+    <ng-container *ngIf="label; else projectedLabel">{{ label }}</ng-container>
+    <ng-template #projectedLabel><ng-content></ng-content></ng-template>
+  </span>
+  <mat-icon *ngIf="icon && !loading && iconPosition === 'end'" aria-hidden="true">{{ icon }}</mat-icon>
+</button>

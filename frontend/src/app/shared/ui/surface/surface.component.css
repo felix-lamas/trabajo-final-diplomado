@@ -1,0 +1,6 @@
+:host { display: block; min-width: 0; }
+.app-surface { display: block; min-width: 0; padding: var(--space-5); border-radius: var(--radius-lg); color: var(--color-text-primary); }
+.app-surface--elevated { background: var(--color-surface); box-shadow: var(--shadow-md); }
+.app-surface--interactive { transition: border-color var(--motion-normal) var(--motion-easing), background-color var(--motion-normal) var(--motion-easing), box-shadow var(--motion-normal) var(--motion-easing); }
+.app-surface--interactive:hover { border-color: var(--color-border-strong); background: var(--color-surface-hover); box-shadow: var(--shadow-md); }
+@media (prefers-reduced-motion: reduce) { .app-surface--interactive { transition: none; } }

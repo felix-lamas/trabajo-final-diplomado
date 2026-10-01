@@ -1,0 +1,5 @@
+<article class="vidia-stat-card" [attr.aria-label]="label + ': ' + value">
+  <mat-icon *ngIf="icon" class="vidia-stat-card__icon" aria-hidden="true">{{ icon }}</mat-icon>
+  <span class="vidia-stat-card__label">{{ label }}</span>
+  <strong class="vidia-stat-card__value">{{ value }}</strong>
+</article>

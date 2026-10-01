@@ -76,7 +76,7 @@ describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
 
     expect(fixture.componentInstance.loading).toBe(false);
     expect(fixture.nativeElement.textContent).toContain('Evento reactivo');
-    expect(fixture.nativeElement.querySelector('.public-event-card')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('app-event-card .vidia-event-card')).not.toBeNull();
   });
 
   it('incluye eventos publicados de pago en el catalogo', async () => {
