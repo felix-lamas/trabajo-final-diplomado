@@ -10,6 +10,8 @@ import { ToastService } from '../../../../shared/ui/toast.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 import { EventoMotivoDialogComponent } from '../evento-motivo-dialog.component';
+import { InscripcionService } from '../../../../core/services/inscripcion.service';
+import { Inscripcion } from '../../../../core/models/inscripcion.model';
 
 @Component({
   selector: 'app-evento-detail',
@@ -22,13 +24,17 @@ export class EventoDetailComponent implements OnInit {
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly procesando = signal(false);
+  readonly inscripciones = signal<Inscripcion[]>([]);
+  readonly cargandoInscripciones = signal(false);
+  readonly errorInscripciones = signal('');
 
   constructor(
     private eventoService: EventoService,
     private authService: AuthService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private toast: ToastService
+    private toast: ToastService,
+    private inscripcionService: InscripcionService
   ) {}
 
   ngOnInit(): void {
@@ -42,8 +48,22 @@ export class EventoDetailComponent implements OnInit {
     this.loading.set(true);
     this.error.set(false);
     this.eventoService.obtenerPorId(id).pipe(finalize(() => this.loading.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (data) => this.evento.set(data),
+      next: (data) => {
+        this.evento.set(data);
+        if (this.esAdministrador || this.esOrganizador) this.cargarInscripciones(data.id);
+      },
       error: (err) => { this.error.set(true); this.toast.error(apiErrorMessage(err, 'Error al cargar detalle')); }
+    });
+  }
+
+  private cargarInscripciones(eventoId: string): void {
+    this.cargandoInscripciones.set(true);
+    this.errorInscripciones.set('');
+    this.inscripcionService.listarInscritosEvento(eventoId).pipe(
+      finalize(() => this.cargandoInscripciones.set(false)), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (data) => this.inscripciones.set(data),
+      error: (err) => this.errorInscripciones.set(apiErrorMessage(err, 'No fue posible cargar las inscripciones del evento.'))
     });
   }
 

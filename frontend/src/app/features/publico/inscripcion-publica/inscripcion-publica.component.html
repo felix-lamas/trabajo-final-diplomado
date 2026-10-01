@@ -1,80 +1,62 @@
-<main class="app-page public-portal">
-  <section class="public-section public-enroll">
-    <div class="app-toolbar">
-      <div class="app-toolbar__title">
-        <h1 class="app-section-title">Proceso de inscripcion</h1>
-        <p>Revise la informacion del evento y confirme su participacion.</p>
-      </div>
-      <a mat-stroked-button routerLink="/eventos">Volver al catalogo</a>
+<main class="app-page student-portal">
+  <header class="app-toolbar">
+    <div class="app-toolbar__title">
+      <h1 class="app-section-title">Inscripción al evento</h1>
+      <p>Revisa la información y confirma tu participación.</p>
     </div>
+    <a mat-stroked-button routerLink="/eventos">Volver al catálogo</a>
+  </header>
 
-    <div *ngIf="loading" class="public-loading">
-      <mat-spinner diameter="40"></mat-spinner>
-    </div>
+  <div *ngIf="loading" class="public-loading" role="status" aria-label="Cargando evento"><mat-spinner diameter="40"></mat-spinner></div>
+  <div *ngIf="!loading && error" class="app-alert app-alert--danger" role="alert">
+    <p>{{ error }}</p>
+    <button mat-stroked-button type="button" *ngIf="evento" (click)="cargarEvento(evento.id)">Reintentar</button>
+  </div>
 
-    <ng-container *ngIf="!loading && evento">
-      <div class="public-enroll__grid" *ngIf="!completado; else doneState">
-        <mat-card class="public-enroll__summary">
-          <div class="public-enroll__image">
-            <img [src]="evento.imagenPortada || 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1200&q=80'" [alt]="evento.titulo">
+  <ng-container *ngIf="!loading && evento as item">
+    <section class="student-split" *ngIf="!completado; else doneState">
+      <article class="student-panel">
+        <img *ngIf="item.imagenPortada" [src]="item.imagenPortada" [alt]="'Imagen del evento ' + item.titulo" loading="lazy" class="w-full rounded-lg object-cover">
+        <div class="student-card__header">
+          <div>
+            <p>{{ item.categoriaNombre }} · {{ item.modalidad }}</p>
+            <h2>{{ item.titulo }}</h2>
           </div>
-          <div class="public-enroll__content">
-            <div class="public-event-card__meta">
-              <span>{{ evento.categoriaNombre }}</span>
-              <span>{{ evento.modalidad }}</span>
-            </div>
-            <h2>{{ evento.titulo }}</h2>
-            <p>{{ evento.descripcion }}</p>
-            <div class="public-enroll__facts">
-              <div><strong>Fecha</strong><span>{{ evento.fechaInicio | date:'dd MMM yyyy' }}</span></div>
-              <div><strong>Horario</strong><span>{{ evento.horaInicio }} - {{ evento.horaFin }}</span></div>
-              <div><strong>Costo</strong><span>{{ evento.tipoInscripcion === 'GRATUITO' ? 'Gratis' : (evento.costo | currency:'Bs. ') }}</span></div>
-              <div><strong>Cupos</strong><span>{{ evento.cupoDisponible }} disponibles</span></div>
-            </div>
-          </div>
-        </mat-card>
+          <span class="app-badge" [class.app-badge--success]="item.tipoInscripcion === 'GRATUITO'" [class.app-badge--info]="item.tipoInscripcion !== 'GRATUITO'">
+            {{ item.tipoInscripcion === 'GRATUITO' ? 'Gratuito' : 'Pagado' }}
+          </span>
+        </div>
+        <p>{{ item.descripcion }}</p>
+        <div class="student-grid student-grid--2">
+          <div><strong>Fecha</strong><p>{{ item.fechaInicio | date:'dd MMM yyyy' }} · {{ item.horaInicio }}–{{ item.horaFin }}</p></div>
+          <div *ngIf="item.modalidad === 'PRESENCIAL'"><strong>Ubicación</strong><p>{{ item.ubicacion || item.direccion || 'No especificada' }}</p></div>
+          <div><strong>Inscripción</strong><p>{{ item.requiereInscripcion ? 'Requerida' : 'No requerida' }}</p></div>
+          <div *ngIf="item.tipoInscripcion !== 'GRATUITO'"><strong>Monto oficial</strong><p>{{ item.costo }}</p></div>
+        </div>
+      </article>
 
-        <mat-card class="public-enroll__form">
-          <div class="public-enroll__step">
-            <span class="app-badge app-badge--info">Confirmacion</span>
-            <strong>Confirmacion visual</strong>
-            <p *ngIf="evento.tipoInscripcion === 'GRATUITO'">La inscripcion gratuita quedara confirmada inmediatamente.</p>
-            <p *ngIf="evento.tipoInscripcion === 'PAGO'">La inscripcion quedara pendiente de pago con el monto oficial del evento.</p>
-          </div>
-
-          <mat-divider></mat-divider>
-
-          <div class="public-enroll__check">
-            <mat-icon>task_alt</mat-icon>
-            <div>
-              <strong>Datos verificados</strong>
-              <span>Evento publicado, cupos disponibles y modalidad activa.</span>
-            </div>
-          </div>
-
-          <div class="public-enroll__check">
-            <mat-icon>shield</mat-icon>
-            <div>
-              <strong>Proceso seguro</strong>
-              <span>La solicitud se envia al sistema institucional con trazabilidad.</span>
-            </div>
-          </div>
-
-          <button mat-flat-button color="primary" type="button" (click)="confirmar()" [disabled]="confirmando || (evento.cupoLimitado && (evento.cupoDisponible ?? 0) <= 0) || evento.estado !== 'PUBLICADO'">
-            {{ confirmando ? 'Confirmando...' : 'Confirmar inscripcion' }}
-          </button>
-
-          <p class="public-enroll__note" *ngIf="evento.cupoLimitado && (evento.cupoDisponible ?? 0) <= 0">El evento no tiene cupos disponibles.</p>
-        </mat-card>
-      </div>
-
-      <ng-template #doneState>
-        <mat-card class="public-enroll__done">
-          <mat-icon>check_circle</mat-icon>
-          <h2>Inscripcion realizada correctamente</h2>
-          <p>Estado: <strong>{{ estadoInscripcion }}</strong>. Abriendo el detalle de la inscripcion.</p>
-        </mat-card>
-      </ng-template>
-    </ng-container>
-  </section>
+      <aside class="student-panel">
+        <h2>Confirma tu participación</h2>
+        <p *ngIf="item.tipoInscripcion === 'GRATUITO'">No se requiere comprobante de pago. La inscripción gratuita se confirma según el resultado del sistema.</p>
+        <p *ngIf="item.tipoInscripcion !== 'GRATUITO'">Este evento es pagado. Después de inscribirte, realiza el pago externamente siguiendo las instrucciones del evento y presenta tu comprobante para validación.</p>
+        <section *ngIf="item.tipoInscripcion !== 'GRATUITO' && item.instruccionesPago">
+          <h3>Instrucciones de pago</h3><p>{{ item.instruccionesPago }}</p>
+        </section>
+        <img *ngIf="item.tipoInscripcion !== 'GRATUITO' && item.qrPagoUrl" [src]="item.qrPagoUrl" alt="QR de pago proporcionado para el evento" loading="lazy" class="max-w-full rounded-lg">
+        <p *ngIf="!item.requiereInscripcion">Este evento no requiere inscripción.</p>
+        <p *ngIf="sinCupo" role="status">No hay cupos disponibles.</p>
+        <button mat-flat-button color="primary" type="button" (click)="confirmar()"
+          [disabled]="confirmando || sinCupo || item.estado !== 'PUBLICADO' || !item.requiereInscripcion">
+          {{ confirmando ? 'Enviando…' : 'Confirmar inscripción' }}
+        </button>
+      </aside>
+    </section>
+    <ng-template #doneState>
+      <section class="student-panel" role="status">
+        <h2>Solicitud recibida</h2>
+        <p>Estado de inscripción: <strong>{{ estadoInscripcion }}</strong>.</p>
+        <a mat-flat-button color="primary" routerLink="/privado/inscripciones">Ver mis inscripciones</a>
+      </section>
+    </ng-template>
+  </ng-container>
 </main>

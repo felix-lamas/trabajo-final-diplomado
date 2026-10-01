@@ -64,6 +64,15 @@ describe('MisInscripcionesComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('No hay inscripciones en este filtro');
   });
 
+  it('incluye el estado CANCELADA en los filtros del historial', async () => {
+    responses[0].next([{ ...inscripcion, estado: EstadoInscripcion.CANCELADA }]); responses[0].complete();
+    await fixture.whenStable();
+    fixture.componentInstance.cambiarFiltro('CANCELADA');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).toContain('Cancelada');
+    expect(fixture.componentInstance.inscripcionesFiltradas).toHaveLength(1);
+  });
+
   it('muestra error con reintento', async () => {
     responses[0].error({ error: { mensaje: 'Servicio no disponible' } });
     await fixture.whenStable();

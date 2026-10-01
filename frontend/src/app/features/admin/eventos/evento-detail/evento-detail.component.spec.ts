@@ -11,6 +11,7 @@ import { ToastService } from '../../../../shared/ui/toast.service';
 import { EventosGestionModule } from '../../../eventos-gestion/eventos-gestion.module';
 import { EventoDetailComponent } from './evento-detail.component';
 import { AsistenciaService } from '../../../../core/services/asistencia.service';
+import { InscripcionService } from '../../../../core/services/inscripcion.service';
 
 describe('EventoDetailComponent', () => {
   let fixture: ComponentFixture<EventoDetailComponent>;
@@ -18,6 +19,7 @@ describe('EventoDetailComponent', () => {
   let response: Subject<Evento>;
   let roles: string[];
   let service: Record<string, ReturnType<typeof vi.fn>>;
+  let inscripcionApi: { listarInscritosEvento: ReturnType<typeof vi.fn> };
 
   const evento: Evento = {
     id: 'evt', titulo: 'Evento', descripcion: 'Descripcion', objetivos: 'Objetivos', categoriaId: 'cat', categoriaNombre: 'Taller',
@@ -35,6 +37,7 @@ describe('EventoDetailComponent', () => {
       enviarARevision: vi.fn(() => of(void 0)), volverABorrador: vi.fn(() => of(void 0)),
       cancelar: vi.fn(() => of(void 0)), finalizar: vi.fn(() => of(void 0))
     };
+    inscripcionApi = { listarInscritosEvento: vi.fn(() => of([])) };
     await TestBed.configureTestingModule({
       imports: [EventosGestionModule],
       providers: [
@@ -42,6 +45,7 @@ describe('EventoDetailComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'evt' } } } },
         { provide: EventoService, useValue: service },
         { provide: AsistenciaService, useValue: { listarSesiones: vi.fn(() => of([])) } },
+        { provide: InscripcionService, useValue: inscripcionApi },
         { provide: AuthService, useValue: { hasAnyRole: (esperados: string[]) => esperados.some((r) => roles.includes(r)) } },
         { provide: MatDialog, useValue: { open: vi.fn(() => ({ afterClosed: () => of('Motivo valido') })) } },
         { provide: ToastService, useValue: { success: vi.fn(), warning: vi.fn(), error: vi.fn() } }
@@ -55,6 +59,8 @@ describe('EventoDetailComponent', () => {
     response.next(evento); response.complete(); await fixture.whenStable();
     expect(component.loading()).toBe(false);
     expect(fixture.nativeElement.textContent).toContain('Evento');
+    expect(inscripcionApi.listarInscritosEvento).toHaveBeenCalledWith('evt');
+    expect(fixture.nativeElement.textContent).toContain('Inscripciones del evento');
   });
 
   it('administrador puede publicar y rechazar EN_REVISION', async () => {

@@ -2,7 +2,7 @@
   <section class="app-toolbar">
     <div class="app-toolbar__title">
       <h1 class="app-section-title">Mis pagos</h1>
-      <p>Historial visual de pagos, comprobantes y validaciones.</p>
+      <p>Consulta el estado de tus pagos y los comprobantes presentados.</p>
     </div>
     <a mat-flat-button color="primary" routerLink="/privado/inscripciones">
       <mat-icon>how_to_reg</mat-icon>
@@ -52,7 +52,7 @@
         <div class="student-card__header">
           <div>
             <h3>{{ pago.eventoTitulo }}</h3>
-            <p>Bs. {{ pago.monto }} · {{ pago.fechaPago | date:'dd MMM yyyy HH:mm' }}</p>
+            <p>Monto: {{ pago.monto }} · {{ pago.fechaPago | date:'dd MMM yyyy HH:mm' }}</p>
           </div>
           <span class="app-badge"
             [class.app-badge--success]="pago.estado === 'APROBADO'"
@@ -67,7 +67,7 @@
         <div class="student-card__footer">
           <span>{{ pago.comprobante?.nombreArchivo || 'Sin comprobante adjunto' }}</span>
           <div class="student-card__meta">
-            <button mat-stroked-button type="button" *ngIf="pago.comprobante" (click)="verComprobante(pago)">Comprobante</button>
+            <button mat-stroked-button type="button" *ngIf="pago.comprobante" (click)="verComprobante(pago)" [disabled]="!!downloadingId" [attr.aria-label]="'Descargar comprobante de ' + pago.eventoTitulo">{{ downloadingId === pago.id ? 'Descargando…' : 'Descargar comprobante' }}</button>
             <a mat-flat-button color="primary" *ngIf="puedePresentar(pago)"
               [routerLink]="['/privado/pagos/registrar']" [queryParams]="{ inscripcionId: pago.inscripcionId }">
               {{ pago.estado === 'RECHAZADO' ? 'Volver a presentar' : 'Presentar comprobante' }}

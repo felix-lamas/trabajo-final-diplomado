@@ -47,11 +47,19 @@ describe('InscripcionPublicaComponent', () => {
     expect(fixture.nativeElement.querySelector('mat-spinner')).not.toBeNull();
   });
 
-  it('admite evento pagado y explica el estado pendiente', async () => {
+  it('admite evento pagado y explica que el pago es externo con comprobante', async () => {
     eventoResponse.next(evento); eventoResponse.complete();
     await fixture.whenStable();
-    expect(fixture.nativeElement.textContent).toContain('pendiente de pago');
+    expect(fixture.nativeElement.textContent).toContain('realiza el pago externamente');
+    expect(fixture.nativeElement.textContent).toContain('presenta tu comprobante');
     expect(router.navigate).not.toHaveBeenCalledWith(['/eventos']);
+  });
+
+  it('muestra el evento gratuito sin pedir comprobante', async () => {
+    eventoResponse.next({ ...evento, tipoInscripcion: TipoInscripcion.GRATUITO, costo: 0 }); eventoResponse.complete();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).toContain('No se requiere comprobante de pago');
+    expect(fixture.nativeElement.textContent).toContain('Gratuito');
   });
 
   it('evita doble envio mientras confirma', async () => {

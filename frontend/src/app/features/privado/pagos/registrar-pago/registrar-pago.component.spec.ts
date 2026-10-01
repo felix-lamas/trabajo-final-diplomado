@@ -7,6 +7,7 @@ import { ComprobanteInscripcion, DetalleInscripcion, EstadoInscripcion } from '.
 import { EstadoPago, Pago } from '../../../../core/models/pago.model';
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
 import { PagoService } from '../../../../core/services/pago.service';
+import { EventoService } from '../../../../core/services/evento.service';
 import { PrivadoPagosModule } from '../pagos.module';
 import { RegistrarPagoComponent } from './registrar-pago.component';
 
@@ -34,6 +35,7 @@ describe('RegistrarPagoComponent', () => {
         provideZonelessChangeDetection(), provideNoopAnimations(),
         { provide: ActivatedRoute, useValue: { snapshot: { queryParams: { inscripcionId: 'inscripcion' } } } },
         { provide: Router, useValue: router },
+        { provide: EventoService, useValue: { obtenerPorId: vi.fn(() => new Subject().asObservable()) } },
         { provide: InscripcionService, useValue: {
           obtenerPorId: vi.fn(() => inscripcionResponse.asObservable()),
           obtenerComprobante: vi.fn(() => comprobanteResponse.asObservable())
@@ -58,7 +60,7 @@ describe('RegistrarPagoComponent', () => {
   it('muestra el monto oficial y el motivo para permitir el reenvío', async () => {
     resolverContexto();
     await fixture.whenStable();
-    expect(fixture.nativeElement.textContent).toContain('Bs.');
+    expect(fixture.nativeElement.textContent).toContain('80');
     expect(fixture.nativeElement.textContent).toContain('Comprobante ilegible');
     expect(fixture.nativeElement.textContent).toContain('Presentar comprobante');
   });
@@ -72,6 +74,15 @@ describe('RegistrarPagoComponent', () => {
     const service = TestBed.inject(PagoService);
     expect(service.subirComprobante).toHaveBeenCalledTimes(1);
     expect(service.registrarPago).not.toHaveBeenCalled();
+  });
+
+  it('muestra el motivo de rechazo de tipo de archivo antes de enviar', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    Object.defineProperty(input, 'files', { value: [new File(['text'], 'notes.txt', { type: 'text/plain' })] });
+    const event = { target: input } as unknown as Event;
+    fixture.componentInstance.onFileSelected(event);
+    expect(fixture.componentInstance.uploadError).toContain('JPG, PNG o PDF');
   });
 
   function resolverContexto(): void {

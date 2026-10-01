@@ -72,7 +72,7 @@
           <div class="student-card__header">
             <div>
               <h3>Costo</h3>
-              <p>{{ evento.costo > 0 ? (evento.costo | currency:'Bs. ') : 'Gratis' }}</p>
+              <p>{{ evento.costo && evento.costo > 0 ? evento.costo : 'Gratis' }}</p>
             </div>
             <mat-icon>payments</mat-icon>
           </div>
@@ -137,4 +137,27 @@
   </section>
 
   <app-sesiones-evento [evento]="evento"></app-sesiones-evento>
+
+  <section class="admin-surface" aria-labelledby="registrations-heading">
+    <div class="app-toolbar__title">
+      <h2 id="registrations-heading" class="app-section-title">Inscripciones del evento</h2>
+      <p>Registros devueltos por el servicio para este evento.</p>
+    </div>
+    <app-skeleton *ngIf="cargandoInscripciones()" variant="list" [count]="3"></app-skeleton>
+    <app-empty-state *ngIf="!cargandoInscripciones() && errorInscripciones()" icon="error_outline"
+      title="No se pudieron cargar las inscripciones" [message]="errorInscripciones()"
+      actionLabel="Reintentar" (action)="cargarEvento(evento.id)"></app-empty-state>
+    <app-empty-state *ngIf="!cargandoInscripciones() && !errorInscripciones() && inscripciones().length === 0"
+      icon="groups" title="Aún no hay inscripciones" message="Las inscripciones de este evento aparecerán aquí cuando existan."></app-empty-state>
+    <div class="student-grid student-grid--2" *ngIf="!cargandoInscripciones() && !errorInscripciones() && inscripciones().length > 0">
+      <article class="student-card" *ngFor="let inscripcion of inscripciones()">
+        <div class="student-card__header">
+          <div><h3>{{ inscripcion.eventoTitulo }}</h3><p>{{ inscripcion.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p></div>
+          <span class="app-badge" [class.app-badge--success]="inscripcion.estado === 'CONFIRMADA'"
+            [class.app-badge--warning]="inscripcion.estado === 'PENDIENTE_PAGO' || inscripcion.estado === 'PENDIENTE_VALIDACION'"
+            [class.app-badge--danger]="inscripcion.estado === 'CANCELADA'">{{ inscripcion.estado }}</span>
+        </div>
+      </article>
+    </div>
+  </section>
 </main>

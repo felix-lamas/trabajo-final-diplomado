@@ -32,6 +32,27 @@ export class InscripcionDetailComponent implements OnInit {
   get procesando(): boolean { return this.viewState().procesando; }
   private set procesando(value: boolean) { this.viewState.update((state) => ({ ...state, procesando: value })); }
 
+  estadoPagoLabel(estado?: string): string {
+    switch (estado) {
+      case 'NO_APLICA': return 'No aplica';
+      case 'PENDIENTE_PAGO': return 'Pendiente de pago';
+      case 'PENDIENTE_VALIDACION': return 'Pendiente de validación';
+      case 'APROBADO': return 'Aprobado';
+      case 'RECHAZADO': return 'Rechazado';
+      default: return estado || 'Sin información de pago';
+    }
+  }
+
+  estadoInscripcionLabel(estado: string): string {
+    switch (estado) {
+      case 'PENDIENTE_PAGO': return 'Pendiente de pago';
+      case 'PENDIENTE_VALIDACION': return 'Pendiente de validación';
+      case 'CONFIRMADA': return 'Confirmada';
+      case 'CANCELADA': return 'Cancelada';
+      default: return estado;
+    }
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,

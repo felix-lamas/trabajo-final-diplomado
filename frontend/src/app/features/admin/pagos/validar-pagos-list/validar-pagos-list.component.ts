@@ -14,6 +14,7 @@ import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/con
 import { EmptyStateComponent } from '../../../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../../../shared/ui/skeleton/skeleton.component';
 import { ToastService } from '../../../../shared/ui/toast.service';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-validar-pagos-list',
@@ -51,7 +52,7 @@ export class ValidarPagosListComponent implements OnInit {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (data) => this.pagos = data,
-        error: () => this.viewState.update((state) => ({ ...state, error: 'No fue posible cargar los pagos pendientes.' }))
+        error: (err) => this.viewState.update((state) => ({ ...state, error: apiErrorMessage(err, 'No fue posible cargar los pagos pendientes.') }))
       });
   }
 
@@ -72,8 +73,14 @@ export class ValidarPagosListComponent implements OnInit {
         return;
       }
 
-      const obs = prompt('Observacion (opcional):');
-      if (obs === null) {
+      const entrada = prompt('Observación (opcional, máximo 1000 caracteres):');
+      if (entrada === null) {
+        this.liberarPago(pago.id);
+        return;
+      }
+      const obs = entrada.trim();
+      if (obs.length > 1000) {
+        this.toast.warning('La observación no puede superar 1000 caracteres.');
         this.liberarPago(pago.id);
         return;
       }
@@ -84,7 +91,7 @@ export class ValidarPagosListComponent implements OnInit {
           this.toast.success('Pago validado correctamente');
           this.cargarPendientes();
         },
-        error: (err) => this.toast.error(err.error?.mensaje || 'Error al validar')
+        error: (err) => this.toast.error(apiErrorMessage(err, 'No fue posible validar el pago.'))
       });
     });
   }
@@ -106,17 +113,18 @@ export class ValidarPagosListComponent implements OnInit {
         return;
       }
 
-      const obs = prompt('Motivo del rechazo (obligatorio):');
-      if (obs) {
+      const entrada = prompt('Motivo del rechazo (obligatorio, máximo 1000 caracteres):');
+      const obs = entrada?.trim();
+      if (obs && obs.length <= 1000) {
         this.pagoService.rechazarPago(pago.id, { observacion: obs })
           .pipe(finalize(() => this.liberarPago(pago.id))).subscribe({
           next: () => {
             this.toast.warning('Pago rechazado');
             this.cargarPendientes();
           },
-          error: (err) => this.toast.error(err.error?.mensaje || 'Error al rechazar')
+          error: (err) => this.toast.error(apiErrorMessage(err, 'No fue posible rechazar el pago.'))
         });
-      } else if (obs === '') {
+      } else if (entrada !== null) {
         this.toast.warning('Debe indicar un motivo para rechazar el pago');
         this.liberarPago(pago.id);
       } else {
@@ -130,8 +138,13 @@ export class ValidarPagosListComponent implements OnInit {
       this.pagoService.descargarComprobante(pago.id).subscribe({
         next: (archivo) => {
           const url = URL.createObjectURL(archivo);
-          window.open(url, '_blank', 'noopener,noreferrer');
-          setTimeout(() => URL.revokeObjectURL(url), 60_000);
+          const contentType = archivo.type || pago.comprobante?.tipoContenido;
+          const extension = contentType === 'application/pdf' ? 'pdf' : contentType === 'image/png' ? 'png' : contentType === 'image/jpeg' ? 'jpg' : 'bin';
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `comprobante-${pago.id}.${extension}`;
+          link.click();
+          URL.revokeObjectURL(url);
         },
         error: () => this.toast.error('No fue posible descargar el comprobante')
       });

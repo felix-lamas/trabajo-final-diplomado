@@ -26,7 +26,7 @@
             [class.app-badge--success]="inscripcion.estado === 'CONFIRMADA'"
             [class.app-badge--warning]="inscripcion.estado === 'PENDIENTE_PAGO' || inscripcion.estado === 'PENDIENTE_VALIDACION'"
             [class.app-badge--danger]="inscripcion.estado === 'CANCELADA'">
-            {{ inscripcion.estado }}
+            {{ estadoInscripcionLabel(inscripcion.estado) }}
           </span>
         </div>
 
@@ -46,7 +46,7 @@
             <div class="student-card__header">
               <div>
                 <h3>Ubicacion</h3>
-                <p>{{ inscripcion.ubicacionEvento || 'Enlace virtual' }}</p>
+                <p>{{ inscripcion.ubicacionEvento || (inscripcion.modalidadEvento === 'VIRTUAL' ? 'Virtual' : 'No especificada') }}</p>
               </div>
               <mat-icon>location_on</mat-icon>
             </div>
@@ -75,12 +75,16 @@
           <span>Codigo {{ inscripcion.codigoInscripcion || (inscripcion.id | slice:0:8) }}</span>
           <a mat-flat-button color="primary" *ngIf="inscripcion.estado === 'PENDIENTE_PAGO'"
             [routerLink]="['/privado/pagos/registrar']" [queryParams]="{ inscripcionId: inscripcion.id }">
-            Presentar comprobante
+            {{ comprobante?.estadoPago === 'RECHAZADO' ? 'Volver a presentar comprobante' : 'Presentar comprobante' }}
           </a>
           <button mat-flat-button color="warn" *ngIf="inscripcion.estado !== 'CANCELADA'" [disabled]="procesando" (click)="cancelar()">
             {{ procesando ? 'Cancelando...' : 'Cancelar inscripcion' }}
           </button>
         </div>
+
+        <p *ngIf="inscripcion.estado === 'PENDIENTE_VALIDACION'" role="status">El comprobante fue presentado y está pendiente de revisión.</p>
+        <p *ngIf="comprobante?.estadoPago === 'RECHAZADO'" class="app-error" role="alert">El pago fue rechazado. Revisa el motivo e inicia un nuevo envío del comprobante.</p>
+        <p *ngIf="inscripcion.estado === 'CONFIRMADA'" role="status">Tu inscripción está confirmada.</p>
       </mat-card>
 
       <mat-card class="student-panel" *ngIf="comprobante">
@@ -90,8 +94,8 @@
         <div class="student-grid student-grid--2">
           <div><strong>Participante</strong><p>{{ comprobante.participante }}</p></div>
           <div><strong>CI / RU</strong><p>{{ comprobante.ci }}<span *ngIf="comprobante.ru"> / {{ comprobante.ru }}</span></p></div>
-          <div><strong>Monto</strong><p>{{ comprobante.monto | currency:'Bs. ' }}</p></div>
-          <div><strong>Estado de pago</strong><p>{{ comprobante.estadoPago }}</p></div>
+          <div *ngIf="comprobante.monto > 0"><strong>Monto</strong><p>{{ comprobante.monto }}</p></div>
+          <div><strong>Estado de pago</strong><p>{{ estadoPagoLabel(comprobante.estadoPago) }}</p></div>
           <div><strong>Codigo de verificacion</strong><p>{{ comprobante.codigoVerificacion }}</p></div>
           <div><strong>Fecha</strong><p>{{ comprobante.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p></div>
         </div>

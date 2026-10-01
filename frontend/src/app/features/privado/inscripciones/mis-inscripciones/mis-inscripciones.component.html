@@ -1,12 +1,12 @@
-<main class="app-page admin-portal">
-  <section class="admin-module-header">
+<main class="app-page student-portal">
+  <section class="app-toolbar">
     <div class="app-toolbar__title">
       <span class="app-chip">
-        <mat-icon>groups</mat-icon>
-        CRM academico
+        <mat-icon>event_available</mat-icon>
+        Participación
       </span>
-      <h1>Gestion de participantes</h1>
-      <p>Historial y estado de sus inscripciones a eventos gratuitos y pagados.</p>
+      <h1>Mis inscripciones</h1>
+      <p>Consulta tus eventos y el estado de cada inscripción.</p>
     </div>
     <a mat-flat-button color="primary" routerLink="/eventos">
       <mat-icon>explore</mat-icon>
@@ -14,53 +14,46 @@
     </a>
   </section>
 
-  <section class="admin-kpi-grid admin-kpi-grid--compact">
-    <article class="admin-metric-card">
-      <div class="admin-metric-card__icon"><mat-icon>how_to_reg</mat-icon></div>
+  <section class="student-grid student-grid--2" aria-label="Resumen de inscripciones">
+    <article class="student-stat">
+      <mat-icon>how_to_reg</mat-icon>
       <span>Total</span>
       <strong>{{ totalInscripciones }}</strong>
-      <div class="admin-kpi__bar"></div>
     </article>
-    <article class="admin-metric-card">
-      <div class="admin-metric-card__icon"><mat-icon>verified</mat-icon></div>
+    <article class="student-stat">
+      <mat-icon>verified</mat-icon>
       <span>Confirmadas</span>
       <strong>{{ totalConfirmadas }}</strong>
-      <div class="admin-kpi__bar" data-tone="green"></div>
     </article>
   </section>
 
   <app-skeleton *ngIf="loading" variant="list" [count]="4"></app-skeleton>
 
-  <section class="admin-surface admin-crm-board" *ngIf="!loading && !error">
-    <div class="admin-toolbar">
-      <div class="admin-filters">
+  <section class="student-panel" *ngIf="!loading && !error">
+    <div class="student-card__meta" aria-label="Filtrar inscripciones">
         <button mat-stroked-button type="button" (click)="cambiarFiltro('TODAS')" [disabled]="estadoFiltro === 'TODAS'">Todas</button>
         <button mat-stroked-button type="button" (click)="cambiarFiltro('CONFIRMADA')" [disabled]="estadoFiltro === 'CONFIRMADA'">Confirmadas</button>
-        <button mat-stroked-button type="button" (click)="cambiarFiltro('PENDIENTE_PAGO')" [disabled]="estadoFiltro === 'PENDIENTE_PAGO'">Pendientes</button>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('PENDIENTE_PAGO')" [disabled]="estadoFiltro === 'PENDIENTE_PAGO'">Pendiente de pago</button>
         <button mat-stroked-button type="button" (click)="cambiarFiltro('PENDIENTE_VALIDACION')" [disabled]="estadoFiltro === 'PENDIENTE_VALIDACION'">En validacion</button>
-      </div>
-      <span class="app-badge app-badge--info">{{ inscripcionesFiltradas.length }} participantes</span>
+        <button mat-stroked-button type="button" (click)="cambiarFiltro('CANCELADA')" [disabled]="estadoFiltro === 'CANCELADA'">Canceladas</button>
+      <span class="app-badge app-badge--info">{{ inscripcionesFiltradas.length }} inscripciones</span>
     </div>
 
     <app-empty-state
       *ngIf="inscripcionesFiltradas.length === 0"
       icon="event_busy"
       title="No hay inscripciones en este filtro"
-      message="Pruebe otra categoria o explore los eventos publicados."
+      message="Prueba otro estado o explora los eventos disponibles."
       actionLabel="Explorar eventos"
       actionRoute="/eventos">
     </app-empty-state>
 
-    <div *ngIf="inscripcionesFiltradas.length > 0" class="admin-crm-grid">
-      <article *ngFor="let ins of inscripcionesFiltradas" class="admin-crm-card">
-        <div class="admin-crm-card__avatar">
-          <mat-icon>person</mat-icon>
-        </div>
-        <div class="admin-crm-card__body">
+    <div *ngIf="inscripcionesFiltradas.length > 0" class="student-grid student-grid--2">
+      <article *ngFor="let ins of inscripcionesFiltradas" class="student-card">
           <div class="student-card__header">
             <div>
               <h3>{{ ins.eventoTitulo }}</h3>
-              <p>Registrado el {{ ins.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p>
+              <p>Inscripción del {{ ins.fechaInscripcion | date:'dd MMM yyyy HH:mm' }}</p>
             </div>
             <span class="app-badge"
               [class.app-badge--success]="ins.estado === 'CONFIRMADA'"
@@ -69,19 +62,14 @@
               {{ getEstadoLabel(ins.estado) }}
             </span>
           </div>
-          <div class="admin-crm-card__meta">
-            <span>ID {{ ins.id | slice:0:8 }}</span>
-            <span>Expediente academico</span>
-          </div>
           <div class="student-card__footer">
             <div class="student-card__meta">
-              <a mat-stroked-button [routerLink]="['/privado/inscripciones', ins.id]">Detalle</a>
-              <button mat-stroked-button color="warn" *ngIf="puedeCancelar(ins.estado)" [disabled]="!!procesandoId" (click)="cancelar(ins)">
+              <a mat-stroked-button [routerLink]="['/privado/inscripciones', ins.id]">Ver detalle</a>
+              <button mat-stroked-button color="warn" *ngIf="puedeCancelar(ins.estado)" [disabled]="!!procesandoId" (click)="cancelar(ins)" [attr.aria-label]="'Cancelar inscripción a ' + ins.eventoTitulo">
                 {{ procesandoId === ins.id ? 'Cancelando...' : 'Cancelar' }}
               </button>
             </div>
           </div>
-        </div>
       </article>
     </div>
   </section>

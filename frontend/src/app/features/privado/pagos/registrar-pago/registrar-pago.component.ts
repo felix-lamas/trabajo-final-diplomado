@@ -5,7 +5,10 @@ import { EstadoInscripcion } from '../../../../core/models/inscripcion.model';
 import { EstadoPago, Pago } from '../../../../core/models/pago.model';
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
 import { PagoService } from '../../../../core/services/pago.service';
+import { EventoService } from '../../../../core/services/evento.service';
+import { EventoDetalle } from '../../../../core/models/evento.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-registrar-pago',
@@ -19,8 +22,9 @@ export class RegistrarPagoComponent implements OnInit {
   inscripcionId = '';
   archivoComprobante: File | null = null;
   private pago?: Pago;
+  evento?: EventoDetalle;
   private readonly viewState = signal({
-    eventoTitulo: '', monto: 0, loading: true, enviando: false, error: ''
+    eventoTitulo: '', monto: 0, loading: true, enviando: false, error: '', uploadError: ''
   });
   get eventoTitulo(): string { return this.viewState().eventoTitulo; }
   get monto(): number { return this.viewState().monto; }
@@ -28,12 +32,14 @@ export class RegistrarPagoComponent implements OnInit {
   get enviando(): boolean { return this.viewState().enviando; }
   get error(): string { return this.viewState().error; }
   get motivoRechazo(): string | undefined { return this.pago?.motivoRechazo; }
+  get uploadError(): string { return this.viewState().uploadError; }
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private pagoService: PagoService,
     private inscripcionService: InscripcionService,
+    private eventoService: EventoService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -63,8 +69,9 @@ export class RegistrarPagoComponent implements OnInit {
           return;
         }
         this.patchState({ eventoTitulo: inscripcion.eventoTitulo, monto: this.pago?.monto ?? comprobanteInscripcion.monto });
+        this.eventoService.obtenerPorId(inscripcion.eventoId).subscribe({ next: (evento) => this.evento = evento });
       },
-      error: () => this.patchState({ error: 'No fue posible cargar el pago asociado a la inscripción.' })
+      error: (err) => this.patchState({ error: apiErrorMessage(err, 'No fue posible cargar el pago asociado a la inscripción.') })
     });
   }
 
@@ -72,16 +79,17 @@ export class RegistrarPagoComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
     if (!file) return;
+    this.patchState({ uploadError: '' });
     if (!RegistrarPagoComponent.ALLOWED_TYPES.has(file.type)) {
       this.archivoComprobante = null;
       input.value = '';
-      this.snackBar.open('Solo se permiten archivos JPG, PNG o PDF', 'Cerrar');
+      this.patchState({ uploadError: 'Selecciona un archivo JPG, PNG o PDF.' });
       return;
     }
     if (file.size > RegistrarPagoComponent.MAX_FILE_SIZE) {
       this.archivoComprobante = null;
       input.value = '';
-      this.snackBar.open('El archivo supera el tamaño máximo de 5 MB', 'Cerrar');
+      this.patchState({ uploadError: 'El archivo supera el tamaño máximo de 5 MB.' });
       return;
     }
     this.archivoComprobante = file;
@@ -99,7 +107,7 @@ export class RegistrarPagoComponent implements OnInit {
         this.snackBar.open('Comprobante presentado para validación', 'Cerrar', { duration: 3000 });
         void this.router.navigate(['/privado/pagos']);
       },
-      error: (err) => this.snackBar.open(err.error?.mensaje || 'No fue posible presentar el comprobante', 'Cerrar')
+      error: (err) => this.patchState({ uploadError: apiErrorMessage(err, 'No fue posible presentar el comprobante. Inténtalo nuevamente.') })
     });
   }
 

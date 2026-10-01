@@ -3,6 +3,7 @@ import { PagoService } from '../../../../core/services/pago.service';
 import { EstadoPago, Pago } from '../../../../core/models/pago.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
+import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-mis-pagos',
@@ -10,11 +11,12 @@ import { finalize } from 'rxjs';
   standalone: false
 })
 export class MisPagosComponent implements OnInit {
-  private readonly viewState = signal({ pagos: [] as Pago[], loading: true, error: '' });
+  private readonly viewState = signal({ pagos: [] as Pago[], loading: true, error: '', downloadingId: '' });
   get pagos(): Pago[] { return this.viewState().pagos; }
   private set pagos(value: Pago[]) { this.viewState.update((state) => ({ ...state, pagos: value })); }
   get loading(): boolean { return this.viewState().loading; }
   get error(): string { return this.viewState().error; }
+  get downloadingId(): string { return this.viewState().downloadingId; }
   displayedColumns: string[] = ['evento', 'monto', 'fecha', 'estado', 'acciones'];
   estadoFiltro = 'TODOS';
 
@@ -33,7 +35,7 @@ export class MisPagosComponent implements OnInit {
       finalize(() => this.viewState.update((state) => ({ ...state, loading: false })))
     ).subscribe({
       next: (data) => this.pagos = data,
-      error: () => this.viewState.update((state) => ({ ...state, error: 'No fue posible cargar sus pagos.' }))
+      error: (err) => this.viewState.update((state) => ({ ...state, error: apiErrorMessage(err, 'No fue posible cargar sus pagos.') }))
     });
   }
 
@@ -83,16 +85,23 @@ export class MisPagosComponent implements OnInit {
   }
 
   verComprobante(pago: Pago): void {
-    if (pago.comprobante) {
-      this.pagoService.descargarComprobante(pago.id).subscribe({
-        next: (archivo) => {
-          const url = URL.createObjectURL(archivo);
-          window.open(url, '_blank', 'noopener,noreferrer');
-          setTimeout(() => URL.revokeObjectURL(url), 60_000);
-        },
-        error: () => this.snackBar.open('No fue posible descargar el comprobante', 'Cerrar')
-      });
-    }
+    if (!pago.comprobante || this.downloadingId) return;
+    this.viewState.update((state) => ({ ...state, downloadingId: pago.id }));
+    this.pagoService.descargarComprobante(pago.id).pipe(
+      finalize(() => this.viewState.update((state) => ({ ...state, downloadingId: '' })))
+    ).subscribe({
+      next: (archivo) => {
+        const contentType = archivo.type || pago.comprobante?.tipoContenido;
+        const extension = contentType === 'application/pdf' ? 'pdf' : contentType === 'image/png' ? 'png' : contentType === 'image/jpeg' ? 'jpg' : 'bin';
+        const url = URL.createObjectURL(archivo);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `comprobante-${pago.id}.${extension}`;
+        link.click();
+        URL.revokeObjectURL(url);
+      },
+      error: (err) => this.snackBar.open(apiErrorMessage(err, 'No fue posible descargar el comprobante'), 'Cerrar')
+    });
   }
 
   puedePresentar(pago: Pago): boolean {

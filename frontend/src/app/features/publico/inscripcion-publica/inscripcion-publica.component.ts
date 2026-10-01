@@ -19,13 +19,15 @@ export class InscripcionPublicaComponent implements OnInit {
   private readonly viewState = signal<{
     evento?: Evento;
     loading: boolean;
+    error: string;
     confirmando: boolean;
     completado: boolean;
     estadoInscripcion?: EstadoInscripcion;
-  }>({ loading: true, confirmando: false, completado: false });
+  }>({ loading: true, error: '', confirmando: false, completado: false });
   get evento(): Evento | undefined { return this.viewState().evento; }
   private set evento(value: Evento | undefined) { this.viewState.update((state) => ({ ...state, evento: value })); }
   get loading(): boolean { return this.viewState().loading; }
+  get error(): string { return this.viewState().error; }
   private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
   get confirmando(): boolean { return this.viewState().confirmando; }
   private set confirmando(value: boolean) { this.viewState.update((state) => ({ ...state, confirmando: value })); }
@@ -45,26 +47,25 @@ export class InscripcionPublicaComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
-      this.router.navigate(['/eventos']);
+      this.viewState.update((state) => ({ ...state, loading: false, error: 'No se encontro el evento solicitado.' }));
       return;
     }
+    this.cargarEvento(id);
+  }
 
+  cargarEvento(id: string): void {
+    this.viewState.update((state) => ({ ...state, loading: true, error: '' }));
     this.eventoService.obtenerPorId(id).pipe(
       takeUntilDestroyed(this.destroyRef),
-      finalize(() => this.loading = false)
+      finalize(() => this.viewState.update((state) => ({ ...state, loading: false })))
     ).subscribe({
-      next: (data) => {
-        this.evento = data;
-      },
-      error: (err) => {
-        this.snackBar.open(apiErrorMessage(err, 'No fue posible cargar el evento'), 'Cerrar', { duration: 4500 });
-        this.router.navigate(['/eventos']);
-      }
+      next: (data) => this.evento = data,
+      error: (err) => this.viewState.update((state) => ({ ...state, error: apiErrorMessage(err, 'No fue posible cargar el evento.') }))
     });
   }
 
   confirmar(): void {
-    if (!this.evento || this.confirmando) return;
+    if (!this.evento || this.confirmando || !this.evento.requiereInscripcion) return;
 
     this.confirmando = true;
     this.inscripcionService.inscribir({ eventoId: this.evento.id }).pipe(
@@ -74,15 +75,21 @@ export class InscripcionPublicaComponent implements OnInit {
       next: (inscripcion) => {
         this.completado = true;
         this.estadoInscripcion = inscripcion.estado;
-        this.snackBar.open(`Inscripcion realizada con exito. Estado: ${inscripcion.estado}`, 'Cerrar', { duration: 3500 });
+        this.snackBar.open('Inscripcion realizada correctamente.', 'Cerrar', { duration: 3500 });
         this.router.navigate(['/privado/inscripciones', inscripcion.id]);
       },
       error: (err) => {
-        const mensaje = err.status === 409
-          ? 'Ya existe una inscripcion para este evento'
-          : apiErrorMessage(err, 'No fue posible completar la inscripcion');
-        this.snackBar.open(mensaje, 'Cerrar', { duration: 4500 });
+        this.viewState.update((state) => ({
+          ...state,
+          error: err.status === 409
+            ? apiErrorMessage(err, 'La inscripcion entro en conflicto con el estado actual del evento.')
+            : apiErrorMessage(err, 'No fue posible completar la inscripcion.')
+        }));
       }
     });
+  }
+
+  get sinCupo(): boolean {
+    return Boolean(this.evento?.cupoLimitado && (this.evento.cupoDisponible == null || this.evento.cupoDisponible <= 0));
   }
 }
