@@ -688,6 +688,12 @@ select:focus-visible {
   color: var(--color-secondary);
 }
 
+.mat-mdc-outlined-button:not(.mat-primary):not(.mat-accent) {
+  --mdc-outlined-button-label-text-color: var(--color-text-primary);
+  --mdc-outlined-button-outline-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+}
+
 .mat-mdc-button:disabled,
 .mat-mdc-raised-button:disabled,
 .mat-mdc-unelevated-button:disabled,
@@ -1879,8 +1885,8 @@ select:focus-visible {
   padding: 1.25rem;
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(circle at top right, rgba(15, 118, 110, 0.12), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 246, 251, 0.96));
+    radial-gradient(circle at top right, color-mix(in srgb, var(--color-secondary) 12%, transparent), transparent 24%),
+    linear-gradient(180deg, var(--color-surface-raised), var(--color-bg-secondary));
   border: 1px solid var(--app-border);
   box-shadow: var(--shadow-sm);
 }
@@ -1923,7 +1929,7 @@ select:focus-visible {
   padding: 1rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--app-border);
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--color-surface);
   box-shadow: var(--shadow-xs);
 }
 
