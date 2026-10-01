@@ -4,12 +4,10 @@
   display: grid;
   place-items: center;
   text-align: center;
-  gap: 0.8rem;
+  gap: var(--space-3);
   border: 1px dashed var(--app-border);
-  border-radius: var(--radius-md);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(247, 249, 252, 0.82)),
-    var(--app-surface);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
   color: var(--app-text-muted);
 }
 
@@ -23,7 +21,7 @@
   height: 3.25rem;
   display: grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--app-surface-strong);
   color: var(--app-primary);
 }

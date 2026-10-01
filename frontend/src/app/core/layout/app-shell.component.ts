@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AuthService } from '../services/auth.service';
+import { ThemeService } from '../services/theme.service';
 import { BreadcrumbItem, BreadcrumbsComponent } from '../../shared/ui/breadcrumbs/breadcrumbs.component';
 
 interface NavItem {
@@ -47,13 +48,14 @@ export class AppShellComponent implements OnInit {
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
   private readonly authService = inject(AuthService);
+  private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
 
   @ViewChild('drawer') drawer?: MatSidenav;
 
   readonly mobile = signal(false);
   readonly collapsed = signal(false);
-  readonly darkMode = signal(false);
+  readonly darkMode = computed(() => this.themeService.theme() === 'dark');
   readonly breadcrumbs = signal<BreadcrumbItem[]>([]);
   readonly currentSection = computed(() => this.breadcrumbs().at(-1)?.label ?? 'Inicio');
   readonly navItems = computed(() => [
@@ -90,13 +92,8 @@ export class AppShellComponent implements OnInit {
   readonly loggingOut = signal(false);
 
   ngOnInit(): void {
-    const savedTheme = localStorage.getItem('app-theme');
-    const isDark = savedTheme === 'dark';
-    this.darkMode.set(isDark);
-    document.documentElement.dataset['theme'] = isDark ? 'dark' : 'light';
-
     this.breakpointObserver
-      .observe(['(max-width: 1024px)'])
+      .observe(['(max-width: 64rem)'])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => this.mobile.set(state.matches));
 
@@ -135,10 +132,7 @@ export class AppShellComponent implements OnInit {
   }
 
   toggleTheme(): void {
-    const nextTheme = this.darkMode() ? 'light' : 'dark';
-    this.darkMode.set(!this.darkMode());
-    document.documentElement.dataset['theme'] = nextTheme;
-    localStorage.setItem('app-theme', nextTheme);
+    this.themeService.toggle();
   }
 
   private buildBreadcrumbs(url: string): BreadcrumbItem[] {
