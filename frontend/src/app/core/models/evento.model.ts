@@ -69,6 +69,9 @@ export interface Evento {
   organizadorNombre: string;
 }
 
+/** Respuesta de GET /eventos/{id}; amplía el resumen con datos del detalle. */
+export type EventoDetalle = Evento;
+
 export interface CrearEventoRequest {
   titulo: string;
   descripcion: string;

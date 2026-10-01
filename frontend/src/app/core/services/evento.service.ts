@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Evento, CrearEventoRequest } from '../models/evento.model';
+import { Evento, EventoDetalle, CrearEventoRequest } from '../models/evento.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,8 @@ export class EventoService {
     return this.http.get<Evento[]>(`${this.apiUrl}/publicados`);
   }
 
-  obtenerPorId(id: string): Observable<Evento> {
-    return this.http.get<Evento>(`${this.apiUrl}/${id}`);
+  obtenerPorId(id: string): Observable<EventoDetalle> {
+    return this.http.get<EventoDetalle>(`${this.apiUrl}/${id}`);
   }
 
   crear(request: CrearEventoRequest): Observable<Evento> {

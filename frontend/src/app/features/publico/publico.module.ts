@@ -20,6 +20,9 @@ import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { EventCardComponent } from '../../shared/ui/event-card/event-card.component';
 import { AlertComponent } from '../../shared/ui/alert/alert.component';
 import { SurfaceComponent } from '../../shared/ui/surface/surface.component';
+import { BadgeComponent } from '../../shared/ui/badge/badge.component';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
+import { PageHeaderComponent } from '../../shared/ui/page-header/page-header.component';
 
 // Components
 import { LandingPublicoComponent } from './landing-publico/landing-publico.component';
@@ -69,7 +72,10 @@ const routes: Routes = [
     SkeletonComponent,
     EventCardComponent,
     AlertComponent,
-    SurfaceComponent
+    SurfaceComponent,
+    BadgeComponent,
+    ButtonComponent,
+    PageHeaderComponent
   ]
 })
 export class PublicoModule { }
