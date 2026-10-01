@@ -1,21 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
-
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
+import { catchError, forkJoin, of } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { CertificadoService } from '../../../core/services/certificado.service';
 import { EventoService } from '../../../core/services/evento.service';
 import { InscripcionService } from '../../../core/services/inscripcion.service';
 import { PagoService } from '../../../core/services/pago.service';
+import { CertificadoResponse } from '../../../core/models/certificado.model';
 import { Evento } from '../../../core/models/evento.model';
-import { Inscripcion } from '../../../core/models/inscripcion.model';
+import { EstadoInscripcion, Inscripcion } from '../../../core/models/inscripcion.model';
 import { EstadoPago, Pago } from '../../../core/models/pago.model';
+import { AlertComponent } from '../../../shared/ui/alert/alert.component';
+import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
+import { EventCardComponent } from '../../../shared/ui/event-card/event-card.component';
+import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
+import { StatCardComponent } from '../../../shared/ui/stat-card/stat-card.component';
+import { SurfaceComponent } from '../../../shared/ui/surface/surface.component';
+
+interface DashboardActivity {
+  id: string;
+  title: string;
+  detail: string;
+  type: 'Inscripción' | 'Pago' | 'Certificado';
+  date: string;
+  icon: string;
+  route: string;
+}
+
+interface DashboardData {
+  eventos: Evento[] | null;
+  inscripciones: Inscripcion[] | null;
+  pagos: Pago[] | null;
+  certificados: CertificadoResponse[] | null;
+}
 
 @Component({
   selector: 'app-dashboard-privado',
@@ -23,96 +43,136 @@ import { EstadoPago, Pago } from '../../../core/models/pago.model';
   imports: [
     CommonModule,
     RouterLink,
-    MatCardModule,
-    MatButtonModule,
     MatIconModule,
-    MatDividerModule,
-    MatProgressSpinnerModule
+    AlertComponent,
+    EmptyStateComponent,
+    EventCardComponent,
+    SkeletonComponent,
+    StatCardComponent,
+    SurfaceComponent
   ],
-  templateUrl: './dashboard-privado.component.html'
+  templateUrl: './dashboard-privado.component.html',
+  styleUrl: './dashboard-privado.component.css'
 })
 export class DashboardPrivadoComponent implements OnInit {
-  private readonly viewState = signal<{
-    loading: boolean;
-    inscripciones: Inscripcion[];
-    pagos: Pago[];
-    recomendados: Evento[];
-  }>({ loading: true, inscripciones: [], pagos: [], recomendados: [] });
-  get loading(): boolean { return this.viewState().loading; }
-  private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
-  get inscripciones(): Inscripcion[] { return this.viewState().inscripciones; }
-  private set inscripciones(value: Inscripcion[]) { this.viewState.update((state) => ({ ...state, inscripciones: value })); }
-  get pagos(): Pago[] { return this.viewState().pagos; }
-  private set pagos(value: Pago[]) { this.viewState.update((state) => ({ ...state, pagos: value })); }
-  get recomendados(): Evento[] { return this.viewState().recomendados; }
-  private set recomendados(value: Evento[]) { this.viewState.update((state) => ({ ...state, recomendados: value })); }
+  readonly loading = signal(true);
+  readonly eventsError = signal(false);
+  readonly registrationsError = signal(false);
+  readonly paymentsError = signal(false);
+  readonly certificatesError = signal(false);
+  readonly eventos = signal<Evento[]>([]);
+  readonly inscripciones = signal<Inscripcion[]>([]);
+  readonly pagos = signal<Pago[]>([]);
+  readonly certificados = signal<CertificadoResponse[]>([]);
+
+  readonly proximosEventos = computed(() => {
+    const now = Date.now();
+    return this.eventos()
+      .filter((event) => new Date(`${event.fechaInicio}T${event.horaInicio || '00:00'}`).getTime() >= now)
+      .sort((a, b) => this.eventStart(a) - this.eventStart(b));
+  });
+  readonly proximoEvento = computed(() => this.proximosEventos()[0]);
+  readonly otrosEventos = computed(() => this.proximosEventos().slice(1, 4));
+  readonly certificadosVigentes = computed(() => this.certificados().filter((certificate) => certificate.estado !== 'ANULADO'));
+  readonly activity = computed(() => this.buildActivity());
 
   constructor(
     private readonly authService: AuthService,
     private readonly eventoService: EventoService,
     private readonly inscripcionService: InscripcionService,
-    private readonly pagoService: PagoService
+    private readonly pagoService: PagoService,
+    private readonly certificadoService: CertificadoService
   ) {}
 
   ngOnInit(): void {
     forkJoin({
-      eventos: this.eventoService.listarPublicados(),
-      inscripciones: this.inscripcionService.listarMisInscripciones(),
-      pagos: this.pagoService.listarMisPagos()
-    }).subscribe({
-      next: (data) => {
-        this.recomendados = data.eventos.slice(0, 3);
-        this.inscripciones = data.inscripciones;
-        this.pagos = data.pagos;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
+      eventos: this.eventoService.listarPublicados().pipe(catchError(() => of(null))),
+      inscripciones: this.inscripcionService.listarMisInscripciones().pipe(catchError(() => of(null))),
+      pagos: this.pagoService.listarMisPagos().pipe(catchError(() => of(null))),
+      certificados: this.certificadoService.listarMisCertificados().pipe(catchError(() => of(null)))
+    }).subscribe((data: DashboardData) => {
+      this.eventsError.set(data.eventos === null);
+      this.registrationsError.set(data.inscripciones === null);
+      this.paymentsError.set(data.pagos === null);
+      this.certificatesError.set(data.certificados === null);
+      this.eventos.set(data.eventos ?? []);
+      this.inscripciones.set(data.inscripciones ?? []);
+      this.pagos.set(data.pagos ?? []);
+      this.certificados.set(data.certificados ?? []);
+      this.loading.set(false);
     });
   }
 
   get userName(): string {
     const user = this.authService.getUser();
-    return user ? `${user.nombres} ${user.apellidos}`.trim() : 'Estudiante';
+    return user ? `${user.nombres} ${user.apellidos}`.trim() : 'Usuario';
   }
 
-  get userRole(): string {
-    return this.authService.getRoles()[0] ?? 'Usuario';
+  get approvedPayments(): number {
+    return this.pagos().filter((payment) => payment.estado === EstadoPago.APROBADO).length;
   }
 
-  get initial(): string {
-    return this.userName.charAt(0).toUpperCase();
+  get registrationCount(): number | string {
+    return this.registrationsError() ? '—' : this.inscripciones().length;
   }
 
-  get pagosValidados(): number {
-    return this.pagos.filter((pago) => pago.estado === EstadoPago.APROBADO).length;
+  get paymentCount(): number | string {
+    return this.paymentsError() ? '—' : this.approvedPayments;
   }
 
-  get pagosPendientes(): number {
-    return this.pagos.filter((pago) =>
-      pago.estado === EstadoPago.PENDIENTE_PAGO || pago.estado === EstadoPago.PENDIENTE_VALIDACION).length;
+  get certificateCount(): number | string {
+    return this.certificatesError() ? '—' : this.certificadosVigentes().length;
   }
 
-  get siguienteEvento(): Evento | undefined {
-    return this.recomendados[0];
+  registrationFor(eventId: string): Inscripcion | undefined {
+    return this.inscripciones().find((registration) => registration.eventoId === eventId);
   }
 
-  get actividad(): Array<{ titulo: string; detalle: string; tipo: string; fecha: Date | string }> {
-    const actividadInscripciones = this.inscripciones.slice(0, 2).map((inscripcion) => ({
-      titulo: inscripcion.eventoTitulo,
-      detalle: `Inscripcion ${inscripcion.estado.toLowerCase()}`,
-      tipo: 'Inscripcion',
-      fecha: inscripcion.fechaInscripcion
+  get hasActivityError(): boolean {
+    return this.registrationsError() || this.paymentsError() || this.certificatesError();
+  }
+
+  private eventStart(event: Evento): number {
+    return new Date(`${event.fechaInicio}T${event.horaInicio || '00:00'}`).getTime();
+  }
+
+  private buildActivity(): DashboardActivity[] {
+    const registrationItems = this.inscripciones().map((registration) => ({
+      id: `registration-${registration.id}`,
+      title: registration.eventoTitulo,
+      detail: `Inscripción ${this.registrationStatus(registration.estado)}`,
+      type: 'Inscripción' as const,
+      date: registration.fechaInscripcion,
+      icon: 'event_available',
+      route: `/privado/inscripciones/${registration.id}`
     }));
-
-    const actividadPagos = this.pagos.slice(0, 2).map((pago) => ({
-      titulo: pago.eventoTitulo,
-      detalle: `Pago ${pago.estado.toLowerCase()} por Bs. ${pago.monto}`,
-      tipo: 'Pago',
-      fecha: pago.fechaPago
+    const paymentItems = this.pagos().map((payment) => ({
+      id: `payment-${payment.id}`,
+      title: payment.eventoTitulo,
+      detail: `Pago ${payment.estado.toLowerCase().replaceAll('_', ' ')}`,
+      type: 'Pago' as const,
+      date: payment.fechaPago,
+      icon: 'payments',
+      route: '/privado/pagos'
     }));
+    const certificateItems = this.certificados()
+      .filter((certificate) => certificate.estado !== 'ANULADO')
+      .map((certificate) => ({
+        id: `certificate-${certificate.id}`,
+        title: certificate.evento,
+        detail: `Certificado ${certificate.tipoCertificado === 'CURRICULAR' ? 'curricular' : 'no curricular'} emitido`,
+        type: 'Certificado' as const,
+        date: certificate.fechaEmision,
+        icon: 'workspace_premium',
+        route: '/certificados/mis-certificados'
+      }));
 
-    return [...actividadInscripciones, ...actividadPagos].slice(0, 4);
+    return [...registrationItems, ...paymentItems, ...certificateItems]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5);
+  }
+
+  private registrationStatus(status: EstadoInscripcion): string {
+    return status.toLowerCase().replaceAll('_', ' ');
   }
 }

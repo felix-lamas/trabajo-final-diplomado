@@ -1,6 +1,7 @@
 @import 'material-design-icons-iconfont/dist/material-design-icons.css';
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 @import 'tailwindcss';
+@import './app/features/privado/dashboard-privado/dashboard-privado-records.css';
 
 /* Vidia design tokens. Components should consume semantic tokens, never palette literals. */
 :root {

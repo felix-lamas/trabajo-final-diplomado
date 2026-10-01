@@ -1,178 +1,201 @@
-<main class="app-page student-portal">
-  <section class="student-hero">
-    <div class="student-hero__copy">
-      <div class="app-chip">
-        <mat-icon>person</mat-icon>
-        Area privada
-      </div>
-      <h1>Bienvenido, {{ userName }}</h1>
-      <p>
-        Explore eventos publicados y consulte sus inscripciones, pagos y certificados.
-      </p>
-      <div class="student-hero__actions">
-        <a mat-flat-button color="primary" routerLink="/eventos">
-          <mat-icon>search</mat-icon>
-          Buscar eventos
+<main class="app-page user-dashboard">
+  <section class="user-dashboard__hero" aria-labelledby="dashboard-title">
+    <div class="user-dashboard__hero-copy">
+      <p class="user-dashboard__eyebrow"><mat-icon aria-hidden="true">auto_awesome</mat-icon> Vidia · donde los eventos cobran vida</p>
+      <h1 id="dashboard-title">Hola, {{ userName }}</h1>
+      <p class="user-dashboard__intro">Tu próxima experiencia universitaria puede empezar aquí. Descubre actividades y sigue tu participación desde un solo lugar.</p>
+      <div class="user-dashboard__actions">
+        <a class="user-dashboard__action user-dashboard__action--primary" routerLink="/eventos">
+          <mat-icon aria-hidden="true">explore</mat-icon>
+          Explorar eventos
+          <mat-icon class="user-dashboard__action-arrow" aria-hidden="true">arrow_forward</mat-icon>
         </a>
-        <a mat-stroked-button routerLink="/privado/perfil">
-          <mat-icon>badge</mat-icon>
+        <a class="user-dashboard__action user-dashboard__action--secondary" routerLink="/privado/perfil">
+          <mat-icon aria-hidden="true">account_circle</mat-icon>
           Mi perfil
         </a>
       </div>
     </div>
-
-    <div class="student-hero__stats" *ngIf="!loading; else loadingStats">
-      <div class="student-stat">
-        <span>Inscripciones</span>
-        <strong>{{ inscripciones.length }}</strong>
-      </div>
-      <div class="student-stat">
-        <span>Pagos validados</span>
-        <strong>{{ pagosValidados }}</strong>
-      </div>
-      <div class="student-stat">
-        <span>Eventos recomendados</span>
-        <strong>{{ recomendados.length }}</strong>
-      </div>
+    <div class="user-dashboard__hero-art" aria-hidden="true">
+      <span class="user-dashboard__hero-orbit user-dashboard__hero-orbit--one"></span>
+      <span class="user-dashboard__hero-orbit user-dashboard__hero-orbit--two"></span>
+      <mat-icon>event_available</mat-icon>
+      <span class="user-dashboard__hero-caption">Ideas que reúnen<br>personas</span>
     </div>
+  </section>
 
-    <ng-template #loadingStats>
-      <div class="public-loading">
-        <mat-spinner diameter="34"></mat-spinner>
+  <section class="user-dashboard__stats" aria-label="Resumen de tu actividad">
+    <ng-container *ngIf="loading(); else statsContent">
+      <div class="user-dashboard__stats-loading" aria-hidden="true">
+        <app-skeleton variant="card"></app-skeleton>
+        <app-skeleton variant="card"></app-skeleton>
+        <app-skeleton variant="card"></app-skeleton>
+      </div>
+    </ng-container>
+    <ng-template #statsContent>
+      <app-stat-card label="Mis inscripciones" [value]="registrationCount" icon="event_available"></app-stat-card>
+      <app-stat-card label="Pagos aprobados" [value]="paymentCount" icon="task_alt"></app-stat-card>
+      <app-stat-card label="Mis certificados" [value]="certificateCount" icon="workspace_premium"></app-stat-card>
+    </ng-template>
+  </section>
+
+  <app-alert *ngIf="eventsError() || registrationsError() || paymentsError() || certificatesError()"
+    variant="warning" title="Algunos datos no están disponibles">
+    <span>Ocurrió un problema al consultar parte de tu actividad. Puedes volver a intentarlo más tarde.</span>
+  </app-alert>
+
+  <section class="user-dashboard__section" aria-labelledby="upcoming-title">
+    <header class="user-dashboard__section-heading">
+      <div>
+        <p class="user-dashboard__section-kicker">Eventos disponibles</p>
+        <h2 id="upcoming-title">Próximos eventos</h2>
+        <p>Actividades publicadas que se acercan.</p>
+      </div>
+      <a class="user-dashboard__text-link" routerLink="/eventos">Ver todos <mat-icon aria-hidden="true">arrow_forward</mat-icon></a>
+    </header>
+
+    <app-skeleton *ngIf="loading(); else eventsContent" variant="card" [count]="2"></app-skeleton>
+    <ng-template #eventsContent>
+      <app-alert *ngIf="eventsError()" variant="error" title="No pudimos cargar los eventos">
+        Prueba nuevamente más tarde o visita el catálogo.
+      </app-alert>
+      <div class="user-dashboard__featured-event" *ngIf="!eventsError() && proximoEvento() as event; else noUpcomingEvent">
+        <app-event-card [event]="event" actionLabel="Ver evento"></app-event-card>
+        <aside class="user-dashboard__next-note">
+          <span class="user-dashboard__next-icon"><mat-icon aria-hidden="true">calendar_month</mat-icon></span>
+          <p class="user-dashboard__section-kicker">Tu siguiente oportunidad</p>
+          <h3>{{ event.titulo }}</h3>
+          <p>Consulta los detalles del evento para conocer su modalidad, ubicación e inscripción.</p>
+          <p class="user-dashboard__enrollment-status" *ngIf="registrationFor(event.id) as enrollment">
+            Tu inscripción: {{ enrollment.estado.toLowerCase().replaceAll('_', ' ') }}
+          </p>
+          <p class="user-dashboard__enrollment-status" *ngIf="!registrationsError() && !registrationFor(event.id) && event.requiereInscripcion">
+            Inscripción disponible
+          </p>
+          <a class="user-dashboard__text-link" [routerLink]="['/eventos', event.id]">Conocer más <mat-icon aria-hidden="true">arrow_forward</mat-icon></a>
+        </aside>
+      </div>
+      <ng-template #noUpcomingEvent>
+        <app-empty-state *ngIf="!eventsError()" icon="event_busy" title="No hay próximos eventos publicados"
+          message="Explora el catálogo para encontrar actividades disponibles." actionLabel="Explorar eventos"
+          actionRoute="/eventos"></app-empty-state>
+      </ng-template>
+      <div class="user-dashboard__event-grid" *ngIf="!eventsError() && otrosEventos().length">
+        <app-event-card *ngFor="let event of otrosEventos()" [event]="event" actionLabel="Ver evento"></app-event-card>
       </div>
     </ng-template>
   </section>
 
-  <section class="student-split">
-    <mat-card class="student-panel">
-      <div class="app-toolbar">
-        <div class="app-toolbar__title">
-          <h2 class="app-section-title">Proximo evento</h2>
-          <p>Recomendado para su participacion academica.</p>
-        </div>
+  <section class="user-dashboard__section" aria-labelledby="my-activity-title">
+    <header class="user-dashboard__section-heading">
+      <div>
+        <p class="user-dashboard__section-kicker">Tu participación</p>
+        <h2 id="my-activity-title">Inscripciones, pagos y certificados</h2>
+        <p>Consulta el estado de tus actividades.</p>
       </div>
+    </header>
+    <div class="user-dashboard__records-grid">
+      <app-surface variant="default" class="user-dashboard__record-panel">
+        <h3>Mis inscripciones</h3>
+        <app-skeleton *ngIf="loading(); else registrationsContent" variant="list" [count]="2"></app-skeleton>
+        <ng-template #registrationsContent>
+          <app-alert *ngIf="registrationsError()" variant="error" title="No pudimos cargar tus inscripciones"></app-alert>
+          <ng-container *ngIf="!registrationsError()">
+            <app-empty-state *ngIf="!inscripciones().length" icon="event_busy" title="Aún no tienes inscripciones"
+              message="Explora eventos para encontrar una actividad." actionLabel="Explorar eventos"
+              actionRoute="/eventos" compact></app-empty-state>
+            <ul class="user-dashboard__record-list" *ngIf="inscripciones().length">
+              <li *ngFor="let registration of inscripciones().slice(0, 2)">
+                <a [routerLink]="['/privado/inscripciones', registration.id]">{{ registration.eventoTitulo }}</a>
+                <span>{{ registration.estado.toLowerCase().replaceAll('_', ' ') }}</span>
+              </li>
+            </ul>
+          </ng-container>
+        </ng-template>
+      </app-surface>
 
-      <div *ngIf="siguienteEvento; else noEvent" class="student-card" style="padding: 0;">
-        <div style="min-height: 220px; overflow: hidden; border-radius: var(--radius-md);">
-          <img [src]="siguienteEvento.imagenPortada || 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1600&q=80'" [alt]="siguienteEvento.titulo" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <div class="student-card__header" style="padding: 0 1rem;">
-          <div>
-            <h3>{{ siguienteEvento.titulo }}</h3>
-            <p>{{ siguienteEvento.categoriaNombre }} · {{ siguienteEvento.modalidad }}</p>
-          </div>
-          <span class="app-badge app-badge--info">{{ siguienteEvento.estado }}</span>
-        </div>
-        <div class="student-card__footer" style="padding: 0 1rem 1rem;">
-          <span>{{ siguienteEvento.fechaInicio | date:'dd MMM yyyy' }}</span>
-          <a mat-flat-button color="primary" [routerLink]="['/eventos', siguienteEvento.id]">Ver evento</a>
-        </div>
-      </div>
+      <app-surface variant="default" class="user-dashboard__record-panel">
+        <h3>Mis pagos</h3>
+        <app-skeleton *ngIf="loading(); else paymentsContent" variant="list" [count]="2"></app-skeleton>
+        <ng-template #paymentsContent>
+          <app-alert *ngIf="paymentsError()" variant="error" title="No pudimos cargar tus pagos"></app-alert>
+          <ng-container *ngIf="!paymentsError()">
+            <app-empty-state *ngIf="!pagos().length" icon="payments" title="Aún no tienes pagos"
+              message="Los pagos asociados a tus inscripciones aparecerán aquí." actionLabel="Explorar eventos"
+              actionRoute="/eventos" compact></app-empty-state>
+            <ul class="user-dashboard__record-list" *ngIf="pagos().length">
+              <li *ngFor="let payment of pagos().slice(0, 2)">
+                <a routerLink="/privado/pagos">{{ payment.eventoTitulo }}</a>
+                <span>{{ payment.estado.toLowerCase().replaceAll('_', ' ') }}</span>
+              </li>
+            </ul>
+          </ng-container>
+        </ng-template>
+      </app-surface>
 
-      <ng-template #noEvent>
-        <div class="student-empty">
-          <mat-icon>event_busy</mat-icon>
-          <strong>No hay eventos recomendados</strong>
-          <p>Revise el catalogo publico para ver eventos publicados.</p>
-        </div>
-      </ng-template>
-    </mat-card>
-
-    <mat-card class="student-panel">
-      <div class="app-toolbar">
-        <div class="app-toolbar__title">
-          <h2 class="app-section-title">Actividad reciente</h2>
-          <p>Ultimos movimientos de su cuenta.</p>
-        </div>
-      </div>
-
-      <div class="student-grid">
-        <div *ngFor="let item of actividad" class="student-card">
-          <div class="student-card__header">
-            <div>
-              <h3>{{ item.titulo }}</h3>
-              <p>{{ item.detalle }}</p>
-            </div>
-            <span class="app-badge app-badge--info">{{ item.tipo }}</span>
-          </div>
-          <div class="student-card__footer">
-            <span>{{ item.fecha | date:'dd MMM yyyy HH:mm' }}</span>
-          </div>
-        </div>
-      </div>
-    </mat-card>
+      <app-surface variant="default" class="user-dashboard__record-panel">
+        <h3>Mis certificados</h3>
+        <app-skeleton *ngIf="loading(); else certificatesContent" variant="list" [count]="2"></app-skeleton>
+        <ng-template #certificatesContent>
+          <app-alert *ngIf="certificatesError()" variant="error" title="No pudimos cargar tus certificados"></app-alert>
+          <ng-container *ngIf="!certificatesError()">
+            <app-empty-state *ngIf="!certificadosVigentes().length" icon="workspace_premium" title="Aún no tienes certificados"
+              message="Los certificados emitidos para ti aparecerán aquí." compact></app-empty-state>
+            <ul class="user-dashboard__record-list" *ngIf="certificadosVigentes().length">
+              <li *ngFor="let certificate of certificadosVigentes().slice(0, 2)">
+                <a routerLink="/certificados/mis-certificados">{{ certificate.evento }}</a>
+                <span>Emitido {{ certificate.fechaEmision | date:'dd MMM yyyy' }}</span>
+              </li>
+            </ul>
+          </ng-container>
+        </ng-template>
+      </app-surface>
+    </div>
   </section>
 
-  <section class="student-grid student-grid--2">
-    <mat-card class="student-panel">
-      <div class="app-toolbar">
-        <div class="app-toolbar__title">
-          <h2 class="app-section-title">Pagos</h2>
-          <p>Estado de validacion y comprobantes.</p>
+  <section class="user-dashboard__lower-grid">
+    <app-surface variant="default" class="user-dashboard__activity" aria-labelledby="activity-title">
+      <header class="user-dashboard__section-heading user-dashboard__section-heading--compact">
+        <div>
+          <p class="user-dashboard__section-kicker">Tu recorrido</p>
+          <h2 id="activity-title">Actividad reciente</h2>
         </div>
-        <a mat-button routerLink="/privado/pagos">Abrir</a>
-      </div>
-      <div class="student-grid">
-        <div class="student-card">
-          <div class="student-card__header">
-            <div>
-              <h3>Pagos pendientes</h3>
-              <p>Solicitudes a la espera de revision</p>
+      </header>
+      <app-skeleton *ngIf="loading(); else activityContent" variant="list" [count]="4"></app-skeleton>
+      <ng-template #activityContent>
+        <app-alert *ngIf="hasActivityError" variant="error" title="No pudimos cargar toda tu actividad">
+          Vuelve a intentarlo más tarde.
+        </app-alert>
+        <ol class="user-dashboard__activity-list" *ngIf="activity().length; else noActivity">
+          <li *ngFor="let item of activity()">
+            <span class="user-dashboard__activity-icon"><mat-icon aria-hidden="true">{{ item.icon }}</mat-icon></span>
+            <div class="user-dashboard__activity-copy">
+              <a [routerLink]="item.route">{{ item.title }}</a>
+              <p>{{ item.detail }} <span aria-hidden="true">·</span> {{ item.type }}</p>
             </div>
-            <span class="app-badge app-badge--warning">{{ pagosPendientes }}</span>
-          </div>
-        </div>
-        <div class="student-card">
-          <div class="student-card__header">
-            <div>
-              <h3>Pagos validados</h3>
-              <p>Comprobantes aprobados</p>
-            </div>
-            <span class="app-badge app-badge--success">{{ pagosValidados }}</span>
-          </div>
-        </div>
-      </div>
-    </mat-card>
+            <time [attr.datetime]="item.date">{{ item.date | date:'dd MMM yyyy' }}</time>
+          </li>
+        </ol>
+        <ng-template #noActivity>
+          <app-empty-state *ngIf="!hasActivityError" icon="history" title="Tu actividad aparecerá aquí"
+            message="Cuando te inscribas, realices un pago o recibas un certificado, verás los movimientos recientes." compact></app-empty-state>
+        </ng-template>
+      </ng-template>
+    </app-surface>
 
-    <mat-card class="student-panel">
-      <div class="app-toolbar">
-        <div class="app-toolbar__title">
-          <h2 class="app-section-title">Accesos rapidos</h2>
-          <p>Atajos a las areas principales.</p>
+    <app-surface variant="default" class="user-dashboard__shortcuts" aria-labelledby="shortcuts-title">
+      <header class="user-dashboard__section-heading user-dashboard__section-heading--compact">
+        <div>
+          <p class="user-dashboard__section-kicker">A un paso</p>
+          <h2 id="shortcuts-title">Tu espacio</h2>
         </div>
-      </div>
-      <div class="student-grid">
-        <a class="student-card" routerLink="/privado/inscripciones">
-          <div class="student-card__header">
-            <div>
-              <h3>Mis inscripciones</h3>
-              <p>Consultar estados y comprobantes de inscripción</p>
-            </div>
-            <mat-icon>how_to_reg</mat-icon>
-          </div>
-        </a>
-        <a class="student-card" routerLink="/certificados/mis-certificados">
-          <div class="student-card__header">
-            <div>
-              <h3>Mis certificados</h3>
-              <p>Consultar y descargar certificados emitidos</p>
-            </div>
-            <mat-icon>workspace_premium</mat-icon>
-          </div>
-        </a>
-        <a class="student-card" routerLink="/privado/pagos">
-          <div class="student-card__header">
-            <div><h3>Mis pagos</h3><p>Consultar pagos y comprobantes</p></div>
-            <mat-icon>payments</mat-icon>
-          </div>
-        </a>
-        <a class="student-card" routerLink="/privado/solicitud-organizador">
-          <div class="student-card__header">
-            <div><h3>Solicitud de organizador</h3><p>Consultar o solicitar el rol de organizador</p></div>
-            <mat-icon>assignment_ind</mat-icon>
-          </div>
-        </a>
-      </div>
-    </mat-card>
+      </header>
+      <nav class="user-dashboard__shortcut-list" aria-label="Accesos personales">
+        <a routerLink="/privado/inscripciones"><span><mat-icon aria-hidden="true">how_to_reg</mat-icon></span><span><strong>Mis inscripciones</strong><small>Consulta estados y comprobantes</small></span><mat-icon class="user-dashboard__shortcut-arrow" aria-hidden="true">arrow_forward</mat-icon></a>
+        <a routerLink="/privado/pagos"><span><mat-icon aria-hidden="true">payments</mat-icon></span><span><strong>Mis pagos</strong><small>Revisa pagos y comprobantes</small></span><mat-icon class="user-dashboard__shortcut-arrow" aria-hidden="true">arrow_forward</mat-icon></a>
+        <a routerLink="/certificados/mis-certificados"><span><mat-icon aria-hidden="true">workspace_premium</mat-icon></span><span><strong>Mis certificados</strong><small>Consulta certificados emitidos</small></span><mat-icon class="user-dashboard__shortcut-arrow" aria-hidden="true">arrow_forward</mat-icon></a>
+        <a routerLink="/privado/solicitud-organizador"><span><mat-icon aria-hidden="true">campaign</mat-icon></span><span><strong>Ser organizador</strong><small>Consulta o inicia tu solicitud</small></span><mat-icon class="user-dashboard__shortcut-arrow" aria-hidden="true">arrow_forward</mat-icon></a>
+      </nav>
+    </app-surface>
   </section>
 </main>
