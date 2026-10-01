@@ -1,67 +1,19 @@
 <main class="auth-page auth-page--compact">
-  <mat-card class="auth-card auth-card--auth auth-card--compact">
-    <div class="auth-card__header--auth">
-      <div class="auth-card__meta">
-        <div class="app-chip">
-          <mat-icon>security</mat-icon>
-          Seguridad
-        </div>
-        <div class="app-chip">
-          <mat-icon>password</mat-icon>
-          Validacion fuerte
-        </div>
-      </div>
-      <h1>Restablecer contrasena</h1>
-      <p>Defina una nueva contrasena segura para recuperar su acceso a la plataforma.</p>
-    </div>
-
-    <div class="auth-strength">
-      <div class="auth-strength__row">
-        <strong>Fortaleza de contrasena</strong>
-        <span class="app-badge"
-          [class.app-badge--danger]="passwordTone === 'danger'"
-          [class.app-badge--warning]="passwordTone === 'warning'"
-          [class.app-badge--success]="passwordTone === 'success'">
-          {{ passwordLabel }}
-        </span>
-      </div>
-      <div class="auth-strength__bar">
-        <span
-          [style.width.%]="passwordStrength"
-          [style.background]="passwordTone === 'danger' ? 'var(--app-danger)' : passwordTone === 'warning' ? 'var(--app-warning)' : 'var(--app-success)'">
-        </span>
-      </div>
-      <ul class="auth-strength__notes">
-        <li>Use minimo 8 caracteres</li>
-        <li>Incluya mayusculas, minusculas, numeros y simbolos</li>
-        <li>No reutilice contrasenas anteriores</li>
-      </ul>
-    </div>
-
-    <form [formGroup]="resetForm" (ngSubmit)="onSubmit()" class="auth-form--auth">
-      <mat-form-field appearance="outline">
-        <mat-label>Nueva contrasena</mat-label>
-        <input matInput formControlName="nuevaContrasena" type="password" (input)="onPasswordChange()">
-        <mat-icon matSuffix>lock</mat-icon>
-        <mat-error *ngIf="resetForm.get('nuevaContrasena')?.hasError('required')">Requerido</mat-error>
-        <mat-error *ngIf="resetForm.get('nuevaContrasena')?.hasError('minlength')">Minimo 8 caracteres</mat-error>
-        <mat-error *ngIf="resetForm.get('nuevaContrasena')?.hasError('pattern')">Use mayuscula, minuscula, numero y simbolo</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Confirmar contrasena</mat-label>
-        <input matInput formControlName="confirmacion" type="password">
-        <mat-icon matSuffix>lock_reset</mat-icon>
-        <mat-error *ngIf="resetForm.hasError('notSame') && resetForm.get('confirmacion')?.touched">Las contrasenas no coinciden</mat-error>
-      </mat-form-field>
-
-      <div class="auth-field-help">
-        El token temporal es de un solo uso y expira luego de 30 minutos.
-      </div>
-
-      <button mat-flat-button color="primary" type="submit" [disabled]="resetForm.invalid || loading">
-        {{ loading ? 'Actualizando...' : 'Cambiar contrasena' }}
-      </button>
-    </form>
-  </mat-card>
+  <section class="vidia-auth" aria-labelledby="reset-title">
+    <a class="vidia-auth__brand" routerLink="/eventos" aria-label="Vidia, ir a eventos"><span class="vidia-auth__brand-mark" aria-hidden="true"><mat-icon>event</mat-icon></span><span><strong>Vidia</strong><small>donde los eventos cobran vida</small></span></a>
+    <mat-card class="auth-card auth-card--auth auth-card--compact">
+      <header class="auth-card__header--auth"><span class="vidia-auth__eyebrow">Seguridad de la cuenta</span><h1 id="reset-title">Crear nueva contrasena</h1><p>Elige una contrasena que cumpla los requisitos de seguridad.</p></header>
+      <div *ngIf="tokenMissing()" class="vidia-auth__notice vidia-auth__notice--error" role="alert"><strong>Enlace incompleto</strong><span>No se encontro el enlace de recuperacion. Solicita uno nuevo para continuar.</span><a mat-button routerLink="/auth/recuperar-contrasena">Solicitar recuperacion</a></div>
+      <ng-container *ngIf="!tokenMissing()">
+        <div class="auth-strength"><div class="auth-strength__row"><strong>Seguridad de contrasena</strong><span class="app-badge" [class.app-badge--danger]="passwordTone === 'danger'" [class.app-badge--warning]="passwordTone === 'warning'" [class.app-badge--success]="passwordTone === 'success'">{{ passwordLabel }}</span></div><div class="auth-strength__bar"><span [style.width.%]="passwordStrength" [class.auth-strength__bar--danger]="passwordTone === 'danger'" [class.auth-strength__bar--warning]="passwordTone === 'warning'" [class.auth-strength__bar--success]="passwordTone === 'success'"></span></div><p class="auth-field-help">Minimo 8 caracteres con mayuscula, minuscula, numero y simbolo.</p></div>
+        <div *ngIf="errorMessage()" class="vidia-auth__notice vidia-auth__notice--error" role="alert">{{ errorMessage() }}</div>
+        <form [formGroup]="resetForm" (ngSubmit)="onSubmit()" class="auth-form--auth" novalidate>
+          <mat-form-field appearance="outline"><mat-label>Nueva contrasena</mat-label><input matInput [type]="passwordVisible() ? 'text' : 'password'" formControlName="nuevaContrasena" autocomplete="new-password" required (input)="onPasswordChange()" /><button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility('password')" [attr.aria-label]="passwordVisible() ? 'Ocultar contrasena' : 'Mostrar contrasena'" [attr.aria-pressed]="passwordVisible()"><mat-icon>{{ passwordVisible() ? 'visibility_off' : 'visibility' }}</mat-icon></button><mat-error *ngIf="resetForm.get('nuevaContrasena')?.invalid && resetForm.get('nuevaContrasena')?.touched">Cumple los requisitos indicados.</mat-error></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Confirmar contrasena</mat-label><input matInput [type]="confirmationVisible() ? 'text' : 'password'" formControlName="confirmacion" autocomplete="new-password" required /><button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility('confirmation')" [attr.aria-label]="confirmationVisible() ? 'Ocultar confirmacion' : 'Mostrar confirmacion'" [attr.aria-pressed]="confirmationVisible()"><mat-icon>{{ confirmationVisible() ? 'visibility_off' : 'visibility' }}</mat-icon></button><mat-error *ngIf="resetForm.hasError('notSame') && resetForm.get('confirmacion')?.touched">Las contrasenas no coinciden.</mat-error></mat-form-field>
+          <button mat-flat-button color="primary" type="submit" [disabled]="resetForm.invalid || loading">{{ loading ? 'Actualizando...' : 'Actualizar contrasena' }}</button><mat-progress-bar *ngIf="loading" mode="indeterminate" aria-label="Actualizando contrasena"></mat-progress-bar>
+        </form>
+      </ng-container>
+      <p class="vidia-auth__institution">Universidad Autonoma Juan Misael Saracho</p>
+    </mat-card>
+  </section>
 </main>

@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recuperar-contrasena',
@@ -11,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RecuperarContrasenaComponent {
   recuperarForm: FormGroup;
   private readonly viewState = signal({ loading: false, enviado: false });
+  readonly errorMessage = signal('');
   get loading(): boolean { return this.viewState().loading; }
   private set loading(value: boolean) { this.viewState.update((state) => ({ ...state, loading: value })); }
   get enviado(): boolean { return this.viewState().enviado; }
@@ -33,15 +35,18 @@ export class RecuperarContrasenaComponent {
     }
 
     this.loading = true;
-    this.authService.recuperarContrasena(this.recuperarForm.value.correoElectronico).subscribe({
+    this.errorMessage.set('');
+    this.authService.recuperarContrasena(String(this.recuperarForm.value.correoElectronico).trim()).pipe(
+      finalize(() => this.loading = false)
+    ).subscribe({
       next: () => {
         this.enviado = true;
-        this.loading = false;
         this.snackBar.open('Se han enviado instrucciones a su correo', 'Cerrar', { duration: 5000 });
       },
       error: (err) => {
-        this.loading = false;
-        this.snackBar.open(err.error?.mensaje || 'Error al procesar solicitud', 'Cerrar', { duration: 3000 });
+        this.errorMessage.set(err.status === 0 || err.status >= 500
+          ? 'No fue posible procesar la solicitud. Intente nuevamente más tarde.'
+          : 'No fue posible procesar la solicitud. Revise el correo e intente nuevamente.');
       }
     });
   }

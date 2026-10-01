@@ -55,7 +55,7 @@ describe('VerificarCorreoComponent reactive HTTP state', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.textContent).toContain('Correo verificado');
-    expect(fixture.nativeElement.textContent).toContain('Ir al login');
+    expect(fixture.nativeElement.textContent).toContain('Ir al inicio de sesion');
   });
 
   it.each([
@@ -71,13 +71,14 @@ describe('VerificarCorreoComponent reactive HTTP state', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.textContent).toContain(texto);
-    expect(fixture.nativeElement.textContent).toContain('Reintentar');
+    expect(fixture.nativeElement.textContent).not.toContain('Reintentar');
+    expect(fixture.nativeElement.textContent).toContain('Solicitar otro enlace');
   });
 
   it('permite estado inicial sin token y reenvio con respuesta generica', async () => {
     queryParams = { correo: 'ana@example.test' };
     createComponent();
-    expect(fixture.nativeElement.textContent).toContain('Revise su bandeja de entrada');
+    expect(fixture.nativeElement.textContent).toContain('Revisa tu bandeja de entrada');
 
     fixture.componentInstance.reenviar();
     await fixture.whenStable();

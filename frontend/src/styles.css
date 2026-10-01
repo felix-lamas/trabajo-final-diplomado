@@ -1326,6 +1326,139 @@ select:focus-visible {
   color: var(--app-primary);
 }
 
+/* Vidia auth flow: semantic surfaces and tokens, shared by every public access screen. */
+.vidia-auth {
+  width: min(34rem, 100%);
+  display: grid;
+  gap: var(--space-5);
+  margin-inline: auto;
+}
+
+.vidia-auth.vidia-auth--wide { width: min(54rem, 100%); }
+.vidia-auth .auth-card--auth {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+.vidia-auth .auth-card--auth::before { display: none; }
+.vidia-auth .auth-card__header--auth { gap: var(--space-2); }
+.vidia-auth .auth-card__header--auth h1 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-tight);
+}
+.vidia-auth .auth-card__header--auth p,
+.vidia-auth .auth-field-help,
+.vidia-auth__institution { color: var(--color-text-secondary); }
+.vidia-auth__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: fit-content;
+  color: var(--color-text-primary);
+  text-decoration: none;
+}
+.vidia-auth__brand:focus-visible,
+.vidia-auth a:focus-visible,
+.vidia-auth button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+.vidia-auth__brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+}
+.vidia-auth__brand-mark mat-icon { color: inherit; }
+.vidia-auth__brand strong,
+.vidia-auth__brand small { display: block; }
+.vidia-auth__brand strong { font-size: var(--font-size-h3); line-height: 1.1; }
+.vidia-auth__brand small { margin-top: var(--space-1); color: var(--color-text-secondary); }
+.vidia-auth__eyebrow {
+  color: var(--color-primary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.vidia-auth__institution { margin: 0; font-size: var(--font-size-caption); text-align: center; }
+.vidia-auth__notice {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  color: var(--color-info-text);
+  background: var(--color-info-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  line-height: var(--line-height-body);
+}
+.vidia-auth__notice--error,
+.vidia-auth__error {
+  color: var(--color-danger-text);
+  background: var(--color-danger-bg);
+}
+.vidia-auth__notice--error { border-color: var(--color-danger); }
+.vidia-auth__error { display: block; }
+.vidia-auth__links { justify-content: space-between; }
+.vidia-auth .auth-form--auth { gap: var(--space-4); }
+.vidia-auth .mat-mdc-form-field { width: 100%; }
+.vidia-auth .auth-step-indicator__item {
+  border-color: var(--color-border);
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.vidia-auth .auth-step-indicator__item--active {
+  border-color: var(--color-primary);
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+.vidia-auth .auth-strength { background: var(--color-surface-raised); }
+.vidia-auth .auth-strength__bar { background: var(--color-bg-tertiary); }
+.auth-strength__bar--danger { background: var(--color-danger); }
+.auth-strength__bar--warning { background: var(--color-warning); }
+.auth-strength__bar--success { background: var(--color-success); }
+.vidia-auth .auth-success { color: var(--color-text-primary); }
+.vidia-auth .auth-success p { color: var(--color-text-secondary); }
+.vidia-auth .auth-success mat-icon { color: var(--color-success); }
+.vidia-auth .mat-mdc-progress-bar { --mdc-linear-progress-active-indicator-color: var(--color-primary); }
+
+.student-profile .student-profile__hero,
+.student-portal .student-panel {
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+.student-profile .student-profile__hero { display: flex; align-items: center; gap: var(--space-4); }
+.student-profile .student-profile__avatar { flex: 0 0 auto; }
+.student-profile [aria-label="Datos de cuenta"] { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.student-profile [aria-label="Datos de cuenta"] > span {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.student-profile [aria-label="Datos de cuenta"] strong { color: var(--color-text-primary); }
+.student-profile .auth-form--auth { display: grid; gap: var(--space-3); }
+.student-profile .auth-form--auth mat-form-field { width: 100%; }
+
+@media (max-width: 640px) {
+  .vidia-auth { gap: var(--space-4); }
+  .vidia-auth .auth-card--auth { padding: var(--space-4); }
+  .vidia-auth .auth-inline-group { grid-template-columns: 1fr; }
+  .vidia-auth__links { align-items: flex-start; }
+  .student-profile .student-profile__hero { align-items: flex-start; }
+}
+
 .auth-compact-copy {
   display: grid;
   gap: 0.4rem;

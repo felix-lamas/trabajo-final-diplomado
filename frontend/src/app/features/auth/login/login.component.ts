@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
@@ -17,6 +16,9 @@ export class LoginComponent {
   private readonly loadingState = signal(false);
   private readonly unverifiedState = signal(false);
   private readonly resendState = signal<'idle' | 'loading' | 'success'>('idle');
+  readonly errorMessage = signal('');
+  readonly resendError = signal('');
+  readonly passwordVisible = signal(false);
   get loading(): boolean { return this.loadingState(); }
   private set loading(value: boolean) { this.loadingState.set(value); }
   get correoNoVerificado(): boolean { return this.unverifiedState(); }
@@ -26,8 +28,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private router: Router
   ) {
     this.form = this.fb.group({
       correoElectronico: ['', [Validators.required, Validators.email]],
@@ -44,12 +45,12 @@ export class LoginComponent {
     this.loading = true;
     this.unverifiedState.set(false);
     this.resendState.set('idle');
+    this.errorMessage.set('');
 
     this.authService.login(this.form.getRawValue()).pipe(
       finalize(() => this.loading = false)
     ).subscribe({
       next: (response) => {
-        this.snackBar.open('Sesion iniciada correctamente', 'Cerrar', { duration: 3000 });
         const roles = response.usuario.roles;
         if (roles.includes('ADMINISTRADOR')) {
           this.router.navigate(['/admin']);
@@ -64,7 +65,9 @@ export class LoginComponent {
           this.unverifiedState.set(true);
           return;
         }
-        this.snackBar.open(apiErrorMessage(err, 'No fue posible iniciar sesion'), 'Cerrar', { duration: 4000 });
+        this.errorMessage.set(err.status === 401
+          ? 'El correo o la contraseña no coinciden.'
+          : apiErrorMessage(err, 'No fue posible iniciar sesión. Intente nuevamente.'));
       }
     });
   }
@@ -76,16 +79,21 @@ export class LoginComponent {
     }
 
     this.resendState.set('loading');
-    this.authService.reenviarVerificacion(correo).subscribe({
+    this.resendError.set('');
+    this.authService.reenviarVerificacion(correo).pipe(
+      finalize(() => {
+        if (this.resendState() === 'loading') this.resendState.set('idle');
+      })
+    ).subscribe({
       next: () => this.resendState.set('success'),
       error: (error) => {
         this.resendState.set('idle');
-        this.snackBar.open(
-          apiErrorMessage(error, 'No fue posible procesar el reenvio. Intente nuevamente.'),
-          'Cerrar',
-          { duration: 4000 }
-        );
+        this.resendError.set(apiErrorMessage(error, 'No fue posible procesar la solicitud. Intente nuevamente.'));
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible.update((visible) => !visible);
   }
 }

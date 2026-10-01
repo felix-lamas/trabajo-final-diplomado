@@ -44,6 +44,9 @@ export class PerfilUsuarioComponent implements OnInit {
   readonly passwordSubmitStatus = signal<SubmitStatus>('idle');
   readonly passwordMessage = signal('');
   readonly loggingOut = signal(false);
+  readonly currentPasswordVisible = signal(false);
+  readonly newPasswordVisible = signal(false);
+  readonly passwordConfirmationVisible = signal(false);
 
   readonly profileForm = this.fb.group({
     nombres: ['', [Validators.required, Validators.maxLength(50)]],
@@ -85,6 +88,18 @@ export class PerfilUsuarioComponent implements OnInit {
 
   get roles(): string[] {
     return this.authService.roles();
+  }
+
+  get correoVerificado(): boolean {
+    return this.user?.correoVerificado ?? false;
+  }
+
+  get tipoUsuario(): string | null {
+    return this.user?.tipoUsuario ?? null;
+  }
+
+  get estadoSolicitudOrganizador(): string | null {
+    return this.user?.estadoSolicitudOrganizador ?? null;
   }
 
   get initial(): string {
@@ -179,6 +194,12 @@ export class PerfilUsuarioComponent implements OnInit {
       next: () => void this.router.navigate(['/auth/login']),
       error: () => void this.router.navigate(['/auth/login'])
     });
+  }
+
+  togglePasswordVisibility(field: 'current' | 'new' | 'confirmation'): void {
+    if (field === 'current') this.currentPasswordVisible.update((visible) => !visible);
+    if (field === 'new') this.newPasswordVisible.update((visible) => !visible);
+    if (field === 'confirmation') this.passwordConfirmationVisible.update((visible) => !visible);
   }
 
   private passwordsMatch(control: AbstractControl): ValidationErrors | null {

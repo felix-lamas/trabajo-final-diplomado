@@ -15,10 +15,12 @@ type VerificationStatus = 'instructions' | 'loading' | 'success' | 'error';
 export class VerificarCorreoComponent implements OnInit {
   readonly estado = signal<VerificationStatus>('instructions');
   readonly mensajeError = signal('');
+  readonly reintentarDisponible = signal(false);
   readonly reenvioEstado = signal<'idle' | 'loading' | 'success' | 'error'>('idle');
   readonly reenvioError = signal('');
   readonly reenvioForm: FormGroup;
   private readonly token = signal('');
+  get hasToken(): boolean { return Boolean(this.token()); }
 
   constructor(
     private readonly fb: FormBuilder,
@@ -53,10 +55,12 @@ export class VerificarCorreoComponent implements OnInit {
 
     this.estado.set('loading');
     this.mensajeError.set('');
+    this.reintentarDisponible.set(false);
     this.authService.verificarCorreo(token).subscribe({
       next: () => this.estado.set('success'),
       error: (error: HttpErrorResponse) => {
         this.estado.set('error');
+        this.reintentarDisponible.set(error.status === 0 || error.status >= 500);
         this.mensajeError.set(this.verificationErrorMessage(error));
       }
     });

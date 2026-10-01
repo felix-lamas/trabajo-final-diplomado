@@ -4,7 +4,7 @@
       <h1 class="app-section-title">Perfil de usuario</h1>
       <p>Informacion personal y configuracion segura de acceso.</p>
     </div>
-    <a mat-stroked-button routerLink="/eventos">Volver a eventos</a>
+          <a mat-stroked-button routerLink="/eventos">Buscar eventos</a>
   </div>
 
   <mat-progress-bar *ngIf="loadStatus() === 'loading'" mode="indeterminate"></mat-progress-bar>
@@ -21,9 +21,16 @@
       <div>
         <strong>{{ fullName }}</strong>
         <div>{{ email }}</div>
-        <div class="student-hero__actions" style="margin-top: 0.75rem;">
-          <span class="app-chip"><mat-icon>verified_user</mat-icon> Correo verificado</span>
+        <div class="student-hero__actions">
+          <span class="app-chip" *ngIf="correoVerificado"><mat-icon>verified_user</mat-icon> Correo verificado</span>
+          <span class="app-chip vedia-profile__status" *ngIf="!correoVerificado"><mat-icon>info</mat-icon> Correo pendiente de verificacion</span>
           <span class="app-chip"><mat-icon>badge</mat-icon> {{ roles[0] || 'Usuario' }}</span>
+        </div>
+        <div class="vidia-profile__details" aria-label="Datos de cuenta">
+          <span *ngIf="user?.ci"><strong>CI:</strong> {{ user?.ci }}</span>
+          <span *ngIf="user?.ru"><strong>RU:</strong> {{ user?.ru }}</span>
+          <span *ngIf="tipoUsuario"><strong>Tipo:</strong> {{ tipoUsuario }}</span>
+          <span *ngIf="estadoSolicitudOrganizador"><strong>Solicitud de organizador:</strong> {{ estadoSolicitudOrganizador }}</span>
         </div>
       </div>
     </mat-card>
@@ -76,13 +83,15 @@
         <form class="auth-form--auth" [formGroup]="passwordForm" (ngSubmit)="cambiarContrasena()">
           <mat-form-field appearance="outline">
             <mat-label>Contrasena actual</mat-label>
-            <input matInput type="password" formControlName="contrasenaActual" autocomplete="current-password" />
+            <input matInput [type]="currentPasswordVisible() ? 'text' : 'password'" formControlName="contrasenaActual" autocomplete="current-password" />
+            <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility('current')" [attr.aria-label]="currentPasswordVisible() ? 'Ocultar contrasena actual' : 'Mostrar contrasena actual'" [attr.aria-pressed]="currentPasswordVisible()"><mat-icon>{{ currentPasswordVisible() ? 'visibility_off' : 'visibility' }}</mat-icon></button>
             <mat-error *ngIf="passwordForm.get('contrasenaActual')?.hasError('required')">La contrasena actual es obligatoria</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Nueva contrasena</mat-label>
-            <input matInput type="password" formControlName="nuevaContrasena" autocomplete="new-password" />
+            <input matInput [type]="newPasswordVisible() ? 'text' : 'password'" formControlName="nuevaContrasena" autocomplete="new-password" />
+            <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility('new')" [attr.aria-label]="newPasswordVisible() ? 'Ocultar nueva contrasena' : 'Mostrar nueva contrasena'" [attr.aria-pressed]="newPasswordVisible()"><mat-icon>{{ newPasswordVisible() ? 'visibility_off' : 'visibility' }}</mat-icon></button>
             <mat-error *ngIf="passwordForm.get('nuevaContrasena')?.hasError('required')">La nueva contrasena es obligatoria</mat-error>
             <mat-error *ngIf="passwordForm.get('nuevaContrasena')?.hasError('minlength')">Minimo 8 caracteres</mat-error>
             <mat-error *ngIf="passwordForm.get('nuevaContrasena')?.hasError('pattern')">Incluya mayuscula, minuscula, numero y simbolo</mat-error>
@@ -90,7 +99,8 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Confirmar nueva contrasena</mat-label>
-            <input matInput type="password" formControlName="confirmacion" autocomplete="new-password" />
+            <input matInput [type]="passwordConfirmationVisible() ? 'text' : 'password'" formControlName="confirmacion" autocomplete="new-password" />
+            <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility('confirmation')" [attr.aria-label]="passwordConfirmationVisible() ? 'Ocultar confirmacion' : 'Mostrar confirmacion'" [attr.aria-pressed]="passwordConfirmationVisible()"><mat-icon>{{ passwordConfirmationVisible() ? 'visibility_off' : 'visibility' }}</mat-icon></button>
             <mat-error *ngIf="passwordForm.get('confirmacion')?.hasError('required')">Confirme la nueva contrasena</mat-error>
           </mat-form-field>
 

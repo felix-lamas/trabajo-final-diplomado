@@ -95,12 +95,27 @@ describe('LoginComponent identity flow', () => {
     }));
     await fixture.whenStable();
 
-    expect(snackBar.open).toHaveBeenCalledWith(
-      'Correo electronico o contrasena incorrectos',
-      'Cerrar',
-      { duration: 4000 }
-    );
+    expect(fixture.componentInstance.errorMessage()).toBe(status === 401
+      ? 'El correo o la contraseña no coinciden.'
+      : 'Correo electronico o contrasena incorrectos');
+    expect(fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain(fixture.componentInstance.errorMessage());
     expect(fixture.componentInstance.correoNoVerificado).toBe(false);
+  });
+
+  it('distingue 403 de credenciales incorrectas', async () => {
+    fixture.componentInstance.onSubmit();
+    loginResponse.error(new HttpErrorResponse({ status: 403, error: {} }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.errorMessage()).toBe('No tiene permisos para realizar esta operacion.');
+    expect(fixture.componentInstance.errorMessage()).not.toContain('no coinciden');
+  });
+
+  it('permite mostrar y ocultar localmente la contrasena', () => {
+    expect(fixture.componentInstance.passwordVisible()).toBe(false);
+    fixture.componentInstance.togglePasswordVisibility();
+    expect(fixture.componentInstance.passwordVisible()).toBe(true);
+    fixture.componentInstance.togglePasswordVisibility();
+    expect(fixture.componentInstance.passwordVisible()).toBe(false);
   });
 });
 

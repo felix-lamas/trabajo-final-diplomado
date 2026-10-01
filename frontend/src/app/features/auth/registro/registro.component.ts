@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, RegistroUsuarioRequest } from '../../../core/services/auth.service';
 import { apiErrorMessage } from '../../../core/utils/api-error.util';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registro',
@@ -13,6 +14,9 @@ import { apiErrorMessage } from '../../../core/utils/api-error.util';
 export class RegistroComponent {
   form: FormGroup;
   private readonly viewState = signal({ currentStep: 1, loading: false });
+  readonly submitError = signal('');
+  readonly passwordVisible = signal(false);
+  readonly confirmationVisible = signal(false);
   get currentStep(): number { return this.viewState().currentStep; }
   private set currentStep(value: number) { this.viewState.update((state) => ({ ...state, currentStep: value })); }
   get loading(): boolean { return this.viewState().loading; }
@@ -25,12 +29,12 @@ export class RegistroComponent {
     private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
-      nombres: ['', [Validators.required, Validators.minLength(2)]],
-      apellidos: ['', [Validators.required, Validators.minLength(2)]],
-      ci: ['', [Validators.required, Validators.minLength(5)]],
-      celular: ['', [Validators.required, Validators.minLength(7)]],
+      nombres: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      apellidos: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      ci: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9-]{4,20}$/)]],
+      celular: ['', [Validators.required, Validators.pattern(/^[0-9+ -]{7,20}$/)]],
       tipoUsuario: ['INTERNO', [Validators.required]],
-      ru: ['', [Validators.required, Validators.minLength(4)]],
+      ru: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9-]{4,20}$/)]],
       correoElectronico: ['', [Validators.required, Validators.email]],
       contrasena: ['', [
         Validators.required,
@@ -76,6 +80,7 @@ export class RegistroComponent {
     }
 
     this.loading = true;
+    this.submitError.set('');
     const value = this.form.getRawValue();
     const request: RegistroUsuarioRequest = {
       nombres: value.nombres,
@@ -89,19 +94,22 @@ export class RegistroComponent {
       tipoUsuario: value.tipoUsuario
     };
 
-    this.authService.registro(request).subscribe({
+    this.authService.registro(request).pipe(finalize(() => this.loading = false)).subscribe({
       next: (response) => {
-        this.loading = false;
         this.snackBar.open('Cuenta creada. Verifique su correo para poder ingresar.', 'Cerrar', { duration: 4500 });
         this.router.navigate(['/auth/verificar-correo'], {
           queryParams: { correo: response.correoElectronico }
         });
       },
       error: (err) => {
-        this.loading = false;
-        this.snackBar.open(apiErrorMessage(err, 'No fue posible completar el registro'), 'Cerrar', { duration: 4500 });
+        this.submitError.set(apiErrorMessage(err, 'No fue posible completar el registro. Revise los datos e intente nuevamente.'));
       }
     });
+  }
+
+  togglePasswordVisibility(field: 'password' | 'confirmation'): void {
+    if (field === 'password') this.passwordVisible.update((visible) => !visible);
+    else this.confirmationVisible.update((visible) => !visible);
   }
 
   get passwordStrength(): number {
@@ -167,7 +175,7 @@ export class RegistroComponent {
     const ruCtrl = this.form.get('ru');
 
     if (tipoUsuario === 'INTERNO') {
-      ruCtrl?.setValidators([Validators.required, Validators.minLength(4)]);
+      ruCtrl?.setValidators([Validators.required, Validators.pattern(/^[A-Za-z0-9-]{4,20}$/)]);
       ruCtrl?.updateValueAndValidity({ emitEvent: false });
       return;
     }

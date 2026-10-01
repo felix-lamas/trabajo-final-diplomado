@@ -68,11 +68,16 @@ describe('RegistroComponent verification flow', () => {
     await fixture.whenStable();
 
     expect(fixture.componentInstance.loading).toBe(false);
-    expect(snackBar.open).toHaveBeenCalledWith(
-      'El correo ya esta registrado',
-      'Cerrar',
-      { duration: 4500 }
-    );
+    expect(fixture.componentInstance.submitError()).toBe('El correo ya esta registrado');
+    expect(fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain('El correo ya esta registrado');
     expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('envia tipo externo sin RU y conserva el flujo de verificacion', async () => {
+    fixture.componentInstance.form.patchValue({ tipoUsuario: 'EXTERNO', ru: '' });
+    fixture.componentInstance.syncAcademicValidators();
+    expect(fixture.componentInstance.form.get('ru')?.valid).toBe(true);
+    fixture.componentInstance.onSubmit();
+    expect(auth.registro).toHaveBeenCalledWith(expect.objectContaining({ tipoUsuario: 'EXTERNO', ru: null }));
   });
 });

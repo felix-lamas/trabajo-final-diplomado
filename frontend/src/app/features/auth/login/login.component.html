@@ -1,94 +1,56 @@
 <main class="auth-page">
-  <section class="auth-shell auth-shell--split">
-    <aside class="auth-visual app-surface">
-      <div class="auth-visual__badge">
-        <mat-icon>event</mat-icon>
-        Plataforma UAJMS
-      </div>
-
-      <div class="auth-visual__content">
-        <p class="auth-visual__eyebrow">Acceso institucional</p>
-        <h1 class="auth-visual__title">Gestion universitaria de eventos con experiencia moderna</h1>
-        <p class="auth-visual__text">
-          Ingrese a una interfaz segura, limpia y pensada para flujo operativo, control de acceso,
-          inscripciones, certificados y reportes.
-        </p>
-
-        <div class="auth-visual__image" aria-hidden="true">
-          <div class="auth-visual__image-copy">
-            <mat-icon style="font-size: 3.5rem; width: 3.5rem; height: 3.5rem;">account_balance</mat-icon>
-            <strong>Universidad autonoma</strong>
-            <span>Entorno institucional con identidad academica, trazabilidad y control.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="auth-visual__stats">
-        <div class="auth-visual__stat">
-          <strong>JWT</strong>
-          <span>Autenticacion segura</span>
-        </div>
-        <div class="auth-visual__stat">
-          <strong>QR</strong>
-          <span>Control y asistencia</span>
-        </div>
-        <div class="auth-visual__stat">
-          <strong>24/7</strong>
-          <span>Disponibilidad en linea</span>
-        </div>
-      </div>
-    </aside>
+  <section class="vidia-auth" aria-labelledby="login-title">
+    <a class="vidia-auth__brand" routerLink="/eventos" aria-label="Vidia, ir a eventos">
+      <span class="vidia-auth__brand-mark" aria-hidden="true"><mat-icon>event</mat-icon></span>
+      <span><strong>Vidia</strong><small>donde los eventos cobran vida</small></span>
+    </a>
 
     <mat-card class="auth-card auth-card--auth">
-      <div class="auth-card__header--auth">
-        <div class="auth-card__meta">
-          <div class="app-chip">
-            <mat-icon>login</mat-icon>
-            Ingreso seguro
-          </div>
-          <div class="app-chip">
-            <mat-icon>verified_user</mat-icon>
-            UAJMS
-          </div>
-        </div>
-        <h1>Iniciar sesion</h1>
-        <p>Acceda a la plataforma institucional con su cuenta registrada.</p>
-      </div>
-
-      <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
-
-      <div class="auth-compact-copy" *ngIf="correoNoVerificado" role="alert">
+      <header class="auth-card__header--auth">
+        <span class="vidia-auth__eyebrow">Tu espacio universitario</span>
+        <h1 id="login-title">Iniciar sesion</h1>
+        <p>Accede para descubrir eventos y gestionar tu participacion.</p>
+      </header>
+      <mat-progress-bar *ngIf="loading" mode="indeterminate" aria-label="Iniciando sesion"></mat-progress-bar>
+      <div class="vidia-auth__notice" *ngIf="correoNoVerificado" role="alert">
         <strong>Correo pendiente de verificacion</strong>
-        <span>Verifique su bandeja de entrada antes de iniciar sesion.</span>
-        <span *ngIf="reenvioEnviado">Si la cuenta existe y requiere verificacion, recibira un nuevo enlace.</span>
+        <span>Verifica tu bandeja de entrada antes de iniciar sesion.</span>
+        <span *ngIf="reenvioEnviado" role="status">Si la cuenta existe y requiere verificacion, recibira un nuevo enlace.</span>
+        <span *ngIf="resendError()" class="vidia-auth__error" role="alert">{{ resendError() }}</span>
         <button mat-stroked-button type="button" (click)="reenviarVerificacion()" [disabled]="reenviando">
           {{ reenviando ? 'Procesando...' : 'Reenviar verificacion' }}
         </button>
       </div>
+      <div *ngIf="errorMessage()" class="vidia-auth__notice vidia-auth__notice--error" role="alert">{{ errorMessage() }}</div>
 
-      <form class="auth-form--auth" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <form class="auth-form--auth" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
         <mat-form-field appearance="outline">
           <mat-label>Correo electronico</mat-label>
-          <input matInput type="email" formControlName="correoElectronico" autocomplete="email" />
-          <mat-error *ngIf="form.get('correoElectronico')?.hasError('required')">El correo es obligatorio</mat-error>
-          <mat-error *ngIf="form.get('correoElectronico')?.hasError('email')">Ingrese un correo valido</mat-error>
+          <input matInput type="email" formControlName="correoElectronico" autocomplete="email" inputmode="email" required />
+          <mat-error *ngIf="form.get('correoElectronico')?.hasError('required')">El correo es obligatorio.</mat-error>
+          <mat-error *ngIf="form.get('correoElectronico')?.hasError('email')">Ingresa un correo valido.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Contrasena</mat-label>
-          <input matInput type="password" formControlName="contrasena" autocomplete="current-password" />
-          <mat-error *ngIf="form.get('contrasena')?.hasError('required')">La contrasena es obligatoria</mat-error>
+          <input matInput [type]="passwordVisible() ? 'text' : 'password'" formControlName="contrasena" autocomplete="current-password" required />
+          <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()"
+            [attr.aria-label]="passwordVisible() ? 'Ocultar contrasena' : 'Mostrar contrasena'"
+            [attr.aria-pressed]="passwordVisible()">
+            <mat-icon>{{ passwordVisible() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="form.get('contrasena')?.hasError('required')">La contrasena es obligatoria.</mat-error>
         </mat-form-field>
 
-        <div class="auth-actions__row">
-          <a mat-button routerLink="/auth/recuperar-contrasena">Olvide mi contrasena</a>
+        <div class="auth-actions__row vidia-auth__links">
+          <a mat-button routerLink="/auth/recuperar-contrasena">Olvidaste tu contrasena?</a>
           <a mat-button routerLink="/auth/registro">Crear cuenta</a>
         </div>
-
         <button mat-flat-button color="primary" type="submit" [disabled]="loading || reenviando || form.invalid">
-          {{ loading ? 'Ingresando...' : 'Ingresar' }}
+          {{ loading ? 'Ingresando...' : 'Iniciar sesion' }}
         </button>
       </form>
+      <p class="vidia-auth__institution">Universidad Autonoma Juan Misael Saracho</p>
     </mat-card>
   </section>
 </main>

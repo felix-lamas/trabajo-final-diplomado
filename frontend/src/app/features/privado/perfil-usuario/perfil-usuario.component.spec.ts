@@ -76,6 +76,17 @@ describe('PerfilUsuarioComponent reactive profile', () => {
     expect(fixture.nativeElement.textContent).toContain('Ana Perez');
     expect(fixture.nativeElement.textContent).toContain('ana@example.test');
     expect(fixture.componentInstance.profileForm.value.celular).toBe('70000000');
+    expect(fixture.nativeElement.textContent).toContain('Correo verificado');
+    expect(fixture.nativeElement.textContent).toContain('CI: 1234567');
+    expect(fixture.nativeElement.textContent).toContain('RU: RU-100');
+  });
+
+  it('no presenta correo verificado cuando el backend lo informa como pendiente', async () => {
+    loadResponse.next({ ...usuario, correoVerificado: false });
+    loadResponse.complete();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).toContain('Correo pendiente de verificacion');
+    expect(fixture.nativeElement.textContent).not.toContain('Correo verificado');
   });
 
   it('muestra error de carga y permite reintentar', async () => {
