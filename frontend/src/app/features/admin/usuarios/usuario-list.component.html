@@ -1,0 +1,83 @@
+<main class="app-page admin-users" aria-label="Directorio administrativo de usuarios">
+  <app-page-header title="Usuarios" description="Consulta administrativa de las cuentas registradas. Esta vista no modifica roles ni estados."
+    [breadcrumbs]="[{ label: 'Administración', route: '/admin', icon: 'admin_panel_settings' }, { label: 'Usuarios' }]">
+    <a pageHeaderActions mat-stroked-button routerLink="/admin">Volver al panel</a>
+  </app-page-header>
+
+  <app-skeleton *ngIf="loading()" variant="table" [count]="5" aria-label="Cargando usuarios"></app-skeleton>
+  <ng-container *ngIf="!loading() && error()">
+    <app-alert variant="error" title="No se pudo cargar el directorio" icon="error_outline"><p>{{ error() }}</p></app-alert>
+    <button mat-stroked-button type="button" (click)="cargar()">Reintentar</button>
+  </ng-container>
+
+  <section class="admin-users__content" *ngIf="!loading() && !error()">
+    <mat-form-field appearance="outline" class="admin-users__search">
+      <mat-label>Buscar usuario</mat-label>
+      <input matInput [value]="busqueda()" (input)="busqueda.set($any($event.target).value)"
+        placeholder="Nombre, correo, CI, RU o rol" autocomplete="off">
+      <mat-icon matSuffix aria-hidden="true">search</mat-icon>
+    </mat-form-field>
+
+    <app-empty-state *ngIf="usuarios().length === 0" icon="groups" title="No hay usuarios registrados"
+      message="Las cuentas registradas aparecerán aquí."></app-empty-state>
+    <app-empty-state *ngIf="usuarios().length > 0 && usuariosFiltrados().length === 0" icon="search_off"
+      title="Sin coincidencias" message="Prueba con otro nombre, correo, documento o rol."></app-empty-state>
+
+    <section class="admin-users__table app-surface" *ngIf="usuariosFiltrados().length > 0">
+      <div class="admin-users__table-scroll">
+        <table mat-table [dataSource]="usuariosFiltrados()">
+          <ng-container matColumnDef="usuario">
+            <th mat-header-cell *matHeaderCellDef>Usuario</th>
+            <td mat-cell *matCellDef="let usuario">
+              <strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong>
+              <small>{{ usuario.tipoUsuario }}</small>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.tipoUsuario }}</td>
+          </ng-container>
+          <ng-container matColumnDef="correo">
+            <th mat-header-cell *matHeaderCellDef>Correo</th>
+            <td mat-cell *matCellDef="let usuario">
+              {{ usuario.correoElectronico }}
+              <span class="app-badge" [class.app-badge--success]="usuario.correoVerificado"
+                [class.app-badge--warning]="!usuario.correoVerificado">
+                {{ usuario.correoVerificado ? 'Verificado' : 'Sin verificar' }}
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="rol">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.roles.join(', ') }}</td>
+          </ng-container>
+          <ng-container matColumnDef="solicitud">
+            <th mat-header-cell *matHeaderCellDef>Solicitud organizador</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.estadoSolicitudOrganizador || 'NINGUNA' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Consulta</th>
+            <td mat-cell *matCellDef="let usuario">
+              <a mat-icon-button [routerLink]="[usuario.id]" [attr.aria-label]="'Ver detalles de ' + usuario.nombres + ' ' + usuario.apellidos">
+                <mat-icon>visibility</mat-icon>
+              </a>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        </table>
+      </div>
+      <div class="admin-users__cards">
+        <article class="app-surface" *ngFor="let usuario of usuariosFiltrados()">
+          <div><strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong><span>{{ usuario.correoElectronico }}</span></div>
+          <dl>
+            <div><dt>Rol</dt><dd>{{ usuario.roles.join(', ') }}</dd></div>
+            <div><dt>Correo</dt><dd>{{ usuario.correoVerificado ? 'Verificado' : 'Sin verificar' }}</dd></div>
+            <div><dt>Solicitud</dt><dd>{{ usuario.estadoSolicitudOrganizador || 'NINGUNA' }}</dd></div>
+          </dl>
+          <a mat-button [routerLink]="[usuario.id]">Ver datos de usuario</a>
+        </article>
+      </div>
+    </section>
+  </section>
+</main>

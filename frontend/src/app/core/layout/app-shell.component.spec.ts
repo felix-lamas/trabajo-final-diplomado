@@ -58,6 +58,8 @@ describe('AppShellComponent navigation by role', () => {
 
     expect(labels).toContain('Revisar eventos');
     expect(labels).toContain('Panel administrativo');
+    expect(labels).toContain('Usuarios');
+    expect(fixture.componentInstance.navGroups().some((group) => group.label === 'Administración' && group.items.some((item) => item.route === '/admin/usuarios'))).toBe(true);
   });
 
   it('ORGANIZADOR conserva el acceso a sus eventos', () => {

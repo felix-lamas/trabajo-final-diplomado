@@ -1,0 +1,30 @@
+<main class="app-page admin-user-detail">
+  <app-page-header title="Detalle de usuario" description="Consulta de datos disponibles para administración."
+    [breadcrumbs]="[{ label: 'Administración', route: '/admin' }, { label: 'Usuarios', route: '/admin/usuarios' }, { label: 'Detalle' }]">
+    <a pageHeaderActions mat-stroked-button routerLink="/admin/usuarios">Volver al directorio</a>
+  </app-page-header>
+
+  <app-skeleton *ngIf="loading()" variant="dashboard" [count]="2" aria-label="Cargando usuario"></app-skeleton>
+
+  <ng-container *ngIf="!loading() && error()">
+    <app-alert variant="error" title="No se pudo cargar el usuario" icon="error_outline"><p>{{ error() }}</p></app-alert>
+    <button mat-stroked-button type="button" (click)="cargar()">Reintentar</button>
+  </ng-container>
+
+  <app-empty-state *ngIf="!loading() && !error() && !usuario()" icon="person_off" title="Usuario no encontrado"
+    message="No se encontró una cuenta con ese identificador."></app-empty-state>
+
+  <app-surface *ngIf="!loading() && usuario() as cuenta" variant="default" class="admin-user-detail__surface">
+    <h2>{{ cuenta.nombres }} {{ cuenta.apellidos }}</h2>
+    <dl class="admin-user-detail__grid">
+      <div><dt>Correo electrónico</dt><dd>{{ cuenta.correoElectronico }}</dd></div>
+      <div><dt>Correo verificado</dt><dd>{{ cuenta.correoVerificado ? 'Sí' : 'No' }}</dd></div>
+      <div><dt>Tipo de usuario</dt><dd>{{ cuenta.tipoUsuario }}</dd></div>
+      <div><dt>Roles</dt><dd>{{ cuenta.roles.join(', ') }}</dd></div>
+      <div><dt>CI</dt><dd>{{ cuenta.ci || 'No disponible' }}</dd></div>
+      <div><dt>RU</dt><dd>{{ cuenta.ru || 'No disponible' }}</dd></div>
+      <div><dt>Celular</dt><dd>{{ cuenta.celular || 'No disponible' }}</dd></div>
+      <div><dt>Solicitud de organizador</dt><dd>{{ cuenta.estadoSolicitudOrganizador || 'NINGUNA' }}</dd></div>
+    </dl>
+  </app-surface>
+</main>

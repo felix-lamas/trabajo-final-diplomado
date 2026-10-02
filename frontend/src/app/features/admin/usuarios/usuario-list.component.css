@@ -1,0 +1,80 @@
+.admin-users__content {
+  margin-top: var(--space-5, 1.25rem);
+}
+
+.admin-users__search {
+  width: min(100%, 34rem);
+}
+
+.admin-users__table {
+  overflow: hidden;
+}
+
+.admin-users__table-scroll {
+  overflow-x: auto;
+}
+
+.admin-users table {
+  width: 100%;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.admin-users th,
+.admin-users td {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-border);
+}
+
+.admin-users td small {
+  display: block;
+  color: var(--color-text-muted);
+}
+
+.admin-users .app-badge {
+  display: inline-flex;
+  margin-inline-start: var(--space-2, 0.5rem);
+}
+
+.admin-users__cards {
+  display: none;
+}
+
+.admin-users__cards article {
+  padding: var(--space-4, 1rem);
+  margin: var(--space-3, 0.75rem);
+  color: var(--color-text-primary);
+}
+
+.admin-users__cards article > div > span {
+  display: block;
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.admin-users__cards dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3, 0.75rem);
+  padding-block: var(--space-1, 0.25rem);
+}
+
+.admin-users__cards dt {
+  color: var(--color-text-muted);
+}
+
+.admin-users__cards dd {
+  margin: 0;
+  color: var(--color-text-primary);
+  text-align: end;
+}
+
+@media (max-width: 54rem) {
+  .admin-users__table-scroll {
+    display: none;
+  }
+
+  .admin-users__cards {
+    display: block;
+  }
+}

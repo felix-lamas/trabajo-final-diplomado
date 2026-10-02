@@ -16,6 +16,13 @@ const routes: Routes = [
     component: AdminDashboardComponent
   },
   {
+    path: 'usuarios',
+    children: [
+      { path: '', loadComponent: () => import('./usuarios/usuario-list.component').then((m) => m.UsuarioListComponent) },
+      { path: ':id', loadComponent: () => import('./usuarios/usuario-detail.component').then((m) => m.UsuarioDetailComponent) }
+    ]
+  },
+  {
     path: 'categorias',
     children: [
       { path: '', component: CategoriaListComponent },

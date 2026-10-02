@@ -10,6 +10,7 @@ import { finalize } from 'rxjs';
 
 import { PagoService } from '../../../../core/services/pago.service';
 import { Pago } from '../../../../core/models/pago.model';
+import { AuthService } from '../../../../core/services/auth.service';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '../../../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../../../shared/ui/skeleton/skeleton.component';
@@ -27,6 +28,7 @@ import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 })
 export class ValidarPagosListComponent implements OnInit {
   private readonly viewState = signal({ pagos: [] as Pago[], loading: true, error: '', procesandoId: '' });
+  readonly administrador: boolean;
   get pagos(): Pago[] { return this.viewState().pagos; }
   private set pagos(value: Pago[]) { this.viewState.update((state) => ({ ...state, pagos: value })); }
   displayedColumns: string[] = ['usuario', 'evento', 'monto', 'fecha', 'acciones'];
@@ -38,8 +40,14 @@ export class ValidarPagosListComponent implements OnInit {
   constructor(
     private pagoService: PagoService,
     private dialog: MatDialog,
-    private toast: ToastService
-  ) {}
+    private toast: ToastService,
+    authService: AuthService
+  ) {
+    this.administrador = authService.hasAnyRole(['ADMINISTRADOR']);
+    this.displayedColumns = this.administrador
+      ? ['usuario', 'evento', 'monto', 'fecha', 'estado', 'acciones']
+      : ['usuario', 'evento', 'monto', 'fecha', 'acciones'];
+  }
 
   ngOnInit(): void {
     this.cargarPendientes();
@@ -48,7 +56,7 @@ export class ValidarPagosListComponent implements OnInit {
   cargarPendientes(): void {
     this.loading = true;
     this.viewState.update((state) => ({ ...state, error: '' }));
-    this.pagoService.listarPendientes()
+    (this.administrador ? this.pagoService.listarTodos() : this.pagoService.listarPendientes())
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (data) => this.pagos = data,
@@ -149,6 +157,10 @@ export class ValidarPagosListComponent implements OnInit {
         error: () => this.toast.error('No fue posible descargar el comprobante')
       });
     }
+  }
+
+  esRevisable(pago: Pago): boolean {
+    return pago.estado === 'PENDIENTE_VALIDACION';
   }
 
   private liberarPago(id: string): void {

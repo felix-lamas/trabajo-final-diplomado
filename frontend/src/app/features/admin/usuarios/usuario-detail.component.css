@@ -1,0 +1,7 @@
+.admin-user-detail__surface { display: block; }
+.admin-user-detail__surface h2 { margin: 0 0 var(--space-5); color: var(--color-text-primary); }
+.admin-user-detail__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); margin: 0; }
+.admin-user-detail__grid div { min-width: 0; padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.admin-user-detail__grid dt { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.admin-user-detail__grid dd { margin: var(--space-1) 0 0; color: var(--color-text-primary); overflow-wrap: anywhere; }
+@media (max-width: 40rem) { .admin-user-detail__grid { grid-template-columns: 1fr; } }

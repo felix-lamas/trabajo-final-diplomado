@@ -71,6 +71,7 @@ export class AppShellComponent implements OnInit {
   readonly navItems = computed(() => [
     { label: 'Panel administrativo', icon: 'space_dashboard', route: '/admin', roles: ['ADMINISTRADOR'] },
     { label: 'Revisar eventos', icon: 'fact_check', route: '/admin/eventos', roles: ['ADMINISTRADOR'] },
+    { label: 'Usuarios', icon: 'groups', route: '/admin/usuarios', roles: ['ADMINISTRADOR'] },
     { label: 'Categorías', icon: 'category', route: '/admin/categorias', roles: ['ADMINISTRADOR'] },
     { label: 'Solicitudes de organizador', icon: 'manage_accounts', route: '/admin/solicitudes-organizador', roles: ['ADMINISTRADOR'] },
     { label: 'Reportes', icon: 'analytics', route: '/reportes/dashboard', roles: ['ADMINISTRADOR', 'ORGANIZADOR'] },
@@ -96,7 +97,7 @@ export class AppShellComponent implements OnInit {
         ? 'Cuenta'
         : itemRoles.includes('USUARIO')
           ? (item.route === '/privado/inscripciones' || item.route === '/privado/pagos' || item.route.startsWith('/certificados/') ? 'Mi actividad' : 'Explorar')
-          : item.route === '/admin' || item.route.startsWith('/admin/eventos') || item.route.startsWith('/admin/categorias') || item.route.startsWith('/admin/solicitudes-organizador')
+          : item.route === '/admin' || item.route.startsWith('/admin/eventos') || item.route.startsWith('/admin/usuarios') || item.route.startsWith('/admin/categorias') || item.route.startsWith('/admin/solicitudes-organizador')
             ? 'Administración'
             : item.route === '/organizador/eventos'
               ? 'Gestión de eventos'
