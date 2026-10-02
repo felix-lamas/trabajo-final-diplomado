@@ -1,7 +1,6 @@
 package bo.uajms.eventos.modulos.pagos.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,13 +17,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Service
-@Slf4j
 public class ArchivoSeguroServicio {
 
     private static final Set<String> EXTENSIONES_PERMITIDAS = Set.of("jpg", "jpeg", "png", "pdf");
@@ -35,13 +33,33 @@ public class ArchivoSeguroServicio {
     private static final int MAX_ALTO = 400;
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final Tika TIKA = new Tika();
+    private static final Pattern CLAVE_STORAGE = Pattern.compile(
+            "^comprobantes/[0-9a-fA-F-]{36}/[0-9a-fA-F-]{36}\\.(pdf|png|jpg|jpeg)$");
+    private static final Pattern RUTA_LOCAL_LEGACY = Pattern.compile(
+            "^comprobantes/[A-Za-z0-9_-]{24}\\.(pdf|png|jpg|jpeg)$");
 
     @Value("${app.uploads.base-dir:uploads}")
     private String baseDir;
 
     public ArchivoGuardado guardarComprobante(MultipartFile archivo, String subDirectorio) {
-        validarArchivo(archivo);
+        try {
+            ArchivoProcesado procesado = procesarComprobante(archivo);
+            Path destino = prepararDestino(subDirectorio, procesado.extension());
+            Files.createDirectories(destino.getParent());
+            Files.write(destino, procesado.contenido());
 
+            return new ArchivoGuardado(
+                    Path.of(baseDir).toAbsolutePath().normalize().relativize(destino).toString().replace('\\', '/'),
+                    destino.getFileName().toString(),
+                    procesado.tipoContenido()
+            );
+        } catch (IOException e) {
+            throw new NegocioException("No fue posible procesar el archivo");
+        }
+    }
+
+    public ArchivoProcesado procesarComprobante(MultipartFile archivo) {
+        validarArchivo(archivo);
         try {
             String extension = extensionNormalizada(archivo.getOriginalFilename());
             byte[] contenido = archivo.getBytes();
@@ -52,18 +70,9 @@ public class ArchivoSeguroServicio {
                 contenido = optimizarImagen(contenido, extension);
                 mimeDetectado = TIKA.detect(contenido, archivo.getOriginalFilename());
             }
-
-            Path destino = prepararDestino(subDirectorio, extension);
-            Files.createDirectories(destino.getParent());
-            Files.write(destino, contenido);
-
-            return new ArchivoGuardado(
-                    Path.of(baseDir).toAbsolutePath().normalize().relativize(destino).toString().replace('\\', '/'),
-                    destino.getFileName().toString(),
-                    mimeDetectado
-            );
+            return new ArchivoProcesado(contenido, extension, mimeDetectado);
         } catch (IOException e) {
-            throw new NegocioException("No fue posible procesar el archivo: " + e.getMessage());
+            throw new NegocioException("No fue posible procesar el archivo");
         }
     }
 
@@ -110,6 +119,17 @@ public class ArchivoSeguroServicio {
             throw new NegocioException("El archivo solicitado no esta disponible");
         }
         return new FileSystemResource(archivo);
+    }
+
+    public void eliminarArchivoLegacy(String rutaInterna) throws IOException {
+        if (rutaInterna == null || !RUTA_LOCAL_LEGACY.matcher(rutaInterna).matches()) return;
+        Path raiz = Path.of(baseDir).toAbsolutePath().normalize();
+        Path archivo = raiz.resolve(rutaInterna).normalize();
+        if (archivo.startsWith(raiz)) Files.deleteIfExists(archivo);
+    }
+
+    public static boolean esClaveStorage(String referencia) {
+        return referencia != null && CLAVE_STORAGE.matcher(referencia).matches();
     }
 
     private void validarContenidoReal(String extension, String mimeDeclarado, String mimeDetectado) {
@@ -178,4 +198,5 @@ public class ArchivoSeguroServicio {
     }
 
     public record ArchivoGuardado(String rutaInterna, String nombreArchivo, String tipoContenido) {}
+    public record ArchivoProcesado(byte[] contenido, String extension, String tipoContenido) {}
 }

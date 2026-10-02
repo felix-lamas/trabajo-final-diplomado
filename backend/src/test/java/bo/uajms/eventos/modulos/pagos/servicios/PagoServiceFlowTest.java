@@ -42,6 +42,7 @@ class PagoServiceFlowTest {
     @Mock InscripcionRepository inscripcionRepository;
     @Mock PagoMapper pagoMapper;
     @Mock ArchivoSeguroServicio archivoSeguroServicio;
+    @Mock AlmacenamientoArchivos almacenamientoArchivos;
     @Mock UsuarioAutenticadoService usuarioAutenticadoService;
     @Mock Clock clock;
     @InjectMocks PagoService service;
@@ -105,8 +106,8 @@ class PagoServiceFlowTest {
         autenticarUsuario();
         MockMultipartFile archivo = archivo();
         when(pagoRepository.findByIdAndUsuarioForUpdate(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
-        when(archivoSeguroServicio.guardarComprobante(archivo, "comprobantes"))
-                .thenReturn(new ArchivoSeguroServicio.ArchivoGuardado("comprobantes/seguro.pdf", "seguro.pdf", "application/pdf"));
+        when(archivoSeguroServicio.procesarComprobante(archivo))
+                .thenReturn(new ArchivoSeguroServicio.ArchivoProcesado("pdf".getBytes(), "pdf", "application/pdf"));
         when(pagoRepository.save(pago)).thenReturn(pago);
 
         service.subirComprobante(pagoId, archivo);
@@ -114,7 +115,8 @@ class PagoServiceFlowTest {
         assertEquals(EstadoPago.PENDIENTE_VALIDACION, pago.getEstado());
         assertEquals(EstadoInscripcion.PENDIENTE_VALIDACION, inscripcion.getEstado());
         assertEquals(1, pago.getIntentosComprobante());
-        assertEquals("comprobantes/seguro.pdf", pago.getComprobanteUrl());
+        assertTrue(ArchivoSeguroServicio.esClaveStorage(pago.getComprobanteUrl()));
+        verify(almacenamientoArchivos).guardar(eq(pago.getComprobanteUrl()), any(byte[].class), eq("application/pdf"));
         verify(inscripcionRepository).save(inscripcion);
     }
 
@@ -126,7 +128,7 @@ class PagoServiceFlowTest {
         when(pagoRepository.findByIdAndUsuarioForUpdate(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
 
         assertThrows(NegocioException.class, () -> service.subirComprobante(pagoId, archivo()));
-        verify(archivoSeguroServicio, never()).guardarComprobante(any(), any());
+        verify(archivoSeguroServicio, never()).procesarComprobante(any());
         verify(pagoRepository, never()).save(any());
         verify(inscripcionRepository, never()).save(any());
     }
@@ -138,7 +140,7 @@ class PagoServiceFlowTest {
         when(pagoRepository.findByIdAndUsuarioForUpdate(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
 
         assertThrows(NegocioException.class, () -> service.subirComprobante(pagoId, archivo()));
-        verify(archivoSeguroServicio, never()).guardarComprobante(any(), any());
+        verify(archivoSeguroServicio, never()).procesarComprobante(any());
     }
 
     @Test
@@ -192,9 +194,11 @@ class PagoServiceFlowTest {
         pago.setIntentosComprobante(1);
         pago.setMotivoRechazo("Comprobante ilegible");
         inscripcion.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
+        pago.setComprobanteUrl("comprobantes/" + pagoId + "/" + UUID.randomUUID() + ".pdf");
+        String referenciaAnterior = pago.getComprobanteUrl();
         when(pagoRepository.findByIdAndUsuarioForUpdate(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
-        when(archivoSeguroServicio.guardarComprobante(any(), eq("comprobantes")))
-                .thenReturn(new ArchivoSeguroServicio.ArchivoGuardado("comprobantes/nuevo.pdf", "nuevo.pdf", "application/pdf"));
+        when(archivoSeguroServicio.procesarComprobante(any()))
+                .thenReturn(new ArchivoSeguroServicio.ArchivoProcesado("pdf".getBytes(), "pdf", "application/pdf"));
         when(pagoRepository.save(pago)).thenReturn(pago);
 
         service.subirComprobante(pagoId, archivo());
@@ -203,6 +207,21 @@ class PagoServiceFlowTest {
         assertEquals(2, pago.getIntentosComprobante());
         assertEquals(EstadoPago.PENDIENTE_VALIDACION, pago.getEstado());
         assertEquals("Comprobante ilegible", pago.getMotivoRechazo());
+        verify(almacenamientoArchivos).eliminar(referenciaAnterior);
+    }
+
+    @Test
+    void errorAlPersistirCompensaElObjetoNuevo() {
+        autenticarUsuario();
+        MockMultipartFile archivo = archivo();
+        when(pagoRepository.findByIdAndUsuarioForUpdate(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
+        when(archivoSeguroServicio.procesarComprobante(archivo))
+                .thenReturn(new ArchivoSeguroServicio.ArchivoProcesado("pdf".getBytes(), "pdf", "application/pdf"));
+        when(pagoRepository.save(pago)).thenThrow(new IllegalStateException("db failure"));
+
+        assertThrows(IllegalStateException.class, () -> service.subirComprobante(pagoId, archivo));
+
+        verify(almacenamientoArchivos).eliminar(argThat(ArchivoSeguroServicio::esClaveStorage));
     }
 
     @Test

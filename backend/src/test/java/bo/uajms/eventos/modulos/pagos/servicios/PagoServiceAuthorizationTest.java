@@ -36,10 +36,13 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +56,8 @@ class PagoServiceAuthorizationTest {
     private PagoMapper pagoMapper;
     @Mock
     private ArchivoSeguroServicio archivoSeguroServicio;
+    @Mock
+    private AlmacenamientoArchivos almacenamientoArchivos;
     @Mock
     private UsuarioAutenticadoService usuarioAutenticadoService;
     @Mock
@@ -136,16 +141,17 @@ class PagoServiceAuthorizationTest {
         PagoResponse response = respuesta(pagoAId);
         when(pagoRepository.findByIdAndUsuarioForUpdate(pagoAId, usuarioA.getId()))
                 .thenReturn(Optional.of(pagoA));
-        when(archivoSeguroServicio.guardarComprobante(archivo, "comprobantes"))
-                .thenReturn(new ArchivoSeguroServicio.ArchivoGuardado("/uploads/a.pdf", "a.pdf", "application/pdf"));
+        when(archivoSeguroServicio.procesarComprobante(archivo))
+                .thenReturn(new ArchivoSeguroServicio.ArchivoProcesado("pdf".getBytes(), "pdf", "application/pdf"));
         when(pagoRepository.save(pagoA)).thenReturn(pagoA);
         when(pagoMapper.toResponse(pagoA)).thenReturn(response);
 
         assertSame(response, pagoService.subirComprobante(pagoAId, archivo));
-        assertEquals("/uploads/a.pdf", pagoA.getComprobanteUrl());
-        assertEquals("a.pdf", pagoA.getComprobanteNombreArchivo());
+        assertTrue(ArchivoSeguroServicio.esClaveStorage(pagoA.getComprobanteUrl()));
+        assertTrue(pagoA.getComprobanteNombreArchivo().startsWith("comprobante-"));
         assertEquals(EstadoPago.PENDIENTE_VALIDACION, pagoA.getEstado());
-        verify(archivoSeguroServicio).guardarComprobante(archivo, "comprobantes");
+        verify(archivoSeguroServicio).procesarComprobante(archivo);
+        verify(almacenamientoArchivos).guardar(eq(pagoA.getComprobanteUrl()), any(byte[].class), eq("application/pdf"));
     }
 
     @Test
@@ -158,7 +164,8 @@ class PagoServiceAuthorizationTest {
         assertThrows(RecursoNoEncontradoException.class,
                 () -> pagoService.subirComprobante(pagoBId, archivo));
 
-        verify(archivoSeguroServicio, never()).guardarComprobante(any(), any());
+        verify(archivoSeguroServicio, never()).procesarComprobante(any());
+        verifyNoInteractions(almacenamientoArchivos);
         verify(pagoRepository, never()).save(any());
         verify(inscripcionRepository, never()).save(any());
     }
@@ -173,7 +180,8 @@ class PagoServiceAuthorizationTest {
         assertThrows(NegocioException.class,
                 () -> pagoService.subirComprobante(pagoAId, archivoValido()));
 
-        verify(archivoSeguroServicio, never()).guardarComprobante(any(), any());
+        verify(archivoSeguroServicio, never()).procesarComprobante(any());
+        verifyNoInteractions(almacenamientoArchivos);
         verify(pagoRepository, never()).save(any());
     }
 
@@ -185,8 +193,8 @@ class PagoServiceAuthorizationTest {
         MockMultipartFile archivo = archivoValido();
         when(pagoRepository.findByIdAndUsuarioForUpdate(pagoAId, usuarioA.getId()))
                 .thenReturn(Optional.of(pagoA));
-        when(archivoSeguroServicio.guardarComprobante(archivo, "comprobantes"))
-                .thenReturn(new ArchivoSeguroServicio.ArchivoGuardado("/uploads/nuevo.pdf", "nuevo.pdf", "application/pdf"));
+        when(archivoSeguroServicio.procesarComprobante(archivo))
+                .thenReturn(new ArchivoSeguroServicio.ArchivoProcesado("pdf".getBytes(), "pdf", "application/pdf"));
         when(pagoRepository.save(pagoA)).thenReturn(pagoA);
 
         pagoService.subirComprobante(pagoAId, archivo);

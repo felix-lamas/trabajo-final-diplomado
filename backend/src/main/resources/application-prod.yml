@@ -1,0 +1,4 @@
+app:
+  storage:
+    # Produccion debe utilizar almacenamiento persistente externo; si faltan credenciales, la app no debe degradar a disco efimero.
+    provider: supabase

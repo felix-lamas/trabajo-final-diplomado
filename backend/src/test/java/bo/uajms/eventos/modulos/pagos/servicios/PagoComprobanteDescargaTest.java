@@ -30,6 +30,7 @@ class PagoComprobanteDescargaTest {
     @Mock InscripcionRepository inscripcionRepository;
     @Mock PagoMapper pagoMapper;
     @Mock ArchivoSeguroServicio archivoSeguroServicio;
+    @Mock AlmacenamientoArchivos almacenamientoArchivos;
     @Mock UsuarioAutenticadoService auth;
     @Mock Clock clock;
     @Mock Resource resource;
@@ -114,6 +115,19 @@ class PagoComprobanteDescargaTest {
         when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
 
         assertThrows(RecursoNoEncontradoException.class, () -> service.descargarComprobante(pagoId));
+        verify(archivoSeguroServicio, never()).cargarArchivo(anyString());
+    }
+
+    @Test
+    void comprobanteDeStorageSeDescargaDesdeElAdaptador() {
+        autenticarUsuario();
+        String key = "comprobantes/" + pagoId + "/" + UUID.randomUUID() + ".pdf";
+        pago.setComprobanteUrl(key);
+        when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoId, usuario.getId())).thenReturn(Optional.of(pago));
+        when(almacenamientoArchivos.descargar(key)).thenReturn(Optional.of(resource));
+
+        assertSame(resource, service.descargarComprobante(pagoId).recurso());
+        verify(almacenamientoArchivos).descargar(key);
         verify(archivoSeguroServicio, never()).cargarArchivo(anyString());
     }
 

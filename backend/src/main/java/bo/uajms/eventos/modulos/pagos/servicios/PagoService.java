@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 
@@ -28,6 +30,7 @@ public class PagoService {
     private final InscripcionRepository inscripcionRepository;
     private final PagoMapper pagoMapper;
     private final ArchivoSeguroServicio archivoSeguroServicio;
+    private final AlmacenamientoArchivos almacenamientoArchivos;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
     private final Clock clock;
 
@@ -37,19 +40,28 @@ public class PagoService {
         Pago pago = obtenerPagoPropioParaActualizar(pagoId);
         validarPagoCargable(pago);
 
-        ArchivoSeguroServicio.ArchivoGuardado guardado = archivoSeguroServicio.guardarComprobante(archivo, "comprobantes");
-        LocalDateTime ahora = LocalDateTime.now(clock);
-        pago.setComprobanteUrl(guardado.rutaInterna());
-        pago.setComprobanteNombreArchivo(guardado.nombreArchivo());
-        pago.setComprobanteTipoContenido(guardado.tipoContenido());
-        pago.setFechaCargaComprobante(ahora);
-        pago.setIntentosComprobante(Optional.ofNullable(pago.getIntentosComprobante()).orElse(0) + 1);
-        pago.setEstado(EstadoPago.PENDIENTE_VALIDACION);
+        ArchivoSeguroServicio.ArchivoProcesado procesado = archivoSeguroServicio.procesarComprobante(archivo);
+        String storageKey = "comprobantes/" + pago.getId() + "/" + UUID.randomUUID() + "." + procesado.extension();
+        String referenciaAnterior = pago.getComprobanteUrl();
+        try {
+            almacenamientoArchivos.guardar(storageKey, procesado.contenido(), procesado.tipoContenido());
+            pago.setComprobanteUrl(storageKey);
+            pago.setComprobanteNombreArchivo("comprobante-" + UUID.randomUUID() + "." + procesado.extension());
+            pago.setComprobanteTipoContenido(procesado.tipoContenido());
+            pago.setFechaCargaComprobante(LocalDateTime.now(clock));
+            pago.setIntentosComprobante(Optional.ofNullable(pago.getIntentosComprobante()).orElse(0) + 1);
+            pago.setEstado(EstadoPago.PENDIENTE_VALIDACION);
 
-        Inscripcion inscripcion = pago.getInscripcion();
-        inscripcion.setEstado(EstadoInscripcion.PENDIENTE_VALIDACION);
-        inscripcionRepository.save(inscripcion);
-        return pagoMapper.toResponse(pagoRepository.save(pago));
+            Inscripcion inscripcion = pago.getInscripcion();
+            inscripcion.setEstado(EstadoInscripcion.PENDIENTE_VALIDACION);
+            inscripcionRepository.save(inscripcion);
+            PagoResponse response = pagoMapper.toResponse(pagoRepository.save(pago));
+            registrarLimpiezaTransaccional(storageKey, referenciaAnterior, pagoId);
+            return response;
+        } catch (RuntimeException exception) {
+            eliminarObjetoNuevo(storageKey, pagoId);
+            throw exception;
+        }
     }
 
     /** Compatibilidad para inscripciones pagadas históricas sin Pago asociado. */
@@ -101,14 +113,63 @@ public class PagoService {
             throw new RecursoNoEncontradoException(CodigosError.PAYMENT_RECEIPT_NOT_FOUND,
                     "Comprobante no encontrado");
         }
-        Resource recurso;
+        Resource recurso = ArchivoSeguroServicio.esClaveStorage(pago.getComprobanteUrl())
+                ? almacenamientoArchivos.descargar(pago.getComprobanteUrl()).orElseThrow(() ->
+                    new RecursoNoEncontradoException(CodigosError.PAYMENT_RECEIPT_NOT_FOUND, "Comprobante no encontrado"))
+                : cargarArchivoLegacy(pago.getComprobanteUrl());
+        return new ComprobanteDescarga(recurso, nombreLogico(pago), pago.getComprobanteTipoContenido());
+    }
+
+    private Resource cargarArchivoLegacy(String referencia) {
         try {
-            recurso = archivoSeguroServicio.cargarArchivo(pago.getComprobanteUrl());
-        } catch (NegocioException ex) {
+            return archivoSeguroServicio.cargarArchivo(referencia);
+        } catch (NegocioException exception) {
             throw new RecursoNoEncontradoException(CodigosError.PAYMENT_RECEIPT_NOT_FOUND,
                     "Comprobante no encontrado");
         }
-        return new ComprobanteDescarga(recurso, nombreLogico(pago), pago.getComprobanteTipoContenido());
+    }
+
+    private void registrarLimpiezaTransaccional(String nuevo, String anterior, UUID pagoId) {
+        if (TransactionSynchronizationManager.isSynchronizationActive()
+                && TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    eliminarReferenciaAnterior(anterior, pagoId);
+                }
+
+                @Override
+                public void afterCompletion(int status) {
+                    if (status != STATUS_COMMITTED) eliminarObjetoNuevo(nuevo, pagoId);
+                }
+            });
+        } else {
+            eliminarReferenciaAnterior(anterior, pagoId);
+        }
+    }
+
+    private void eliminarObjetoNuevo(String storageKey, UUID pagoId) {
+        try {
+            almacenamientoArchivos.eliminar(storageKey);
+        } catch (RuntimeException exception) {
+            // Solo se registra el identificador técnico del pago; nunca credenciales ni contenido.
+            org.slf4j.LoggerFactory.getLogger(PagoService.class)
+                    .warn("No se pudo compensar objeto de comprobante para pago {}", pagoId);
+        }
+    }
+
+    private void eliminarReferenciaAnterior(String anterior, UUID pagoId) {
+        if (anterior == null || anterior.isBlank()) return;
+        try {
+            if (ArchivoSeguroServicio.esClaveStorage(anterior)) {
+                almacenamientoArchivos.eliminar(anterior);
+            } else {
+                archivoSeguroServicio.eliminarArchivoLegacy(anterior);
+            }
+        } catch (RuntimeException | java.io.IOException exception) {
+            org.slf4j.LoggerFactory.getLogger(PagoService.class)
+                    .warn("Quedo pendiente la limpieza del comprobante anterior del pago {}", pagoId);
+        }
     }
 
     @Transactional

@@ -55,6 +55,16 @@ app:
     from-name: ${MAIL_FROM_NAME:Vidia}
   uploads:
     base-dir: ${UPLOADS_BASE_DIR:uploads}
+  storage:
+    provider: ${APP_STORAGE_PROVIDER:local}
+    supabase:
+      endpoint: ${SUPABASE_STORAGE_ENDPOINT:}
+      region: ${SUPABASE_STORAGE_REGION:us-east-2}
+      bucket: ${SUPABASE_STORAGE_BUCKET:vidia-comprobantes}
+      access-key: ${SUPABASE_STORAGE_ACCESS_KEY:}
+      secret-key: ${SUPABASE_STORAGE_SECRET_KEY:}
+      connection-timeout-ms: ${SUPABASE_STORAGE_CONNECTION_TIMEOUT_MS:5000}
+      api-timeout-ms: ${SUPABASE_STORAGE_API_TIMEOUT_MS:20000}
   certificados:
     verificacion-base-url: ${CERTIFICATE_VERIFICATION_BASE_URL:http://localhost:4200/verificar-certificado}
 
