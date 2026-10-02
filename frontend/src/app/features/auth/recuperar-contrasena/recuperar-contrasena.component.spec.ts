@@ -12,13 +12,14 @@ describe('RecuperarContrasenaComponent', () => {
   let fixture: ComponentFixture<RecuperarContrasenaComponent>;
   let response: Subject<void>;
   const auth = { recuperarContrasena: vi.fn(() => response.asObservable()) };
+  const snackBar = { open: vi.fn() };
 
   beforeEach(async () => {
     response = new Subject<void>();
     vi.clearAllMocks();
     await TestBed.configureTestingModule({
       imports: [AuthModule],
-      providers: [provideZonelessChangeDetection(), provideRouter([]), { provide: AuthService, useValue: auth }, { provide: MatSnackBar, useValue: { open: vi.fn() } }]
+      providers: [provideZonelessChangeDetection(), provideRouter([]), { provide: AuthService, useValue: auth }, { provide: MatSnackBar, useValue: snackBar }]
     }).compileComponents();
     fixture = TestBed.createComponent(RecuperarContrasenaComponent);
     fixture.detectChanges();
@@ -42,6 +43,11 @@ describe('RecuperarContrasenaComponent', () => {
     await fixture.whenStable();
     expect(auth.recuperarContrasena).toHaveBeenCalledWith('demo@example.test');
     expect(fixture.nativeElement.textContent).toContain('Si existe una cuenta asociada');
+    expect(snackBar.open).toHaveBeenCalledWith(
+      'Si la dirección está registrada, recibirás instrucciones para recuperar tu contraseña.',
+      'Cerrar',
+      { duration: 5000 }
+    );
     expect(fixture.componentInstance.loading).toBe(false);
   });
 

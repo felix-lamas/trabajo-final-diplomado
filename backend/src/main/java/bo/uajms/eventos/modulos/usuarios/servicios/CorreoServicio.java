@@ -11,6 +11,10 @@ import org.springframework.mail.MailException;
 import bo.uajms.eventos.core.excepciones.CodigosError;
 import bo.uajms.eventos.core.excepciones.ServicioNoDisponibleException;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import jakarta.mail.internet.InternetAddress;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,6 +24,9 @@ public class CorreoServicio {
 
     @Value("${app.mail.from:no-reply@uajms.edu.bo}")
     private String remitente;
+
+    @Value("${app.mail.from-name:Vidia}")
+    private String nombreRemitente;
 
     public void enviarRecuperacionContrasena(String destinatario, String enlace) {
         enviar(destinatario, "Recuperacion de contrasena - Plataforma Eventos UAJMS", """
@@ -53,13 +60,20 @@ public class CorreoServicio {
         }
 
         SimpleMailMessage mensaje = new SimpleMailMessage();
-        mensaje.setFrom(remitente);
+        try {
+            mensaje.setFrom(new InternetAddress(remitente, nombreRemitente, StandardCharsets.UTF_8.name())
+                    .toUnicodeString());
+        } catch (UnsupportedEncodingException ex) {
+            log.error("No fue posible preparar la identidad del remitente de correo");
+            throw correoNoDisponible();
+        }
         mensaje.setTo(destinatario);
         mensaje.setSubject(asunto);
         mensaje.setText(contenido);
 
         try {
             mailSender.send(mensaje);
+            log.info("Correo transaccional enviado correctamente");
         } catch (MailException ex) {
             log.error("Fallo seguro al enviar correo mediante SMTP: {}", ex.getClass().getSimpleName());
             throw correoNoDisponible();

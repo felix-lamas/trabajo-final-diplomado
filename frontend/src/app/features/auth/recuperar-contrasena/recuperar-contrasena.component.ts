@@ -41,7 +41,11 @@ export class RecuperarContrasenaComponent {
     ).subscribe({
       next: () => {
         this.enviado = true;
-        this.snackBar.open('Se han enviado instrucciones a su correo', 'Cerrar', { duration: 5000 });
+        this.snackBar.open(
+          'Si la dirección está registrada, recibirás instrucciones para recuperar tu contraseña.',
+          'Cerrar',
+          { duration: 5000 }
+        );
       },
       error: (err) => {
         this.errorMessage.set(err.status === 0 || err.status >= 500
