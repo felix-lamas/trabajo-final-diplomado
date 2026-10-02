@@ -147,13 +147,13 @@
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let ev">
             <div class="student-card__meta">
-              <button mat-icon-button color="primary" [routerLink]="[ev.id]" matTooltip="Detalle">
+              <button mat-icon-button color="primary" [routerLink]="[ev.id]" matTooltip="Detalle" [attr.aria-label]="'Ver detalle de ' + ev.titulo">
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button mat-icon-button color="accent" *ngIf="(esOrganizador || esAdministrador) && (ev.estado === 'BORRADOR' || ev.estado === 'RECHAZADO')" [routerLink]="['editar', ev.id]" matTooltip="Editar">
+              <button mat-icon-button color="accent" *ngIf="(esOrganizador || esAdministrador) && (ev.estado === 'BORRADOR' || ev.estado === 'RECHAZADO')" [routerLink]="['editar', ev.id]" matTooltip="Editar" [attr.aria-label]="'Editar ' + ev.titulo">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" *ngIf="(esOrganizador || esAdministrador) && ev.estado === 'BORRADOR'" (click)="eliminar(ev)" matTooltip="Eliminar">
+              <button mat-icon-button color="warn" *ngIf="(esOrganizador || esAdministrador) && ev.estado === 'BORRADOR'" (click)="eliminar(ev)" matTooltip="Eliminar" [attr.aria-label]="'Eliminar ' + ev.titulo">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

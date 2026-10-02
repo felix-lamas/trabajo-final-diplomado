@@ -17,9 +17,6 @@ import { AlertComponent } from '../../shared/ui/alert/alert.component';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
-// Components
-import { ControlScannerComponent } from './control-scanner/control-scanner.component';
-import { HistorialAccesoComponent } from './historial-acceso/historial-acceso.component';
 import { AsistenciaListComponent } from './asistencia-list/asistencia-list.component';
 
 const routes: Routes = [
@@ -29,8 +26,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    ControlScannerComponent,
-    HistorialAccesoComponent,
     AsistenciaListComponent
   ],
   imports: [

@@ -30,10 +30,8 @@ export const roleGuard: CanMatchFn = (route: Route, _segments: UrlSegment[]) => 
 
   return authService.refrescarPerfil().pipe(
     map(() => resolveAccess()),
-    catchError(() => of(
-      authService.isAuthenticated()
-        ? router.createUrlTree(['/eventos'])
-        : router.createUrlTree(['/auth/login'])
-    ))
+    // This only preserves role-appropriate navigation during a profile outage;
+    // protected API operations remain authorized by the backend.
+    catchError(() => of(resolveAccess()))
   );
 };

@@ -62,9 +62,18 @@ describe('roleGuard with refreshed roles', () => {
 
     const result = await execute({ data: { roles: ['ADMINISTRADOR'] } });
 
-    expect(result).toBeInstanceOf(UrlTree);
-    expect(router.serializeUrl(result as UrlTree)).toBe('/eventos');
+    expect(result).toBe(true);
     expect(auth.isAuthenticated).not.toHaveReturnedWith(false);
+  });
+
+  it('un rol cacheado distinto sigue bloqueado y vuelve a su panel, no al catálogo', async () => {
+    currentRoles = ['USUARIO'];
+    auth.refrescarPerfil.mockReturnValue(throwError(() => new Error('offline')));
+
+    const result = await execute({ data: { roles: ['ADMINISTRADOR'] } });
+
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(router.serializeUrl(result as UrlTree)).toBe('/privado/dashboard');
   });
 
   async function execute(route: Route): Promise<boolean | UrlTree> {
