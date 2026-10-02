@@ -1,88 +1,102 @@
-<div class="container mx-auto p-6">
-  <div class="bg-white p-6 rounded-lg shadow-md mb-6 border-l-8 border-green-600">
-    <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-      <mat-icon>how_to_reg</mat-icon> Lista Oficial de Asistencia Registrada
-    </h1>
-    <p class="text-sm text-gray-500 mt-1">Participantes con ingreso validado y presencia efectiva en el evento.</p>
-  </div>
+<main class="app-page organizer-attendance" aria-labelledby="attendance-title">
+  <header class="organizer-attendance__header">
+    <div>
+      <span class="app-chip">Operación de eventos</span>
+      <h1 id="attendance-title">Asistencias registradas</h1>
+      <p>Consulta las asistencias registradas para tus eventos y sesiones.</p>
+    </div>
+  </header>
 
-  <mat-card class="p-4 mb-6 shadow">
-    <form [formGroup]="filtroForm" (ngSubmit)="cargarAsistencias()" class="flex flex-col sm:flex-row gap-4 items-center">
-      <mat-form-field appearance="outline" class="w-full sm:w-2/3">
-        <mat-label>Seleccione el Evento Académico</mat-label>
+  <section class="app-surface organizer-attendance__filter" aria-label="Seleccionar evento">
+    <form [formGroup]="filtroForm" (ngSubmit)="cargarAsistencias()">
+      <mat-form-field appearance="outline">
+        <mat-label>Evento</mat-label>
         <mat-select formControlName="eventoId">
           <mat-option *ngFor="let evt of eventos" [value]="evt.id">{{ evt.titulo }}</mat-option>
         </mat-select>
+        <mat-error *ngIf="filtroForm.controls['eventoId'].hasError('required')">Selecciona un evento.</mat-error>
       </mat-form-field>
-      
-      <button mat-raised-button color="primary" type="submit" class="w-full sm:w-1/3 h-12 text-lg uppercase font-bold" [disabled]="filtroForm.invalid || loading">
-        Ver Asistentes
+      <button mat-flat-button color="primary" type="submit"
+        [disabled]="filtroForm.invalid || loading || eventosLoading">
+        <mat-icon>search</mat-icon> Consultar asistencia
       </button>
     </form>
-  </mat-card>
+  </section>
 
-  <div *ngIf="loading" class="flex justify-center items-center h-48">
-    <mat-spinner duration="3000"></mat-spinner>
-  </div>
+  <app-skeleton *ngIf="eventosLoading" variant="list" [count]="2"></app-skeleton>
+  <app-alert *ngIf="eventosError" variant="error" title="No se pudieron cargar los eventos" icon="error_outline">
+    <p>{{ eventosError }}</p>
+  </app-alert>
+  <button *ngIf="eventosError" mat-stroked-button type="button" (click)="cargarEventos()">Reintentar</button>
+  <app-empty-state *ngIf="!eventosLoading && !eventosError && eventos.length === 0"
+    icon="event_busy" title="No tienes eventos disponibles"
+    message="Los eventos que puedes administrar aparecerán aquí."></app-empty-state>
 
-  <!-- Tabla de Asistencias -->
-  <mat-card class="shadow overflow-hidden" *ngIf="!loading && asistencias.length > 0">
-    <div class="p-3 bg-green-50 text-green-800 font-bold border-b text-sm flex justify-between items-center">
-      <span>TOTAL DE ASISTENTES CONFIRMADOS:</span>
-      <span class="bg-green-600 text-white px-3 py-1 rounded-full text-base font-extrabold shadow-sm">{{ asistencias.length }}</span>
+  <app-skeleton *ngIf="loading" variant="table" [count]="4" aria-label="Cargando asistencias"></app-skeleton>
+  <app-alert *ngIf="error" variant="error" title="No se pudo consultar la asistencia" icon="error_outline">
+    <p>{{ error }}</p>
+  </app-alert>
+  <button *ngIf="error" mat-stroked-button type="button" (click)="cargarAsistencias()"
+    [disabled]="filtroForm.invalid || loading">Reintentar</button>
+
+  <section class="app-surface organizer-attendance__results" *ngIf="!loading && !error && asistencias.length > 0"
+    aria-live="polite">
+    <div class="organizer-attendance__results-heading">
+      <h2>Participantes con asistencia</h2>
+      <span class="app-badge app-badge--success">{{ asistencias.length }} registros</span>
     </div>
-    
-    <table mat-table [dataSource]="asistencias" class="w-full text-left">
-      
-      <!-- Indice Column -->
-      <ng-container matColumnDef="indice">
-        <th mat-header-cell *matHeaderCellDef class="font-bold text-gray-700 p-3 w-16 text-center">Nro</th>
-        <td mat-cell *matCellDef="let row; let i = index" class="p-3 text-center text-gray-500 font-medium">{{ i + 1 }}</td>
-      </ng-container>
 
-      <!-- Código Column -->
-      <ng-container matColumnDef="codigo">
-        <th mat-header-cell *matHeaderCellDef class="font-bold text-gray-700 p-3">Código Participante</th>
-        <td mat-cell *matCellDef="let row" class="p-3 font-mono text-sm text-blue-700 font-bold">{{ row.codigoParticipante }}</td>
-      </ng-container>
+    <div class="organizer-attendance__table-wrap">
+      <table mat-table [dataSource]="asistencias">
+        <ng-container matColumnDef="indice">
+          <th mat-header-cell *matHeaderCellDef>N.º</th>
+          <td mat-cell *matCellDef="let row; let i = index">{{ i + 1 }}</td>
+        </ng-container>
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let row"><code>{{ row.codigoParticipante }}</code></td>
+        </ng-container>
+        <ng-container matColumnDef="participante">
+          <th mat-header-cell *matHeaderCellDef>Participante</th>
+          <td mat-cell *matCellDef="let row">{{ row.nombreParticipante }}</td>
+        </ng-container>
+        <ng-container matColumnDef="sesion">
+          <th mat-header-cell *matHeaderCellDef>Sesión</th>
+          <td mat-cell *matCellDef="let row">{{ row.sesion }}</td>
+        </ng-container>
+        <ng-container matColumnDef="fechaHora">
+          <th mat-header-cell *matHeaderCellDef>Fecha y hora</th>
+          <td mat-cell *matCellDef="let row">{{ row.fechaHoraRegistro | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="ubicacion">
+          <th mat-header-cell *matHeaderCellDef>Distancia</th>
+          <td mat-cell *matCellDef="let row">{{ row.distanciaMetros == null ? 'No requerida' : (row.distanciaMetros | number:'1.0-2') + ' m' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="operador">
+          <th mat-header-cell *matHeaderCellDef>Registrado por</th>
+          <td mat-cell *matCellDef="let row">{{ row.registradoPor || 'No informado' }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
 
-      <!-- Participante Column -->
-      <ng-container matColumnDef="participante">
-        <th mat-header-cell *matHeaderCellDef class="font-bold text-gray-700 p-3">Nombre Completo</th>
-        <td mat-cell *matCellDef="let row" class="p-3 font-semibold text-gray-800">{{ row.nombreParticipante }}</td>
-      </ng-container>
+    <div class="organizer-attendance__cards">
+      <article class="app-surface" *ngFor="let row of asistencias">
+        <h3>{{ row.nombreParticipante }}</h3>
+        <dl>
+          <div><dt>Código</dt><dd><code>{{ row.codigoParticipante }}</code></dd></div>
+          <div><dt>Sesión</dt><dd>{{ row.sesion }}</dd></div>
+          <div><dt>Fecha</dt><dd>{{ row.fechaHoraRegistro | date:'dd/MM/yyyy HH:mm:ss' }}</dd></div>
+          <div><dt>Distancia</dt><dd>{{ row.distanciaMetros == null ? 'No requerida' : (row.distanciaMetros | number:'1.0-2') + ' m' }}</dd></div>
+          <div><dt>Validación</dt><dd>{{ row.resultadoValidacion }}</dd></div>
+          <div><dt>Registrado por</dt><dd>{{ row.registradoPor || 'No informado' }}</dd></div>
+        </dl>
+      </article>
+    </div>
+  </section>
 
-      <ng-container matColumnDef="sesion">
-        <th mat-header-cell *matHeaderCellDef class="font-bold text-gray-700 p-3">Sesion</th>
-        <td mat-cell *matCellDef="let row" class="p-3 font-medium text-gray-600">{{ row.sesion }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="ubicacion">
-        <th mat-header-cell *matHeaderCellDef class="font-bold text-gray-700 p-3">Validacion GPS</th>
-        <td mat-cell *matCellDef="let row" class="p-3 text-sm">
-          {{ row.distanciaMetros == null ? 'No requerida' : ((row.distanciaMetros | number:'1.0-2') + ' m') }}
-        </td>
-      </ng-container>
-
-      <!-- Fecha/Hora Column -->
-      <ng-container matColumnDef="fechaHora">
-        <th mat-header-cell *matHeaderCellDef class="font-bold text-gray-700 p-3">Hora de Registro</th>
-        <td mat-cell *matCellDef="let row" class="p-3 text-sm font-mono">{{ row.fechaHoraRegistro | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-      </ng-container>
-
-      <!-- Operador Column -->
-      <ng-container matColumnDef="operador">
-        <th mat-header-cell *matHeaderCellDef class="font-bold text-gray-700 p-3">Registrado Por</th>
-        <td mat-cell *matCellDef="let row" class="p-3 text-sm text-gray-500">{{ row.registradoPor }}</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50 border-b"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="border-b hover:bg-gray-50"></tr>
-    </table>
-  </mat-card>
-
-  <div *ngIf="!loading && asistencias.length === 0 && filtroForm.get('eventoId')?.value" class="bg-gray-50 p-12 text-center rounded border border-dashed border-gray-300 text-gray-500 shadow-inner">
-    <mat-icon class="text-5xl mb-2 opacity-50">people_outline</mat-icon>
-    <p class="text-lg font-medium">Ningún participante ha marcado asistencia para este evento todavía.</p>
-  </div>
-</div>
+  <app-empty-state *ngIf="!loading && !error && filtroForm.get('eventoId')?.value && asistencias.length === 0"
+    icon="people_outline" title="Aún no hay asistencias"
+    message="Las asistencias registradas para este evento aparecerán aquí."></app-empty-state>
+</main>

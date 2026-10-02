@@ -13,6 +13,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { AlertComponent } from '../../shared/ui/alert/alert.component';
+import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
+import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 
 // Components
 import { ControlScannerComponent } from './control-scanner/control-scanner.component';
@@ -45,7 +48,10 @@ const routes: Routes = [
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    MatTableModule
+    MatTableModule,
+    AlertComponent,
+    EmptyStateComponent,
+    SkeletonComponent
   ]
 })
 export class AsistenciasModule { }

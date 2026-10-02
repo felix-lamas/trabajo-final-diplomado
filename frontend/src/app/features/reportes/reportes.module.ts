@@ -19,6 +19,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BreadcrumbsComponent } from '../../shared/ui/breadcrumbs/breadcrumbs.component';
 import { SkeletonComponent } from '../../shared/ui/skeleton/skeleton.component';
 import { EmptyStateComponent } from '../../shared/ui/empty-state/empty-state.component';
+import { PageHeaderComponent } from '../../shared/ui/page-header/page-header.component';
+import { StatCardComponent } from '../../shared/ui/stat-card/stat-card.component';
+import { SurfaceComponent } from '../../shared/ui/surface/surface.component';
+import { AlertComponent } from '../../shared/ui/alert/alert.component';
 
 // Components
 import { DashboardPanelComponent } from './dashboard-panel/dashboard-panel.component';
@@ -54,6 +58,10 @@ const routes: Routes = [
     MatNativeDateModule,
     MatProgressBarModule,
     BreadcrumbsComponent,
+    PageHeaderComponent,
+    StatCardComponent,
+    SurfaceComponent,
+    AlertComponent,
     SkeletonComponent,
     EmptyStateComponent
   ]

@@ -14,6 +14,9 @@ import { of } from 'rxjs';
 import { AsistenciaService } from '../../../core/services/asistencia.service';
 import { EventoService } from '../../../core/services/evento.service';
 import { AsistenciaListComponent } from './asistencia-list.component';
+import { AlertComponent } from '../../../shared/ui/alert/alert.component';
+import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
+import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 
 describe('AsistenciaListComponent', () => {
   let fixture: ComponentFixture<AsistenciaListComponent>;
@@ -29,7 +32,8 @@ describe('AsistenciaListComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AsistenciaListComponent],
       imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule,
-        MatIconModule, MatOptionModule, MatSelectModule, MatProgressSpinnerModule, MatTableModule],
+        MatIconModule, MatOptionModule, MatSelectModule, MatProgressSpinnerModule, MatTableModule,
+        AlertComponent, EmptyStateComponent, SkeletonComponent],
       providers: [
         { provide: AsistenciaService, useValue: { listarPorEvento: vi.fn(() => of([{
           id: 'asistencia-1', nombreParticipante: 'Participante Ficticio', documentoIdentidad: 'CI-FICTICIO',
@@ -52,5 +56,15 @@ describe('AsistenciaListComponent', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Participante Ficticio');
     expect(fixture.nativeElement.textContent).toContain('No requerida');
+    expect(fixture.nativeElement.textContent).toContain('No informado');
+  });
+
+  it('muestra información de validación de asistencia devuelta por backend', () => {
+    fixture.componentInstance.filtroForm.setValue({ eventoId: evento.id });
+    fixture.componentInstance.cargarAsistencias();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('VALIDADO');
+    expect(fixture.nativeElement.textContent).toContain('Código');
   });
 });
