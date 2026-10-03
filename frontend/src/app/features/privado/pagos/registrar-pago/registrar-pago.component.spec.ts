@@ -17,7 +17,7 @@ describe('RegistrarPagoComponent', () => {
   let pagosResponse: Subject<Pago[]>;
   let comprobanteResponse: Subject<ComprobanteInscripcion>;
   let uploadResponse: Subject<Pago>;
-  const router = { navigate: vi.fn() };
+  const router = { navigate: vi.fn(() => Promise.resolve(true)) };
   const pago: Pago = {
     id: 'pago', inscripcionId: 'inscripcion', eventoTitulo: 'Evento pagado', usuarioNombre: 'Ana',
     monto: 80, fechaPago: '2026-09-30T10:00:00', estado: EstadoPago.RECHAZADO,
@@ -74,6 +74,44 @@ describe('RegistrarPagoComponent', () => {
     const service = TestBed.inject(PagoService);
     expect(service.subirComprobante).toHaveBeenCalledTimes(1);
     expect(service.registrarPago).not.toHaveBeenCalled();
+  });
+
+  it('intercepta el submit nativo, conserva la inscripcion y llama guardar una sola vez', async () => {
+    resolverContexto();
+    await fixture.whenStable();
+    const archivo = new File(['pdf'], 'comprobante.pdf', { type: 'application/pdf' });
+    fixture.componentInstance.archivoComprobante = archivo;
+    const guardar = vi.spyOn(fixture.componentInstance, 'guardar');
+    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    const submit = new Event('submit', { bubbles: true, cancelable: true });
+
+    form.dispatchEvent(submit);
+
+    expect(submit.defaultPrevented).toBe(true);
+    expect(guardar).toHaveBeenCalledTimes(1);
+    expect(fixture.componentInstance.inscripcionId).toBe('inscripcion');
+    expect(TestBed.inject(PagoService).subirComprobante).toHaveBeenCalledOnce();
+    expect(TestBed.inject(PagoService).subirComprobante).toHaveBeenCalledWith('pago', archivo);
+    expect(router.navigate).not.toHaveBeenCalled();
+
+    uploadResponse.next({ ...pago, estado: EstadoPago.PENDIENTE_VALIDACION });
+    uploadResponse.complete();
+    await fixture.whenStable();
+
+    expect(router.navigate).toHaveBeenCalledOnce();
+    expect(router.navigate).toHaveBeenCalledWith(['/privado/pagos']);
+  });
+
+  it('no navega como exito si falla la carga del comprobante', async () => {
+    resolverContexto();
+    await fixture.whenStable();
+    fixture.componentInstance.archivoComprobante = new File(['pdf'], 'comprobante.pdf', { type: 'application/pdf' });
+    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    uploadResponse.error(new Error('fallo de prueba'));
+
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.uploadError).toBeTruthy();
   });
 
   it('muestra el motivo de rechazo de tipo de archivo antes de enviar', () => {
