@@ -47,7 +47,7 @@
         <mat-label>Modalidad</mat-label>
         <mat-select formControlName="modalidad">
           <mat-option value="TODAS">Todas las modalidades</mat-option>
-          <mat-option *ngFor="let opcion of modalidadOpciones" [value]="opcion.value">{{ opcion.label }}</mat-option>
+          <mat-option *ngFor="let opcion of modalidadOpciones; trackBy: trackByModalidad" [value]="opcion.value">{{ opcion.label }}</mat-option>
         </mat-select>
       </mat-form-field>
 

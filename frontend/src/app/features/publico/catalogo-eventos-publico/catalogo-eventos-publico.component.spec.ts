@@ -70,6 +70,20 @@ describe('CatalogoEventosPublicoComponent reactive HTTP state', () => {
     expect(fixture.nativeElement.querySelector('app-skeleton')).not.toBeNull();
   });
 
+  it('mantiene opciones de modalidad estables y con identidad por valor', () => {
+    const component = fixture.componentInstance;
+    const opciones = component.modalidadOpciones;
+
+    expect(opciones).toEqual([
+      { value: Modalidad.PRESENCIAL, label: 'Presencial' },
+      { value: Modalidad.VIRTUAL, label: 'Virtual' }
+    ]);
+    expect(component.modalidadOpciones).toBe(opciones);
+    expect(component.modalidadOpciones).toBe(opciones);
+    expect(component.trackByModalidad(0, opciones[0])).toBe(Modalidad.PRESENCIAL);
+    expect(component.trackByModalidad(1, opciones[1])).toBe(Modalidad.VIRTUAL);
+  });
+
   it('muestra success al resolver HTTP', () => {
     responses[0].next([evento]);
     responses[0].complete();

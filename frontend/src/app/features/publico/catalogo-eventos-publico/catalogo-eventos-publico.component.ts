@@ -83,11 +83,13 @@ export class CatalogoEventosPublicoComponent implements OnInit {
     return String(this.filtros.get('buscar')?.value || '');
   }
 
-  get modalidadOpciones(): Array<{ value: string; label: string }> {
-    return [
-      { value: Modalidad.PRESENCIAL, label: 'Presencial' },
-      { value: Modalidad.VIRTUAL, label: 'Virtual' }
-    ];
+  readonly modalidadOpciones: Array<{ value: string; label: string }> = [
+    { value: Modalidad.PRESENCIAL, label: 'Presencial' },
+    { value: Modalidad.VIRTUAL, label: 'Virtual' }
+  ];
+
+  trackByModalidad(_index: number, opcion: { value: string }): string {
+    return opcion.value;
   }
 
   cambiarPagina(event: { pageIndex: number; pageSize: number }): void {
