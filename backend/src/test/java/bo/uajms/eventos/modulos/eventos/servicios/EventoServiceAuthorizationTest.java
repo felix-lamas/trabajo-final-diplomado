@@ -14,6 +14,7 @@ import bo.uajms.eventos.modulos.eventos.entidades.PublicoObjetivo;
 import bo.uajms.eventos.modulos.eventos.mappers.EventoMapper;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
+import bo.uajms.eventos.modulos.pagos.servicios.AlmacenamientoArchivos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,6 +53,9 @@ class EventoServiceAuthorizationTest {
 
     @Mock
     private UsuarioAutenticadoService usuarioAutenticadoService;
+
+    @Mock
+    private AlmacenamientoArchivos almacenamientoArchivos;
 
     @InjectMocks
     private EventoService eventoService;

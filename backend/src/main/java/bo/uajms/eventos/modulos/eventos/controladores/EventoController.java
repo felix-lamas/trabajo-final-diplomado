@@ -7,6 +7,8 @@ import bo.uajms.eventos.modulos.eventos.servicios.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,11 +16,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ContentDisposition;
+import org.springframework.core.io.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/v1/eventos")
@@ -116,6 +124,58 @@ public class EventoController {
             @Parameter(description = "Identificador del evento") @PathVariable UUID id,
             @Valid @RequestBody ActualizarEventoRequest request) {
         return ResponseEntity.ok(eventoService.actualizar(id, request));
+    }
+
+    @PutMapping(value = "/{id}/qr-pago", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
+    @Operation(summary = "Cargar o reemplazar el QR de pago del evento",
+            description = "Acepta el campo multipart archivo (PNG/JPG/JPEG) hasta 5 MB. ORGANIZADOR debe estar aprobado y ser propietario; solo BORRADOR o RECHAZADO.")
+    @ApiResponse(responseCode = "204", description = "QR guardado")
+    @ApiResponse(responseCode = "400", description = "Archivo vacío, inválido, incompatible o mayor a 5 MB")
+    @ApiResponse(responseCode = "401", description = "Autenticación requerida")
+    @ApiResponse(responseCode = "403", description = "Rol u ownership no autorizado")
+    @ApiResponse(responseCode = "404", description = "Evento no encontrado")
+    @ApiResponse(responseCode = "409", description = "Evento no editable")
+    @ApiResponse(responseCode = "413", description = "Solicitud multipart supera el límite configurado del servidor")
+    public ResponseEntity<Void> subirQrPago(
+            @Parameter(description = "Imagen PNG, JPG o JPEG; máximo 5 MB", required = true,
+                    content = @Content(mediaType = "application/octet-stream", schema = @Schema(type = "string", format = "binary")))
+            @RequestPart("archivo") MultipartFile archivo,
+            @Parameter(description = "Identificador del evento") @PathVariable UUID id) {
+        eventoService.subirQrPago(id, archivo);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/qr-pago")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')")
+    @Operation(summary = "Eliminar el QR de pago del evento",
+            description = "Solo permite modificar QR de eventos BORRADOR o RECHAZADO; ORGANIZADOR requiere ownership.")
+    @ApiResponse(responseCode = "204", description = "QR eliminado o ya ausente")
+    @ApiResponse(responseCode = "401", description = "Autenticación requerida")
+    @ApiResponse(responseCode = "403", description = "Rol u ownership no autorizado")
+    @ApiResponse(responseCode = "404", description = "Evento no encontrado")
+    @ApiResponse(responseCode = "409", description = "Evento no editable")
+    public ResponseEntity<Void> eliminarQrPago(@PathVariable UUID id) {
+        eventoService.eliminarQrPago(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/qr-pago")
+    @SecurityRequirements
+    @Operation(summary = "Obtener imagen QR del evento",
+            description = "Eventos publicados son visibles públicamente; eventos no publicados solo para administrador u organizador propietario.")
+    @ApiResponse(responseCode = "200", description = "Imagen PNG o JPEG", content = @Content(schema = @Schema(type = "string", format = "binary")))
+    @ApiResponse(responseCode = "404", description = "Evento no visible o QR ausente")
+    public ResponseEntity<Resource> obtenerQrPago(@PathVariable UUID id) {
+        EventoService.QrPagoArchivo qr = eventoService.obtenerQrPago(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(qr.tipoContenido());
+        headers.setContentLength(qr.longitud());
+        headers.setContentDisposition(ContentDisposition.inline().filename("qr-pago").build());
+        headers.setCacheControl(qr.publico()
+                ? CacheControl.maxAge(Duration.ofMinutes(10)).cachePublic()
+                : CacheControl.noStore());
+        return ResponseEntity.ok().headers(headers).body(qr.recurso());
     }
 
     @DeleteMapping("/{id}")

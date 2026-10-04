@@ -11,6 +11,7 @@ import bo.uajms.eventos.modulos.eventos.entidades.*;
 import bo.uajms.eventos.modulos.eventos.mappers.EventoMapper;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
+import bo.uajms.eventos.modulos.pagos.servicios.AlmacenamientoArchivos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +38,7 @@ class EventoServiceLifecycleTest {
     @Mock CategoriaEventoRepository categoriaRepository;
     @Mock EventoMapper eventoMapper;
     @Mock UsuarioAutenticadoService usuarioAutenticadoService;
+    @Mock AlmacenamientoArchivos almacenamientoArchivos;
     @InjectMocks EventoService service;
 
     private UUID eventoId;

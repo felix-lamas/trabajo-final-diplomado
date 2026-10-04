@@ -12,22 +12,38 @@ import bo.uajms.eventos.modulos.eventos.entidades.*;
 import bo.uajms.eventos.modulos.eventos.mappers.EventoMapper;
 import bo.uajms.eventos.modulos.eventos.repositorios.EventoRepository;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
+import bo.uajms.eventos.modulos.pagos.servicios.AlmacenamientoArchivos;
+import bo.uajms.eventos.core.excepciones.ServicioNoDisponibleException;
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Iterator;
 import java.util.Optional;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventoService {
 
     private static final String CATEGORIA_ACTIVA = "ACTIVO";
@@ -37,6 +53,7 @@ public class EventoService {
     private final CategoriaEventoRepository categoriaRepository;
     private final EventoMapper eventoMapper;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
+    private final AlmacenamientoArchivos almacenamientoArchivos;
 
     @Transactional(readOnly = true)
     public List<EventoResponse> listarTodos() {
@@ -80,6 +97,128 @@ public class EventoService {
         return buscarEventoVisible(id).map(eventoMapper::toDetalleResponse)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
     }
+
+    @Transactional
+    public void subirQrPago(UUID id, MultipartFile archivo) {
+        Evento evento = obtenerEventoGestionable(id);
+        validarEstadoEditableQr(evento);
+        if (evento.getTipoInscripcion() != TipoInscripcion.PAGO) {
+            throw new NegocioException("Solo los eventos de pago pueden tener un QR");
+        }
+        QrProcesado procesado = validarQr(archivo);
+        String nuevaClave = "eventos/" + id + "/qr-pago/" + UUID.randomUUID() + "." + procesado.extension();
+        String claveAnterior = evento.getQrPagoStorageKey();
+        almacenamientoArchivos.guardar(nuevaClave, procesado.bytes(), procesado.mime());
+        evento.setQrPagoStorageKey(nuevaClave);
+        evento.setQrPagoUrl(null);
+        try {
+            eventoRepository.saveAndFlush(evento);
+        } catch (RuntimeException exception) {
+            eliminarQrSeguro(nuevaClave);
+            throw exception;
+        }
+        registrarLimpiezaQr(claveAnterior, nuevaClave);
+    }
+
+    @Transactional
+    public void eliminarQrPago(UUID id) {
+        Evento evento = obtenerEventoGestionable(id);
+        validarEstadoEditableQr(evento);
+        String anterior = evento.getQrPagoStorageKey();
+        evento.setQrPagoStorageKey(null);
+        evento.setQrPagoUrl(null);
+        eventoRepository.saveAndFlush(evento);
+        registrarLimpiezaQr(anterior, null);
+    }
+
+    @Transactional(readOnly = true)
+    public QrPagoArchivo obtenerQrPago(UUID id) {
+        Evento evento = buscarEventoVisible(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Evento", id));
+        String clave = evento.getQrPagoStorageKey();
+        if (clave == null) throw new RecursoNoEncontradoException("QR de pago", id);
+        Resource recurso = almacenamientoArchivos.descargar(clave)
+                .orElseThrow(() -> new RecursoNoEncontradoException("QR de pago", id));
+        String extension = clave.substring(clave.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+        MediaType mime = "png".equals(extension) ? MediaType.IMAGE_PNG : MediaType.IMAGE_JPEG;
+        try {
+            return new QrPagoArchivo(recurso, mime, recurso.contentLength(), evento.getEstado() == EstadoEvento.PUBLICADO);
+        } catch (IOException exception) {
+            throw new ServicioNoDisponibleException("STORAGE_UNAVAILABLE", "No fue posible leer el QR del evento");
+        }
+    }
+
+    private void validarEstadoEditableQr(Evento evento) {
+        if (evento.getEstado() != EstadoEvento.BORRADOR && evento.getEstado() != EstadoEvento.RECHAZADO) {
+            throw new ConflictoException(CodigosError.EVENT_INVALID_STATE,
+                    "Solo se puede modificar el QR de un evento BORRADOR o RECHAZADO");
+        }
+    }
+
+    private QrProcesado validarQr(MultipartFile archivo) {
+        if (archivo == null || archivo.isEmpty()) throw new NegocioException("La imagen QR es obligatoria");
+        if (archivo.getSize() > 5L * 1024 * 1024) throw new NegocioException("La imagen QR supera el máximo de 5 MB");
+        String nombre = archivo.getOriginalFilename();
+        int punto = nombre == null ? -1 : nombre.lastIndexOf('.');
+        if (punto < 0 || punto == nombre.length() - 1) throw new NegocioException("Solo se permiten PNG, JPG o JPEG");
+        String extension = nombre.substring(punto + 1).toLowerCase(Locale.ROOT);
+        if (!List.of("png", "jpg", "jpeg").contains(extension)) throw new NegocioException("Solo se permiten PNG, JPG o JPEG");
+        try {
+            byte[] bytes = archivo.getBytes();
+            if (bytes.length == 0 || bytes.length > 5L * 1024 * 1024) {
+                throw new NegocioException("La imagen QR debe pesar como máximo 5 MB");
+            }
+            String mimeReal = new org.apache.tika.Tika().detect(bytes, nombre);
+            String mimeEsperado = "png".equals(extension) ? "image/png" : "image/jpeg";
+            if (!mimeEsperado.equals(mimeReal) || (archivo.getContentType() != null
+                    && !archivo.getContentType().isBlank() && !mimeEsperado.equalsIgnoreCase(archivo.getContentType()))) {
+                throw new NegocioException("La extensión y el tipo de imagen no coinciden con el contenido");
+            }
+            if (!imagenValida(bytes)) {
+                throw new NegocioException("El archivo no contiene una imagen válida");
+            }
+            return new QrProcesado(bytes, extension, mimeEsperado);
+        } catch (IOException exception) {
+            throw new NegocioException("No fue posible leer la imagen QR");
+        }
+    }
+
+    private boolean imagenValida(byte[] bytes) throws IOException {
+        try (ImageInputStream input = ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {
+            if (input == null) return false;
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+            if (!readers.hasNext()) return false;
+            ImageReader reader = readers.next();
+            try {
+                reader.setInput(input, true, true);
+                long pixeles = (long) reader.getWidth(0) * reader.getHeight(0);
+                return pixeles > 0 && pixeles <= 25_000_000L && reader.read(0) != null;
+            } finally {
+                reader.dispose();
+            }
+        }
+    }
+
+    private void registrarLimpiezaQr(String anterior, String nueva) {
+        if (!TransactionSynchronizationManager.isSynchronizationActive()) return;
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override public void afterCommit() {
+                if (anterior != null && !anterior.equals(nueva)) eliminarQrSeguro(anterior);
+            }
+            @Override public void afterCompletion(int status) {
+                if (status != STATUS_COMMITTED && nueva != null) eliminarQrSeguro(nueva);
+            }
+        });
+    }
+
+    private void eliminarQrSeguro(String clave) {
+        if (!AlmacenamientoArchivos.esClaveQrPago(clave)) return;
+        try { almacenamientoArchivos.eliminar(clave); }
+        catch (RuntimeException exception) { log.warn("No se pudo limpiar un QR reemplazado o compensatorio"); }
+    }
+
+    public record QrPagoArchivo(Resource recurso, MediaType tipoContenido, long longitud, boolean publico) {}
+    private record QrProcesado(byte[] bytes, String extension, String mime) {}
 
     @Transactional
     public EventoDetalleResponse crear(CrearEventoRequest request) {
@@ -221,7 +360,12 @@ public class EventoService {
         evento.setWhatsappContacto(limpiar(request.getWhatsappContacto()));
         evento.setImagenPortada(limpiar(request.getImagenPortada()));
         boolean pagado = request.getTipoInscripcion() == TipoInscripcion.PAGO;
-        evento.setQrPagoUrl(pagado ? limpiar(request.getQrPagoUrl()) : null);
+        if (!pagado) {
+            String qrAnterior = evento.getQrPagoStorageKey();
+            evento.setQrPagoStorageKey(null);
+            evento.setQrPagoUrl(null);
+            registrarLimpiezaQr(qrAnterior, null);
+        }
         evento.setInstruccionesPago(pagado ? limpiar(request.getInstruccionesPago()) : null);
     }
 
@@ -250,7 +394,6 @@ public class EventoService {
         }
         if (request.getModalidad() == Modalidad.VIRTUAL) validarUrl(request.getEnlaceVirtual(), "enlace virtual");
         validarUrl(request.getImagenPortada(), "imagen de portada");
-        if (request.getTipoInscripcion() == TipoInscripcion.PAGO) validarUrl(request.getQrPagoUrl(), "QR de pago");
         if ((request.getLatitud() == null) != (request.getLongitud() == null)) {
             throw new NegocioException("Latitud y longitud deben informarse juntas");
         }
@@ -274,10 +417,6 @@ public class EventoService {
                     && (request.getHorasAcademicas() == null || request.getHorasAcademicas() <= 0)) {
                 throw new NegocioException("Un certificado CURRICULAR requiere horas academicas mayores a cero");
             }
-        }
-        if (request.getTipoInscripcion() == TipoInscripcion.PAGO
-                && esVacio(request.getInstruccionesPago()) && esVacio(request.getQrPagoUrl())) {
-            throw new NegocioException("Un evento de PAGO requiere instrucciones o QR de pago");
         }
         if (completo && (esVacio(request.getDescripcion()) || esVacio(request.getObjetivos()))) {
             throw new NegocioException("El evento requiere descripcion y objetivos para revision");
@@ -314,10 +453,12 @@ public class EventoService {
         validarUrl(evento.getImagenPortada(), "imagen de portada");
         validarCosto(evento.getTipoInscripcion(), evento.getCosto());
         if (evento.getTipoInscripcion() == TipoInscripcion.PAGO
-                && esVacio(evento.getInstruccionesPago()) && esVacio(evento.getQrPagoUrl())) {
+                && esVacio(evento.getInstruccionesPago()) && evento.getQrPagoStorageKey() == null
+                && esVacio(evento.getQrPagoUrl())) {
             throw new NegocioException("El evento de PAGO no tiene instrucciones ni QR de pago");
         }
-        if (evento.getTipoInscripcion() == TipoInscripcion.PAGO) validarUrl(evento.getQrPagoUrl(), "QR de pago");
+        if (evento.getTipoInscripcion() == TipoInscripcion.PAGO && evento.getQrPagoStorageKey() == null)
+            validarUrl(evento.getQrPagoUrl(), "QR de pago");
         if (Boolean.TRUE.equals(evento.getRequiereInscripcion()) && Boolean.TRUE.equals(evento.getCupoLimitado())
                 && (evento.getCupoMaximo() == null || evento.getCupoMaximo() <= 0)) {
             throw new NegocioException("El evento con cupo limitado no tiene capacidad valida");

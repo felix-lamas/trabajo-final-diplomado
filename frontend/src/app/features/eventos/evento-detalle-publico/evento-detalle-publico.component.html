@@ -109,7 +109,8 @@
           variant="default" class="vidia-event-detail__section">
           <h2>Información de pago</h2>
           <p *ngIf="event.instruccionesPago" class="vidia-event-detail__body-copy">{{ event.instruccionesPago }}</p>
-          <img *ngIf="event.qrPagoUrl" class="vidia-event-detail__payment-qr" [src]="event.qrPagoUrl"
+          <h3 *ngIf="qrPagoImagenUrl">QR de pago</h3>
+          <img *ngIf="qrPagoImagenUrl" class="vidia-event-detail__payment-qr" [src]="qrPagoImagenUrl"
             alt="Código QR para pago indicado por el organizador" loading="lazy">
           <p class="vidia-event-detail__muted">El pago se realiza externamente; no se procesa mediante una pasarela en Vidia.</p>
         </app-surface>

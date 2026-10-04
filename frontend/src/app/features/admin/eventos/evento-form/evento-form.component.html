@@ -54,7 +54,19 @@
         <mat-form-field appearance="outline"><mat-label>Precio</mat-label><mat-select formControlName="tipoInscripcion"><mat-option value="GRATUITO">Gratuito</mat-option><mat-option value="PAGO">Pago</mat-option></mat-select></mat-form-field>
         <mat-form-field appearance="outline" *ngIf="esPagado()"><mat-label>Monto (Bs)</mat-label><input matInput type="number" step="0.01" formControlName="costo"></mat-form-field>
         <mat-form-field appearance="outline" *ngIf="esPagado()"><mat-label>Instrucciones de pago</mat-label><textarea matInput rows="3" formControlName="instruccionesPago"></textarea></mat-form-field>
-        <mat-form-field appearance="outline" *ngIf="esPagado()"><mat-label>QR de pago (URL)</mat-label><input matInput formControlName="qrPagoUrl"></mat-form-field>
+        <section class="qr-payment-upload" *ngIf="esPagado()" aria-labelledby="qr-payment-title">
+          <h3 id="qr-payment-title">QR de pago <span>(opcional)</span></h3>
+          <p>Selecciona una imagen real para que los participantes puedan escanearla.</p>
+          <input #qrInput id="qr-pago-file" type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg"
+            (change)="onQrSelected($event)" [disabled]="guardando()" aria-describedby="qr-payment-help qr-payment-error">
+          <p id="qr-payment-help">Formatos PNG, JPG o JPEG · Máximo 5 MB</p>
+          <p *ngIf="qrSaved() && !qrFileName()">QR guardado</p>
+          <p *ngIf="qrFileName()">{{ qrFileName() }}</p>
+          <img *ngIf="qrPreviewUrl()" [src]="qrPreviewUrl()!" alt="Previsualización del QR de pago" class="qr-payment-upload__preview">
+          <button mat-stroked-button type="button" *ngIf="qrSaved() || qrFileName()"
+            (click)="quitarQr()" [disabled]="guardando()">{{ qrFileName() ? 'Quitar selección' : 'Eliminar QR guardado' }}</button>
+          <p *ngIf="qrError()" id="qr-payment-error" role="alert">{{ qrError() }}</p>
+        </section>
       </div>
     </mat-card>
 

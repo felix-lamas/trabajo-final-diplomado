@@ -18,14 +18,11 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 @Slf4j
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "supabase")
 public class SupabaseS3StorageService implements AlmacenamientoArchivos {
-    private static final Pattern CLAVE_SEGURA = Pattern.compile(
-            "^comprobantes/[0-9a-fA-F-]{36}/[0-9a-fA-F-]{36}\\.(pdf|png|jpg|jpeg)$");
 
     private final S3Client cliente;
     private final SupabaseStorageProperties properties;
@@ -102,7 +99,7 @@ public class SupabaseS3StorageService implements AlmacenamientoArchivos {
     }
 
     private void validarClave(String clave) {
-        if (clave == null || !CLAVE_SEGURA.matcher(clave).matches()) {
+        if (!AlmacenamientoArchivos.esClavePermitida(clave)) {
             throw new IllegalArgumentException("Clave de almacenamiento invalida");
         }
     }

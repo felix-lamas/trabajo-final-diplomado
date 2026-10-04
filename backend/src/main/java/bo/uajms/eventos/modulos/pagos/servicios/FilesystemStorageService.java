@@ -10,14 +10,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /** Almacenamiento local para desarrollo y pruebas; produccion fuerza la implementacion externa. */
 @Service
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "local", matchIfMissing = true)
 public class FilesystemStorageService implements AlmacenamientoArchivos {
-    private static final Pattern CLAVE_SEGURA = Pattern.compile(
-            "^comprobantes/[0-9a-fA-F-]{36}/[0-9a-fA-F-]{36}\\.(pdf|png|jpg|jpeg)$");
     private final Path raiz;
 
     public FilesystemStorageService(@Value("${app.uploads.base-dir:uploads}") String baseDir) {
@@ -58,7 +55,7 @@ public class FilesystemStorageService implements AlmacenamientoArchivos {
     }
 
     private Path resolver(String clave) {
-        if (clave == null || !CLAVE_SEGURA.matcher(clave).matches()) {
+        if (!AlmacenamientoArchivos.esClavePermitida(clave)) {
             throw new IllegalArgumentException("Clave de almacenamiento invalida");
         }
         Path archivo = raiz.resolve(clave).normalize();

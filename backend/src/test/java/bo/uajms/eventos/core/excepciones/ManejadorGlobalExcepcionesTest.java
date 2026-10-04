@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +27,15 @@ class ManejadorGlobalExcepcionesTest {
                 new ConflictoException(CodigosError.ATTENDANCE_DUPLICATED, "Duplicada"), request);
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals(CodigosError.ATTENDANCE_DUPLICATED, response.getBody().getCodigo());
+    }
+
+    @Test
+    void tamanoMultipartExcesivoDevuelve413SinExponerDetalle() {
+        var response = handler.manejarArchivoDemasiadoGrande(
+                new MaxUploadSizeExceededException(5L * 1024 * 1024), request);
+        assertEquals(HttpStatus.PAYLOAD_TOO_LARGE, response.getStatusCode());
+        assertEquals(CodigosError.FILE_TOO_LARGE, response.getBody().getCodigo());
+        assertFalse(response.getBody().getMensaje().contains("5"));
     }
 
     @Test

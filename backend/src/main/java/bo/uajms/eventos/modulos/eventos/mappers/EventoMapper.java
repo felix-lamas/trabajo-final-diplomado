@@ -76,7 +76,9 @@ public class EventoMapper {
                 .telefonoContacto(evento.getTelefonoContacto())
                 .emailContacto(evento.getEmailContacto())
                 .whatsappContacto(evento.getWhatsappContacto())
-                .qrPagoUrl(evento.getQrPagoUrl())
+                .qrPagoUrl(evento.getQrPagoStorageKey() != null
+                        ? "/api/v1/eventos/" + evento.getId() + "/qr-pago"
+                        : evento.getQrPagoUrl())
                 .instruccionesPago(evento.getInstruccionesPago())
                 .motivoRechazo(evento.getMotivoRechazo())
                 .motivoCancelacion(evento.getMotivoCancelacion())

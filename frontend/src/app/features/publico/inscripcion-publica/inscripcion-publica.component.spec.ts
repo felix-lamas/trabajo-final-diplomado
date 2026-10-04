@@ -33,7 +33,7 @@ describe('InscripcionPublicaComponent', () => {
         provideZonelessChangeDetection(), provideNoopAnimations(),
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'evento' } } } },
         { provide: Router, useValue: router },
-        { provide: EventoService, useValue: { obtenerPorId: vi.fn(() => eventoResponse.asObservable()) } },
+        { provide: EventoService, useValue: { obtenerPorId: vi.fn(() => eventoResponse.asObservable()), normalizarQrPagoUrl: vi.fn((url: string) => url) } },
         { provide: InscripcionService, useValue: { inscribir: vi.fn(() => inscripcionResponse.asObservable()) } }
       ]
     }).compileComponents();

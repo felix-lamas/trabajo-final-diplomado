@@ -121,6 +121,9 @@ public class Evento extends EntidadBase {
     @Column(name = "qr_pago_url", length = 500)
     private String qrPagoUrl;
 
+    @Column(name = "qr_pago_storage_key", length = 500)
+    private String qrPagoStorageKey;
+
     @Column(name = "instrucciones_pago", columnDefinition = "TEXT")
     private String instruccionesPago;
 

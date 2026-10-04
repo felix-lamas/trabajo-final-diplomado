@@ -20,9 +20,10 @@
       <div class="student-card" *ngIf="motivoRechazo"><strong>Último motivo de rechazo</strong><p>{{ motivoRechazo }}</p></div>
 
       <section class="student-card" *ngIf="evento?.instruccionesPago || evento?.qrPagoUrl">
-        <h3>Instrucciones del evento</h3>
+        <h3 *ngIf="evento?.instruccionesPago">Instrucciones del evento</h3>
         <p *ngIf="evento?.instruccionesPago">{{ evento?.instruccionesPago }}</p>
-        <img *ngIf="evento?.qrPagoUrl" [src]="evento?.qrPagoUrl" alt="QR de pago proporcionado por el organizador" loading="lazy" class="max-w-full rounded-lg">
+        <h4 *ngIf="evento?.qrPagoUrl">QR de pago</h4>
+        <img *ngIf="qrPagoImagenUrl && !qrImagenFallida" [src]="qrPagoImagenUrl" (error)="ocultarQr()" alt="QR de pago proporcionado por el organizador" loading="lazy" class="max-w-full rounded-lg">
       </section>
 
       <form (ngSubmit)="guardar()" class="student-grid">

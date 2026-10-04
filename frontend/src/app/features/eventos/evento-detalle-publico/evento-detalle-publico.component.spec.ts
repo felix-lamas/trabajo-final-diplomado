@@ -2,7 +2,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { EventoService } from '../../../core/services/evento.service';
 import { InscripcionService } from '../../../core/services/inscripcion.service';
@@ -17,7 +17,7 @@ describe('EventoDetallePublicoComponent', () => {
   let eventoResponses: Subject<EventoDetalle>[];
   let inscripcionResponses: Subject<Inscripcion[]>[];
   let authUser: { authenticated: boolean; roles: string[] };
-  let eventoApi: { obtenerPorId: ReturnType<typeof vi.fn> };
+  let eventoApi: { obtenerPorId: ReturnType<typeof vi.fn>; descargarQrPago: ReturnType<typeof vi.fn> };
   let inscripcionApi: { listarMisInscripciones: ReturnType<typeof vi.fn> };
 
   const evento: EventoDetalle = {
@@ -45,6 +45,7 @@ describe('EventoDetallePublicoComponent', () => {
     inscripcionResponses = [];
     authUser = { authenticated: false, roles: [] };
     eventoApi = {
+      descargarQrPago: vi.fn(() => of(new Blob())),
       obtenerPorId: vi.fn(() => {
         const response = new Subject<EventoDetalle>();
         eventoResponses.push(response);

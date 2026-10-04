@@ -39,10 +39,11 @@
         <h2>Confirma tu participación</h2>
         <p *ngIf="item.tipoInscripcion === 'GRATUITO'">No se requiere comprobante de pago. La inscripción gratuita se confirma según el resultado del sistema.</p>
         <p *ngIf="item.tipoInscripcion !== 'GRATUITO'">Este evento es pagado. Después de inscribirte, realiza el pago externamente siguiendo las instrucciones del evento y presenta tu comprobante para validación.</p>
-        <section *ngIf="item.tipoInscripcion !== 'GRATUITO' && item.instruccionesPago">
-          <h3>Instrucciones de pago</h3><p>{{ item.instruccionesPago }}</p>
+        <section *ngIf="item.tipoInscripcion !== 'GRATUITO' && (item.instruccionesPago || item.qrPagoUrl)">
+          <h3 *ngIf="item.instruccionesPago">Instrucciones de pago</h3><p *ngIf="item.instruccionesPago">{{ item.instruccionesPago }}</p>
+          <h3 *ngIf="item.qrPagoUrl">QR de pago</h3>
+          <img *ngIf="qrPagoImagenUrl && !qrImagenFallida" [src]="qrPagoImagenUrl" (error)="ocultarQr()" alt="QR de pago proporcionado para el evento" loading="lazy" class="max-w-full rounded-lg">
         </section>
-        <img *ngIf="item.tipoInscripcion !== 'GRATUITO' && item.qrPagoUrl" [src]="item.qrPagoUrl" alt="QR de pago proporcionado para el evento" loading="lazy" class="max-w-full rounded-lg">
         <p *ngIf="!item.requiereInscripcion">Este evento no requiere inscripción.</p>
         <p *ngIf="sinCupo" role="status">No hay cupos disponibles.</p>
         <button mat-flat-button color="primary" type="button" (click)="confirmar()"

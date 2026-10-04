@@ -30,6 +30,26 @@ describe('EventoService contrato canonico', () => {
   it('obtiene detalle por id', () => { service.obtenerPorId('evt').subscribe(); expect(http.expectOne(`${base}/evt`).request.method).toBe('GET'); });
   it('crea el borrador sin organizador enviado', () => { service.crear(request).subscribe(); const r = http.expectOne(base); expect(r.request.method).toBe('POST'); expect(r.request.body.organizadorId).toBeUndefined(); });
   it('actualiza por PUT', () => { service.actualizar('evt', request).subscribe(); expect(http.expectOne(`${base}/evt`).request.method).toBe('PUT'); });
+  it('sube la imagen QR mediante multipart en la ruta específica del evento', () => {
+    const file = new File(['qr'], 'qr.png', { type: 'image/png' });
+    service.subirQrPago('evt', file).subscribe();
+    const req = http.expectOne(`${base}/evt/qr-pago`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body instanceof FormData).toBe(true);
+    expect((req.request.body as FormData).get('archivo')).toBe(file);
+  });
+  it('elimina el QR del evento en la ruta específica', () => {
+    service.eliminarQrPago('evt').subscribe();
+    expect(http.expectOne(`${base}/evt/qr-pago`).request.method).toBe('DELETE');
+  });
+  it('descarga el QR como Blob y normaliza la URL relativa al host API', () => {
+    service.descargarQrPago('evt').subscribe((blob) => expect(blob).toBeInstanceOf(Blob));
+    const req = http.expectOne(`${base}/evt/qr-pago`);
+    expect(req.request.responseType).toBe('blob');
+    req.flush(new Blob(['qr'], { type: 'image/png' }));
+    expect(service.normalizarQrPagoUrl('/api/v1/eventos/evt/qr-pago'))
+      .toBe(`${environment.apiUrl}/eventos/evt/qr-pago`);
+  });
   it('elimina por DELETE', () => { service.eliminar('evt').subscribe(); expect(http.expectOne(`${base}/evt`).request.method).toBe('DELETE'); });
   it('envia a revision por PATCH', () => { service.enviarARevision('evt').subscribe(); expect(http.expectOne(`${base}/evt/enviar-revision`).request.method).toBe('PATCH'); });
   it('publica por PATCH', () => { service.publicar('evt').subscribe(); expect(http.expectOne(`${base}/evt/publicar`).request.method).toBe('PATCH'); });

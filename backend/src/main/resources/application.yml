@@ -26,6 +26,13 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
     driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    # El esquema histórico se creaba con Hibernate; se marca en V0 y V1 aplica
+    # cambios aditivos. En esquemas vacíos, Hibernate crea las tablas al iniciar.
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
   jpa:
     hibernate:
       ddl-auto: ${JPA_DDL_AUTO:update}

@@ -59,7 +59,7 @@ export class InscripcionPublicaComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
       finalize(() => this.viewState.update((state) => ({ ...state, loading: false })))
     ).subscribe({
-      next: (data) => this.evento = data,
+      next: (data) => { this.evento = data; this.qrImagenFallida = false; },
       error: (err) => this.viewState.update((state) => ({ ...state, error: apiErrorMessage(err, 'No fue posible cargar el evento.') }))
     });
   }
@@ -92,4 +92,11 @@ export class InscripcionPublicaComponent implements OnInit {
   get sinCupo(): boolean {
     return Boolean(this.evento?.cupoLimitado && (this.evento.cupoDisponible == null || this.evento.cupoDisponible <= 0));
   }
+
+  get qrPagoImagenUrl(): string | null {
+    const url = this.evento?.qrPagoUrl;
+    return url ? this.eventoService.normalizarQrPagoUrl(url) : null;
+  }
+  qrImagenFallida = false;
+  ocultarQr(): void { this.qrImagenFallida = true; }
 }

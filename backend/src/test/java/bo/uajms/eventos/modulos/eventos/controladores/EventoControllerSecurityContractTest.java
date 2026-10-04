@@ -5,6 +5,7 @@ import bo.uajms.eventos.modulos.eventos.dtos.CrearEventoRequest;
 import bo.uajms.eventos.modulos.eventos.dtos.EventoRechazoRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -40,6 +41,20 @@ class EventoControllerSecurityContractTest {
     }
 
     @Test
+    void cargarYEliminarQrExigenRolDeGestion() throws Exception {
+        assertEquals("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')",
+                regla("subirQrPago", MultipartFile.class, UUID.class));
+        assertEquals("hasAnyRole('ADMINISTRADOR', 'ORGANIZADOR')", regla("eliminarQrPago", UUID.class));
+    }
+
+    @Test
+    void lecturaQrEsPublicaEnElContratoYRestringidaPorServicioParaNoPublicados() throws Exception {
+        var metodo = EventoController.class.getMethod("obtenerQrPago", UUID.class);
+        assertNotNull(metodo.getAnnotation(io.swagger.v3.oas.annotations.security.SecurityRequirements.class));
+        assertNull(metodo.getAnnotation(PreAuthorize.class));
+    }
+
+    @Test
     void cancelarEstaReservadoAlAdministrador() throws Exception {
         assertEquals("hasRole('ADMINISTRADOR')", regla("cancelar", UUID.class,
                 bo.uajms.eventos.modulos.eventos.dtos.EventoCancelacionRequest.class));
@@ -59,6 +74,13 @@ class EventoControllerSecurityContractTest {
         var nombres = Arrays.stream(ActualizarEventoRequest.class.getMethods()).map(Method::getName).toList();
         assertFalse(nombres.contains("setOrganizadorId"));
         assertFalse(nombres.contains("setEstado"));
+    }
+
+    @Test
+    void dtoDeEventoNoAceptaKeysNiUrlsQrDeCliente() {
+        var nombres = Arrays.stream(CrearEventoRequest.class.getMethods()).map(Method::getName).toList();
+        assertFalse(nombres.contains("setQrPagoUrl"));
+        assertFalse(nombres.contains("setQrPagoStorageKey"));
     }
 
     private String regla(String metodo, Class<?>... tipos) throws Exception {

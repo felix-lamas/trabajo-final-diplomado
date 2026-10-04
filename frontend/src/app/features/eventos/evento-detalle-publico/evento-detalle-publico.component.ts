@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -24,10 +24,12 @@ interface DetalleState {
   styleUrl: './evento-detalle-publico.component.css',
   standalone: false
 })
-export class EventoDetallePublicoComponent implements OnInit {
+export class EventoDetallePublicoComponent implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private readonly state = signal<DetalleState>({ loading: true, notFound: false, loadingInscripcion: false });
   private readonly eventoId = inject(ActivatedRoute).snapshot.paramMap.get('id');
+  private qrPreviewUrl: string | null = null;
+  private qrObjectUrl: string | null = null;
 
   get evento(): EventoDetalle | undefined { return this.state().evento; }
   get loading(): boolean { return this.state().loading; }
@@ -36,6 +38,7 @@ export class EventoDetallePublicoComponent implements OnInit {
   get inscripcion(): Inscripcion | undefined { return this.state().inscripcion; }
   get loadingInscripcion(): boolean { return this.state().loadingInscripcion; }
   get errorInscripcion(): string | undefined { return this.state().errorInscripcion; }
+  get qrPagoImagenUrl(): string | null { return this.qrPreviewUrl; }
 
   constructor(
     private readonly router: Router,
@@ -58,6 +61,7 @@ export class EventoDetallePublicoComponent implements OnInit {
     this.eventoService.obtenerPorId(this.eventoId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (evento) => {
         this.state.update((state) => ({ ...state, evento, loading: false }));
+        this.cargarQr(evento);
         if (this.esParticipante) this.cargarInscripcion();
       },
       error: (error: { status?: number }) => {
@@ -69,6 +73,24 @@ export class EventoDetallePublicoComponent implements OnInit {
         }));
       }
     });
+  }
+
+  ngOnDestroy(): void { this.reemplazarQr(null); }
+
+  private cargarQr(evento: EventoDetalle): void {
+    this.reemplazarQr(null);
+    if (!evento.qrPagoUrl) return;
+    if (/^https?:\/\//i.test(evento.qrPagoUrl)) { this.reemplazarQr(evento.qrPagoUrl); return; }
+    this.eventoService.descargarQrPago(evento.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (blob) => this.reemplazarQr(URL.createObjectURL(blob)),
+      error: () => this.reemplazarQr(null)
+    });
+  }
+
+  private reemplazarQr(url: string | null): void {
+    if (this.qrObjectUrl) URL.revokeObjectURL(this.qrObjectUrl);
+    this.qrObjectUrl = url?.startsWith('blob:') ? url : null;
+    this.qrPreviewUrl = url;
   }
 
   cargarInscripcion(): void {

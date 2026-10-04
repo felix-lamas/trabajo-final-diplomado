@@ -1,9 +1,9 @@
-import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { finalize } from 'rxjs';
+import { finalize, map, of, switchMap } from 'rxjs';
 
 import { CategoriaEvento } from '../../../../core/models/categoria-evento.model';
 import { CrearEventoRequest, Modalidad, PublicoObjetivo, TipoCertificadoEvento, TipoInscripcion } from '../../../../core/models/evento.model';
@@ -11,8 +11,8 @@ import { CategoriaEventoService } from '../../../../core/services/categoria-even
 import { EventoService } from '../../../../core/services/evento.service';
 import { apiErrorMessage } from '../../../../core/utils/api-error.util';
 
-@Component({ selector: 'app-evento-form', templateUrl: './evento-form.component.html', standalone: false })
-export class EventoFormComponent implements OnInit {
+@Component({ selector: 'app-evento-form', templateUrl: './evento-form.component.html', styleUrl: './evento-form.component.css', standalone: false })
+export class EventoFormComponent implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   readonly categorias = signal<CategoriaEvento[]>([]);
   readonly cargandoCategorias = signal(true);
@@ -29,10 +29,20 @@ export class EventoFormComponent implements OnInit {
   readonly esPagado = computed(() => this.tipoInscripcion() === TipoInscripcion.PAGO);
   readonly mostrarCupo = computed(() => this.requiereInscripcion() && this.cupoLimitado());
   readonly mostrarHoras = computed(() => this.emiteCertificado() && this.tipoCertificado() === TipoCertificadoEvento.CURRICULAR);
+  readonly qrPreviewUrl = signal<string | null>(null);
+  readonly qrFileName = signal<string | null>(null);
+  readonly qrError = signal<string | null>(null);
+  readonly qrSaved = signal(false);
+  readonly qrRemoveRequested = signal(false);
 
   readonly eventoForm: FormGroup;
   esEdicion = false;
   id: string | null = null;
+  private qrFile: File | null = null;
+  private qrObjectUrl: string | null = null;
+  private qrSavedUrl: string | null = null;
+  private static readonly QR_MAX_BYTES = 5 * 1024 * 1024;
+  private static readonly QR_MIMES = new Set(['image/png', 'image/jpeg']);
 
   constructor(
     private readonly fb: FormBuilder,
@@ -54,7 +64,7 @@ export class EventoFormComponent implements OnInit {
       publicoObjetivo: [PublicoObjetivo.AMBOS, Validators.required],
       telefonoContacto: ['', Validators.pattern(/^[0-9+() -]{7,20}$/)], emailContacto: ['', Validators.email],
       whatsappContacto: ['', Validators.pattern(/^[0-9+() -]{7,20}$/)],
-      imagenPortada: ['', Validators.pattern(/^https?:\/\/.+/i)], qrPagoUrl: ['', Validators.pattern(/^https?:\/\/.+/i)],
+      imagenPortada: ['', Validators.pattern(/^https?:\/\/.+/i)],
       instruccionesPago: ['']
     }, { validators: this.rangoTemporalValido });
     this.conectarEstadoCondicional();
@@ -82,7 +92,12 @@ export class EventoFormComponent implements OnInit {
     this.eventoService.obtenerPorId(id).pipe(
       finalize(() => this.cargandoEvento.set(false)), takeUntilDestroyed(this.destroyRef)
     ).subscribe({
-      next: (evento) => { this.eventoForm.patchValue(evento); this.sincronizarSignals(); this.actualizarValidadores(); },
+      next: (evento) => {
+        this.eventoForm.patchValue(evento); this.sincronizarSignals(); this.actualizarValidadores();
+        this.qrSavedUrl = evento.qrPagoUrl ?? null;
+        this.qrSaved.set(Boolean(this.qrSavedUrl));
+        if (this.qrSavedUrl) this.cargarPreviewQr(id, this.qrSavedUrl);
+      },
       error: (err) => this.error.set(apiErrorMessage(err, 'Error al cargar evento'))
     });
   }
@@ -105,16 +120,74 @@ export class EventoFormComponent implements OnInit {
       radioMetros: presencial ? Number(raw.radioMetros) : null, enlaceVirtual: presencial ? undefined : raw.enlaceVirtual,
       cupoLimitado: limitado, cupoMaximo: limitado ? Number(raw.cupoMaximo) : null,
       tipoCertificado: certificado ? raw.tipoCertificado : null, horasAcademicas: curricular ? Number(raw.horasAcademicas) : null,
-      qrPagoUrl: pagado ? raw.qrPagoUrl : undefined, instruccionesPago: pagado ? raw.instruccionesPago : undefined
+      instruccionesPago: pagado ? raw.instruccionesPago : undefined
     };
     const operacion$ = this.esEdicion && this.id ? this.eventoService.actualizar(this.id, request) : this.eventoService.crear(request);
-    operacion$.pipe(finalize(() => this.guardando.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
+    operacion$.pipe(
+      switchMap((evento) => {
+        this.id = evento.id;
+        this.esEdicion = true;
+        if (pagado && this.qrFile) return this.eventoService.subirQrPago(evento.id, this.qrFile).pipe(map(() => {
+          this.qrSaved.set(true); this.qrRemoveRequested.set(false); return evento;
+        }));
+        if (pagado && this.qrRemoveRequested()) return this.eventoService.eliminarQrPago(evento.id).pipe(map(() => {
+          this.qrSaved.set(false); this.qrSavedUrl = null; return evento;
+        }));
+        return of(evento);
+      }),
+      finalize(() => this.guardando.set(false)), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => {
+        this.qrFile = null; this.qrFileName.set(null); this.qrRemoveRequested.set(false);
         this.snackBar.open(this.esEdicion ? 'Evento actualizado' : 'Evento creado correctamente', 'Cerrar', { duration: 3000 });
         this.router.navigate([this.rutaGestion]);
       },
       error: (err) => this.error.set(apiErrorMessage(err, this.esEdicion ? 'Error al actualizar' : 'Error al crear'))
     });
+  }
+
+  onQrSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    this.qrError.set(null);
+    if (!file) return;
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    if (!['png', 'jpg', 'jpeg'].includes(extension ?? '') || (file.type && !EventoFormComponent.QR_MIMES.has(file.type))) {
+      this.qrError.set('Selecciona una imagen PNG, JPG o JPEG válida.'); input.value = ''; return;
+    }
+    if (file.size <= 0 || file.size > EventoFormComponent.QR_MAX_BYTES) {
+      this.qrError.set('La imagen debe pesar más de 0 y como máximo 5 MB.'); input.value = ''; return;
+    }
+    this.qrFile = file; this.qrFileName.set(file.name); this.qrRemoveRequested.set(false);
+    this.reemplazarPreview(URL.createObjectURL(file));
+  }
+
+  quitarQr(): void {
+    this.qrError.set(null);
+    if (this.qrFile) {
+      this.qrFile = null; this.qrFileName.set(null);
+      if (this.qrSaved() && this.qrSavedUrl && this.id) this.cargarPreviewQr(this.id, this.qrSavedUrl);
+      else this.reemplazarPreview(null);
+      return;
+    }
+    this.qrFileName.set(null); this.qrRemoveRequested.set(this.qrSaved()); this.qrSaved.set(false);
+    this.reemplazarPreview(null);
+  }
+
+  ngOnDestroy(): void { this.reemplazarPreview(null); }
+
+  private cargarPreviewQr(eventoId: string, qrUrl: string): void {
+    if (/^https?:\/\//i.test(qrUrl)) { this.reemplazarPreview(qrUrl); return; }
+    this.eventoService.descargarQrPago(eventoId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (blob) => this.reemplazarPreview(URL.createObjectURL(blob)),
+      error: () => this.qrError.set('No fue posible cargar la imagen QR guardada.')
+    });
+  }
+
+  private reemplazarPreview(url: string | null): void {
+    if (this.qrObjectUrl) URL.revokeObjectURL(this.qrObjectUrl);
+    this.qrObjectUrl = url?.startsWith('blob:') ? url : null;
+    this.qrPreviewUrl.set(url);
   }
 
   get rutaGestion(): string { return this.router.url.startsWith('/organizador') ? '/organizador/eventos' : '/admin/eventos'; }
@@ -146,7 +219,7 @@ export class EventoFormComponent implements OnInit {
     this.definir('radioMetros', this.esPresencial(), [Validators.required, Validators.min(1), Validators.max(500)]);
     this.definir('enlaceVirtual', !this.esPresencial(), [Validators.required, Validators.pattern(/^https?:\/\/.+/i)]);
     this.definir('costo', this.esPagado(), [Validators.required, Validators.min(0.01)]);
-    this.definir('instruccionesPago', this.esPagado(), [Validators.required, Validators.maxLength(2000)]);
+    this.definir('instruccionesPago', this.esPagado(), [Validators.maxLength(2000)]);
     this.definir('cupoMaximo', this.mostrarCupo(), [Validators.required, Validators.min(1)]);
     this.definir('tipoCertificado', this.emiteCertificado(), [Validators.required]);
     this.definir('horasAcademicas', this.mostrarHoras(), [Validators.required, Validators.min(1)]);

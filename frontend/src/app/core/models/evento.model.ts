@@ -101,6 +101,5 @@ export interface CrearEventoRequest {
   telefonoContacto?: string;
   emailContacto?: string;
   whatsappContacto?: string;
-  qrPagoUrl?: string;
   instruccionesPago?: string;
 }

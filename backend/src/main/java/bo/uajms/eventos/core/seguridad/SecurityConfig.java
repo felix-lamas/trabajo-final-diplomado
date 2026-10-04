@@ -67,7 +67,8 @@ public class SecurityConfig {
                                 "/api/v1/eventos/publicados",
                                 "/api/v1/eventos/publicados/**",
                                 "/api/v1/eventos/categoria/*",
-                                "/api/v1/eventos/*"
+                                "/api/v1/eventos/*",
+                                "/api/v1/eventos/*/qr-pago"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

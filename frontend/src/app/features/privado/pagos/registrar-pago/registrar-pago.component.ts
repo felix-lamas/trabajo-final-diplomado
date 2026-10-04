@@ -33,6 +33,12 @@ export class RegistrarPagoComponent implements OnInit {
   get error(): string { return this.viewState().error; }
   get motivoRechazo(): string | undefined { return this.pago?.motivoRechazo; }
   get uploadError(): string { return this.viewState().uploadError; }
+  get qrPagoImagenUrl(): string | null {
+    const url = this.evento?.qrPagoUrl;
+    return url ? this.eventoService.normalizarQrPagoUrl(url) : null;
+  }
+  qrImagenFallida = false;
+  ocultarQr(): void { this.qrImagenFallida = true; }
 
   constructor(
     private route: ActivatedRoute,
@@ -69,7 +75,7 @@ export class RegistrarPagoComponent implements OnInit {
           return;
         }
         this.patchState({ eventoTitulo: inscripcion.eventoTitulo, monto: this.pago?.monto ?? comprobanteInscripcion.monto });
-        this.eventoService.obtenerPorId(inscripcion.eventoId).subscribe({ next: (evento) => this.evento = evento });
+        this.eventoService.obtenerPorId(inscripcion.eventoId).subscribe({ next: (evento) => { this.evento = evento; this.qrImagenFallida = false; } });
       },
       error: (err) => this.patchState({ error: apiErrorMessage(err, 'No fue posible cargar el pago asociado a la inscripción.') })
     });

@@ -13,10 +13,10 @@ import { EventoFormComponent } from './evento-form.component';
 describe('EventoFormComponent', () => {
   let fixture: ComponentFixture<EventoFormComponent>;
   let component: EventoFormComponent;
-  let eventoService: { crear: ReturnType<typeof vi.fn>; actualizar: ReturnType<typeof vi.fn>; obtenerPorId: ReturnType<typeof vi.fn> };
+  let eventoService: { crear: ReturnType<typeof vi.fn>; actualizar: ReturnType<typeof vi.fn>; obtenerPorId: ReturnType<typeof vi.fn>; subirQrPago: ReturnType<typeof vi.fn>; eliminarQrPago: ReturnType<typeof vi.fn>; descargarQrPago: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    eventoService = { crear: vi.fn(() => of({})), actualizar: vi.fn(() => of({})), obtenerPorId: vi.fn() };
+    eventoService = { crear: vi.fn(() => of({})), actualizar: vi.fn(() => of({})), obtenerPorId: vi.fn(), subirQrPago: vi.fn(() => of(undefined)), eliminarQrPago: vi.fn(() => of(undefined)), descargarQrPago: vi.fn(() => of(new Blob())) };
     await TestBed.configureTestingModule({
       imports: [EventosGestionModule],
       providers: [
@@ -48,13 +48,13 @@ describe('EventoFormComponent', () => {
     expect(component.eventoForm.get('enlaceVirtual')?.hasError('required')).toBe(true);
   });
 
-  it('PAGO exige monto e instrucciones sin alterar la capacidad', () => {
+  it('PAGO exige monto y permite omitir instrucciones para adjuntar un QR', () => {
     component.eventoForm.get('cupoLimitado')?.setValue(false);
     component.eventoForm.get('tipoInscripcion')?.setValue(TipoInscripcion.PAGO);
     expect(component.esPagado()).toBe(true);
     expect(component.cupoLimitado()).toBe(false);
     expect(component.eventoForm.get('costo')?.hasError('min')).toBe(true);
-    expect(component.eventoForm.get('instruccionesPago')?.hasError('required')).toBe(true);
+    expect(component.eventoForm.get('instruccionesPago')?.hasError('required')).toBe(false);
   });
 
   it('capacidad limitada exige un valor positivo', () => {
@@ -91,6 +91,73 @@ describe('EventoFormComponent', () => {
     expect(request.ubicacion).toBeUndefined();
     expect(request.cupoLimitado).toBe(false);
     expect(request.costo).toBe(0);
+  });
+
+  it('crea el evento primero como JSON y luego carga la imagen QR multipart', () => {
+    eventoService.crear.mockReturnValue(of({ id: 'evento-qr' }));
+    component.eventoForm.patchValue({
+      titulo: 'Evento pagado', descripcion: 'Descripcion', objetivos: 'Objetivos', categoriaId: 'cat',
+      modalidad: Modalidad.VIRTUAL, enlaceVirtual: 'https://meet.example.test/x', tipoInscripcion: TipoInscripcion.PAGO,
+      costo: 50, fechaInicio: '2026-10-01', horaInicio: '08:00', fechaFin: '2026-10-01', horaFin: '10:00',
+      requiereInscripcion: false, cupoLimitado: false, emiteCertificado: false, instruccionesPago: ''
+    });
+    const file = new File(['qr'], 'pago.png', { type: 'image/png' });
+    component.onQrSelected({ target: { files: [file], value: '' } } as unknown as Event);
+    component.guardar();
+    expect(eventoService.crear).toHaveBeenCalledOnce();
+    expect(eventoService.crear.mock.calls[0][0].qrPagoUrl).toBeUndefined();
+    expect(eventoService.subirQrPago).toHaveBeenCalledWith('evento-qr', file);
+  });
+
+  it('valida formato y tamaño antes de permitir la carga', () => {
+    component.onQrSelected({ target: { files: [new File(['x'], 'qr.gif', { type: 'image/gif' })], value: 'bad' } } as unknown as Event);
+    expect(component.qrError()).toContain('PNG, JPG o JPEG');
+    const oversized = new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'qr.png', { type: 'image/png' });
+    component.onQrSelected({ target: { files: [oversized], value: 'large' } } as unknown as Event);
+    expect(component.qrError()).toContain('5 MB');
+    expect(component.qrFileName()).toBeNull();
+  });
+
+  it('limpia selección local sin llamar eliminación remota', () => {
+    const file = new File(['x'], 'qr.jpg', { type: 'image/jpeg' });
+    component.onQrSelected({ target: { files: [file], value: '' } } as unknown as Event);
+    expect(component.qrPreviewUrl()).toContain('blob:');
+    component.quitarQr();
+    expect(component.qrPreviewUrl()).toBeNull();
+    expect(eventoService.eliminarQrPago).not.toHaveBeenCalled();
+  });
+
+  it('elimina el QR ya guardado al guardar una edición', () => {
+    eventoService.actualizar.mockReturnValue(of({ id: 'evento-edit' }));
+    component.esEdicion = true; component.id = 'evento-edit'; component.qrSaved.set(true);
+    component.quitarQr();
+    component.eventoForm.patchValue({
+      titulo: 'Evento', descripcion: 'Descripcion', objetivos: 'Objetivos', categoriaId: 'cat',
+      modalidad: Modalidad.VIRTUAL, enlaceVirtual: 'https://meet.example.test/x', tipoInscripcion: TipoInscripcion.PAGO,
+      costo: 50, instruccionesPago: 'Transferencia', fechaInicio: '2026-10-01', horaInicio: '08:00',
+      fechaFin: '2026-10-01', horaFin: '10:00', requiereInscripcion: false, cupoLimitado: false,
+      emiteCertificado: false
+    });
+    component.guardar();
+    expect(eventoService.eliminarQrPago).toHaveBeenCalledWith('evento-edit');
+    expect(eventoService.subirQrPago).not.toHaveBeenCalled();
+  });
+
+  it('mantiene el error y no considera exitoso un fallo al subir el QR', () => {
+    eventoService.crear.mockReturnValue(of({ id: 'evento-error' }));
+    eventoService.subirQrPago.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 503 })));
+    component.eventoForm.patchValue({
+      titulo: 'Evento pagado', descripcion: 'Descripcion', objetivos: 'Objetivos', categoriaId: 'cat',
+      modalidad: Modalidad.VIRTUAL, enlaceVirtual: 'https://meet.example.test/x', tipoInscripcion: TipoInscripcion.PAGO,
+      costo: 50, instruccionesPago: 'Pago externo', fechaInicio: '2026-10-01', horaInicio: '08:00',
+      fechaFin: '2026-10-01', horaFin: '10:00', requiereInscripcion: false, cupoLimitado: false,
+      emiteCertificado: false
+    });
+    const file = new File(['x'], 'qr.png', { type: 'image/png' });
+    component.onQrSelected({ target: { files: [file], value: '' } } as unknown as Event);
+    component.guardar();
+    expect(component.error()).toBeTruthy();
+    expect(component.guardando()).toBe(false);
   });
 
   it('expone el error backend y libera el doble envio', () => {

@@ -1,0 +1,25 @@
+.qr-payment-upload {
+  grid-column: 1 / -1;
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2, 8px);
+  padding: var(--space-4, 16px);
+  border: 1px solid var(--color-border, currentColor);
+  border-radius: var(--radius-md, 12px);
+  color: var(--color-text-primary, inherit);
+  background: var(--color-surface, transparent);
+}
+
+.qr-payment-upload h3,
+.qr-payment-upload p { margin: 0; }
+.qr-payment-upload h3 span,
+.qr-payment-upload p { color: var(--color-text-secondary, inherit); }
+.qr-payment-upload input[type='file'] { max-width: 100%; }
+.qr-payment-upload__preview {
+  display: block;
+  width: min(100%, 280px);
+  max-height: 280px;
+  object-fit: contain;
+  border: 1px solid var(--color-border, currentColor);
+  border-radius: var(--radius-sm, 8px);
+}

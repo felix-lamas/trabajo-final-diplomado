@@ -3,6 +3,7 @@ package bo.uajms.eventos.core.excepciones;
 /** Codigos estables consumidos por clientes web y moviles. */
 public final class CodigosError {
     public static final String VALIDATION_ERROR = "VALIDATION_ERROR";
+    public static final String FILE_TOO_LARGE = "FILE_TOO_LARGE";
     public static final String BUSINESS_RULE_VIOLATION = "BUSINESS_RULE_VIOLATION";
     public static final String AUTH_REQUIRED = "AUTH_REQUIRED";
     public static final String AUTH_INVALID_TOKEN = "AUTH_INVALID_TOKEN";

@@ -28,12 +28,30 @@ export class EventoService {
     return this.http.get<EventoDetalle>(`${this.apiUrl}/${id}`);
   }
 
-  crear(request: CrearEventoRequest): Observable<Evento> {
-    return this.http.post<Evento>(this.apiUrl, request);
+  crear(request: CrearEventoRequest): Observable<EventoDetalle> {
+    return this.http.post<EventoDetalle>(this.apiUrl, request);
   }
 
-  actualizar(id: string, request: CrearEventoRequest): Observable<Evento> {
-    return this.http.put<Evento>(`${this.apiUrl}/${id}`, request);
+  actualizar(id: string, request: CrearEventoRequest): Observable<EventoDetalle> {
+    return this.http.put<EventoDetalle>(`${this.apiUrl}/${id}`, request);
+  }
+
+  subirQrPago(id: string, archivo: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    return this.http.put<void>(`${this.apiUrl}/${id}/qr-pago`, formData);
+  }
+
+  eliminarQrPago(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}/qr-pago`);
+  }
+
+  descargarQrPago(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${id}/qr-pago`, { responseType: 'blob' });
+  }
+
+  normalizarQrPagoUrl(url: string): string {
+    return /^https?:\/\//i.test(url) ? url : new URL(url, environment.apiUrl).toString();
   }
 
   eliminar(id: string): Observable<void> {
