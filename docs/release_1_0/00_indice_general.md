@@ -1,5 +1,7 @@
 # Documentacion Oficial Release 1.0
 
+> **Archivo de release histórico (E3.4), no fuente de verdad vigente.** El contenido, los manuales y las afirmaciones de despliegue deben verificarse y actualizarse antes de reutilizarse. Consulte `../auditoria/E3_4_ALINEACION_DOCUMENTAL.md` y la documentación auxiliar vigente. No usar este paquete como evidencia de producción.
+
 ## Proyecto
 Plataforma Web para la Gestion Integral de Eventos Universitarios - UAJMS
 

@@ -1,5 +1,7 @@
 # Documento de Base de Datos
 
+> **Release histórico (E3.4):** el número de entidades JPA no demuestra el esquema físico. Verificar migraciones y PostgreSQL antes de afirmar tablas/columnas desplegadas.
+
 ## 1. Modelo entidad relacion
 El modelo se organiza en torno a:
 - Seguridad y usuarios.

@@ -1,5 +1,7 @@
 # 16. BITÁCORA DE CAMBIOS
 
+> **Nota de vigencia (E3.4):** las filas siguientes registran afirmaciones históricas de su fecha y no sustituyen una verificación actual. Estados como “Completado” o resultados de pruebas son históricos; no equivalen a aceptación integral ni a verificación en producción. La línea base reconciliada está en `01_estado_actual.md` y `docs/auditoria/E3_4_ALINEACION_DOCUMENTAL.md`.
+
 | Fecha | Módulo | Tipo | Cambio | Pruebas | Estado |
 |---|---|---|---|---|---|
 | 20/09/2026 | Documentación | NUEVO | Creación del Plan Maestro de Implementación | Revisión documental | Completado |

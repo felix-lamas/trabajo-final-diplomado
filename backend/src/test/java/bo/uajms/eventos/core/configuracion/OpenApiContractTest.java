@@ -1,5 +1,7 @@
 package bo.uajms.eventos.core.configuracion;
 
+import bo.uajms.eventos.core.controladores.SaludController;
+
 import bo.uajms.eventos.modulos.asistencias.controladores.AsistenciaController;
 import bo.uajms.eventos.modulos.asistencias.controladores.QrAsistenciaController;
 import bo.uajms.eventos.modulos.categorias.controladores.CategoriaEventoController;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.method.HandlerMethod;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -42,11 +45,12 @@ class OpenApiContractTest {
             AsistenciaController.class,
             QrAsistenciaController.class,
             CertificadoController.class,
-            DashboardController.class
+            DashboardController.class,
+            SaludController.class
     );
 
     @Test
-    void contratoCanonicoContiene81OperacionesDocumentadas() {
+    void contratoCanonicoContiene82OperacionesDocumentadas() {
         int operaciones = 0;
         for (Class<?> controller : CONTROLLERS) {
             for (Method method : controller.getDeclaredMethods()) {
@@ -72,7 +76,7 @@ class OpenApiContractTest {
                 }
             }
         }
-        assertEquals(81, operaciones);
+        assertEquals(82, operaciones);
     }
 
     @Test
@@ -101,6 +105,25 @@ class OpenApiContractTest {
                 .filter(method -> method.getName().equals("verificarCorreo"))
                 .findFirst().orElseThrow();
         assertNotNull(verificar.getAnnotation(SecurityRequirements.class));
+    }
+
+    @Test
+    void saludEsPublicaYDocumentada() throws Exception {
+        Method salud = SaludController.class.getDeclaredMethod("salud");
+        assertNotNull(salud.getAnnotation(Operation.class));
+        assertNotNull(salud.getAnnotation(SecurityRequirements.class));
+        assertEquals(List.of("/api/v1"),
+                Arrays.asList(SaludController.class.getAnnotation(RequestMapping.class).value()));
+        assertEquals(List.of("/salud"),
+                Arrays.asList(salud.getAnnotation(GetMapping.class).value()));
+
+        var operation = new io.swagger.v3.oas.models.Operation()
+                .responses(new io.swagger.v3.oas.models.responses.ApiResponses()
+                        .addApiResponse("200", new io.swagger.v3.oas.models.responses.ApiResponse()));
+        new OpenAPIConfig().respuestasErrorComunes().customize(
+                operation, new HandlerMethod(new SaludController(), salud));
+        assertNotNull(operation.getSecurity());
+        assertTrue(operation.getSecurity().isEmpty());
     }
 
     @Test

@@ -1,10 +1,17 @@
-# 5. Fuera de Alcance
+# Fuera de alcance de la versión Vidia
 
-Para asegurar el éxito de la primera fase del proyecto, los siguientes puntos quedan explícitamente excluidos:
+La aplicación Flutter de participante **sí forma parte del producto**. Las capacidades indicadas como pendientes abajo siguen dentro de alcance y no deben confundirse con exclusiones.
 
-*   **Aplicación Móvil Nativa:** No se desarrollarán apps para Android o iOS. La plataforma será una Web App con diseño Responsivo.
-*   **Pasarela de Pagos Online:** No se integrarán servicios de terceros para pagos con tarjeta de crédito/débito en tiempo real (ej. CyberSource, PagosNet) en esta fase. El registro de pago será mediante carga de comprobante (depósito/transferencia) y validación manual.
-*   **Hardware de Control de Acceso:** No se contempla la integración con molinetes físicos, torniquetes o lectores QR industriales. El escaneo se realizará mediante la interfaz web de la plataforma en dispositivos móviles/laptops.
-*   **Gestión de Contenido Académico:** La plataforma no es un LMS (Learning Management System). No alojará videos de clases, exámenes o tareas.
-*   **Firma Digital con Certificado de Tercero:** La "firma" en los certificados será una representación gráfica digital autorizada por la universidad, no una firma digital con validez legal de una autoridad certificadora externa (como la ADSIB), a menos que se defina lo contrario en una fase posterior.
-*   **Módulo de Compras o Viáticos:** No se gestionarán presupuestos internos de la universidad ni gastos logísticos de los organizadores.
+Quedan fuera de alcance para esta versión:
+
+- Pasarela de pago, checkout, pago con tarjeta o conciliación automática. El participante paga externamente y carga comprobante.
+- Facturación electrónica/fiscal.
+- Blockchain, reconocimiento facial e IA compleja para decisiones.
+- Streaming, videollamadas, chat interno, red social o LMS/contenido académico.
+- Operación multiuniversidad e integración implementada con SIA o sistemas financieros institucionales.
+- Aplicaciones móviles para Administrador u Organizador; esos roles usan Web.
+- Integración con torniquetes, molinetes u otro hardware industrial.
+- Firma digital de terceros con validez legal certificada, salvo proyecto posterior aprobado.
+- Compras, presupuestos y viáticos institucionales.
+
+La generación de QR de pago desde URL no forma parte del sistema: el organizador puede proporcionar una imagen. El QR de asistencia temporal y el código/QR incluido para verificación de certificado son flujos diferentes que sí pertenecen al alcance descrito.

@@ -1,5 +1,7 @@
 # Manual de Usuario
 
+> **Release histórico (E3.4):** validar cada pantalla y flujo contra la versión desplegada antes de usar como manual vigente. Los flujos Flutter aún pendientes no deben presentarse como disponibles.
+
 ## 1. Administrador
 Funciones:
 - Gestion global de usuarios y roles.

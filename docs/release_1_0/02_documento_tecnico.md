@@ -1,5 +1,7 @@
 # Documento Tecnico
 
+> **Release histórico (E3.4):** revisar contra el código y la documentación auxiliar vigente antes de reutilizar. No acredita funcionalidades ni despliegue en producción.
+
 ## 1. Estructura de modulos
 ### Backend
 - `modulos/usuarios`

@@ -1,5 +1,7 @@
 # Narrativa Oficial para la Defensa del Proyecto
 
+> **Borrador histórico (E3.4):** no presentar afirmaciones de funcionalidades, pruebas o producción sin evidencia actual. Flutter de pagos, asistencia QR/GPS y certificados permanece pendiente según la línea base auxiliar reconciliada.
+
 ## 1. Problema Identificado
 La gestion de eventos universitarios, cuando se realiza de forma tradicional, suele depender de registros dispersos, controles manuales en papel, verificaciones visuales sin trazabilidad y procesos separados entre inscripcion, pago, acceso y certificacion. Esta fragmentacion produce retrasos, duplicidad de informacion, dificultad para validar la asistencia real y una baja capacidad de seguimiento institucional.
 

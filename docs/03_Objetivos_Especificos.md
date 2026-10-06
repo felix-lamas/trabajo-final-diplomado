@@ -1,9 +1,12 @@
-# 3. Objetivos Específicos
+# Objetivos específicos
 
-*   **Digitalización del Registro y Autenticación:** Implementar un sistema de gestión de usuarios seguro que permita el registro de participantes internos y externos con roles diferenciados.
-*   **Centralización de la Oferta Académica:** Crear un catálogo digital unificado para la publicación de conferencias, cursos, diplomados, seminarios, talleres, congresos, charlas y eventos culturales.
-*   **Automatización de Inscripciones y Pagos:** Desarrollar un flujo de trabajo para inscripciones gratuitas y de pago, incluyendo la validación administrativa de comprobantes.
-*   **Optimización del Control de Acceso:** Implementar tecnología de códigos QR para la validación de ingreso y registro de asistencia en tiempo real mediante dispositivos con cámara.
-*   **Garantía de Autenticidad en Certificación:** Generar certificados digitales automáticos con mecanismos de verificación mediante códigos únicos (UUID) para prevenir falsificaciones.
-*   **Generación de Inteligencia de Negocio:** Proveer un módulo de reportes y dashboards que visualice la participación por facultad, carrera e ingresos generados para la toma de decisiones estratégicas.
-*   **Aseguramiento Tecnológico:** Garantizar una disponibilidad del 99.5% y una experiencia de usuario fluida mediante el uso de tecnologías modernas (Java 21, Angular 21).
+Los objetivos siguientes corresponden a la monografía académica vigente. Sus resultados no se consideran alcanzados por la sola existencia de código; deben concluirse con evidencia en el Capítulo 3.
+
+1. Analizar los procesos y requerimientos relacionados con la gestión de eventos universitarios, considerando las necesidades de administradores, organizadores y participantes.
+2. Diseñar la arquitectura de la solución, el modelo de datos, las interfaces y los contratos de comunicación necesarios para integrar los componentes web, móvil y backend de la plataforma.
+3. Implementar las funcionalidades de gestión de eventos, inscripción, pagos, control de asistencia, generación de códigos QR y certificación, de acuerdo con los requerimientos definidos.
+4. Aplicar mecanismos de autenticación, autorización y protección de la información para controlar el acceso a las funcionalidades de la plataforma según el rol del usuario.
+5. Validar el funcionamiento de la plataforma mediante pruebas funcionales y no funcionales sobre los principales procesos de gestión y participación en eventos.
+6. Desplegar y documentar la plataforma web y móvil, incluyendo los procedimientos necesarios para su instalación, configuración, utilización y mantenimiento básico.
+
+El estado de evidencia al corte E3.4 es parcial para estos objetivos. La encuesta exploratoria, la implementación Flutter de pagos/asistencia/certificados, las pruebas RNF y el despliegue comprobado requieren trabajo y resultados antes de declarar cumplimiento.

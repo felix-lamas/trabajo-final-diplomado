@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/inscripcion.dart';
 import '../repositories/inscripcion_repository.dart';
+import '../services/api_exception.dart';
 import '../widgets/load_error.dart';
 import '../widgets/vidia_empty_state.dart';
 import '../widgets/vidia_status_chip.dart';
@@ -36,9 +37,47 @@ class _MyRegistrationsScreenState extends State<MyRegistrationsScreen> {
           await context.read<InscripcionRepository>().fetchMine();
       if (mounted) setState(() => _registrations = registrations);
     } catch (error) {
-      if (mounted) setState(() => _error = error.toString());
+      if (mounted) {
+        setState(() => _error = error is ApiException
+            ? error.message
+            : 'No se pudieron cargar tus inscripciones.');
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _cancel(Inscripcion registration) async {
+    final repository = context.read<InscripcionRepository>();
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cancelar inscripción'),
+        content: Text(
+            '¿Quieres cancelar tu inscripción a "${registration.eventoTitulo}"?'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Volver')),
+          FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Cancelar inscripción')),
+        ],
+      ),
+    );
+    if (confirm != true || !mounted) return;
+    try {
+      await repository.cancel(registration.id);
+      await _load();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Inscripción cancelada.')));
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('No se pudo cancelar la inscripción.')));
+      }
     }
   }
 
@@ -92,16 +131,29 @@ class _MyRegistrationsScreenState extends State<MyRegistrationsScreen> {
                                       ),
                                     ],
                                   ),
-                                  trailing:
-                                      const Icon(Icons.chevron_right_rounded),
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => EventDetailScreen(
-                                        eventoId: registration.eventoId,
+                                  trailing: registration.estado == 'CANCELADA'
+                                      ? const Icon(Icons.chevron_right_rounded)
+                                      : PopupMenuButton<String>(
+                                          onSelected: (_) =>
+                                              _cancel(registration),
+                                          itemBuilder: (_) => const [
+                                            PopupMenuItem(
+                                                value: 'cancel',
+                                                child: Text(
+                                                    'Cancelar inscripción'))
+                                          ],
+                                        ),
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => EventDetailScreen(
+                                          eventoId: registration.eventoId,
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                    if (mounted) await _load();
+                                  },
                                 ),
                               );
                             },
@@ -127,7 +179,7 @@ String _friendlyStatus(String status) => status
 
 VidiaStatusKind _statusKind(String status) => switch (status) {
       'CONFIRMADA' => VidiaStatusKind.success,
-      'CANCELADA' || 'RECHAZADA' => VidiaStatusKind.error,
+      'CANCELADA' => VidiaStatusKind.error,
       'PENDIENTE_PAGO' || 'PENDIENTE_VALIDACION' => VidiaStatusKind.warning,
       _ => VidiaStatusKind.info,
     };

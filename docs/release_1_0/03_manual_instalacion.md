@@ -1,5 +1,7 @@
 # Manual de Instalacion
 
+> **Release histórico (E3.4):** las instrucciones y variables deben validarse con la configuración actual; no compartir secretos. No asumir que los pasos han sido verificados recientemente.
+
 ## 1. Requisitos
 - Java 21
 - Maven 3.9 o superior

@@ -1,73 +1,42 @@
-# Plataforma Web para la Gestión Integral de Eventos Universitarios - UAJMS
+# Vidia — Gestión de eventos universitarios UAJMS
 
-Bootstrap oficial del proyecto siguiendo los estándares del **Documento Maestro de Desarrollo (MDD)**.
+Vidia centraliza consulta y gestión de eventos universitarios mediante una API backend común, aplicación Web y aplicación Flutter para participantes. El sistema utiliza roles `ADMINISTRADOR`, `ORGANIZADOR` y `USUARIO`.
 
-## Estructura del Repositorio
-*   `backend/`: Código fuente de la API REST (Java 21 / Spring Boot 3).
-*   `frontend/`: Código fuente de la SPA (Angular 21 / Tailwind CSS).
-*   `docker/`: Orquestación de servicios (PostgreSQL, pgAdmin).
-*   `database/`: Scripts SQL de inicialización y migraciones.
-*   `docs/`: Documentación oficial, MDD y manuales técnicos.
-*   `diagramas/`: Archivos .wsd (PlantUML) del diseño técnico.
-*   `prompts/`: Guías para generación de código asistida por IA.
+> **Estado del producto al corte documental E3.4:** backend y Web cubren gran parte de los flujos. Flutter ya incluye autenticación básica, catálogo/detalle e inscripción/mis inscripciones; pagos/comprobantes, captura de asistencia QR/GPS y certificados están pendientes. No se afirma que el despliegue productivo se haya verificado en esta fase. Para prioridades y detalle ver `docs/07_Requerimientos_Funcionales.md` y `docs/12_Matriz_de_Trazabilidad.md`.
 
-## Requisitos Previos
-*   Docker & Docker Compose.
-*   Java JDK 21.
-*   Node.js v20+ / Angular CLI 19+.
-*   PostgreSQL 16.
+## Arquitectura
 
-## Guía de Inicio Rápido
+- Backend: Java 21, Spring Boot 3.3, Spring Security/JWT, API REST `/api/v1`, arquitectura de monolito modular.
+- Web: Angular 21.
+- Móvil: Flutter 3.44.8 (cliente participante; brechas detalladas arriba).
+- Persistencia: PostgreSQL con Spring Data JPA.
+- Correo: SMTP mediante Brevo.
+- Archivos privados: Supabase Storage S3-compatible, accedido únicamente por backend. Supabase no presta autenticación ni reemplaza PostgreSQL.
+- No existe gateway de pago: los pagos son externos y el participante presenta comprobante.
 
-### 1. Levantar Servicios (Base de Datos)
-```bash
-cd docker
-docker compose --env-file ../.env up -d
-```
-pgAdmin queda disponible en `http://localhost:5050`. Sus credenciales se definen exclusivamente en el archivo local `.env`.
+## Requisitos previos
 
-### 2. Configuración de Entorno
-Copia `.env.example` como `.env` y reemplaza todos los valores de ejemplo por valores locales seguros. El archivo `.env` no debe subirse al repositorio ni compartirse. El backend lo carga desde la raíz del proyecto al ejecutarse desde `backend/`.
+- Java/JDK 21 y Maven.
+- Node.js compatible con Angular 21 y npm.
+- PostgreSQL 16.
+- Flutter SDK/Dart compatibles con `flutter/VidiaApp/pubspec.yaml` para el cliente móvil.
+- Docker Compose es opcional para servicios locales si se usa `docker/docker-compose.yml`.
 
-`DEMO_PASSWORD` se usa únicamente para los usuarios iniciales creados por el seed demo. Debe configurarse con un valor local y nunca reutilizarse como credencial de producción.
+## Configuración local
 
-El arranque normal no ejecuta `DatosInicialesSeed`. El seed está restringido al perfil Spring `demo` y solo debe habilitarse de forma explícita en un entorno controlado:
+1. Copiar `.env.example` a `.env` y completar valores locales. El `.env` es secreto y no se versiona.
+2. Iniciar PostgreSQL local o el servicio definido en Docker Compose.
+3. Iniciar backend desde `backend/` con `mvn spring-boot:run`.
+4. Iniciar Web desde `frontend/` con `npm install` y `npm start` (consultar scripts reales de `frontend/package.json`).
+5. Para Flutter consultar `flutter/VidiaApp/README.md`; configurar la API base de desarrollo mediante `--dart-define=API_BASE_URL=...`.
 
-```bash
-cd backend
-SPRING_PROFILES_ACTIVE=demo mvn spring-boot:run
-```
+Swagger local se publica bajo `/api/v1/swagger-ui.html` según configuración. URLs públicas, CORS productivo, base productiva, correo/Storage en hosting y distribución instalable Flutter requieren verificación del entorno; esta guía no certifica su disponibilidad.
 
-En PowerShell:
+## Documentación
 
-```powershell
-cd backend
-$env:SPRING_PROFILES_ACTIVE = 'demo'
-mvn spring-boot:run
-```
-
-Para volver al comportamiento normal en la misma sesión de PowerShell, elimina la variable con `Remove-Item Env:SPRING_PROFILES_ACTIVE`. En producción no se debe activar el perfil `demo` ni configurar cuentas de demostración.
-
-En PowerShell, si ejecutas el backend sin Docker, asegúrate de que el servicio PostgreSQL esté disponible con los valores definidos en `.env`.
-
-Para el acceso desde Angular, configura `CORS_ALLOWED_ORIGINS` con los orígenes autorizados separados por comas. En desarrollo, el valor de ejemplo `http://localhost:4200` corresponde al servidor Angular; no se admiten comodines ni credenciales por cookies.
-
-### 3. Ejecutar Backend
-```bash
-cd backend
-mvn spring-boot:run
-```
-Este comando utiliza el perfil normal configurado por el entorno (por defecto `dev`) y no carga datos demo.
-
-Swagger UI: `http://localhost:8080/api/v1/swagger-ui.html`
-
-### 4. Ejecutar Frontend
-```bash
-cd frontend
-npm install
-ng serve
-```
-Acceso: `http://localhost:4200`
-
----
-© 2026 Universidad Autónoma Juan Misael Saracho. Todos los derechos reservados.
+- `docs/07_Requerimientos_Funcionales.md`: RF y CA reconciliados, pendientes de incorporarse formalmente a la monografía en E3.5.
+- `docs/08_Requerimientos_No_Funcionales.md`: métricas normativas conservadas y evidencia pendiente.
+- `docs/12_Matriz_de_Trazabilidad.md`: estado backend/Web/Flutter sin confundirlo con producción.
+- `docs/auditoria/E3_3_RECONCILIACION_DOCUMENTO_SISTEMA.md`: decisiones y brechas detectadas.
+- `docs/auditoria/E3_4_ALINEACION_DOCUMENTAL.md`: cambios realizados en esta alineación.
+- `docs/release_1_0/`, `docs/design/` y documentos Postman señalados como históricos no son contratos vigentes sin reconciliación adicional.

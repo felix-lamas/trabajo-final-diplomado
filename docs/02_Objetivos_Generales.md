@@ -1,3 +1,5 @@
-# 2. Objetivos Generales
+# Objetivo general
 
-Desarrollar e implementar una plataforma web robusta y escalable para la gestión integral de eventos académicos, científicos, culturales y de capacitación de la Universidad Autónoma Juan Misael Saracho (UAJMS), que permita centralizar la información, automatizar los procesos de inscripción, control de asistencia y certificación, mejorando la eficiencia administrativa y la transparencia institucional.
+Desarrollar una plataforma web y móvil para la gestión de eventos universitarios en la Universidad Autónoma Juan Misael Saracho, que permita centralizar la información y gestionar los procesos de inscripción, pago, asistencia y certificación de los participantes.
+
+**Estado de cumplimiento:** parcial al corte E3.4. El backend y Web implementan gran parte del dominio; varios procesos de participante previstos para Flutter todavía están pendientes y el despliegue no se ha verificado en esta alineación documental.

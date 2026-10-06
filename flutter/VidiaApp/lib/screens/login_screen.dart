@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../controllers/session_controller.dart';
 import '../widgets/vidia_logo.dart';
+import 'auth_flow_screens.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -132,6 +133,37 @@ class _LoginScreenState extends State<LoginScreen> {
                             label: Text(
                               session.busy ? 'Iniciando sesión...' : 'Ingresar',
                             ),
+                          ),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: session.busy
+                                    ? null
+                                    : () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute<void>(
+                                            builder: (_) =>
+                                                const RegistrationScreen(),
+                                          ),
+                                        ),
+                                child: const Text('Crear cuenta'),
+                              ),
+                              TextButton(
+                                onPressed: session.busy
+                                    ? null
+                                    : () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute<void>(
+                                            builder: (_) =>
+                                                const AccountRecoveryScreen(),
+                                          ),
+                                        ),
+                                child: const Text(
+                                    'Verificar correo / recuperar acceso'),
+                              ),
+                            ],
                           ),
                         ],
                       ),

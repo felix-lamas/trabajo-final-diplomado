@@ -1,5 +1,6 @@
 package bo.uajms.eventos.core.configuracion;
 
+import bo.uajms.eventos.core.controladores.SaludController;
 import bo.uajms.eventos.core.excepciones.ErrorRespuesta;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
@@ -66,6 +67,9 @@ public class OpenAPIConfig {
                     .anyMatch(parameter -> parameter.hasParameterAnnotation(Valid.class));
 
             documentarAcceso(operation, handlerMethod, publico);
+            if (SaludController.class.isAssignableFrom(handlerMethod.getBeanType())) {
+                operation.setSecurity(List.of());
+            }
 
             if (validaEntrada) {
                 agregarRespuesta(operation, "400", "Datos de entrada o regla de negocio invalidos");

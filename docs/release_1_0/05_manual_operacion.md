@@ -1,5 +1,7 @@
 # Manual de Operacion
 
+> **Release histórico (E3.4):** revisar comandos, perfiles y procedimientos contra la infraestructura actual; no constituye evidencia de operación productiva verificada.
+
 ## 1. Flujo de registro
 1. El usuario completa sus datos.
 2. El sistema valida correo, CI y contrasena.

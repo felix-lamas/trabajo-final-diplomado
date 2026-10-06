@@ -25,6 +25,15 @@ class Evento {
     this.tipoCertificado,
     this.horasAcademicas,
     this.organizadorNombre,
+    this.categoriaId,
+    this.publicoObjetivo,
+    this.latitud,
+    this.longitud,
+    this.telefonoContacto,
+    this.emailContacto,
+    this.whatsappContacto,
+    this.instruccionesPago,
+    this.qrPagoUrl,
   });
 
   final String id;
@@ -52,9 +61,19 @@ class Evento {
   final String? tipoCertificado;
   final int? horasAcademicas;
   final String? organizadorNombre;
+  final String? categoriaId;
+  final String? publicoObjetivo;
+  final double? latitud;
+  final double? longitud;
+  final String? telefonoContacto;
+  final String? emailContacto;
+  final String? whatsappContacto;
+  final String? instruccionesPago;
+  final String? qrPagoUrl;
 
   bool get esGratuito => tipoInscripcion == 'GRATUITO';
-  bool get sinCupo => cupoLimitado && (cupoDisponible ?? 0) <= 0;
+  bool get sinCupo =>
+      cupoLimitado && cupoDisponible != null && cupoDisponible! <= 0;
 
   factory Evento.fromJson(Map<String, dynamic> json) {
     final id = json['id']?.toString() ?? '';
@@ -89,6 +108,15 @@ class Evento {
       tipoCertificado: _optional(json['tipoCertificado']),
       horasAcademicas: (json['horasAcademicas'] as num?)?.toInt(),
       organizadorNombre: _optional(json['organizadorNombre']),
+      categoriaId: _optional(json['categoriaId']),
+      publicoObjetivo: _optional(json['publicoObjetivo']),
+      latitud: (json['latitud'] as num?)?.toDouble(),
+      longitud: (json['longitud'] as num?)?.toDouble(),
+      telefonoContacto: _optional(json['telefonoContacto']),
+      emailContacto: _optional(json['emailContacto']),
+      whatsappContacto: _optional(json['whatsappContacto']),
+      instruccionesPago: _optional(json['instruccionesPago']),
+      qrPagoUrl: _optional(json['qrPagoUrl']),
     );
   }
 

@@ -1,5 +1,7 @@
 # 15. DECISIONES
 
+> **Nota de vigencia (E3.4):** las decisiones de la tabla son un registro histórico y deben contrastarse con `docs/07_Requerimientos_Funcionales.md`, `docs/09_Reglas_De_Negocio.md` y la implementación actual. En particular, DEC-009 está supersedida respecto a “un solo uso global”: el QR temporal de asistencia es compartido por sesión; la unicidad de asistencia es por inscripción y sesión. DEC-012 está supersedida en la parte que decía “mientras se implementa EN_REVISION”: el flujo de revisión ya forma parte de la implementación. No inferir despliegue productivo a partir de una decisión marcada “Vigente”.
+
 | ID | Fecha | Decisión | Estado |
 |---|---|---|---|
 | DEC-001 | 20/09/2026 | Mantener monolito modular profesional | Vigente |

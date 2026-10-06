@@ -1,5 +1,7 @@
 # Documento de Seguridad
 
+> **Release histórico (E3.4):** contrastar sus afirmaciones con `../plan_maestro/11_seguridad.md`; la revocación de sesión existe en el backend actual. No reutilizar afirmaciones obsoletas.
+
 ## 1. JWT
 La plataforma usa JWT como mecanismo principal de autenticacion.
 

@@ -1,23 +1,23 @@
-# 1. Visión del Proyecto
+# Visión del proyecto Vidia
 
-## Introducción
-La Universidad Autónoma Juan Misael Saracho (UAJMS) requiere una modernización en la gestión de sus actividades extracurriculares y de formación continua. Actualmente, la dispersión de información y los procesos manuales dificultan la participación estudiantil y la gestión administrativa de eventos.
+## Contexto y problema
 
-## Declaración del Problema
-El proceso actual de gestión de eventos en la UAJMS carece de una plataforma centralizada, lo que genera:
-*   Baja visibilidad de eventos académicos y culturales.
-*   Dificultad en el seguimiento de inscripciones y pagos.
-*   Procesos lentos de registro de asistencia y emisión de certificados.
-*   Falta de datos estadísticos consolidados para la toma de decisiones.
+La monografía vigente describe que la información y los procedimientos de difusión, inscripción, asistencia y certificación de eventos universitarios UAJMS pueden distribuirse entre distintos canales. Esto dificulta que el participante encuentre información centralizada y que responsables y participantes sigan la participación a través de las etapas del evento. Esta descripción debe respaldarse en la entrega final con los resultados de la investigación exploratoria anunciada en la monografía; este documento no los sustituye ni afirma que una encuesta ya concluyó.
 
-## Propuesta de Valor
-La "Plataforma Web para la Gestión Integral de Eventos Universitarios" proporcionará una solución integral que automatice el ciclo de vida completo de un evento, desde su planificación y publicación hasta la emisión de certificados digitales verificables. La plataforma mejorará la experiencia del usuario (estudiantes, docentes y externos) y optimizará la carga administrativa del personal universitario.
+## Propuesta
 
-## Audiencia Objetivo
-*   **Comunidad Universitaria (Estudiantes y Docentes):** Acceso ágil a formación complementaria.
-*   **Administradores de Facultades/Carreras:** Herramientas eficientes para organizar y promover eventos.
-*   **Autoridades Universitarias:** Reportes estratégicos sobre el impacto de los eventos en la formación académica.
-*   **Público Externo:** Participación en actividades abiertas de la universidad.
+Vidia es una plataforma web y móvil para centralizar información y gestionar eventos universitarios UAJMS, con procesos de inscripción, pagos externos mediante comprobante, asistencia por sesión y certificación cuando corresponda. La solución integra un backend común para Web y Flutter. La experiencia móvil del participante está parcialmente implementada: pagos/comprobantes, asistencia QR/GPS y certificados quedan pendientes en Flutter, aunque existan capacidades backend y web.
 
-## Metas a Largo Plazo
-Convertirse en el estándar tecnológico para la gestión de toda actividad extracurricular en la UAJMS, integrándose en el futuro con otros sistemas académicos (SIA) y financieros de la universidad.
+## Usuarios y canales
+
+- Roles funcionales: `ADMINISTRADOR`, `ORGANIZADOR` y `USUARIO`.
+- “Participante” describe funcionalmente al `USUARIO`; no es autoridad/rol separado.
+- Administrador y Organizador operan desde Web Angular.
+- Usuario dispone de Web donde las vistas existen y de la aplicación Flutter participante; la cobertura de Flutter aún se completa.
+- Un tercero puede consultar públicamente un certificado por código sin cuenta ni rol.
+
+## Límites de la propuesta
+
+No se ofrece gateway/checkout ni pago electrónico con tarjeta. El pago se realiza externamente y Vidia procesa la presentación y revisión del comprobante. La imagen QR de pago opcional pertenece al evento; no es el comprobante del participante ni el QR temporal de asistencia.
+
+La integración futura con SIA u otros sistemas académicos/financieros es una posibilidad, no una capacidad implementada ni parte de la evidencia actual.

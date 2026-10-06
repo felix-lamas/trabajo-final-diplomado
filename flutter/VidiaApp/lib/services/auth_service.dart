@@ -31,15 +31,78 @@ class AuthService {
 
   Future<AuthUser?> restoreUser() async {
     final token = await _tokenStore.readToken();
-    final encodedUser = await _tokenStore.readUser();
-    if (token == null || token.isEmpty || encodedUser == null) return null;
+    if (token == null || token.isEmpty) return null;
+    final response = await _api.get('/usuarios/perfil');
+    final user = AuthUser.fromJson(response as Map<String, dynamic>);
+    await _tokenStore.saveSession(token: token, user: user.encode());
+    return user;
+  }
+
+  Future<Map<String, dynamic>> register(Map<String, dynamic> body) async =>
+      (await _api.post('/auth/registro', authenticated: false, body: body))
+          as Map<String, dynamic>;
+
+  Future<void> verifyEmail(String token) async {
+    await _api.post('/auth/verificar-correo',
+        authenticated: false, body: {'token': token});
+  }
+
+  Future<void> resendVerification(String email) async {
+    await _api.post('/auth/reenviar-verificacion',
+        authenticated: false, body: {'correoElectronico': email.trim()});
+  }
+
+  Future<void> requestPasswordReset(String email) async {
+    await _api.post('/auth/recuperar-contrasena',
+        authenticated: false, body: {'correoElectronico': email.trim()});
+  }
+
+  Future<void> resetPassword({
+    required String token,
+    required String password,
+    required String confirmation,
+  }) async {
+    await _api
+        .post('/auth/restablecer-contrasena', authenticated: false, body: {
+      'token': token,
+      'nuevaContrasena': password,
+      'confirmacion': confirmation,
+    });
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmation,
+  }) async {
+    await _api.post('/usuarios/cambiar-contrasena', body: {
+      'contrasenaActual': currentPassword,
+      'nuevaContrasena': newPassword,
+      'confirmacion': confirmation,
+    });
+    // The backend revokes every active session as part of this operation.
+    await _tokenStore.clear();
+  }
+
+  Future<void> updateProfile({
+    required String names,
+    required String surnames,
+    required String phone,
+  }) async {
+    await _api.put('/usuarios/perfil', body: {
+      'nombres': names,
+      'apellidos': surnames,
+      'celular': phone,
+    });
+  }
+
+  Future<void> signOut() async {
     try {
-      return AuthUser.decode(encodedUser);
-    } on FormatException {
+      await _api.post('/auth/logout');
+    } finally {
       await _tokenStore.clear();
-      return null;
     }
   }
 
-  Future<void> signOut() => _tokenStore.clear();
+  Future<void> clearLocalSession() => _tokenStore.clear();
 }

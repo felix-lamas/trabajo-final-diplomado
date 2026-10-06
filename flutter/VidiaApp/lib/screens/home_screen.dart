@@ -5,7 +5,10 @@ import '../controllers/session_controller.dart';
 import '../widgets/vidia_logo.dart';
 import '../widgets/vidia_section_title.dart';
 import 'events_screen.dart';
+import 'history_screen.dart';
+import 'my_certificates_screen.dart';
 import 'my_registrations_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,6 +20,14 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const VidiaLogo(height: 38),
         actions: [
+          IconButton(
+            tooltip: 'Mi perfil',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(builder: (_) => const ProfileScreen()),
+            ),
+            icon: const Icon(Icons.person_outline_rounded),
+          ),
           IconButton(
             tooltip: 'Cerrar sesión',
             onPressed: session.busy ? null : session.logout,
@@ -60,32 +71,77 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 28),
-          const VidiaSectionTitle(
-            title: 'Explora Vidia',
-            subtitle: 'Consulta eventos e inscripciones de tu cuenta.',
-          ),
-          const SizedBox(height: 16),
-          _MenuCard(
-            icon: Icons.event_outlined,
-            title: 'Eventos publicados',
-            subtitle: 'Descubre los eventos disponibles.',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const EventsScreen()),
-            ),
-          ),
-          _MenuCard(
-            icon: Icons.how_to_reg_outlined,
-            title: 'Mis inscripciones',
-            subtitle: 'Revisa tus inscripciones reales.',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const MyRegistrationsScreen(),
+          if (session.user?.organizadorPendiente ?? false) ...[
+            const SizedBox(height: 20),
+            const Card(
+              child: ListTile(
+                leading: Icon(Icons.hourglass_top_rounded),
+                title: Text('Solicitud de organizador pendiente'),
+                subtitle: Text(
+                  'Tu cuenta conserva el rol Usuario hasta que el administrador resuelva la solicitud.',
+                ),
               ),
             ),
-          ),
+          ],
+          if (session.user?.isUsuario ?? false) ...[
+            const SizedBox(height: 28),
+            const VidiaSectionTitle(
+              title: 'Explora Vidia',
+              subtitle: 'Consulta eventos e inscripciones de tu cuenta.',
+            ),
+            const SizedBox(height: 16),
+            _MenuCard(
+              icon: Icons.event_outlined,
+              title: 'Eventos publicados',
+              subtitle: 'Descubre los eventos disponibles.',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const EventsScreen()),
+              ),
+            ),
+            _MenuCard(
+              icon: Icons.how_to_reg_outlined,
+              title: 'Mis inscripciones',
+              subtitle: 'Revisa tus inscripciones reales.',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MyRegistrationsScreen(),
+                ),
+              ),
+            ),
+            _MenuCard(
+              icon: Icons.workspace_premium_outlined,
+              title: 'Mis certificados',
+              subtitle: 'Consulta y descarga tus certificados.',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MyCertificatesScreen(),
+                ),
+              ),
+            ),
+            _MenuCard(
+              icon: Icons.history_rounded,
+              title: 'Historial',
+              subtitle: 'Revisa inscripciones, pagos, asistencias y certificados.',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const HistoryScreen()),
+              ),
+            ),
+          ] else ...[
+            const SizedBox(height: 28),
+            const Card(
+              child: ListTile(
+                leading: Icon(Icons.info_outline_rounded),
+                title: Text('Canal móvil para participantes'),
+                subtitle: Text(
+                  'Las funciones móviles de administración y organización no forman parte de esta aplicación.',
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

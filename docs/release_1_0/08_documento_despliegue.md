@@ -1,5 +1,7 @@
 # Documento de Despliegue
 
+> **Release histórico (E3.4):** URLs y configuración descritas no equivalen a servicios activos. Verifique frontend, backend, PostgreSQL, correo y Storage en ejecución antes de usarlo como evidencia de producción.
+
 ## 1. Servidor
 Ambiente recomendado:
 - Sistema operativo Linux para produccion.

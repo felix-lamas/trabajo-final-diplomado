@@ -23,4 +23,9 @@ class BackendInscripcionRepository implements InscripcionRepository {
         .map((item) => Inscripcion.fromJson(item as Map<String, dynamic>))
         .toList(growable: false);
   }
+
+  @override
+  Future<void> cancel(String id) async {
+    await _api.patch('/inscripciones/$id/cancelar');
+  }
 }

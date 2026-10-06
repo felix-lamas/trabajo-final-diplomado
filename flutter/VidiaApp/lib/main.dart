@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,12 +7,21 @@ import 'app.dart';
 import 'config/app_config.dart';
 import 'controllers/session_controller.dart';
 import 'repositories/backend_evento_repository.dart';
+import 'repositories/backend_categoria_repository.dart';
+import 'repositories/categoria_repository.dart';
 import 'repositories/backend_inscripcion_repository.dart';
 import 'repositories/evento_repository.dart';
 import 'repositories/inscripcion_repository.dart';
+import 'repositories/pago_repository.dart';
+import 'repositories/asistencia_repository.dart';
+import 'repositories/certificado_repository.dart';
+import 'services/attendance_location_source.dart';
+import 'services/certificado_document_manager.dart';
+import 'services/certificado_file_service.dart';
 import 'services/api_service.dart';
 import 'services/auth_service.dart';
 import 'services/token_store.dart';
+import 'screens/auth_gate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +31,12 @@ Future<void> main() async {
   final authService = AuthService(api, tokenStore);
   final session = SessionController(authService);
   api.onUnauthorized = session.expire;
-  await session.restore();
+  session.onSessionExpired = () async {
+    appNavigatorKey.currentState?.pushAndRemoveUntil<void>(
+      MaterialPageRoute<void>(builder: (_) => const AuthGate()),
+      (_) => false,
+    );
+  };
 
   runApp(
     MultiProvider(
@@ -31,11 +47,34 @@ Future<void> main() async {
         Provider<EventoRepository>.value(
           value: BackendEventoRepository(api),
         ),
+        Provider<CategoriaRepository>.value(
+          value: BackendCategoriaRepository(api),
+        ),
         Provider<InscripcionRepository>.value(
           value: BackendInscripcionRepository(api),
+        ),
+        Provider<PagoRepository>.value(value: BackendPagoRepository(api)),
+        Provider<AsistenciaRepository>.value(
+          value: BackendAsistenciaRepository(api),
+        ),
+        Provider<CertificadoRepository>.value(
+          value: BackendCertificadoRepository(api),
+        ),
+        Provider<CertificadoFileService>.value(
+          value: PlatformCertificadoFileService(),
+        ),
+        Provider<CertificadoDocumentManager>(
+          create: (context) => CertificadoDocumentManager(
+            repository: context.read<CertificadoRepository>(),
+            files: context.read<CertificadoFileService>(),
+          ),
+        ),
+        Provider<AttendanceLocationSource>.value(
+          value: GeolocatorAttendanceLocationSource(),
         ),
       ],
       child: const VidiaApp(),
     ),
   );
+  unawaited(session.restore());
 }

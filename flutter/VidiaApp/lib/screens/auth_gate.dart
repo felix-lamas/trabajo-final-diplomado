@@ -26,6 +26,32 @@ class AuthGate extends StatelessWidget {
         ),
       );
     }
+    if (session.restoreError != null) {
+      return Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.cloud_off_outlined, size: 48),
+                const SizedBox(height: 16),
+                Text(session.restoreError!, textAlign: TextAlign.center),
+                const SizedBox(height: 16),
+                FilledButton(
+                  onPressed: session.initializing ? null : session.restore,
+                  child: const Text('Reintentar'),
+                ),
+                TextButton(
+                  onPressed: session.logout,
+                  child: const Text('Cerrar sesión en este dispositivo'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return session.isAuthenticated ? const HomeScreen() : const LoginScreen();
   }
 }

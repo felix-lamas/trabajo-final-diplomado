@@ -1,5 +1,7 @@
 # Documento de Arquitectura
 
+> **Release histórico (E3.4):** revisar contra la arquitectura reconciliada en `../plan_maestro/06_arquitectura.md`. Este archivo no acredita el estado de producción.
+
 ## 1. Vision general
 La Plataforma Web para la Gestion Integral de Eventos Universitarios - UAJMS es un sistema empresarial para centralizar la administracion de eventos academicos, cientificos y culturales. El sistema cubre desde la publicacion del evento hasta la inscripcion, validacion de pagos, control de acceso, emision de credenciales y certificados, asi como encuestas de satisfaccion y reportes ejecutivos.
 
