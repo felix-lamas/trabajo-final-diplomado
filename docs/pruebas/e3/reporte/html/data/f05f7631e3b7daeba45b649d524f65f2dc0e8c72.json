@@ -1,0 +1,19 @@
+{
+  "case": "CP-18",
+  "title": "CP-18 — USUARIO no publica ni rechaza eventos",
+  "timestamp": "2026-10-07T14:59:14.176Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/eventos/00000000-0000-4000-8000-000000000001/rechazar",
+  "method": "PATCH",
+  "status": 403,
+  "durationMs": 12.78,
+  "browser": "chromium",
+  "body": {
+    "codigo": "ACCESS_DENIED",
+    "mensaje": "No tiene permisos para realizar esta operacion",
+    "detalles": null,
+    "timestamp": "2026-10-07T10:59:14.1744274",
+    "ruta": "uri=/api/v1/eventos/00000000-0000-4000-8000-000000000001/rechazar"
+  }
+}

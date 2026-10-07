@@ -1,0 +1,13 @@
+{
+  "case": "CP-19",
+  "title": "CP-19 — catálogo y búsqueda pública usan rutas reales y solo datos publicados",
+  "timestamp": "2026-10-07T14:59:14.401Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/eventos/publicados/buscar?texto=E3-NO-COINCIDENCIA&tipo=GRATUITO&modalidad=VIRTUAL",
+  "method": "GET",
+  "status": 200,
+  "durationMs": 7.17,
+  "browser": "chromium",
+  "body": []
+}

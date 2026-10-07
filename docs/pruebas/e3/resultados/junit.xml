@@ -1,0 +1,428 @@
+<testsuites id="" name="" tests="39" failures="0" skipped="17" errors="0" time="26.339458">
+<testsuite name="auth-security.api.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="api" tests="11" failures="0" skipped="1" time="1.373" errors="0">
+<testcase name="CP-01 — login, perfil protegido, logout y revocación de sesión" classname="auth-security.api.spec.ts" time="0.239">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\attachments\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\attachments\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\attachments\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\attachments\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-02 — endpoint protegido devuelve 401 sin Authorization" classname="auth-security.api.spec.ts" time="0.311">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-02-—--44498-uelve-401-sin-Authorization-api\attachments\CP-02-endpoint-protegido-devuelve-401-sin-authorization-api-json-04dbe77482ae5081c787482a8f4a952b16a73981.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-02-—--44498-uelve-401-sin-Authorization-api\attachments\CP-02-401-png-0840f097bb671612ffb17dc6088123afa7a53a58.png]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-03 — USUARIO autenticado recibe 403 en consulta exclusiva de administración" classname="auth-security.api.spec.ts" time="0.16">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-03-—--b5a5d-exclusiva-de-administración-api\attachments\CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api-json-ce1efe43c1adc55532a219402f8baad244cf66a3.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-03-—--b5a5d-exclusiva-de-administración-api\attachments\CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api-json-ce1efe43c1adc55532a219402f8baad244cf66a3.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-16 — credenciales inválidas y JWT inválido se rechazan" classname="auth-security.api.spec.ts" time="0.116">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-16-—--a9b90--y-JWT-inválido-se-rechazan-api\attachments\CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api-json-a48db44129e29777b4b5384f98201b294486b983.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-16-—--a9b90--y-JWT-inválido-se-rechazan-api\attachments\CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api-json-a48db44129e29777b4b5384f98201b294486b983.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-18 — USUARIO no publica ni rechaza eventos" classname="auth-security.api.spec.ts" time="0.165">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api\attachments\CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api\attachments\CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api\attachments\CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-18 — transición de publicación incompatible devuelve conflicto real" classname="auth-security.api.spec.ts">
+<properties>
+<property name="skip" value="Falta E3_STATE_CONFLICT_EVENT_ID de un evento local no EN_REVISION; no se crea ni cambia un evento para fabricar el conflicto.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-17 — datos incompletos de evento son rechazados por validación real" classname="auth-security.api.spec.ts" time="0.14">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-17-—--36605-hazados-por-validación-real-api\attachments\CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api-json-aff6f11785657f30951da63097535365d92fed05.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-17-—--36605-hazados-por-validación-real-api\attachments\CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api-json-aff6f11785657f30951da63097535365d92fed05.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-19 — catálogo y búsqueda pública usan rutas reales y solo datos publicados" classname="auth-security.api.spec.ts" time="0.036">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-19-—--58a6b-les-y-solo-datos-publicados-api\attachments\CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api-json-e4d36daacec0e3d85f3b452a36e575fdd72bbfe6.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-19-—--58a6b-les-y-solo-datos-publicados-api\attachments\CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api-json-e4d36daacec0e3d85f3b452a36e575fdd72bbfe6.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-20 — búsqueda vacía y detalle inexistente se responden según contrato" classname="auth-security.api.spec.ts" time="0.035">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-20-—--4a4d8-se-responden-según-contrato-api\attachments\CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api-json-ade0c36d14224969a6292354b73cb9261153a923.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-20-—--4a4d8-se-responden-según-contrato-api\attachments\CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api-json-ade0c36d14224969a6292354b73cb9261153a923.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-23 — verificación pública distingue un código no registrado sin JWT" classname="auth-security.api.spec.ts" time="0.021">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-23-—--7a97c-ódigo-no-registrado-sin-JWT-api\attachments\CP-23-verificaci-n-p-blica-distingue-un-c-digo-no-registrado-api-json-243e16d68884363515f1cbdb1ee9387f8af76643.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-16 — login correcto emite JWT solo para credenciales de cuenta de prueba" classname="auth-security.api.spec.ts" time="0.145">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-16-—--9e720-nciales-de-cuenta-de-prueba-api\attachments\CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api-json-89e96666a3a6a7d72dbde45626ba709075de9752.json]]
+
+[[ATTACHMENT|playwright-artifacts\auth-security.api-CP-16-—--9e720-nciales-de-cuenta-de-prueba-api\attachments\CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api-json-89e96666a3a6a7d72dbde45626ba709075de9752.json]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="events.api.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="api" tests="5" failures="0" skipped="1" time="3.484" errors="0">
+<testcase name="Flujos de eventos E3 › CP-04 — ORGANIZADOR aprobado crea evento de prueba en BORRADOR" classname="events.api.spec.ts" time="1.885">
+<properties>
+<property name="serial" value="">
+</property>
+</properties>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api\attachments\CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-json-e0f673bfe9606085f59434aacf2846d4bf891aab.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api\attachments\CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-json-e0f673bfe9606085f59434aacf2846d4bf891aab.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api\attachments\CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-png-0b30fc0b999649879c7a28babce7fa90683a16b2.png]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Flujos de eventos E3 › CP-05 — ADMINISTRADOR publica evento y este aparece en catálogo público" classname="events.api.spec.ts" time="1.184">
+<properties>
+<property name="serial" value="">
+</property>
+</properties>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\attachments\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\attachments\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\attachments\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\attachments\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\attachments\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-png-3e60c691e809aae5fc6c095535b91fa17b5bf631.png]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Flujos de eventos E3 › CP-06 — inscripción gratuita produce estado confirmado" classname="events.api.spec.ts" time="0.203">
+<properties>
+<property name="serial" value="">
+</property>
+</properties>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\attachments\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\attachments\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\attachments\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\attachments\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Flujos de eventos E3 › CP-06 — inscripción pagada produce PENDIENTE_PAGO y monto del backend" classname="events.api.spec.ts">
+<properties>
+<property name="serial" value="">
+</property>
+<property name="skip" value="Falta el fixture real E3_PAID_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Flujos de eventos E3 › CP-07 — segunda inscripción del mismo usuario es rechazada" classname="events.api.spec.ts" time="0.208">
+<properties>
+<property name="serial" value="">
+</property>
+</properties>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\attachments\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\attachments\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\attachments\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json]]
+
+[[ATTACHMENT|playwright-artifacts\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\attachments\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="lifecycle.api.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="api" tests="12" failures="0" skipped="12" time="0.041" errors="0">
+<testcase name="CP-08 — upload multipart de comprobante técnico propio actualiza estado real" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-17 — MIME de comprobante incompatible es rechazado" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-17 — tamaño mayor al máximo documentado se rechaza" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-09 — actor autorizado valida un pago propio en PENDIENTE_VALIDACION" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-10 — sesión propia emite QR temporal con vigencia del contrato" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_QR_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-11 — asistencia QR/GPS necesita ejecución Flutter en dispositivo" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="NEEDS_DEVICE_EVIDENCE: cámara y GPS se validan mediante flutter test integration_test en dispositivo/emulador real; Playwright no simula estos sensores.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-12 — certificado se genera solo para inscripción elegible configurada" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_ELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-13 — código válido de prueba se verifica públicamente" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta E3_CERTIFICATE_CODE de un certificado legítimo de prueba; no se generó un certificado para esta consulta.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-21 — rechazo y reenvío solo con pago propio en estado compatible" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-21 — acceso de USUARIO a pago ajeno se deniega" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_OTHER_USER_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-23 — certificado no elegible es rechazado por el backend" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="Falta el fixture real E3_INELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-22 — escenarios QR expirado, GPS, duplicado y sensor requieren dispositivo/datos legítimos" classname="lifecycle.api.spec.ts">
+<properties>
+<property name="skip" value="NEEDS_DEVICE_EVIDENCE: no hay sesión/QR/inscripción real declarada para fabricar expiración, distancia ni duplicidad.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="security-matrix.api.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="api" tests="1" failures="0" skipped="0" time="0.783" errors="0">
+<testcase name="CP-25 — matriz de autenticación y roles basada en anotaciones actuales" classname="security-matrix.api.spec.ts" time="0.783">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+
+[[ATTACHMENT|playwright-artifacts\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\attachments\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="public-web.web.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="chromium" tests="3" failures="0" skipped="0" time="4.659" errors="0">
+<testcase name="CP-19 — catálogo Angular carga eventos y filtros en navegador" classname="public-web.web.spec.ts" time="1.692">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\public-web.web-CP-19-—-cat-21e8a-ntos-y-filtros-en-navegador-chromium\attachments\CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-chromium-png-f527e75bed2bd7dceb9aba3fc2c8d5618148d1d3.png]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar" classname="public-web.web.spec.ts" time="1.481">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\public-web.web-CP-20-—-bús-d055a-ado-vacío-y-permite-limpiar-chromium\attachments\CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--chromium-png-6ae65ec8b6c643b260ece5d992a57e66f90508af.png]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-27 — compatibilidad web del catálogo en el navegador configurado" classname="public-web.web.spec.ts" time="1.486">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\public-web.web-CP-27-—-com-c3474-en-el-navegador-configurado-chromium\attachments\CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-chromium-png-7b51cc4b801e2fc585d6fc9700f31ae7620fe46f.png]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="admin-ui.web.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="admin-chromium" tests="1" failures="0" skipped="0" time="1.837" errors="0">
+<testcase name="CP-15 — Angular presenta datos administrativos recibidos de API" classname="admin-ui.web.spec.ts" time="1.837">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\admin-ui.web-CP-15-—-Angul-d7199-istrativos-recibidos-de-API-admin-chromium\attachments\CP-15-angular-presenta-datos-administrativos-recibidos-de-ap-admin-chromium-png-26f159bba4f6d2091c4e20efc9bdc86433ed0372.png]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="public-web.web.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="CP-19 — catálogo Angular carga eventos y filtros en navegador" classname="public-web.web.spec.ts">
+<properties>
+<property name="skip" value="BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar" classname="public-web.web.spec.ts">
+<properties>
+<property name="skip" value="BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CP-27 — compatibilidad web del catálogo en el navegador configurado" classname="public-web.web.spec.ts">
+<properties>
+<property name="skip" value="BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="public-web.web.spec.ts" timestamp="2026-10-07T14:59:11.967Z" hostname="webkit" tests="3" failures="0" skipped="0" time="7.924" errors="0">
+<testcase name="CP-19 — catálogo Angular carga eventos y filtros en navegador" classname="public-web.web.spec.ts" time="2.967">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\public-web.web-CP-19-—-cat-21e8a-ntos-y-filtros-en-navegador-webkit\attachments\CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-webkit-png-33f335e9094bf088485e051a4c790f9df5707a09.png]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar" classname="public-web.web.spec.ts" time="2.447">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\public-web.web-CP-20-—-bús-d055a-ado-vacío-y-permite-limpiar-webkit\attachments\CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--webkit-png-d3b8bb8842ec6b4fe0ebb7a5c60d36d67c1d33b6.png]]
+]]>
+</system-out>
+</testcase>
+<testcase name="CP-27 — compatibilidad web del catálogo en el navegador configurado" classname="public-web.web.spec.ts" time="2.51">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|playwright-artifacts\public-web.web-CP-27-—-com-c3474-en-el-navegador-configurado-webkit\attachments\CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-webkit-png-ec887aaaffb37f58bab7ac0f3a0c84560743ca21.png]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

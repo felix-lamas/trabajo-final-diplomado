@@ -1,0 +1,19 @@
+{
+  "case": "CP-16",
+  "title": "CP-16 — credenciales inválidas y JWT inválido se rechazan",
+  "timestamp": "2026-10-07T14:59:13.995Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/usuarios/perfil",
+  "method": "GET",
+  "status": 401,
+  "durationMs": 4.67,
+  "browser": "chromium",
+  "body": {
+    "codigo": "AUTH_INVALID_TOKEN",
+    "mensaje": "El token de autenticacion no es valido",
+    "detalles": null,
+    "timestamp": "2026-10-07T10:59:13.9943492",
+    "ruta": "/api/v1/usuarios/perfil"
+  }
+}

@@ -1,0 +1,2396 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config=playwright.config.ts"
+    ],
+    "configFile": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\playwright.config.ts",
+    "rootDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/e3-tests/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "environment": "local-e3-isolated",
+      "webUrl": "http://localhost:4200",
+      "apiUrl": "http://localhost:8080",
+      "startedAt": "2026-10-07T14:59:11.659Z",
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/docs/pruebas/e3/resultados/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "environment": "local-e3-isolated",
+          "webUrl": "http://localhost:4200",
+          "apiUrl": "http://localhost:8080",
+          "startedAt": "2026-10-07T14:59:11.659Z",
+          "actualWorkers": 1
+        },
+        "id": "api",
+        "name": "api",
+        "testDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/e3-tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.api.spec.ts"
+        ],
+        "timeout": 45000
+      },
+      {
+        "outputDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/docs/pruebas/e3/resultados/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "environment": "local-e3-isolated",
+          "webUrl": "http://localhost:4200",
+          "apiUrl": "http://localhost:8080",
+          "startedAt": "2026-10-07T14:59:11.659Z",
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/e3-tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/public-web.web.spec.ts"
+        ],
+        "timeout": 45000
+      },
+      {
+        "outputDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/docs/pruebas/e3/resultados/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "environment": "local-e3-isolated",
+          "webUrl": "http://localhost:4200",
+          "apiUrl": "http://localhost:8080",
+          "startedAt": "2026-10-07T14:59:11.659Z",
+          "actualWorkers": 1
+        },
+        "id": "admin-chromium",
+        "name": "admin-chromium",
+        "testDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/e3-tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/admin-ui.web.spec.ts"
+        ],
+        "timeout": 45000
+      },
+      {
+        "outputDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/docs/pruebas/e3/resultados/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "environment": "local-e3-isolated",
+          "webUrl": "http://localhost:4200",
+          "apiUrl": "http://localhost:8080",
+          "startedAt": "2026-10-07T14:59:11.659Z",
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/e3-tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/public-web.web.spec.ts"
+        ],
+        "timeout": 45000
+      },
+      {
+        "outputDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/docs/pruebas/e3/resultados/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "environment": "local-e3-isolated",
+          "webUrl": "http://localhost:4200",
+          "apiUrl": "http://localhost:8080",
+          "startedAt": "2026-10-07T14:59:11.659Z",
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/e3-tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/public-web.web.spec.ts"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\reporte\\html",
+          "open": "never"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\junit.xml"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright.json"
+        }
+      ],
+      [
+        "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\matrix-reporter.mjs",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "auth-security.api.spec.ts",
+      "file": "auth-security.api.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "CP-01 — login, perfil protegido, logout y revocación de sesión",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 239,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:12.654Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\\attachments\\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json"
+                    },
+                    {
+                      "name": "CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\\attachments\\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json"
+                    },
+                    {
+                      "name": "CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\\attachments\\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json"
+                    },
+                    {
+                      "name": "CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api\\attachments\\CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json"
+                    },
+                    {
+                      "name": "CP-01-sesion-revocada.txt",
+                      "contentType": "text/plain",
+                      "body": "TGEgQVBJIGFjZXB0w7MgcGVyZmlsIGFudGVzIGRlIGxvZ291dCwgcmV2b2PDsyBsYSBzZXNpw7NuIHkgcmVjaGF6w7MgZWwgbWlzbW8gSldUIGRlc3B1w6lzLg=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-c4db1dee5cdcfc60e1bf",
+          "file": "auth-security.api.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "CP-02 — endpoint protegido devuelve 401 sin Authorization",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 311,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:12.936Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-02-endpoint-protegido-devuelve-401-sin-authorization-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-02-—--44498-uelve-401-sin-Authorization-api\\attachments\\CP-02-endpoint-protegido-devuelve-401-sin-authorization-api-json-04dbe77482ae5081c787482a8f4a952b16a73981.json"
+                    },
+                    {
+                      "name": "CP-02-401.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-02-—--44498-uelve-401-sin-Authorization-api\\attachments\\CP-02-401-png-0840f097bb671612ffb17dc6088123afa7a53a58.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-0b70e6dbea86c61a707a",
+          "file": "auth-security.api.spec.ts",
+          "line": 21,
+          "column": 1
+        },
+        {
+          "title": "CP-03 — USUARIO autenticado recibe 403 en consulta exclusiva de administración",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 160,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:13.704Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-03-—--b5a5d-exclusiva-de-administración-api\\attachments\\CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api-json-ce1efe43c1adc55532a219402f8baad244cf66a3.json"
+                    },
+                    {
+                      "name": "CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-03-—--b5a5d-exclusiva-de-administración-api\\attachments\\CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api-json-ce1efe43c1adc55532a219402f8baad244cf66a3.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-c92ffacac0ff678f7693",
+          "file": "auth-security.api.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "CP-16 — credenciales inválidas y JWT inválido se rechazan",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 116,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:13.881Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-16-—--a9b90--y-JWT-inválido-se-rechazan-api\\attachments\\CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api-json-a48db44129e29777b4b5384f98201b294486b983.json"
+                    },
+                    {
+                      "name": "CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-16-—--a9b90--y-JWT-inválido-se-rechazan-api\\attachments\\CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api-json-a48db44129e29777b4b5384f98201b294486b983.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-31cc8689daab0cecc966",
+          "file": "auth-security.api.spec.ts",
+          "line": 41,
+          "column": 1
+        },
+        {
+          "title": "CP-18 — USUARIO no publica ni rechaza eventos",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 165,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:14.010Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-18-usuario-no-publica-ni-rechaza-eventos-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api\\attachments\\CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json"
+                    },
+                    {
+                      "name": "CP-18-usuario-no-publica-ni-rechaza-eventos-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api\\attachments\\CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json"
+                    },
+                    {
+                      "name": "CP-18-usuario-no-publica-ni-rechaza-eventos-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api\\attachments\\CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-c8ee2a2d23d20e0a6108",
+          "file": "auth-security.api.spec.ts",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "CP-18 — transición de publicación incompatible devuelve conflicto real",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta E3_STATE_CONFLICT_EVENT_ID de un evento local no EN_REVISION; no se crea ni cambia un evento para fabricar el conflicto.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\auth-security.api.spec.ts",
+                    "line": 70,
+                    "column": 21
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 5,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:14.189Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta E3_STATE_CONFLICT_EVENT_ID de un evento local no EN_REVISION; no se crea ni cambia un evento para fabricar el conflicto.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\auth-security.api.spec.ts",
+                        "line": 70,
+                        "column": 21
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "910727f858fae4b2a627-18ad57fcd0333c17c251",
+          "file": "auth-security.api.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "CP-17 — datos incompletos de evento son rechazados por validación real",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 140,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:14.205Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-17-—--36605-hazados-por-validación-real-api\\attachments\\CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api-json-aff6f11785657f30951da63097535365d92fed05.json"
+                    },
+                    {
+                      "name": "CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-17-—--36605-hazados-por-validación-real-api\\attachments\\CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api-json-aff6f11785657f30951da63097535365d92fed05.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-ffbb3aeaa7d3ec80f229",
+          "file": "auth-security.api.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "CP-19 — catálogo y búsqueda pública usan rutas reales y solo datos publicados",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 36,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:14.358Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-19-—--58a6b-les-y-solo-datos-publicados-api\\attachments\\CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api-json-e4d36daacec0e3d85f3b452a36e575fdd72bbfe6.json"
+                    },
+                    {
+                      "name": "CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-19-—--58a6b-les-y-solo-datos-publicados-api\\attachments\\CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api-json-e4d36daacec0e3d85f3b452a36e575fdd72bbfe6.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-28129b96042d8adcaba1",
+          "file": "auth-security.api.spec.ts",
+          "line": 88,
+          "column": 1
+        },
+        {
+          "title": "CP-20 — búsqueda vacía y detalle inexistente se responden según contrato",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 35,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:14.415Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-20-—--4a4d8-se-responden-según-contrato-api\\attachments\\CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api-json-ade0c36d14224969a6292354b73cb9261153a923.json"
+                    },
+                    {
+                      "name": "CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-20-—--4a4d8-se-responden-según-contrato-api\\attachments\\CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api-json-ade0c36d14224969a6292354b73cb9261153a923.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-bd75361dee1c3d26e1a1",
+          "file": "auth-security.api.spec.ts",
+          "line": 100,
+          "column": 1
+        },
+        {
+          "title": "CP-23 — verificación pública distingue un código no registrado sin JWT",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 21,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:14.463Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-23-verificaci-n-p-blica-distingue-un-c-digo-no-registrado-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-23-—--7a97c-ódigo-no-registrado-sin-JWT-api\\attachments\\CP-23-verificaci-n-p-blica-distingue-un-c-digo-no-registrado-api-json-243e16d68884363515f1cbdb1ee9387f8af76643.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-8ea4ac08e38956c665ea",
+          "file": "auth-security.api.spec.ts",
+          "line": 108,
+          "column": 1
+        },
+        {
+          "title": "CP-16 — login correcto emite JWT solo para credenciales de cuenta de prueba",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 145,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:14.498Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-16-—--9e720-nciales-de-cuenta-de-prueba-api\\attachments\\CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api-json-89e96666a3a6a7d72dbde45626ba709075de9752.json"
+                    },
+                    {
+                      "name": "CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\auth-security.api-CP-16-—--9e720-nciales-de-cuenta-de-prueba-api\\attachments\\CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api-json-89e96666a3a6a7d72dbde45626ba709075de9752.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "910727f858fae4b2a627-6de5ea2b71d6df305917",
+          "file": "auth-security.api.spec.ts",
+          "line": 116,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "events.api.spec.ts",
+      "file": "events.api.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Flujos de eventos E3",
+          "file": "events.api.spec.ts",
+          "line": 38,
+          "column": 15,
+          "specs": [
+            {
+              "title": "CP-04 — ORGANIZADOR aprobado crea evento de prueba en BORRADOR",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                        "line": 38,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1885,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-07T14:59:14.689Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                            "line": 38,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api\\attachments\\CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-json-e0f673bfe9606085f59434aacf2846d4bf891aab.json"
+                        },
+                        {
+                          "name": "CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api\\attachments\\CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-json-e0f673bfe9606085f59434aacf2846d4bf891aab.json"
+                        },
+                        {
+                          "name": "CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api\\attachments\\CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-png-0b30fc0b999649879c7a28babce7fa90683a16b2.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f16af43992cdcbc1cb8b-c8359d8557ddd188a932",
+              "file": "events.api.spec.ts",
+              "line": 39,
+              "column": 3
+            },
+            {
+              "title": "CP-05 — ADMINISTRADOR publica evento y este aparece en catálogo público",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                        "line": 38,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1184,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-07T14:59:16.595Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                            "line": 38,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\\attachments\\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json"
+                        },
+                        {
+                          "name": "CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\\attachments\\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json"
+                        },
+                        {
+                          "name": "CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\\attachments\\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json"
+                        },
+                        {
+                          "name": "CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\\attachments\\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json"
+                        },
+                        {
+                          "name": "CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api\\attachments\\CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-png-3e60c691e809aae5fc6c095535b91fa17b5bf631.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f16af43992cdcbc1cb8b-4507b31c1138b52d3c04",
+              "file": "events.api.spec.ts",
+              "line": 86,
+              "column": 3
+            },
+            {
+              "title": "CP-06 — inscripción gratuita produce estado confirmado",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                        "line": 38,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 203,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-07T14:59:17.798Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                            "line": 38,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "CP-06-inscripci-n-gratuita-produce-estado-confirmado-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\\attachments\\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json"
+                        },
+                        {
+                          "name": "CP-06-inscripci-n-gratuita-produce-estado-confirmado-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\\attachments\\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json"
+                        },
+                        {
+                          "name": "CP-06-inscripci-n-gratuita-produce-estado-confirmado-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\\attachments\\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json"
+                        },
+                        {
+                          "name": "CP-06-inscripci-n-gratuita-produce-estado-confirmado-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api\\attachments\\CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f16af43992cdcbc1cb8b-2d1840ebbfe7a06e0247",
+              "file": "events.api.spec.ts",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "CP-06 — inscripción pagada produce PENDIENTE_PAGO y monto del backend",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                        "line": 38,
+                        "column": 15
+                      }
+                    },
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_PAID_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 4,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-07T14:59:18.018Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                            "line": 38,
+                            "column": 15
+                          }
+                        },
+                        {
+                          "type": "skip",
+                          "description": "Falta el fixture real E3_PAID_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                          "location": {
+                            "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                            "line": 57,
+                            "column": 24
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f16af43992cdcbc1cb8b-f259611ccfbb30277e44",
+              "file": "events.api.spec.ts",
+              "line": 127,
+              "column": 3
+            },
+            {
+              "title": "CP-07 — segunda inscripción del mismo usuario es rechazada",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                        "line": 38,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "api",
+                  "projectName": "api",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 208,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-07T14:59:18.034Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\events.api.spec.ts",
+                            "line": 38,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\\attachments\\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json"
+                        },
+                        {
+                          "name": "CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\\attachments\\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json"
+                        },
+                        {
+                          "name": "CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\\attachments\\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json"
+                        },
+                        {
+                          "name": "CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api.json",
+                          "contentType": "application/json",
+                          "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api\\attachments\\CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f16af43992cdcbc1cb8b-0d2692926be2d3da600e",
+              "file": "events.api.spec.ts",
+              "line": 149,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "lifecycle.api.spec.ts",
+      "file": "lifecycle.api.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "CP-08 — upload multipart de comprobante técnico propio actualiza estado real",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.323Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-1592ff63342db51d376d",
+          "file": "lifecycle.api.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "CP-17 — MIME de comprobante incompatible es rechazado",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.335Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-cb342b5eba65928ed593",
+          "file": "lifecycle.api.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "CP-17 — tamaño mayor al máximo documentado se rechaza",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.350Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-6344d6a62fb0ec216ca7",
+          "file": "lifecycle.api.spec.ts",
+          "line": 50,
+          "column": 1
+        },
+        {
+          "title": "CP-09 — actor autorizado valida un pago propio en PENDIENTE_VALIDACION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 10,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.363Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-09e65c25f54ebde80010",
+          "file": "lifecycle.api.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "CP-10 — sesión propia emite QR temporal con vigencia del contrato",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_QR_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.384Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_QR_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-1de2b949969a01180e0b",
+          "file": "lifecycle.api.spec.ts",
+          "line": 82,
+          "column": 1
+        },
+        {
+          "title": "CP-11 — asistencia QR/GPS necesita ejecución Flutter en dispositivo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "NEEDS_DEVICE_EVIDENCE: cámara y GPS se validan mediante flutter test integration_test en dispositivo/emulador real; Playwright no simula estos sensores.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\lifecycle.api.spec.ts",
+                    "line": 119,
+                    "column": 12
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 1,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.396Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "NEEDS_DEVICE_EVIDENCE: cámara y GPS se validan mediante flutter test integration_test en dispositivo/emulador real; Playwright no simula estos sensores.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\lifecycle.api.spec.ts",
+                        "line": 119,
+                        "column": 12
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-aa28373dd3ee4613beaf",
+          "file": "lifecycle.api.spec.ts",
+          "line": 118,
+          "column": 1
+        },
+        {
+          "title": "CP-12 — certificado se genera solo para inscripción elegible configurada",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_ELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.408Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_ELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-9d28570b896d0615383e",
+          "file": "lifecycle.api.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "CP-13 — código válido de prueba se verifica públicamente",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta E3_CERTIFICATE_CODE de un certificado legítimo de prueba; no se generó un certificado para esta consulta.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\lifecycle.api.spec.ts",
+                    "line": 135,
+                    "column": 23
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.423Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta E3_CERTIFICATE_CODE de un certificado legítimo de prueba; no se generó un certificado para esta consulta.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\lifecycle.api.spec.ts",
+                        "line": 135,
+                        "column": 23
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-2f6b32b60dfccc0eab79",
+          "file": "lifecycle.api.spec.ts",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "CP-21 — rechazo y reenvío solo con pago propio en estado compatible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.437Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-9742511787ab9b93045f",
+          "file": "lifecycle.api.spec.ts",
+          "line": 141,
+          "column": 1
+        },
+        {
+          "title": "CP-21 — acceso de USUARIO a pago ajeno se deniega",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_OTHER_USER_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.450Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_OTHER_USER_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-2d17f8b4d4f5fa891ffb",
+          "file": "lifecycle.api.spec.ts",
+          "line": 169,
+          "column": 1
+        },
+        {
+          "title": "CP-23 — certificado no elegible es rechazado por el backend",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Falta el fixture real E3_INELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                    "line": 57,
+                    "column": 24
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 5,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.463Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Falta el fixture real E3_INELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\support\\api.ts",
+                        "line": 57,
+                        "column": 24
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-0e1313b7389a87ec4f2c",
+          "file": "lifecycle.api.spec.ts",
+          "line": 176,
+          "column": 1
+        },
+        {
+          "title": "CP-22 — escenarios QR expirado, GPS, duplicado y sensor requieren dispositivo/datos legítimos",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "NEEDS_DEVICE_EVIDENCE: no hay sesión/QR/inscripción real declarada para fabricar expiración, distancia ni duplicidad.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\lifecycle.api.spec.ts",
+                    "line": 186,
+                    "column": 12
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 1,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.477Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "NEEDS_DEVICE_EVIDENCE: no hay sesión/QR/inscripción real declarada para fabricar expiración, distancia ni duplicidad.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\lifecycle.api.spec.ts",
+                        "line": 186,
+                        "column": 12
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1eef5c64d12d24ca3104-0d7e7b3e7fd0e62c692e",
+          "file": "lifecycle.api.spec.ts",
+          "line": 185,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "security-matrix.api.spec.ts",
+      "file": "security-matrix.api.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "CP-25 — matriz de autenticación y roles basada en anotaciones actuales",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "api",
+              "projectName": "api",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 783,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:18.495Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    },
+                    {
+                      "name": "CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api.json",
+                      "contentType": "application/json",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api\\attachments\\CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "de4875de90760328a595-33d8e9f8b8a8e07a98e6",
+          "file": "security-matrix.api.spec.ts",
+          "line": 7,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "public-web.web.spec.ts",
+      "file": "public-web.web.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "CP-19 — catálogo Angular carga eventos y filtros en navegador",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1692,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:19.979Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-chromium.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\public-web.web-CP-19-—-cat-21e8a-ntos-y-filtros-en-navegador-chromium\\attachments\\CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-chromium-png-f527e75bed2bd7dceb9aba3fc2c8d5618148d1d3.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-cc8ef8b3b0d603eaa9ed",
+          "file": "public-web.web.spec.ts",
+          "line": 16,
+          "column": 1
+        },
+        {
+          "title": "CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1481,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:22.279Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--chromium.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\public-web.web-CP-20-—-bús-d055a-ado-vacío-y-permite-limpiar-chromium\\attachments\\CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--chromium-png-6ae65ec8b6c643b260ece5d992a57e66f90508af.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-8d53395aad1371d5f990",
+          "file": "public-web.web.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "CP-27 — compatibilidad web del catálogo en el navegador configurado",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:23.778Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-27-navegador.txt",
+                      "contentType": "text/plain",
+                      "body": "TmF2ZWdhZG9yIGVqZWN1dGFkbzogY2hyb21pdW0KVVJMOiBodHRwOi8vbG9jYWxob3N0OjQyMDAvZXZlbnRvcw=="
+                    },
+                    {
+                      "name": "CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-chromium.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\public-web.web-CP-27-—-com-c3474-en-el-navegador-configurado-chromium\\attachments\\CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-chromium-png-7b51cc4b801e2fc585d6fc9700f31ae7620fe46f.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-041540b6516d1009e59c",
+          "file": "public-web.web.spec.ts",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "CP-19 — catálogo Angular carga eventos y filtros en navegador",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\public-web.web.spec.ts",
+                    "line": 6,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:29.156Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\public-web.web.spec.ts",
+                        "line": 6,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-983a07cd6a981becc7ec",
+          "file": "public-web.web.spec.ts",
+          "line": 16,
+          "column": 1
+        },
+        {
+          "title": "CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\public-web.web.spec.ts",
+                    "line": 6,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:29.261Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\public-web.web.spec.ts",
+                        "line": 6,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-06a4268ac3f05c74e3f0",
+          "file": "public-web.web.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "CP-27 — compatibilidad web del catálogo en el navegador configurado",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+                  "location": {
+                    "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\public-web.web.spec.ts",
+                    "line": 6,
+                    "column": 6
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 0,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:29.262Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+                      "location": {
+                        "file": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\e3-tests\\tests\\public-web.web.spec.ts",
+                        "line": 6,
+                        "column": 6
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-6e0f6228ee8fb5edaba1",
+          "file": "public-web.web.spec.ts",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "CP-19 — catálogo Angular carga eventos y filtros en navegador",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:29.915Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-webkit.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\public-web.web-CP-19-—-cat-21e8a-ntos-y-filtros-en-navegador-webkit\\attachments\\CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-webkit-png-33f335e9094bf088485e051a4c790f9df5707a09.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-219a4d6e906f84d72b11",
+          "file": "public-web.web.spec.ts",
+          "line": 16,
+          "column": 1
+        },
+        {
+          "title": "CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2447,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:33.079Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--webkit.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\public-web.web-CP-20-—-bús-d055a-ado-vacío-y-permite-limpiar-webkit\\attachments\\CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--webkit-png-d3b8bb8842ec6b4fe0ebb7a5c60d36d67c1d33b6.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-b35e2d7d34c453ed23e9",
+          "file": "public-web.web.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "CP-27 — compatibilidad web del catálogo en el navegador configurado",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2510,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:35.547Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-27-navegador.txt",
+                      "contentType": "text/plain",
+                      "body": "TmF2ZWdhZG9yIGVqZWN1dGFkbzogd2Via2l0ClVSTDogaHR0cDovL2xvY2FsaG9zdDo0MjAwL2V2ZW50b3M="
+                    },
+                    {
+                      "name": "CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-webkit.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\public-web.web-CP-27-—-com-c3474-en-el-navegador-configurado-webkit\\attachments\\CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-webkit-png-ec887aaaffb37f58bab7ac0f3a0c84560743ca21.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dd5d26c9685b711b3c9-54969a9cf8198dd62700",
+          "file": "public-web.web.spec.ts",
+          "line": 33,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "admin-ui.web.spec.ts",
+      "file": "admin-ui.web.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "CP-15 — Angular presenta datos administrativos recibidos de API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "admin-chromium",
+              "projectName": "admin-chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1837,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-07T14:59:25.992Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "CP-15-angular-presenta-datos-administrativos-recibidos-de-ap-admin-chromium.png",
+                      "contentType": "image/png",
+                      "path": "C:\\Trabajo_Final_Vidia\\plataforma-eventos-uajms\\docs\\pruebas\\e3\\resultados\\playwright-artifacts\\admin-ui.web-CP-15-—-Angul-d7199-istrativos-recibidos-de-API-admin-chromium\\attachments\\CP-15-angular-presenta-datos-administrativos-recibidos-de-ap-admin-chromium-png-26f159bba4f6d2091c4e20efc9bdc86433ed0372.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60caa02b5a78b11e0b82-7c0d8eb5a42bc7dbddb7",
+          "file": "admin-ui.web.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-07T14:59:11.807Z",
+    "duration": 26339.458,
+    "expected": 22,
+    "skipped": 17,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

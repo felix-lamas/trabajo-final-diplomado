@@ -5,6 +5,8 @@
 *.local
 *.local.*
 !.env.example
+!.env.e3.example
+.env.e3.local
 *.pem
 *.key
 *.p12

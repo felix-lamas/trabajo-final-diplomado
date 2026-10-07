@@ -1,0 +1,19 @@
+{
+  "case": "CP-01",
+  "title": "CP-01 — login, perfil protegido, logout y revocación de sesión",
+  "timestamp": "2026-10-07T14:59:12.915Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/usuarios/perfil",
+  "method": "GET",
+  "status": 401,
+  "durationMs": 17.11,
+  "browser": "chromium",
+  "body": {
+    "codigo": "AUTH_INVALID_SESSION",
+    "mensaje": "La sesion no existe, expiro o fue revocada",
+    "detalles": null,
+    "timestamp": "2026-10-07T10:59:12.9150744",
+    "ruta": "/api/v1/usuarios/perfil"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "case": "CP-14",
+  "timestamp": "2026-10-07T14:14:11.346Z",
+  "environment": "local-or-custom",
+  "device": null,
+  "apiBaseUrl": null,
+  "status": "BLOCKED",
+  "reason": "Precondiciones faltantes: E3_ANDROID_DEVICE_ID, E3_USER_EMAIL/E3_USER_PASSWORD, E3_FLUTTER_API_BASE_URL con /api/v1 accesible desde Android, E3_ISOLATED_TEST_ENV=true (login crea/revoca una sesión local)"
+}

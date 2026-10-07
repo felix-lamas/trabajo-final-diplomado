@@ -1,0 +1,19 @@
+{
+  "case": "CP-20",
+  "title": "CP-20 — búsqueda vacía y detalle inexistente se responden según contrato",
+  "timestamp": "2026-10-07T14:59:14.449Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/eventos/d8f2ca76-08c1-4eb7-8813-4d0ec2456896",
+  "method": "GET",
+  "status": 404,
+  "durationMs": 7.11,
+  "browser": "chromium",
+  "body": {
+    "codigo": "RESOURCE_NOT_FOUND",
+    "mensaje": "Evento no encontrado: d8f2ca76-08c1-4eb7-8813-4d0ec2456896",
+    "detalles": null,
+    "timestamp": "2026-10-07T10:59:14.4490695",
+    "ruta": "uri=/api/v1/eventos/d8f2ca76-08c1-4eb7-8813-4d0ec2456896"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "case": "CP-16",
+  "title": "CP-16 — login correcto emite JWT solo para credenciales de cuenta de prueba",
+  "timestamp": "2026-10-07T14:59:14.636Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/usuarios/perfil",
+  "method": "GET",
+  "status": 200,
+  "durationMs": 17.7,
+  "browser": "chromium",
+  "body": {
+    "id": "d294bf47-d349-484f-a709-e3f6be9e60c2",
+    "nombres": "[REDACTED]",
+    "apellidos": "[REDACTED]",
+    "correoElectronico": "[REDACTED]",
+    "correoVerificado": "[REDACTED]",
+    "ci": "[REDACTED]",
+    "ru": "[REDACTED]",
+    "celular": "[REDACTED]",
+    "tipoUsuario": "EXTERNO",
+    "estadoSolicitudOrganizador": "NINGUNA",
+    "roles": [
+      "USUARIO"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "case": "CP-06",
+  "title": "CP-06 — inscripción gratuita produce estado confirmado",
+  "timestamp": "2026-10-07T14:59:18.006Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/inscripciones",
+  "method": "POST",
+  "status": 201,
+  "durationMs": 18.4,
+  "browser": "chromium",
+  "body": {
+    "id": "eb23fe3f-6baa-48ae-8086-215ae6d443cf",
+    "usuarioId": "d294bf47-d349-484f-a709-e3f6be9e60c2",
+    "usuarioNombre": "Usuario Demo",
+    "eventoId": "730d7f4a-164b-4176-b268-48750dcb456c",
+    "eventoTitulo": "[E3-TEST] 20261007T145915914Z-47528f",
+    "fechaInscripcion": "2026-10-07T10:59:18.0023596",
+    "estado": "CONFIRMADA",
+    "codigoInscripcion": "INS-4CE7584050714243AC2B68B6",
+    "observacion": null,
+    "modalidadEvento": "VIRTUAL",
+    "ubicacionEvento": null
+  }
+}

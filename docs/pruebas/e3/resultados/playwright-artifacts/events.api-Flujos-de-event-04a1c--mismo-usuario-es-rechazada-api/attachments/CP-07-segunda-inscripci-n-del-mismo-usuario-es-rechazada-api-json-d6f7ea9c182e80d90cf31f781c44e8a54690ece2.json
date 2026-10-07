@@ -1,0 +1,35 @@
+{
+  "case": "CP-07",
+  "title": "CP-07 — segunda inscripción del mismo usuario es rechazada",
+  "timestamp": "2026-10-07T14:59:18.241Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/inscripciones/mis-inscripciones",
+  "method": "GET",
+  "status": 200,
+  "durationMs": 23.86,
+  "browser": "chromium",
+  "body": [
+    {
+      "id": "78595bdd-9bd2-4a09-b153-6ca8700028f6",
+      "eventoId": "07af8dee-d146-47d5-b679-b3a22f599379",
+      "eventoTitulo": "[E3-TEST] 20261007T145310751Z-e267b2",
+      "fechaInscripcion": "2026-10-07T10:53:12.799631",
+      "estado": "CONFIRMADA"
+    },
+    {
+      "id": "eb23fe3f-6baa-48ae-8086-215ae6d443cf",
+      "eventoId": "730d7f4a-164b-4176-b268-48750dcb456c",
+      "eventoTitulo": "[E3-TEST] 20261007T145915914Z-47528f",
+      "fechaInscripcion": "2026-10-07T10:59:18.00236",
+      "estado": "CONFIRMADA"
+    },
+    {
+      "id": "82d057c3-8484-4d5f-a652-bcebf26fe825",
+      "eventoId": "b935983a-5a37-4aa1-a09d-00e245bf76e4",
+      "eventoTitulo": "[E3-TEST] 20261007T145329864Z-2c42d6",
+      "fechaInscripcion": "2026-10-07T10:53:32.083069",
+      "estado": "CONFIRMADA"
+    }
+  ]
+}

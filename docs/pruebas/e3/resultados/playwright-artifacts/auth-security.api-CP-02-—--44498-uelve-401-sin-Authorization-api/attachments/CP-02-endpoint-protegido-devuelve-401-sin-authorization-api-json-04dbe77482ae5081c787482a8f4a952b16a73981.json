@@ -1,0 +1,19 @@
+{
+  "case": "CP-02",
+  "title": "CP-02 — endpoint protegido devuelve 401 sin Authorization",
+  "timestamp": "2026-10-07T14:59:13.510Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/usuarios/perfil",
+  "method": "GET",
+  "status": 401,
+  "durationMs": 9,
+  "browser": "chromium",
+  "body": {
+    "codigo": "AUTH_REQUIRED",
+    "mensaje": "Se requiere autenticacion",
+    "detalles": null,
+    "timestamp": "2026-10-07T10:59:13.5083498",
+    "ruta": "/api/v1/usuarios/perfil"
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "case": "CP-25",
+  "title": "CP-25 — matriz de autenticación y roles basada en anotaciones actuales",
+  "timestamp": "2026-10-07T14:59:19.276Z",
+  "environment": "local-e3-isolated",
+  "openApi": "http://localhost:8080/v3/api-docs",
+  "derivation": "Roles tomados de las anotaciones @PreAuthorize listadas por fila; OpenAPI comprueba ruta/método y seguridad declarada.",
+  "rows": [
+    {
+      "endpoint": "/usuarios",
+      "method": "GET",
+      "actor": "sin token",
+      "expected": 401,
+      "obtained": 401,
+      "result": "PASS",
+      "source": "UsuarioControlador.listar — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/usuarios/solicitudes-organizador",
+      "method": "GET",
+      "actor": "sin token",
+      "expected": 401,
+      "obtained": 401,
+      "result": "PASS",
+      "source": "UsuarioControlador.listarSolicitudesOrganizador — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/eventos/revision",
+      "method": "GET",
+      "actor": "sin token",
+      "expected": 401,
+      "obtained": 401,
+      "result": "PASS",
+      "source": "EventoController.listarEnRevision — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos",
+      "method": "GET",
+      "actor": "sin token",
+      "expected": 401,
+      "obtained": 401,
+      "result": "PASS",
+      "source": "PagoController.listarTodos — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos/pendientes",
+      "method": "GET",
+      "actor": "sin token",
+      "expected": 401,
+      "obtained": 401,
+      "result": "PASS",
+      "source": "PagoController.listarPendientes — @PreAuthorize(hasAnyRole ADMINISTRADOR, ORGANIZADOR)"
+    },
+    {
+      "endpoint": "/inscripciones/mis-inscripciones",
+      "method": "GET",
+      "actor": "sin token",
+      "expected": 401,
+      "obtained": 401,
+      "result": "PASS",
+      "source": "InscripcionController.listarMisInscripciones — @PreAuthorize(hasRole USUARIO)"
+    },
+    {
+      "endpoint": "/usuarios",
+      "method": "GET",
+      "actor": "user",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "UsuarioControlador.listar — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/usuarios/solicitudes-organizador",
+      "method": "GET",
+      "actor": "user",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "UsuarioControlador.listarSolicitudesOrganizador — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/eventos/revision",
+      "method": "GET",
+      "actor": "user",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "EventoController.listarEnRevision — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos",
+      "method": "GET",
+      "actor": "user",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "PagoController.listarTodos — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos/pendientes",
+      "method": "GET",
+      "actor": "user",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "PagoController.listarPendientes — @PreAuthorize(hasAnyRole ADMINISTRADOR, ORGANIZADOR)"
+    },
+    {
+      "endpoint": "/inscripciones/mis-inscripciones",
+      "method": "GET",
+      "actor": "user",
+      "expected": 200,
+      "obtained": 200,
+      "result": "PASS",
+      "source": "InscripcionController.listarMisInscripciones — @PreAuthorize(hasRole USUARIO)"
+    },
+    {
+      "endpoint": "/usuarios",
+      "method": "GET",
+      "actor": "organizer",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "UsuarioControlador.listar — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/usuarios/solicitudes-organizador",
+      "method": "GET",
+      "actor": "organizer",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "UsuarioControlador.listarSolicitudesOrganizador — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/eventos/revision",
+      "method": "GET",
+      "actor": "organizer",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "EventoController.listarEnRevision — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos",
+      "method": "GET",
+      "actor": "organizer",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "PagoController.listarTodos — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos/pendientes",
+      "method": "GET",
+      "actor": "organizer",
+      "expected": 200,
+      "obtained": 200,
+      "result": "PASS",
+      "source": "PagoController.listarPendientes — @PreAuthorize(hasAnyRole ADMINISTRADOR, ORGANIZADOR)"
+    },
+    {
+      "endpoint": "/inscripciones/mis-inscripciones",
+      "method": "GET",
+      "actor": "organizer",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "InscripcionController.listarMisInscripciones — @PreAuthorize(hasRole USUARIO)"
+    },
+    {
+      "endpoint": "/usuarios",
+      "method": "GET",
+      "actor": "admin",
+      "expected": 200,
+      "obtained": 200,
+      "result": "PASS",
+      "source": "UsuarioControlador.listar — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/usuarios/solicitudes-organizador",
+      "method": "GET",
+      "actor": "admin",
+      "expected": 200,
+      "obtained": 200,
+      "result": "PASS",
+      "source": "UsuarioControlador.listarSolicitudesOrganizador — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/eventos/revision",
+      "method": "GET",
+      "actor": "admin",
+      "expected": 200,
+      "obtained": 200,
+      "result": "PASS",
+      "source": "EventoController.listarEnRevision — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos",
+      "method": "GET",
+      "actor": "admin",
+      "expected": 200,
+      "obtained": 200,
+      "result": "PASS",
+      "source": "PagoController.listarTodos — @PreAuthorize(hasRole ADMINISTRADOR)"
+    },
+    {
+      "endpoint": "/pagos/pendientes",
+      "method": "GET",
+      "actor": "admin",
+      "expected": 200,
+      "obtained": 200,
+      "result": "PASS",
+      "source": "PagoController.listarPendientes — @PreAuthorize(hasAnyRole ADMINISTRADOR, ORGANIZADOR)"
+    },
+    {
+      "endpoint": "/inscripciones/mis-inscripciones",
+      "method": "GET",
+      "actor": "admin",
+      "expected": 403,
+      "obtained": 403,
+      "result": "PASS",
+      "source": "InscripcionController.listarMisInscripciones — @PreAuthorize(hasRole USUARIO)"
+    }
+  ]
+}

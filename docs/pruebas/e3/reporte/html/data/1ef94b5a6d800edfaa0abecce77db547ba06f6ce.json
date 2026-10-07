@@ -1,0 +1,19 @@
+{
+  "case": "CP-17",
+  "title": "CP-17 — datos incompletos de evento son rechazados por validación real",
+  "timestamp": "2026-10-07T14:59:14.344Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/eventos",
+  "method": "POST",
+  "status": 400,
+  "durationMs": 13.74,
+  "browser": "chromium",
+  "body": {
+    "codigo": "VALIDATION_ERROR",
+    "mensaje": "El cuerpo de la solicitud no es valido",
+    "detalles": null,
+    "timestamp": "2026-10-07T10:59:14.3430189",
+    "ruta": "uri=/api/v1/eventos"
+  }
+}

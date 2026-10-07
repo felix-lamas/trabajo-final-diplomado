@@ -1,0 +1,7 @@
+{
+  "case": "CP-24",
+  "status": "BLOCKED",
+  "timestamp": "2026-10-07T12:06:47.468Z",
+  "apiUrl": "http://localhost:8080",
+  "reason": "La carga de 20 usuarios solo se ejecuta en API local/privada y requiere E3_PERFORMANCE_ACK=I_CONFIRM_LOCAL_LOAD."
+}

@@ -1,0 +1,19 @@
+{
+  "case": "CP-03",
+  "title": "CP-03 — USUARIO autenticado recibe 403 en consulta exclusiva de administración",
+  "timestamp": "2026-10-07T14:59:13.866Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/usuarios/solicitudes-organizador",
+  "method": "GET",
+  "status": 403,
+  "durationMs": 20.91,
+  "browser": "chromium",
+  "body": {
+    "codigo": "ACCESS_DENIED",
+    "mensaje": "No tiene permisos para realizar esta operacion",
+    "detalles": null,
+    "timestamp": "2026-10-07T10:59:13.8573483",
+    "ruta": "uri=/api/v1/usuarios/solicitudes-organizador"
+  }
+}

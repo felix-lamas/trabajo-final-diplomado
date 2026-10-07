@@ -1,0 +1,750 @@
+{
+  "generatedAt": "2026-10-07T14:59:38.385Z",
+  "environment": "local-e3-isolated",
+  "webUrl": "http://localhost:4200",
+  "apiUrl": "http://localhost:8080",
+  "cases": [
+    {
+      "id": "CP-01",
+      "requirement": "RF-01",
+      "scenario": "Login, acceso protegido, logout y revocacion; registro/verificacion requiere bandeja de prueba.",
+      "expected": "Login y perfil 200; logout invalida JWT. Registro/verificacion solo se marca PASS con evidencia real de correo.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-01 — login, perfil protegido, logout y revocación de sesión",
+          "status": "PASS",
+          "durationMs": 239,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api/attachments/CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api/attachments/CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api/attachments/CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api/attachments/CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json",
+            "CP-01-sesion-revocada.txt"
+          ]
+        },
+        {
+          "title": "Registro y verificacion de correo mediante bandeja externa",
+          "status": "BLOCKED",
+          "durationMs": null,
+          "browser": "evidencia manual/correo",
+          "error": null,
+          "blockedReason": "No hay una bandeja de correo de prueba accesible; el seed marca la cuenta demo como verificada, por lo que no se afirmo haber probado el flujo de correo.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-02",
+      "requirement": "Seguridad",
+      "scenario": "Acceso a una operación protegida sin autenticación.",
+      "expected": "HTTP 401 ante ausencia o invalidez de autenticación.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-02 — endpoint protegido devuelve 401 sin Authorization",
+          "status": "PASS",
+          "durationMs": 311,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-02-—--44498-uelve-401-sin-Authorization-api/attachments/CP-02-endpoint-protegido-devuelve-401-sin-authorization-api-json-04dbe77482ae5081c787482a8f4a952b16a73981.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-02-—--44498-uelve-401-sin-Authorization-api/attachments/CP-02-401-png-0840f097bb671612ffb17dc6088123afa7a53a58.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-03",
+      "requirement": "Seguridad",
+      "scenario": "Operación administrativa solicitada por un rol sin autorización.",
+      "expected": "HTTP 403 para un usuario autenticado con rol insuficiente.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-03 — USUARIO autenticado recibe 403 en consulta exclusiva de administración",
+          "status": "PASS",
+          "durationMs": 160,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-03-—--b5a5d-exclusiva-de-administración-api/attachments/CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api-json-ce1efe43c1adc55532a219402f8baad244cf66a3.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-03-—--b5a5d-exclusiva-de-administración-api/attachments/CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api-json-ce1efe43c1adc55532a219402f8baad244cf66a3.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-04",
+      "requirement": "RF-03",
+      "scenario": "Creación de evento propio por ORGANIZADOR aprobado.",
+      "expected": "El backend valida los datos y crea el evento correctamente.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-04 — ORGANIZADOR aprobado crea evento de prueba en BORRADOR",
+          "status": "PASS",
+          "durationMs": 1885,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api/attachments/CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-json-e0f673bfe9606085f59434aacf2846d4bf891aab.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api/attachments/CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-json-e0f673bfe9606085f59434aacf2846d4bf891aab.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api/attachments/CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-png-0b30fc0b999649879c7a28babce7fa90683a16b2.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-05",
+      "requirement": "RF-04",
+      "scenario": "Publicación de evento EN_REVISION por ADMINISTRADOR.",
+      "expected": "El backend transiciona a PUBLICADO y el evento es visible en la consulta pública.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-05 — ADMINISTRADOR publica evento y este aparece en catálogo público",
+          "status": "PASS",
+          "durationMs": 1184,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api/attachments/CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api/attachments/CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api/attachments/CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api/attachments/CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api/attachments/CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-png-3e60c691e809aae5fc6c095535b91fa17b5bf631.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-06",
+      "requirement": "RF-06",
+      "scenario": "Inscripción de USUARIO a evento gratuito y pagado.",
+      "expected": "Gratuito: CONFIRMADA sin Pago. Pagado: PENDIENTE_PAGO y monto oficial del backend.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-06 — inscripción gratuita produce estado confirmado",
+          "status": "PASS",
+          "durationMs": 203,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api/attachments/CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api/attachments/CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api/attachments/CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api/attachments/CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json"
+          ]
+        },
+        {
+          "title": "CP-06 — inscripción pagada produce PENDIENTE_PAGO y monto del backend",
+          "status": "BLOCKED",
+          "durationMs": 4,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_PAID_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-07",
+      "requirement": "Seguridad",
+      "scenario": "Segunda inscripción del mismo participante al mismo evento.",
+      "expected": "El sistema impide la duplicación de la inscripción.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-07 — segunda inscripción del mismo usuario es rechazada",
+          "status": "PASS",
+          "durationMs": 208,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api/attachments/CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api/attachments/CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api/attachments/CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api/attachments/CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-08",
+      "requirement": "RF-07",
+      "scenario": "Carga de comprobante privado válido de pago propio.",
+      "expected": "Archivo persistido y pago/inscripción PENDIENTE_VALIDACION; consulta propia devuelve el mismo pago.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-08 — upload multipart de comprobante técnico propio actualiza estado real",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-09",
+      "requirement": "Seguridad",
+      "scenario": "Validación de pago por Administrador u Organizador autorizado.",
+      "expected": "El sistema actualiza el estado de pago según la decisión registrada.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-09 — actor autorizado valida un pago propio en PENDIENTE_VALIDACION",
+          "status": "BLOCKED",
+          "durationMs": 10,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-10",
+      "requirement": "RF-08",
+      "scenario": "Generación de QR temporal de una sesión propia.",
+      "expected": "Token temporal asociado a sesión, con vigencia validada por backend.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-10 — sesión propia emite QR temporal con vigencia del contrato",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_QR_EVENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-11",
+      "requirement": "RF-08",
+      "scenario": "Asistencia móvil con QR vigente y GPS admisible.",
+      "expected": "Una asistencia por inscripción y sesión. Requiere evidencia de dispositivo.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-11 — asistencia QR/GPS necesita ejecución Flutter en dispositivo",
+          "status": "BLOCKED",
+          "durationMs": 1,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "NEEDS_DEVICE_EVIDENCE: cámara y GPS se validan mediante flutter test integration_test en dispositivo/emulador real; Playwright no simula estos sensores.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-12",
+      "requirement": "RF-09",
+      "scenario": "Generación de certificado de inscripción elegible.",
+      "expected": "El sistema genera el certificado y asigna código único de verificación.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-12 — certificado se genera solo para inscripción elegible configurada",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_ELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-13",
+      "requirement": "RF-13",
+      "scenario": "Verificación pública de certificado mediante código.",
+      "expected": "El endpoint público devuelve la información correspondiente; código no registrado se distingue de error de servidor.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-13 — código válido de prueba se verifica públicamente",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta E3_CERTIFICATE_CODE de un certificado legítimo de prueba; no se generó un certificado para esta consulta.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-14",
+      "requirement": "Integración móvil",
+      "scenario": "Consulta de eventos desde la aplicación Flutter.",
+      "expected": "La aplicación obtiene datos de API y muestra eventos disponibles.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "Flutter integration_test CP-14",
+          "status": "BLOCKED",
+          "durationMs": null,
+          "browser": "Android / Flutter integration_test",
+          "error": null,
+          "blockedReason": "Precondiciones faltantes: E3_ANDROID_DEVICE_ID, E3_USER_EMAIL/E3_USER_PASSWORD, E3_FLUTTER_API_BASE_URL con /api/v1 accesible desde Android, E3_ISOLATED_TEST_ENV=true (login crea/revoca una sesión local)",
+          "evidence": [
+            "docs/pruebas/e3/resultados/flutter-cp-14-2026-10-07T14-14-11.345Z.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-15",
+      "requirement": "Integración web",
+      "scenario": "Consulta de operación administrativa desde Angular.",
+      "expected": "La aplicación web consume API y presenta información al usuario autorizado.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-15 — Angular presenta datos administrativos recibidos de API",
+          "status": "PASS",
+          "durationMs": 1837,
+          "browser": "admin-chromium",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/admin-ui.web-CP-15-—-Angul-d7199-istrativos-recibidos-de-API-admin-chromium/attachments/CP-15-angular-presenta-datos-administrativos-recibidos-de-ap-admin-chromium-png-26f159bba4f6d2091c4e20efc9bdc86433ed0372.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-16",
+      "requirement": "RF-01",
+      "scenario": "Credenciales inválidas, token inválido o sesión revocada.",
+      "expected": "Rechazo según contrato (400 o 401); no se crea sesión válida indebida.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-16 — credenciales inválidas y JWT inválido se rechazan",
+          "status": "PASS",
+          "durationMs": 116,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-16-—--a9b90--y-JWT-inválido-se-rechazan-api/attachments/CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api-json-a48db44129e29777b4b5384f98201b294486b983.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-16-—--a9b90--y-JWT-inválido-se-rechazan-api/attachments/CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api-json-a48db44129e29777b4b5384f98201b294486b983.json"
+          ]
+        },
+        {
+          "title": "CP-16 — login correcto emite JWT solo para credenciales de cuenta de prueba",
+          "status": "PASS",
+          "durationMs": 145,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-16-—--9e720-nciales-de-cuenta-de-prueba-api/attachments/CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api-json-89e96666a3a6a7d72dbde45626ba709075de9752.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-16-—--9e720-nciales-de-cuenta-de-prueba-api/attachments/CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api-json-89e96666a3a6a7d72dbde45626ba709075de9752.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-17",
+      "requirement": "RF-03 / Seguridad",
+      "scenario": "Datos inválidos, recurso ajeno o archivo de tipo/tamaño incorrecto.",
+      "expected": "La operación se rechaza sin alterar el recurso anterior.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-17 — datos incompletos de evento son rechazados por validación real",
+          "status": "PASS",
+          "durationMs": 140,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-17-—--36605-hazados-por-validación-real-api/attachments/CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api-json-aff6f11785657f30951da63097535365d92fed05.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-17-—--36605-hazados-por-validación-real-api/attachments/CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api-json-aff6f11785657f30951da63097535365d92fed05.json"
+          ]
+        },
+        {
+          "title": "CP-17 — MIME de comprobante incompatible es rechazado",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        },
+        {
+          "title": "CP-17 — tamaño mayor al máximo documentado se rechaza",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_INVALID_FILE_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-18",
+      "requirement": "RF-04 / Seguridad",
+      "scenario": "Publicar/rechazar con rol insuficiente o estado incompatible.",
+      "expected": "403 o conflicto de estado según API; el evento no se publica indebidamente.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-18 — USUARIO no publica ni rechaza eventos",
+          "status": "PASS",
+          "durationMs": 165,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api/attachments/CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api/attachments/CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api/attachments/CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json"
+          ]
+        },
+        {
+          "title": "CP-18 — transición de publicación incompatible devuelve conflicto real",
+          "status": "BLOCKED",
+          "durationMs": 5,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta E3_STATE_CONFLICT_EVENT_ID de un evento local no EN_REVISION; no se crea ni cambia un evento para fabricar el conflicto.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-19",
+      "requirement": "RF-05",
+      "scenario": "Catálogo, detalle y filtros con coincidencias e información de pago.",
+      "expected": "Solo eventos públicos visibles; instrucciones y QR opcional corresponden al evento.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-19 — catálogo y búsqueda pública usan rutas reales y solo datos publicados",
+          "status": "PASS",
+          "durationMs": 36,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-19-—--58a6b-les-y-solo-datos-publicados-api/attachments/CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api-json-e4d36daacec0e3d85f3b452a36e575fdd72bbfe6.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-19-—--58a6b-les-y-solo-datos-publicados-api/attachments/CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api-json-e4d36daacec0e3d85f3b452a36e575fdd72bbfe6.json"
+          ]
+        },
+        {
+          "title": "CP-19 — catálogo Angular carga eventos y filtros en navegador",
+          "status": "PASS",
+          "durationMs": 1692,
+          "browser": "chromium",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/public-web.web-CP-19-—-cat-21e8a-ntos-y-filtros-en-navegador-chromium/attachments/CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-chromium-png-f527e75bed2bd7dceb9aba3fc2c8d5618148d1d3.png"
+          ]
+        },
+        {
+          "title": "CP-19 — catálogo Angular carga eventos y filtros en navegador",
+          "status": "BLOCKED",
+          "durationMs": 0,
+          "browser": "firefox",
+          "error": null,
+          "blockedReason": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+          "evidence": []
+        },
+        {
+          "title": "CP-19 — catálogo Angular carga eventos y filtros en navegador",
+          "status": "PASS",
+          "durationMs": 2967,
+          "browser": "webkit",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/public-web.web-CP-19-—-cat-21e8a-ntos-y-filtros-en-navegador-webkit/attachments/CP-19-cat-logo-angular-carga-eventos-y-filtros-en-navegador-webkit-png-33f335e9094bf088485e051a4c790f9df5707a09.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-20",
+      "requirement": "RF-05",
+      "scenario": "Filtros sin resultados o detalle inexistente/no visible.",
+      "expected": "Lista vacía o 404 según operación; sin datos inventados.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-20 — búsqueda vacía y detalle inexistente se responden según contrato",
+          "status": "PASS",
+          "durationMs": 35,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-20-—--4a4d8-se-responden-según-contrato-api/attachments/CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api-json-ade0c36d14224969a6292354b73cb9261153a923.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-20-—--4a4d8-se-responden-según-contrato-api/attachments/CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api-json-ade0c36d14224969a6292354b73cb9261153a923.json"
+          ]
+        },
+        {
+          "title": "CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar",
+          "status": "PASS",
+          "durationMs": 1481,
+          "browser": "chromium",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/public-web.web-CP-20-—-bús-d055a-ado-vacío-y-permite-limpiar-chromium/attachments/CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--chromium-png-6ae65ec8b6c643b260ece5d992a57e66f90508af.png"
+          ]
+        },
+        {
+          "title": "CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar",
+          "status": "BLOCKED",
+          "durationMs": 0,
+          "browser": "firefox",
+          "error": null,
+          "blockedReason": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+          "evidence": []
+        },
+        {
+          "title": "CP-20 — búsqueda Angular sin coincidencias muestra estado vacío y permite limpiar",
+          "status": "PASS",
+          "durationMs": 2447,
+          "browser": "webkit",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/public-web.web-CP-20-—-bús-d055a-ado-vacío-y-permite-limpiar-webkit/attachments/CP-20-b-squeda-angular-sin-coincidencias-muestra-estado-vac--webkit-png-d3b8bb8842ec6b4fe0ebb7a5c60d36d67c1d33b6.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-21",
+      "requirement": "RF-07 / Seguridad",
+      "scenario": "Comprobante rechazado, reenvío permitido y acceso a pago ajeno.",
+      "expected": "Reenvío validado en estado permitido; recurso ajeno protegido.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-21 — rechazo y reenvío solo con pago propio en estado compatible",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_TEST_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        },
+        {
+          "title": "CP-21 — acceso de USUARIO a pago ajeno se deniega",
+          "status": "BLOCKED",
+          "durationMs": 3,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_OTHER_USER_PAYMENT_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-22",
+      "requirement": "RF-08 / Seguridad",
+      "scenario": "QR vencido/rotado, GPS fuera de regla o asistencia duplicada.",
+      "expected": "Rechazo backend sin crear una nueva asistencia.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-22 — escenarios QR expirado, GPS, duplicado y sensor requieren dispositivo/datos legítimos",
+          "status": "BLOCKED",
+          "durationMs": 1,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "NEEDS_DEVICE_EVIDENCE: no hay sesión/QR/inscripción real declarada para fabricar expiración, distancia ni duplicidad.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-23",
+      "requirement": "RF-09 / RF-13",
+      "scenario": "Falta de elegibilidad y código desconocido.",
+      "expected": "Generación rechazada; verificación de código inexistente no produce error de servidor.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-23 — verificación pública distingue un código no registrado sin JWT",
+          "status": "PASS",
+          "durationMs": 21,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-23-—--7a97c-ódigo-no-registrado-sin-JWT-api/attachments/CP-23-verificaci-n-p-blica-distingue-un-c-digo-no-registrado-api-json-243e16d68884363515f1cbdb1ee9387f8af76643.json"
+          ]
+        },
+        {
+          "title": "CP-23 — certificado no elegible es rechazado por el backend",
+          "status": "BLOCKED",
+          "durationMs": 5,
+          "browser": "api",
+          "error": null,
+          "blockedReason": "Falta el fixture real E3_INELIGIBLE_INSCRIPTION_ID; no se fabricó ni se buscó un identificador ajeno.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "CP-24",
+      "requirement": "RNF-01",
+      "scenario": "Operaciones principales con 20 usuarios concurrentes.",
+      "expected": "Al menos 95 % de solicitudes en 3 segundos o menos.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "Carga de 20 usuarios concurrentes",
+          "status": "BLOCKED",
+          "durationMs": null,
+          "browser": "node fetch",
+          "error": null,
+          "blockedReason": "La carga de 20 usuarios solo se ejecuta en API local/privada y requiere E3_PERFORMANCE_ACK=I_CONFIRM_LOCAL_LOAD.",
+          "evidence": [
+            "docs/pruebas/e3/resultados/CP-24-rendimiento-2026-10-07T14-14-20.680Z.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-25",
+      "requirement": "RNF-02",
+      "scenario": "Matriz de endpoints y roles.",
+      "expected": "Autenticación ausente/inválida y roles insuficientes son rechazados según contratos.",
+      "state": "PASS",
+      "runs": [
+        {
+          "title": "CP-25 — matriz de autenticación y roles basada en anotaciones actuales",
+          "status": "PASS",
+          "durationMs": 783,
+          "browser": "api",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+            "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-26",
+      "requirement": "RNF-03",
+      "scenario": "Tareas principales con participantes de prueba.",
+      "expected": "Al menos 80 % completa tareas sin asistencia; requiere protocolo y resultados humanos.",
+      "state": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "CP-27",
+      "requirement": "RNF-04",
+      "scenario": "Compatibilidad Chrome, Edge, Firefox y Android 12+.",
+      "expected": "Flujos correctos en versiones/dispositivos registrados.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "CP-27 — compatibilidad web del catálogo en el navegador configurado",
+          "status": "PASS",
+          "durationMs": 1486,
+          "browser": "chromium",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "CP-27-navegador.txt",
+            "docs/pruebas/e3/resultados/playwright-artifacts/public-web.web-CP-27-—-com-c3474-en-el-navegador-configurado-chromium/attachments/CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-chromium-png-7b51cc4b801e2fc585d6fc9700f31ae7620fe46f.png"
+          ]
+        },
+        {
+          "title": "CP-27 — compatibilidad web del catálogo en el navegador configurado",
+          "status": "BLOCKED",
+          "durationMs": 0,
+          "browser": "firefox",
+          "error": null,
+          "blockedReason": "BLOCKED: en este entorno Windows Firefox lanza pero falla browserContext.newPage antes de ejecutar la prueba; requiere diagnóstico del runtime Playwright.",
+          "evidence": []
+        },
+        {
+          "title": "CP-27 — compatibilidad web del catálogo en el navegador configurado",
+          "status": "PASS",
+          "durationMs": 2510,
+          "browser": "webkit",
+          "error": null,
+          "blockedReason": null,
+          "evidence": [
+            "CP-27-navegador.txt",
+            "docs/pruebas/e3/resultados/playwright-artifacts/public-web.web-CP-27-—-com-c3474-en-el-navegador-configurado-webkit/attachments/CP-27-compatibilidad-web-del-cat-logo-en-el-navegador-config-webkit-png-ec887aaaffb37f58bab7ac0f3a0c84560743ca21.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CP-28",
+      "requirement": "RNF-05",
+      "scenario": "Monitoreo de disponibilidad durante el período de prueba.",
+      "expected": "Disponibilidad mínima 95 %, excluyendo mantenimiento programado.",
+      "state": "BLOCKED",
+      "runs": [
+        {
+          "title": "Monitoreo de disponibilidad",
+          "status": "BLOCKED",
+          "durationMs": null,
+          "browser": "node fetch",
+          "error": null,
+          "blockedReason": "Definir E3_AVAILABILITY_PERIOD_HOURS > 0 para comenzar una medición con duración explícita.",
+          "evidence": [
+            "docs/pruebas/e3/resultados/CP-28-disponibilidad-2026-10-07T14-14-36.433Z.json"
+          ]
+        }
+      ]
+    }
+  ]
+}

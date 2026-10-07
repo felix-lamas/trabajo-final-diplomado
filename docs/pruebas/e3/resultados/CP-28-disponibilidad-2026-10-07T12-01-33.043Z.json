@@ -1,0 +1,6 @@
+{
+  "case": "CP-28",
+  "state": "BLOCKED",
+  "timestamp": "2026-10-07T12:01:33.048Z",
+  "reason": "Definir E3_AVAILABILITY_PERIOD_HOURS > 0 para comenzar una medición con duración explícita."
+}

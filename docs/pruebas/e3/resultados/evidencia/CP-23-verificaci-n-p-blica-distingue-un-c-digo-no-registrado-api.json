@@ -1,0 +1,25 @@
+{
+  "case": "CP-23",
+  "title": "CP-23 — verificación pública distingue un código no registrado sin JWT",
+  "timestamp": "2026-10-07T14:59:14.482Z",
+  "environment": "local-e3-isolated",
+  "apiBaseUrl": "http://localhost:8080",
+  "endpoint": "/certificados/verificar/E3-NO-REGISTRADO-15366a37-6d56-4e39-be4b-651711c41704",
+  "method": "GET",
+  "status": 200,
+  "durationMs": 10.13,
+  "browser": "chromium",
+  "body": {
+    "valido": false,
+    "mensaje": "Certificado no registrado",
+    "institucion": "Universidad Autónoma Juan Misael Saracho - UAJMS",
+    "nombreCompleto": "[REDACTED]",
+    "evento": null,
+    "tipoCertificado": null,
+    "horasAcademicas": null,
+    "porcentajeAsistencia": null,
+    "fechaEmision": null,
+    "codigoCertificado": "[REDACTED]",
+    "estado": "NO_REGISTRADO"
+  }
+}

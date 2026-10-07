@@ -1,0 +1,11 @@
+export const REPO_ROOT: string;
+export const WEB_URL: string;
+export const API_URL: string;
+export function loadE3Env(): void;
+export function apiV1(route?: string): string;
+export function webUrl(route?: string): string;
+export function credential(role: 'admin' | 'organizer' | 'user'): { email: string; password: string } | null;
+export function e3Environment(): string;
+export function mutationTargetAllowed(): boolean;
+export function isLocalOrPrivateTarget(): boolean;
+export function requiredScenario(name: string): string | null;

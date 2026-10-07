@@ -62,6 +62,8 @@ public class SecurityConfig {
                                 "/api/v1/swagger-ui.html",
                                 "/api/v1/swagger-ui/**"
                         ).permitAll()
+                        // Evita que el matcher público de detalle /eventos/* exponga esta ruta protegida.
+                        .requestMatchers(HttpMethod.GET, "/api/v1/eventos/revision").authenticated()
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/v1/salud",

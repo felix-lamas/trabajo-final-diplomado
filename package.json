@@ -1,0 +1,24 @@
+{
+  "name": "vidia-e3-qa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:e3": "playwright test --config=playwright.config.ts",
+    "test:e3:headed": "playwright test --config=playwright.config.ts --headed",
+    "test:e3:report": "playwright show-report docs/pruebas/e3/reporte/html",
+    "test:e3:types": "tsc --noEmit -p e3-tests/tsconfig.json",
+    "test:e3:install-browsers": "playwright install chromium firefox webkit",
+    "test:e3:performance": "tsx e3-tests/scripts/performance.ts",
+    "test:e3:availability": "tsx e3-tests/scripts/availability.ts",
+    "test:e3:flutter": "node e3-tests/scripts/run-flutter-integration.mjs",
+    "test:backend": "mvn -f backend/pom.xml test",
+    "test:angular": "npm --prefix frontend test -- --watch=false",
+    "test:flutter:unit": "flutter test --directory flutter/VidiaApp"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3"
+  }
+}
