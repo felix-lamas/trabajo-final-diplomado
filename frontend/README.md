@@ -36,6 +36,59 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+## Despliegue en Render y rutas SPA
+
+El frontend se publica como **Static Site**. El archivo `../render.yaml`
+versiona su configuración: raíz `frontend`, build `npm ci && npm run build`
+y directorio publicado `dist/frontend/browser` (relativo a la raíz del servicio).
+
+Angular Router resuelve las rutas en el navegador. Para abrir enlaces directos,
+Render debe servir `index.html` cuando la ruta no corresponde a un archivo:
+
+| Source | Destination | Action |
+| --- | --- | --- |
+| `/*` | `/index.html` | **Rewrite** |
+
+La reescritura conserva la URL y sus parámetros, incluido `?token=...`.
+Los archivos existentes (JavaScript, CSS, imágenes) se sirven normalmente.
+No se requiere cambiar las rutas Angular ni las URLs del backend.
+
+### Aplicar al sitio existente
+
+Si el servicio está administrado por un Blueprint, sincronizar el
+`render.yaml` de la raíz del repositorio con el **servicio existente**
+`trabajo-final-diplomado-web`. Revisar el cambio antes de aplicarlo.
+El Blueprint solo declara el frontend.
+
+Si el sitio se creó manualmente, un push o redeploy **no importa automáticamente**
+este YAML. En Render Dashboard, abrir el Static Site existente y agregar la
+regla anterior en **Redirects/Rewrites**. Colocarla después de cualquier regla
+más específica. Usar **Rewrite**, para conservar la ruta y el token en el
+navegador. No crear un segundo sitio.
+
+La regla de Static Site no se aplica a un Web Service con servidor propio;
+si el Dashboard muestra ese tipo, revisar su comando de inicio y configurar
+el fallback en dicho servidor antes de desplegar.
+
+### Validación después de aplicar la configuración
+
+1. Abrir directamente `/auth/verificar-correo?token=TOKEN_DE_PRUEBA` y
+   `/auth/restablecer-contrasena?token=TOKEN_DE_PRUEBA` en el dominio del frontend.
+2. Confirmar en Network que la petición del documento devuelve **200** con
+   `index.html`, que carga la pantalla correspondiente y que la URL conserva
+   `?token=TOKEN_DE_PRUEBA`. Un token ficticio puede mostrar un error de token;
+   el documento no debe responder `Not Found`.
+3. Recargar ambas páginas y comprobar la navegación interna.
+4. Abrir un enlace real recibido por correo con una cuenta de prueba y un
+   token vigente para validar el flujo completo.
+5. Comprobar que JavaScript, CSS e imágenes siguen cargando correctamente.
+
+Sin aplicar la regla en Render no se corrige el 404 de producción.
+La compilación y las pruebas locales no sustituyen esta comprobación.
+
+Referencias: [rewrites de Render](https://render.com/docs/redirects-rewrites)
+y [Blueprint YAML](https://render.com/docs/blueprint-spec).
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
