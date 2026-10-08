@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.usuarios.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.ServicioNoDisponibleException;
 import bo.uajms.eventos.core.seguridad.JwtService;
 import bo.uajms.eventos.modulos.usuarios.dtos.LoginRequest;
 import bo.uajms.eventos.modulos.usuarios.dtos.LoginResponse;
@@ -9,6 +10,7 @@ import bo.uajms.eventos.modulos.usuarios.dtos.RegistroUsuarioRequest;
 import bo.uajms.eventos.modulos.usuarios.entidades.Rol;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
 import bo.uajms.eventos.modulos.usuarios.entidades.UsuarioRol;
+import bo.uajms.eventos.modulos.usuarios.entidades.TokenVerificacionCorreo;
 import bo.uajms.eventos.modulos.usuarios.entidades.SesionUsuario;
 import bo.uajms.eventos.modulos.usuarios.mappers.UsuarioMapper;
 import bo.uajms.eventos.modulos.usuarios.repositorios.RolRepository;
@@ -32,6 +34,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.time.LocalDateTime;
+import java.util.HexFormat;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,6 +56,7 @@ class AutenticacionServicioTest {
     private Rol rolUsuario;
     private TokenVerificacionCorreoRepository tokenVerificacionCorreoRepository;
     private SesionUsuarioServicio sesionUsuarioServicio;
+    private CorreoServicio correoServicio;
 
     @BeforeEach
     void configurar() {
@@ -62,6 +69,7 @@ class AutenticacionServicioTest {
         userDetailsService = mock(UserDetailsService.class);
         tokenVerificacionCorreoRepository = mock(TokenVerificacionCorreoRepository.class);
         sesionUsuarioServicio = mock(SesionUsuarioServicio.class);
+        correoServicio = mock(CorreoServicio.class);
         rolUsuario = rol("USUARIO");
 
         servicio = new AutenticacionServicio(
@@ -75,7 +83,7 @@ class AutenticacionServicioTest {
                 authenticationManager,
                 userDetailsService,
                 new UsuarioMapper(),
-                mock(CorreoServicio.class),
+                correoServicio,
                 sesionUsuarioServicio
         );
         ReflectionTestUtils.setField(servicio, "verifyEmailUrl", "https://app.example.test/verificar");
@@ -98,6 +106,42 @@ class AutenticacionServicioTest {
         assertEquals("USUARIO", rolCaptor.getValue().getRol().getNombre());
         assertFalse(response.isCorreoVerificado());
         verify(jwtService, never()).generarToken(any(), any());
+    }
+
+    @Test
+    void registroDejaCorreoSinVerificarYPersisteHashDeTokenConExpiracion() {
+        prepararRegistroExitoso();
+        ArgumentCaptor<TokenVerificacionCorreo> tokenCaptor =
+                ArgumentCaptor.forClass(TokenVerificacionCorreo.class);
+        ArgumentCaptor<String> enlaceCaptor = ArgumentCaptor.forClass(String.class);
+        LocalDateTime inicio = LocalDateTime.now();
+
+        RegistroResponse response = servicio.registrar(registroInterno());
+
+        LocalDateTime fin = LocalDateTime.now();
+        verify(tokenVerificacionCorreoRepository).save(tokenCaptor.capture());
+        verify(correoServicio).enviarVerificacionCorreo(eq("usuario@ejemplo.test"), enlaceCaptor.capture());
+        TokenVerificacionCorreo token = tokenCaptor.getValue();
+        String plano = enlaceCaptor.getValue().substring(enlaceCaptor.getValue().indexOf("token=") + 6);
+        assertFalse(response.isCorreoVerificado());
+        assertFalse(token.isUtilizado());
+        assertEquals(hash(plano), token.getTokenHash());
+        assertNotEquals(plano, token.getTokenHash());
+        assertFalse(token.getFechaExpiracion().isBefore(inicio.plusHours(24)));
+        assertFalse(token.getFechaExpiracion().isAfter(fin.plusHours(24)));
+    }
+
+    @Test
+    void falloDelProveedorEnRegistroSePropagaComoServicioNoDisponible() {
+        prepararRegistroExitoso();
+        doThrow(new ServicioNoDisponibleException("MAIL_SERVICE_UNAVAILABLE", "correo no disponible"))
+                .when(correoServicio).enviarVerificacionCorreo(eq("usuario@ejemplo.test"), anyString());
+
+        ServicioNoDisponibleException exception = assertThrows(ServicioNoDisponibleException.class,
+                () -> servicio.registrar(registroInterno()));
+
+        assertEquals("MAIL_SERVICE_UNAVAILABLE", exception.getCodigo());
+        verify(tokenVerificacionCorreoRepository, never()).save(any());
     }
 
     @Test
@@ -261,5 +305,14 @@ class AutenticacionServicioTest {
         Rol rol = Rol.builder().nombre(nombre).build();
         ReflectionTestUtils.setField(rol, "id", UUID.randomUUID());
         return rol;
+    }
+
+    private String hash(String value) {
+        try {
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                    .digest(value.getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception ex) {
+            throw new AssertionError(ex);
+        }
     }
 }

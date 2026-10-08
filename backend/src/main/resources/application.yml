@@ -58,6 +58,7 @@ app:
     reset-password-url: ${FRONTEND_RESET_PASSWORD_URL:http://localhost:4200/auth/restablecer-contrasena}
     verify-email-url: ${FRONTEND_VERIFY_EMAIL_URL:http://localhost:4200/auth/verificar-correo}
   mail:
+    provider: ${MAIL_PROVIDER:brevo-api}
     from: ${MAIL_FROM:appvidia@gmail.com}
     from-name: ${MAIL_FROM_NAME:Vidia}
   uploads:

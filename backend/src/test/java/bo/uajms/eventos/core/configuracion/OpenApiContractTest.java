@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.method.HandlerMethod;
 
 import java.lang.reflect.Method;
@@ -85,6 +86,22 @@ class OpenApiContractTest {
                 Arrays.asList(AutenticacionControlador.class.getAnnotation(RequestMapping.class).value()));
         assertTrue(Arrays.stream(AutenticacionControlador.class.getDeclaredMethods())
                 .noneMatch(method -> method.getName().equals("resetearContrasena")));
+    }
+
+    @Test
+    void rutasPublicasDeCorreoMantienenSusContratosPost() throws Exception {
+        assertPostRuta("registrar", "/registro");
+        assertPostRuta("verificarCorreo", "/verificar-correo");
+        assertPostRuta("reenviarVerificacion", "/reenviar-verificacion");
+        assertPostRuta("solicitarRecuperacion", "/recuperar-contrasena");
+        assertPostRuta("restablecerContrasena", "/restablecer-contrasena");
+    }
+
+    private void assertPostRuta(String metodo, String ruta) throws Exception {
+        Method endpoint = Arrays.stream(AutenticacionControlador.class.getDeclaredMethods())
+                .filter(candidate -> candidate.getName().equals(metodo))
+                .findFirst().orElseThrow();
+        assertEquals(List.of(ruta), Arrays.asList(endpoint.getAnnotation(PostMapping.class).value()));
     }
 
     @Test

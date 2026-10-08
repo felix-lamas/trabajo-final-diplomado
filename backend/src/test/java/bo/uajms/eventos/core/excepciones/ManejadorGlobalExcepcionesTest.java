@@ -39,6 +39,15 @@ class ManejadorGlobalExcepcionesTest {
     }
 
     @Test
+    void proveedorDeCorreoNoDisponibleDevuelve503() {
+        var response = handler.manejarServicioNoDisponible(
+                new ServicioNoDisponibleException(CodigosError.MAIL_SERVICE_UNAVAILABLE,
+                        "El servicio de correo no esta disponible temporalmente"), request);
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
+        assertEquals(CodigosError.MAIL_SERVICE_UNAVAILABLE, response.getBody().getCodigo());
+    }
+
+    @Test
     void errorInesperadoNoExponeDetalle() {
         var response = handler.manejarExcepcionGlobal(new RuntimeException("SELECT secreto FROM tabla"), request);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

@@ -16,16 +16,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CorreoConfiguracionTest {
 
     @Test
-    void applicationDeclaraVariablesSMTPYRemitenteSinClaveVersionada() throws Exception {
+    void applicationUsaBrevoApiPorDefectoYConservaSMTPParaDesarrollo() throws Exception {
         var config = new YamlPropertySourceLoader().load("application",
                 new ClassPathResource("application.yml")).get(0);
 
+        assertEquals("${MAIL_PROVIDER:brevo-api}", config.getProperty("app.mail.provider"));
         assertEquals("${SPRING_MAIL_HOST:}", config.getProperty("spring.mail.host"));
         assertEquals("${SPRING_MAIL_PORT:587}", config.getProperty("spring.mail.port").toString());
         assertEquals("${SPRING_MAIL_USERNAME:}", config.getProperty("spring.mail.username"));
         assertEquals("${SPRING_MAIL_PASSWORD:}", config.getProperty("spring.mail.password"));
         assertEquals("${MAIL_FROM:appvidia@gmail.com}", config.getProperty("app.mail.from"));
         assertEquals("${MAIL_FROM_NAME:Vidia}", config.getProperty("app.mail.from-name"));
+        assertEquals("${FRONTEND_VERIFY_EMAIL_URL:http://localhost:4200/auth/verificar-correo}",
+                config.getProperty("app.frontend.verify-email-url"));
+        assertEquals("${FRONTEND_RESET_PASSWORD_URL:http://localhost:4200/auth/restablecer-contrasena}",
+                config.getProperty("app.frontend.reset-password-url"));
     }
 
     @Test

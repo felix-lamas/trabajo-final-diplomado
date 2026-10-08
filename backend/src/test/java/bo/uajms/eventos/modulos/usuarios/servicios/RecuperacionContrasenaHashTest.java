@@ -1,6 +1,7 @@
 package bo.uajms.eventos.modulos.usuarios.servicios;
 
 import bo.uajms.eventos.core.excepciones.NegocioException;
+import bo.uajms.eventos.core.excepciones.ServicioNoDisponibleException;
 import bo.uajms.eventos.core.seguridad.JwtService;
 import bo.uajms.eventos.modulos.usuarios.dtos.RecuperarContrasenaRequest;
 import bo.uajms.eventos.modulos.usuarios.dtos.ResetContrasenaRequest;
@@ -72,6 +73,21 @@ class RecuperacionContrasenaHashTest {
         assertNotEquals(tokenPlano, entidad.getValue().getToken());
         assertEquals(hash(tokenPlano), entidad.getValue().getToken());
         assertEquals(64, entidad.getValue().getToken().length());
+    }
+
+    @Test
+    void falloDeCorreoEnRecuperacionConservaRespuestaNoEnumerativaYNoPersisteToken() {
+        RecuperarContrasenaRequest request = new RecuperarContrasenaRequest();
+        request.setCorreoElectronico("usuario@example.test");
+        when(usuarioRepository.findByCorreoElectronicoIgnoreCase("usuario@example.test"))
+                .thenReturn(Optional.of(usuario));
+        when(tokenRepository.existsByToken(anyString())).thenReturn(false);
+        doThrow(new ServicioNoDisponibleException("MAIL_SERVICE_UNAVAILABLE", "correo no disponible"))
+                .when(correoServicio).enviarRecuperacionContrasena(eq("usuario@example.test"), anyString());
+
+        assertDoesNotThrow(() -> service.solicitarRecuperacion(request));
+
+        verify(tokenRepository, never()).save(any());
     }
 
     @Test
