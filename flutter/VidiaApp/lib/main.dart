@@ -22,10 +22,18 @@ import 'services/api_service.dart';
 import 'services/auth_service.dart';
 import 'services/token_store.dart';
 import 'screens/auth_gate.dart';
+import 'screens/auth_link_screens.dart';
+import 'services/auth_link_coordinator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final links = AuthLinkCoordinator(
+    source: PlatformAuthLinkSource(),
+    onLink: (link) => appNavigatorKey.currentState?.pushAndRemoveUntil<void>(
+        authLinkRoute(link), (route) => route.isFirst),
+  );
+  unawaited(links.start());
   final tokenStore = SecureTokenStore();
   final api = ApiService(baseUrl: ApiConfig.baseUrl, tokenStore: tokenStore);
   final authService = AuthService(api, tokenStore);
@@ -73,7 +81,7 @@ Future<void> main() async {
           value: GeolocatorAttendanceLocationSource(),
         ),
       ],
-      child: const VidiaApp(),
+      child: VidiaApp(authLinks: links),
     ),
   );
   unawaited(session.restore());

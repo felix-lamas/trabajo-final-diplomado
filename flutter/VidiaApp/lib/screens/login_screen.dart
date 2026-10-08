@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../controllers/session_controller.dart';
 import '../widgets/vidia_logo.dart';
 import 'auth_flow_screens.dart';
+import 'email_auth_screens.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,10 +29,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
-    await context.read<SessionController>().login(
-          email: _email.text,
-          password: _password.text,
-        );
+    final session = context.read<SessionController>();
+    final success = await session.login(
+      email: _email.text,
+      password: _password.text,
+    );
+    if (!mounted || success || session.unverifiedEmail == null) return;
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => EmailVerificationPendingScreen(
+            initialEmail: session.unverifiedEmail!)));
   }
 
   @override
@@ -141,6 +147,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextButton(
                                 onPressed: session.busy
                                     ? null
+                                    : () => Navigator.of(context).push(
+                                        MaterialPageRoute<void>(
+                                            builder: (_) =>
+                                                EmailVerificationPendingScreen(
+                                                    initialEmail:
+                                                        _email.text.trim()))),
+                                child: const Text('Reenviar verificación'),
+                              ),
+                              TextButton(
+                                onPressed: session.busy
+                                    ? null
                                     : () => Navigator.push(
                                           context,
                                           MaterialPageRoute<void>(
@@ -157,11 +174,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                           context,
                                           MaterialPageRoute<void>(
                                             builder: (_) =>
-                                                const AccountRecoveryScreen(),
+                                                PasswordRecoveryScreen(
+                                                    initialEmail:
+                                                        _email.text.trim()),
                                           ),
                                         ),
-                                child: const Text(
-                                    'Verificar correo / recuperar acceso'),
+                                child: const Text('¿Olvidaste tu contraseña?'),
                               ),
                             ],
                           ),

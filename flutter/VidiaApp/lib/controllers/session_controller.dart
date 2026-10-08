@@ -13,6 +13,7 @@ class SessionController extends ChangeNotifier {
   bool _busy = false;
   String? _message;
   String? _restoreError;
+  String? _unverifiedEmail;
 
   AuthUser? get user => _user;
   bool get isAuthenticated => _user != null;
@@ -20,6 +21,7 @@ class SessionController extends ChangeNotifier {
   bool get busy => _busy;
   String? get message => _message;
   String? get restoreError => _restoreError;
+  String? get unverifiedEmail => _unverifiedEmail;
   Future<void> Function()? onSessionExpired;
 
   Future<void> restore() async {
@@ -45,6 +47,7 @@ class SessionController extends ChangeNotifier {
   Future<bool> login({required String email, required String password}) async {
     _busy = true;
     _message = null;
+    _unverifiedEmail = null;
     notifyListeners();
     try {
       final session =
@@ -53,14 +56,24 @@ class SessionController extends ChangeNotifier {
       _restoreError = null;
       return true;
     } catch (error) {
+      if (error is ApiException && error.code == 'EMAIL_NOT_VERIFIED') {
+        _unverifiedEmail = email.trim();
+      }
       _message = error is ApiException && error.code == 'EMAIL_NOT_VERIFIED'
-          ? 'Tu correo todavía no está verificado. Abre “Verificación y recuperación” para verificarlo o solicitar otro correo.'
+          ? 'Tu correo todavía no está verificado. Abre el enlace recibido o solicita otro correo.'
           : error.toString();
       return false;
     } finally {
       _busy = false;
       notifyListeners();
     }
+  }
+
+  void accountPasswordReset() {
+    _user = null;
+    _restoreError = null;
+    _message = 'Contraseña restablecida. Inicia sesión nuevamente.';
+    notifyListeners();
   }
 
   Future<void> logout() async {

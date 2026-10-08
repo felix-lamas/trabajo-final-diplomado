@@ -68,6 +68,7 @@ class AuthService {
       'nuevaContrasena': password,
       'confirmacion': confirmation,
     });
+    await _tokenStore.clear();
   }
 
   Future<void> changePassword({
