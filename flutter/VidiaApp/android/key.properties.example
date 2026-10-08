@@ -1,0 +1,6 @@
+# Keep real passwords out of this file. Supply them through
+# VIDIA_RELEASE_STORE_PASSWORD and VIDIA_RELEASE_KEY_PASSWORD.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=vidia-release
+storeFile=C:\\Users\\USERNAME\\.vidia-signing\\vidia-release.jks

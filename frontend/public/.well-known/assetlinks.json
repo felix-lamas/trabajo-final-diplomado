@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "bo.edu.uajms.vidia",
+      "sha256_cert_fingerprints": [
+        "59:55:F7:0A:56:98:90:B1:AE:22:79:52:78:98:39:7D:14:95:04:10:19:A4:6F:4F:04:6D:25:EE:67:C8:F2:9E"
+      ]
+    }
+  }
+]
