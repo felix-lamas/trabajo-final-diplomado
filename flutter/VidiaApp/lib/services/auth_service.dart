@@ -1,3 +1,4 @@
+import '../models/organizer_application.dart';
 import '../models/auth_session.dart';
 import '../models/auth_user.dart';
 import 'api_service.dart';
@@ -8,6 +9,36 @@ class AuthService {
 
   final ApiService _api;
   final TokenStore _tokenStore;
+
+  Future<OrganizerApplication> organizerApplication() async =>
+      OrganizerApplication.fromJson(
+        await _api.get('/usuarios/solicitud-organizador')
+            as Map<String, dynamic>,
+      );
+
+  Future<List<OrganizerEventType>> organizerEventTypes() async =>
+      (await _api.get('/usuarios/solicitud-organizador/tipos-eventos') as List)
+          .map(
+            (item) => OrganizerEventType.fromJson(item as Map<String, dynamic>),
+          )
+          .toList();
+
+  Future<OrganizerApplication> requestOrganizer({
+    required String reason,
+    required List<String> eventTypes,
+    String? additionalInformation,
+  }) async => OrganizerApplication.fromJson(
+    await _api.post(
+          '/usuarios/solicitud-organizador',
+          body: {
+            'motivoSolicitud': reason.trim(),
+            'tiposEventos': eventTypes,
+            if (additionalInformation != null)
+              'informacionAdicional': additionalInformation.trim(),
+          },
+        )
+        as Map<String, dynamic>,
+  );
 
   Future<AuthSession> signIn({
     required String email,

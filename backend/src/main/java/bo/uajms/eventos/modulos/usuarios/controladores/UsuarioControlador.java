@@ -1,5 +1,9 @@
 package bo.uajms.eventos.modulos.usuarios.controladores;
 
+import bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest;
+import bo.uajms.eventos.modulos.usuarios.dtos.TipoEventoSolicitudResponse;
+import java.util.Arrays;
+import bo.uajms.eventos.modulos.usuarios.entidades.TipoEventoSolicitud;
 import bo.uajms.eventos.modulos.usuarios.dtos.ActualizarPerfilRequest;
 import bo.uajms.eventos.modulos.usuarios.dtos.CambioContrasenaRequest;
 import bo.uajms.eventos.modulos.usuarios.dtos.PerfilResponse;
@@ -89,21 +93,47 @@ public class UsuarioControlador {
     @PostMapping("/solicitud-organizador")
     @PreAuthorize("hasRole('USUARIO')")
     @Operation(summary = "Solicitar rol de organizador",
-            description = "Crea una solicitud PENDIENTE exclusivamente para el propietario del JWT con rol USUARIO. Una solicitud RECHAZADA puede volver a presentarse sin periodo de espera.")
+            description = "Crea una solicitud PENDIENTE exclusivamente para el propietario del JWT con rol USUARIO. Requiere motivo de 30 a 1000 caracteres, al menos un tipo del catalogo y admite informacion adicional de hasta 1000 caracteres. Una solicitud RECHAZADA puede volver a presentarse sin periodo de espera; el intento anterior se conserva en el historial.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Solicitud creada", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "400", description = "Ya existe una solicitud pendiente o aprobada"),
+            @ApiResponse(responseCode = "400", description = "Datos invalidos o solicitud pendiente/aprobada existente"),
             @ApiResponse(responseCode = "401", description = "JWT o sesion no validos"),
             @ApiResponse(responseCode = "403", description = "Requiere rol USUARIO")
     })
-    public ResponseEntity<SolicitudOrganizadorResponse> solicitarSerOrganizador() {
-        return ResponseEntity.ok(usuarioServicio.solicitarSerOrganizador());
+    public ResponseEntity<SolicitudOrganizadorResponse> solicitarSerOrganizador(
+            @Valid @RequestBody SolicitarOrganizadorRequest request) {
+        return ResponseEntity.ok(usuarioServicio.solicitarSerOrganizador(request));
+    }
+
+    @GetMapping("/solicitud-organizador")
+    @PreAuthorize("hasRole('USUARIO')")
+    @Operation(summary = "Consultar mi solicitud", description = "Estado, motivos y permiso de reenvio del propietario del JWT. No acepta IDs de otros usuarios.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Estado y permiso actuales del solicitante", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "401", description = "Se requiere autenticacion"),
+            @ApiResponse(responseCode = "403", description = "Requiere rol USUARIO")
+    })
+    public ResponseEntity<SolicitudOrganizadorResponse> obtenerMiSolicitud() {
+        return ResponseEntity.ok(usuarioServicio.obtenerMiSolicitudOrganizador());
+    }
+
+    @GetMapping("/solicitud-organizador/tipos-eventos")
+    @PreAuthorize("hasAnyRole('USUARIO', 'ADMINISTRADOR')")
+    @Operation(summary = "Tipos de eventos permitidos en una solicitud", description = "Catalogo controlado por el backend; independiente de las categorias administrables de eventos.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Codigos y nombres de los seis tipos permitidos", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "401", description = "Se requiere autenticacion"),
+            @ApiResponse(responseCode = "403", description = "Requiere rol USUARIO o ADMINISTRADOR")
+    })
+    public List<TipoEventoSolicitudResponse> tiposEventosSolicitud() {
+        return Arrays.stream(TipoEventoSolicitud.values())
+                .map(tipo -> new TipoEventoSolicitudResponse(tipo.name(), tipo.getNombre())).toList();
     }
 
     @GetMapping("/solicitudes-organizador")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Listar solicitudes de organizador",
-            description = "Consulta exclusiva de ADMINISTRADOR filtrada por NINGUNA, PENDIENTE, APROBADA o RECHAZADA. El valor predeterminado es PENDIENTE.")
+            description = "Consulta exclusiva de ADMINISTRADOR filtrada por NINGUNA, PENDIENTE, APROBADA o RECHAZADA. Incluye motivo, tipos de eventos e informacion adicional. El filtro RECHAZADA incluye intentos anteriores conservados. El valor predeterminado es PENDIENTE.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Solicitudes filtradas", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "Estado de filtro invalido"),

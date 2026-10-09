@@ -1,5 +1,9 @@
 package bo.uajms.eventos.modulos.usuarios.servicios;
 
+import bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest;
+import bo.uajms.eventos.modulos.usuarios.entidades.TipoEventoSolicitud;
+import bo.uajms.eventos.modulos.usuarios.entidades.SolicitudOrganizadorHistorial;
+import bo.uajms.eventos.modulos.usuarios.repositorios.SolicitudOrganizadorHistorialRepository;
 import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.excepciones.CodigosError;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
@@ -25,6 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.time.LocalDateTime;
 
 @Service
@@ -38,6 +47,7 @@ public class UsuarioServicio {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
     private final SesionUsuarioServicio sesionUsuarioServicio;
+    private final SolicitudOrganizadorHistorialRepository historialRepository;
 
     @Transactional(readOnly = true)
     public List<UsuarioDto> listarTodos() {
@@ -98,7 +108,9 @@ public class UsuarioServicio {
 
     @Transactional
     @PreAuthorize("hasRole('USUARIO')")
-    public SolicitudOrganizadorResponse solicitarSerOrganizador() {
+    public SolicitudOrganizadorResponse solicitarSerOrganizador(
+            SolicitarOrganizadorRequest request) {
+        validarSolicitud(request);
         UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
         Usuario usuario = usuarioRepository.findByIdForUpdate(usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario", usuarioId));
@@ -114,6 +126,18 @@ public class UsuarioServicio {
             throw new NegocioException("La solicitud ya fue aprobada");
         }
 
+        if (usuario.getEstadoSolicitudOrganizador() == Usuario.EstadoSolicitudOrganizador.RECHAZADA) {
+            var historial = new SolicitudOrganizadorHistorial();
+            historial.setId(UUID.randomUUID());
+            historial.setUsuarioId(usuario.getId());
+            historial.setEstado(usuario.getEstadoSolicitudOrganizador());
+            historial.setDetalle(aSolicitudResponse(usuario));
+            historialRepository.save(historial);
+        }
+        usuario.setMotivoSolicitudOrganizador(request.getMotivoSolicitud().trim());
+        usuario.setTiposEventosSolicitud(new LinkedHashSet<>(request.getTiposEventos()));
+        usuario.setInformacionAdicionalOrganizador(request.getInformacionAdicional() == null
+                ? null : request.getInformacionAdicional().trim());
         usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.PENDIENTE);
         usuario.setFechaSolicitudOrganizador(LocalDateTime.now());
         usuario.setFechaResolucionOrganizador(null);
@@ -126,10 +150,17 @@ public class UsuarioServicio {
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     public List<SolicitudOrganizadorResponse> listarSolicitudesOrganizador(
             Usuario.EstadoSolicitudOrganizador estado) {
-        return usuarioRepository.findByEstadoSolicitudOrganizadorOrderByFechaSolicitudOrganizadorAsc(estado)
-                .stream()
-                .map(this::aSolicitudResponse)
-                .toList();
+        var resultado = new ArrayList<>(usuarioRepository
+                .findByEstadoSolicitudOrganizadorOrderByFechaSolicitudOrganizadorAsc(estado)
+                .stream().map(this::aSolicitudResponse).toList());
+        if (estado == Usuario.EstadoSolicitudOrganizador.RECHAZADA) {
+            historialRepository.findByEstado(estado).stream()
+                    .map(SolicitudOrganizadorHistorial::getDetalle)
+                    .forEach(resultado::add);
+        }
+        resultado.sort(Comparator.comparing(SolicitudOrganizadorResponse::getFechaSolicitud,
+                Comparator.nullsLast(Comparator.naturalOrder())));
+        return resultado;
     }
 
     @Transactional
@@ -174,6 +205,35 @@ public class UsuarioServicio {
         return aSolicitudResponse(usuarioRepository.save(solicitante));
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('USUARIO')")
+    public SolicitudOrganizadorResponse obtenerMiSolicitudOrganizador() {
+        Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
+        var respuesta = aSolicitudResponse(usuario);
+        respuesta.setPuedeSolicitar(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "USUARIO")
+                && !usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ORGANIZADOR")
+                && !usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ADMINISTRADOR")
+                && (usuario.getEstadoSolicitudOrganizador() == Usuario.EstadoSolicitudOrganizador.NINGUNA
+                || usuario.getEstadoSolicitudOrganizador() == Usuario.EstadoSolicitudOrganizador.RECHAZADA));
+        return respuesta;
+    }
+
+    private void validarSolicitud(SolicitarOrganizadorRequest request) {
+        if (request == null || request.getMotivoSolicitud() == null
+                || request.getMotivoSolicitud().trim().length() < 30
+                || request.getMotivoSolicitud().length() > 1000) {
+            throw new NegocioException("El motivo debe contener entre 30 y 1000 caracteres");
+        }
+        if (request.getTiposEventos() == null || request.getTiposEventos().isEmpty()
+                || request.getTiposEventos().size() > 6 || request.getTiposEventos().stream().anyMatch(Objects::isNull)
+                || new HashSet<>(request.getTiposEventos()).size() != request.getTiposEventos().size()) {
+            throw new NegocioException("Seleccione tipos de eventos validos, sin duplicados");
+        }
+        if (request.getInformacionAdicional() != null && request.getInformacionAdicional().length() > 1000) {
+            throw new NegocioException("La informacion adicional admite hasta 1000 caracteres");
+        }
+    }
+
     private Usuario obtenerSolicitudPendiente(UUID usuarioId, boolean permitirOrganizadorExistente) {
         Usuario usuario = usuarioRepository.findByIdForUpdate(usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario", usuarioId));
@@ -192,6 +252,11 @@ public class UsuarioServicio {
 
     private SolicitudOrganizadorResponse aSolicitudResponse(Usuario usuario) {
         return SolicitudOrganizadorResponse.builder()
+                .motivoSolicitud(usuario.getMotivoSolicitudOrganizador())
+                .informacionAdicional(usuario.getInformacionAdicionalOrganizador())
+                .tiposEventos(List.copyOf(usuario.getTiposEventosSolicitud()))
+                .nombresTiposEventos(usuario.getTiposEventosSolicitud().stream()
+                        .map(TipoEventoSolicitud::getNombre).toList())
                 .usuarioId(usuario.getId())
                 .nombres(usuario.getNombres())
                 .apellidos(usuario.getApellidos())

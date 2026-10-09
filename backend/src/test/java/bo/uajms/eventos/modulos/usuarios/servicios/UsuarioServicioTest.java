@@ -33,6 +33,7 @@ class UsuarioServicioTest {
     private UsuarioAutenticadoService usuarioAutenticadoService;
     private UsuarioServicio servicio;
     private SesionUsuarioServicio sesionUsuarioServicio;
+    private bo.uajms.eventos.modulos.usuarios.repositorios.SolicitudOrganizadorHistorialRepository historialRepository;
     private Usuario usuario;
     private Usuario administrador;
 
@@ -44,8 +45,9 @@ class UsuarioServicioTest {
         passwordEncoder = mock(PasswordEncoder.class);
         usuarioAutenticadoService = mock(UsuarioAutenticadoService.class);
         sesionUsuarioServicio = mock(SesionUsuarioServicio.class);
+        historialRepository = mock(bo.uajms.eventos.modulos.usuarios.repositorios.SolicitudOrganizadorHistorialRepository.class);
         servicio = new UsuarioServicio(usuarioRepository, usuarioRolRepository, rolRepository,
-                new UsuarioMapper(), passwordEncoder, usuarioAutenticadoService, sesionUsuarioServicio);
+                new UsuarioMapper(), passwordEncoder, usuarioAutenticadoService, sesionUsuarioServicio, historialRepository);
         usuario = usuario("usuario@ejemplo.test");
         administrador = usuario("admin@ejemplo.test");
     }
@@ -161,7 +163,7 @@ class UsuarioServicioTest {
         autenticarUsuario();
         when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
-        var response = servicio.solicitarSerOrganizador();
+        var response = servicio.solicitarSerOrganizador(solicitudValida());
 
         assertEquals("PENDIENTE", response.getEstado());
         assertNotNull(usuario.getFechaSolicitudOrganizador());
@@ -173,7 +175,7 @@ class UsuarioServicioTest {
         usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.PENDIENTE);
         autenticarUsuario();
 
-        assertThrows(NegocioException.class, () -> servicio.solicitarSerOrganizador());
+        assertThrows(NegocioException.class, () -> servicio.solicitarSerOrganizador(solicitudValida()));
         verify(usuarioRepository, never()).save(any());
     }
 
@@ -184,7 +186,7 @@ class UsuarioServicioTest {
         autenticarUsuario();
         when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
-        var response = servicio.solicitarSerOrganizador();
+        var response = servicio.solicitarSerOrganizador(solicitudValida());
 
         assertEquals("PENDIENTE", response.getEstado());
         assertNull(response.getMotivoRechazo());
@@ -200,7 +202,7 @@ class UsuarioServicioTest {
         when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ORGANIZADOR"))
                 .thenReturn(true);
 
-        assertThrows(NegocioException.class, () -> servicio.solicitarSerOrganizador());
+        assertThrows(NegocioException.class, () -> servicio.solicitarSerOrganizador(solicitudValida()));
         verify(usuarioRepository, never()).save(any());
     }
 
@@ -388,6 +390,78 @@ class UsuarioServicioTest {
         assertThrows(NegocioException.class, () -> servicio.aprobarSolicitudOrganizador(usuario.getId()));
         verify(usuarioRolRepository, never()).save(any());
         verify(usuarioRolRepository, never()).deleteByUsuarioId(any());
+    }
+
+    private bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest solicitudValida() {
+        var request = new bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest();
+        request.setMotivoSolicitud("Deseo organizar eventos universitarios educativos");
+        request.setTiposEventos(List.of(bo.uajms.eventos.modulos.usuarios.entidades.TipoEventoSolicitud.CURSOS_TALLERES));
+        return request;
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"vacio", "corto", "largo", "espacios", "sinTipos", "nulos", "duplicados", "adicional"})
+    void validaCamposAntesDePersistir(String caso) {
+        var request = solicitudValida();
+        switch (caso) {
+            case "vacio" -> request.setMotivoSolicitud("");
+            case "corto" -> request.setMotivoSolicitud("Quiero organizar");
+            case "largo" -> request.setMotivoSolicitud("a".repeat(1001));
+            case "espacios" -> request.setMotivoSolicitud(" ".repeat(30));
+            case "sinTipos" -> request.setTiposEventos(List.of());
+            case "nulos" -> request.setTiposEventos(java.util.Arrays.asList((bo.uajms.eventos.modulos.usuarios.entidades.TipoEventoSolicitud)null));
+            case "duplicados" -> request.setTiposEventos(List.of(request.getTiposEventos().getFirst(), request.getTiposEventos().getFirst()));
+            case "adicional" -> request.setInformacionAdicional("a".repeat(1001));
+        }
+        assertThrows(NegocioException.class, () -> servicio.solicitarSerOrganizador(request));
+        verify(usuarioRepository, never()).save(any());
+    }
+
+    @Test void solicitudConservaMotivoTiposEInformacionOpcional() {
+        autenticarUsuario(); when(usuarioRepository.save(usuario)).thenReturn(usuario);
+        var request = solicitudValida(); request.setInformacionAdicional("Experiencia previa");
+        var response = servicio.solicitarSerOrganizador(request);
+        assertEquals(request.getMotivoSolicitud(), response.getMotivoSolicitud());
+        assertEquals(request.getTiposEventos(), response.getTiposEventos());
+        assertEquals("Experiencia previa", response.getInformacionAdicional());
+    }
+
+    @Test void reenvioArchivaRechazoAnteriorSinInventarMotivoHistorico() {
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.RECHAZADA);
+        usuario.setMotivoRechazoOrganizador("Completa la propuesta");
+        autenticarUsuario(); when(usuarioRepository.save(usuario)).thenReturn(usuario);
+        servicio.solicitarSerOrganizador(solicitudValida());
+        var captor = org.mockito.ArgumentCaptor.forClass(bo.uajms.eventos.modulos.usuarios.entidades.SolicitudOrganizadorHistorial.class);
+        verify(historialRepository).save(captor.capture());
+        assertEquals(usuario.getId(), captor.getValue().getUsuarioId());
+        assertEquals("Completa la propuesta", captor.getValue().getDetalle().getMotivoRechazo());
+        assertNull(captor.getValue().getDetalle().getMotivoSolicitud());
+        assertEquals(List.of(), captor.getValue().getDetalle().getTiposEventos());
+    }
+
+    @Test void estadoPropioAutorizaReenvioSegunRolesYEstadoActuales() {
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "USUARIO")).thenReturn(true);
+        assertTrue(servicio.obtenerMiSolicitudOrganizador().isPuedeSolicitar());
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.PENDIENTE);
+        assertFalse(servicio.obtenerMiSolicitudOrganizador().isPuedeSolicitar());
+        usuario.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.RECHAZADA);
+        assertTrue(servicio.obtenerMiSolicitudOrganizador().isPuedeSolicitar());
+        when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ADMINISTRADOR")).thenReturn(true);
+        assertFalse(servicio.obtenerMiSolicitudOrganizador().isPuedeSolicitar());
+    }
+
+    @Test void cuentaAdministrativaNoPuedeSolicitarInclusoConRolUsuarioInconsistente() {
+        autenticarUsuario();
+        when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ADMINISTRADOR")).thenReturn(true);
+        assertThrows(NegocioException.class, () -> servicio.solicitarSerOrganizador(solicitudValida()));
+        verify(usuarioRepository, never()).save(any());
+    }
+
+    @Test void categoriasArbitrariasNoSonParteDelContrato() {
+        assertThrows(com.fasterxml.jackson.core.JsonProcessingException.class, () ->
+            new com.fasterxml.jackson.databind.ObjectMapper().readValue("{\"motivoSolicitud\":\"Motivo universitario educativo completo\",\"tiposEventos\":[\"ARBITRARIA\"]}",
+                bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest.class));
     }
 
 }

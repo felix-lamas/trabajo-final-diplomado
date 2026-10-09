@@ -20,7 +20,7 @@
       <div class="student-card__header">
         <div>
           <h2>Estado actual</h2>
-          <p>El rol cambia únicamente después de una aprobación administrativa.</p>
+          <p>La aprobación agrega ORGANIZADOR y conserva tus capacidades de USUARIO.</p>
         </div>
         <span class="app-badge"
           [class.app-badge--warning]="estado() === 'PENDIENTE'"
@@ -45,9 +45,37 @@
       </div>
       <div class="auth-compact-copy" *ngIf="estado() === 'RECHAZADA'" role="status">
         <strong>Solicitud rechazada</strong>
-        <span>El contrato actual permite presentar una nueva solicitud sin periodo de espera.</span>
+        <span>Puedes presentar una nueva solicitud con la información solicitada.</span>
       </div>
 
+      <p *ngIf="solicitud()?.motivoRechazo"><strong>Motivo del rechazo:</strong> {{ solicitud()?.motivoRechazo }}</p>
+      <section *ngIf="solicitud()?.motivoSolicitud && !puedeSolicitar()">
+        <h3>Tu solicitud</h3>
+        <p style="white-space: pre-wrap; overflow-wrap: anywhere">{{ solicitud()?.motivoSolicitud }}</p>
+        <p>{{ solicitud()?.nombresTiposEventos?.join(', ') }}</p>
+        <p *ngIf="solicitud()?.informacionAdicional">{{ solicitud()?.informacionAdicional }}</p>
+      </section>
+      <form *ngIf="puedeSolicitar()" [formGroup]="form" (ngSubmit)="solicitar()" class="auth-form">
+        <mat-form-field appearance="outline">
+          <mat-label>¿Por qué deseas ser organizador?</mat-label>
+          <textarea matInput formControlName="motivoSolicitud" rows="4" maxlength="1000"></textarea>
+          <mat-hint align="end">{{ form.controls.motivoSolicitud.value.length }}/1000</mat-hint>
+          <mat-error>Escribe un motivo de entre 30 y 1000 caracteres.</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Tipos de eventos que te interesa publicar</mat-label>
+          <mat-select formControlName="tiposEventos" multiple>
+            <mat-option *ngFor="let tipo of tipos()" [value]="tipo.codigo">{{ tipo.nombre }}</mat-option>
+          </mat-select>
+          <mat-error>Selecciona al menos un tipo de evento.</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Información adicional (opcional)</mat-label>
+          <textarea matInput formControlName="informacionAdicional" rows="3" maxlength="1000"></textarea>
+          <mat-hint align="end">{{ form.controls.informacionAdicional.value.length }}/1000</mat-hint>
+          <mat-error>Admite hasta 1000 caracteres.</mat-error>
+        </mat-form-field>
+      </form>
       <p *ngIf="message()" [attr.role]="requestStatus() === 'error' ? 'alert' : 'status'">{{ message() }}</p>
       <div class="auth-actions__row">
         <button mat-flat-button color="primary" type="button" (click)="solicitar()"

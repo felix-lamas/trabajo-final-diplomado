@@ -51,7 +51,7 @@ class OpenApiContractTest {
     );
 
     @Test
-    void contratoCanonicoContiene82OperacionesDocumentadas() {
+    void contratoCanonicoContiene84OperacionesDocumentadas() {
         int operaciones = 0;
         for (Class<?> controller : CONTROLLERS) {
             for (Method method : controller.getDeclaredMethods()) {
@@ -77,7 +77,7 @@ class OpenApiContractTest {
                 }
             }
         }
-        assertEquals(82, operaciones);
+        assertEquals(84, operaciones);
     }
 
     @Test
@@ -164,4 +164,14 @@ class OpenApiContractTest {
     private String normalizar(String ruta) {
         return ruta.replaceAll("/{2,}", "/");
     }
+    @Test void solicitudOrganizadorMantienePostYAgregaConsultasPropias() throws Exception {
+        var solicitud = UsuarioControlador.class.getDeclaredMethod("solicitarSerOrganizador",
+                bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest.class);
+        assertEquals(List.of("/solicitud-organizador"), Arrays.asList(solicitud.getAnnotation(PostMapping.class).value()));
+        assertEquals(List.of("/solicitud-organizador"), Arrays.asList(UsuarioControlador.class
+                .getDeclaredMethod("obtenerMiSolicitud").getAnnotation(GetMapping.class).value()));
+        assertEquals(List.of("/solicitud-organizador/tipos-eventos"), Arrays.asList(UsuarioControlador.class
+                .getDeclaredMethod("tiposEventosSolicitud").getAnnotation(GetMapping.class).value()));
+    }
+
 }

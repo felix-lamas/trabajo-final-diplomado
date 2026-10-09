@@ -83,7 +83,7 @@ class CuentaDualHistorialTest {
         var detalles = new DetallesUsuarioService(usuarios, usuarioRoles, mock(RolPermisoRepository.class));
         var auth = new UsuarioAutenticadoService(usuarios);
         var cuentas = new UsuarioServicio(usuarios, usuarioRoles, roles, new UsuarioMapper(),
-                mock(PasswordEncoder.class), auth, mock(SesionUsuarioServicio.class));
+                mock(PasswordEncoder.class), auth, mock(SesionUsuarioServicio.class), mock(bo.uajms.eventos.modulos.usuarios.repositorios.SolicitudOrganizadorHistorialRepository.class));
         var inscripciones = mock(InscripcionRepository.class);
         var pagos = mock(PagoRepository.class);
         var certificados = mock(CertificadoRepository.class);
@@ -125,7 +125,7 @@ class CuentaDualHistorialTest {
                 pagoService.listarMisPagos().getFirst().getId(),
                 certificadoService.listarMisCertificados().getFirst().getId(),
                 asistenciaService.obtenerMisAsistencias().getFirst().getId());
-        assertEquals("PENDIENTE", cuentas.solicitarSerOrganizador().getEstado());
+        assertEquals("PENDIENTE", cuentas.solicitarSerOrganizador(solicitudValida()).getEstado());
         autenticar(org.springframework.security.core.userdetails.User.withUsername(administrador.getCorreoElectronico())
                 .password("hash").roles("ADMINISTRADOR").build());
         assertEquals("APROBADA", cuentas.aprobarSolicitudOrganizador(usuario.getId()).getEstado());
@@ -173,4 +173,11 @@ class CuentaDualHistorialTest {
         rol.setId(UUID.randomUUID());
         return rol;
     }
+    private static bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest solicitudValida() {
+        var request = new bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest();
+        request.setMotivoSolicitud("Deseo organizar eventos universitarios educativos");
+        request.setTiposEventos(java.util.List.of(bo.uajms.eventos.modulos.usuarios.entidades.TipoEventoSolicitud.CURSOS_TALLERES));
+        return request;
+    }
+
 }

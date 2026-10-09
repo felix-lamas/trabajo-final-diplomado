@@ -27,10 +27,10 @@ describe('SolicitudOrganizadorService', () => {
   afterEach(() => http.verify());
 
   it('solicita para el usuario autenticado sin enviar usuarioId', () => {
-    service.solicitar().subscribe();
+    service.solicitar({ motivoSolicitud: 'Deseo organizar eventos universitarios educativos', tiposEventos: ['CURSOS_TALLERES'] }).subscribe();
     const request = http.expectOne(`${environment.apiUrl}/usuarios/solicitud-organizador`);
     expect(request.request.method).toBe('POST');
-    expect(request.request.body).toEqual({});
+    expect(request.request.body).toEqual({ motivoSolicitud: 'Deseo organizar eventos universitarios educativos', tiposEventos: ['CURSOS_TALLERES'] });
     request.flush(solicitud);
   });
 
@@ -61,4 +61,15 @@ describe('SolicitudOrganizadorService', () => {
     expect(request.request.body).toEqual({ motivo: 'Informacion incompleta' });
     request.flush({ ...solicitud, estado: 'RECHAZADA' });
   });
+  it('consulta solicitud propia sin ID de usuario', () => {
+    service.obtenerMiSolicitud().subscribe();
+    const request = http.expectOne(`${environment.apiUrl}/usuarios/solicitud-organizador`);
+    expect(request.request.method).toBe('GET'); request.flush(solicitud);
+  });
+  it('obtiene opciones controladas por el servidor', () => {
+    service.tiposEventos().subscribe(tipos => expect(tipos[0].codigo).toBe('CURSOS_TALLERES'));
+    const request = http.expectOne(`${environment.apiUrl}/usuarios/solicitud-organizador/tipos-eventos`);
+    expect(request.request.method).toBe('GET'); request.flush([{ codigo: 'CURSOS_TALLERES', nombre: 'Cursos y talleres' }]);
+  });
+
 });

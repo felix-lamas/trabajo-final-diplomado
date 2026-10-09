@@ -1,3 +1,5 @@
+import 'organizer_application_screen.dart';
+import '../services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -201,6 +203,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       trailing: const Icon(Icons.chevron_right_rounded),
                       onTap: session.busy ? null : _changePassword,
                     ),
+                    if (user.isUsuario && !user.isAdministrador)
+                      ListTile(
+                        leading: const Icon(Icons.event_note_outlined),
+                        title: Text(
+                          [
+                                'NINGUNA',
+                                'RECHAZADA',
+                              ].contains(user.estadoSolicitudOrganizador)
+                              ? 'Solicitar ser organizador'
+                              : 'Solicitud de organizador',
+                        ),
+                        subtitle: Text(user.estadoSolicitudOrganizador),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) => OrganizerApplicationScreen(
+                                auth: context.read<AuthService>(),
+                                onSubmitted: session.refreshProfile,
+                              ),
+                            ),
+                          );
+                          if (mounted) await session.refreshProfile();
+                        },
+                      ),
                     ExpansionTile(
                       title: const Text('Información de la cuenta'),
                       children: [

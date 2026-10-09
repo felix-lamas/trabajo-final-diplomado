@@ -133,4 +133,18 @@ describe('SolicitudesOrganizadorComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('La solicitud no esta pendiente');
     expect(fixture.componentInstance.solicitudes()).toHaveLength(1);
   });
+  it('muestra motivo, tipos y datos adicionales en la bandeja', async () => {
+    await resolveList([{ ...solicitud, motivoSolicitud: 'Deseo organizar cursos educativos universitarios',
+      nombresTiposEventos: ['Cursos y talleres', 'Actividades culturales'], informacionAdicional: 'Experiencia docente' }]);
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('Deseo organizar cursos educativos universitarios');
+    expect(text).toContain('Cursos y talleres, Actividades culturales');
+    expect(text).toContain('Experiencia docente');
+  });
+  it('muestra solicitudes historicas sin inventar motivos', async () => {
+    await resolveList([{ ...solicitud, estado: 'RECHAZADA', motivoRechazo: 'Motivo anterior' }]);
+    expect(fixture.nativeElement.textContent).toContain('Solicitud anterior sin motivo registrado');
+    expect(fixture.nativeElement.textContent).toContain('Motivo anterior');
+  });
+
 });

@@ -34,7 +34,10 @@
           <strong>{{ solicitud.nombres }} {{ solicitud.apellidos }}</strong>
           <span>{{ solicitud.correoElectronico }}</span>
           <span>Solicitud: {{ solicitud.fechaSolicitud | date:'dd/MM/yyyy HH:mm' }}</span>
-          <span *ngIf="solicitud.motivoRechazo">Motivo: {{ solicitud.motivoRechazo }}</span>
+          <p style="white-space: pre-wrap; overflow-wrap: anywhere"><strong>Motivo de solicitud:</strong> {{ solicitud.motivoSolicitud || 'Solicitud anterior sin motivo registrado.' }}</p>
+          <p><strong>Tipos de eventos:</strong> {{ solicitud.nombresTiposEventos?.join(', ') || 'Sin tipos registrados.' }}</p>
+          <p *ngIf="solicitud.informacionAdicional"><strong>Información adicional:</strong> {{ solicitud.informacionAdicional }}</p>
+          <span *ngIf="solicitud.motivoRechazo">Motivo de rechazo: {{ solicitud.motivoRechazo }}</span>
         </div>
         <div class="student-card__meta">
           <span class="app-badge app-badge--warning">{{ solicitud.estado }}</span>

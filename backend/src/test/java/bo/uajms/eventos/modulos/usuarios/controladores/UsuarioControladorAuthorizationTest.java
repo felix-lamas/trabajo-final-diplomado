@@ -92,10 +92,10 @@ class UsuarioControladorAuthorizationTest {
     @Test
     void usuarioPuedeCrearSuSolicitudYOrganizadorNoPuedeRepetirla() {
         autenticar("USUARIO");
-        assertDoesNotThrow(() -> controlador.solicitarSerOrganizador());
+        assertDoesNotThrow(() -> controlador.solicitarSerOrganizador(solicitudValida()));
 
         autenticar("ORGANIZADOR");
-        assertThrows(AccessDeniedException.class, () -> controlador.solicitarSerOrganizador());
+        assertThrows(AccessDeniedException.class, () -> controlador.solicitarSerOrganizador(solicitudValida()));
     }
 
     private void autenticar(String rol) {
@@ -116,4 +116,11 @@ class UsuarioControladorAuthorizationTest {
             return new UsuarioControlador(servicio);
         }
     }
+    private static bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest solicitudValida() {
+        var request = new bo.uajms.eventos.modulos.usuarios.dtos.SolicitarOrganizadorRequest();
+        request.setMotivoSolicitud("Deseo organizar eventos universitarios educativos");
+        request.setTiposEventos(java.util.List.of(bo.uajms.eventos.modulos.usuarios.entidades.TipoEventoSolicitud.CURSOS_TALLERES));
+        return request;
+    }
+
 }

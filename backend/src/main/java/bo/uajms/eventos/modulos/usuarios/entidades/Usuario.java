@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.LinkedHashSet;
 
 @Entity
 @Table(name = "usuario")
@@ -78,6 +80,19 @@ public class Usuario extends EntidadBase {
     @Column(nullable = false)
     @Builder.Default
     private boolean activo = true;
+
+    @Column(name = "motivo_solicitud_organizador", length = 1000)
+    private String motivoSolicitudOrganizador;
+
+    @Column(name = "informacion_adicional_organizador", length = 1000)
+    private String informacionAdicionalOrganizador;
+
+    @ElementCollection
+    @CollectionTable(name = "usuario_solicitud_tipos_evento", joinColumns = @JoinColumn(name = "usuario_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_evento", nullable = false, length = 40)
+    @Builder.Default
+    private Set<TipoEventoSolicitud> tiposEventosSolicitud = new LinkedHashSet<>();
 
     public enum TipoUsuario {
         INTERNO, EXTERNO

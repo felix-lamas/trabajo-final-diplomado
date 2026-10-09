@@ -1,3 +1,4 @@
+import 'package:vidia/screens/organizer_application_screen.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -151,6 +152,15 @@ class _Fixture {
           ];
         case '/certificados/mis-certificados':
           data = empty ? [] : [_certificate];
+        case '/usuarios/solicitud-organizador':
+          data = {
+            'estado': dual ? 'APROBADA' : 'NINGUNA',
+            'puedeSolicitar': participant && !dual,
+          };
+        case '/usuarios/solicitud-organizador/tipos-eventos':
+          data = [
+            {'codigo': 'CURSOS_TALLERES', 'nombre': 'Cursos y talleres'},
+          ];
         default:
           return http.Response('', 404);
       }
@@ -531,4 +541,19 @@ void main() {
       },
     );
   }
+  testWidgets('Perfil abre solicitud existente y volver conserva navegacion', (
+    tester,
+  ) async {
+    final fixture = _Fixture();
+    await fixture.mount(tester);
+    await _tab(tester, 'Perfil');
+    await tester.ensureVisible(find.text('Solicitar ser organizador'));
+    await tester.tap(find.text('Solicitar ser organizador'));
+    await tester.pumpAndSettle();
+    expect(find.byType(OrganizerApplicationScreen), findsOneWidget);
+    expect(find.text('Estado: NINGUNA'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfileScreen), findsOneWidget);
+  });
 }

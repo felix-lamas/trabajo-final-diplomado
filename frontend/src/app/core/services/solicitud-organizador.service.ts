@@ -11,10 +11,25 @@ export interface SolicitudOrganizador {
   apellidos: string;
   correoElectronico: string;
   estado: EstadoSolicitudOrganizador;
-  fechaSolicitud: string;
+  fechaSolicitud: string | null;
   fechaResolucion?: string | null;
   motivoRechazo?: string | null;
   resueltaPorId?: string | null;
+  motivoSolicitud?: string | null;
+  tiposEventos?: string[];
+  nombresTiposEventos?: string[];
+  informacionAdicional?: string | null;
+  puedeSolicitar?: boolean;
+}
+
+export interface TipoEventoSolicitud {
+  codigo: string;
+  nombre: string;
+}
+export interface SolicitarOrganizadorRequest {
+  motivoSolicitud: string;
+  tiposEventos: string[];
+  informacionAdicional?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -23,8 +38,18 @@ export class SolicitudOrganizadorService {
 
   constructor(private readonly http: HttpClient) {}
 
-  solicitar(): Observable<SolicitudOrganizador> {
-    return this.http.post<SolicitudOrganizador>(`${this.apiUrl}/solicitud-organizador`, {});
+  solicitar(request: SolicitarOrganizadorRequest): Observable<SolicitudOrganizador> {
+    return this.http.post<SolicitudOrganizador>(`${this.apiUrl}/solicitud-organizador`, request);
+  }
+
+  obtenerMiSolicitud(): Observable<SolicitudOrganizador> {
+    return this.http.get<SolicitudOrganizador>(`${this.apiUrl}/solicitud-organizador`);
+  }
+
+  tiposEventos(): Observable<TipoEventoSolicitud[]> {
+    return this.http.get<TipoEventoSolicitud[]>(
+      `${this.apiUrl}/solicitud-organizador/tipos-eventos`
+    );
   }
 
   listar(estado: EstadoSolicitudOrganizador): Observable<SolicitudOrganizador[]> {

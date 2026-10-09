@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { Subject, tap } from 'rxjs';
+import { Subject, tap, of } from 'rxjs';
 import { AuthService, AuthUser } from '../../../core/services/auth.service';
 import { SolicitudOrganizador, SolicitudOrganizadorService } from '../../../core/services/solicitud-organizador.service';
 import { SolicitudOrganizadorComponent } from './solicitud-organizador.component';
@@ -31,6 +31,7 @@ describe('SolicitudOrganizadorComponent', () => {
     apellidos: 'Perez',
     correoElectronico: 'ana@example.test',
     estado: 'PENDIENTE',
+    puedeSolicitar: false,
     fechaSolicitud: '2026-09-29T12:00:00'
   };
 
@@ -51,7 +52,12 @@ describe('SolicitudOrganizadorComponent', () => {
         }));
       })
     };
-    service = { solicitar: vi.fn(() => requestResponse.asObservable()) };
+    service = {
+      solicitar: vi.fn(() => requestResponse.asObservable()),
+      tiposEventos: vi.fn(() => of([{ codigo: 'CURSOS_TALLERES', nombre: 'Cursos y talleres' }])),
+      obtenerMiSolicitud: vi.fn(() => of({ ...solicitud, estado: userState()?.estadoSolicitudOrganizador,
+        puedeSolicitar: ['NINGUNA', 'RECHAZADA'].includes(userState()?.estadoSolicitudOrganizador ?? ''), motivoRechazo: 'Completa la propuesta' }))
+    };
 
     await TestBed.configureTestingModule({
       imports: [SolicitudOrganizadorComponent],
@@ -82,6 +88,7 @@ describe('SolicitudOrganizadorComponent', () => {
 
   it('envia solicitud y muestra PENDIENTE inmediatamente sin interaccion adicional', async () => {
     await resolveInitial(user());
+    fixture.componentInstance.form.setValue({ motivoSolicitud: 'Deseo organizar eventos universitarios educativos', tiposEventos: ['CURSOS_TALLERES'], informacionAdicional: '' });
     fixture.componentInstance.solicitar();
     await fixture.whenStable();
     expect(fixture.nativeElement.textContent).toContain('Enviando...');
@@ -99,6 +106,7 @@ describe('SolicitudOrganizadorComponent', () => {
 
   it('estado pendiente impide solicitud duplicada', async () => {
     await resolveInitial(user('PENDIENTE'));
+    fixture.componentInstance.form.setValue({ motivoSolicitud: 'Deseo organizar eventos universitarios educativos', tiposEventos: ['CURSOS_TALLERES'], informacionAdicional: '' });
     fixture.componentInstance.solicitar();
 
     expect(service.solicitar).not.toHaveBeenCalled();
@@ -130,6 +138,7 @@ describe('SolicitudOrganizadorComponent', () => {
 
   it('muestra error de solicitud y rehabilita el boton', async () => {
     await resolveInitial(user());
+    fixture.componentInstance.form.setValue({ motivoSolicitud: 'Deseo organizar eventos universitarios educativos', tiposEventos: ['CURSOS_TALLERES'], informacionAdicional: '' });
     fixture.componentInstance.solicitar();
     requestResponse.error(new HttpErrorResponse({
       status: 400,
@@ -141,4 +150,38 @@ describe('SolicitudOrganizadorComponent', () => {
     expect(fixture.componentInstance.requestStatus()).toBe('error');
     expect(fixture.componentInstance.puedeSolicitar()).toBe(true);
   });
+  it('formulario invalido no envia y valida limites y seleccion', async () => {
+    await resolveInitial(user());
+    fixture.componentInstance.solicitar();
+    expect(service.solicitar).not.toHaveBeenCalled();
+    const form = fixture.componentInstance.form;
+    form.controls.motivoSolicitud.setValue('a'.repeat(1001));
+    expect(form.controls.motivoSolicitud.invalid).toBe(true);
+    form.controls.motivoSolicitud.setValue('Motivo completo para organizar talleres universitarios');
+    expect(form.invalid).toBe(true);
+    form.controls.tiposEventos.setValue(['CURSOS_TALLERES']);
+    expect(form.valid).toBe(true);
+    form.controls.informacionAdicional.setValue('a'.repeat(1001));
+    expect(form.invalid).toBe(true);
+  });
+  it('presenta motivo de rechazo y usa permiso del backend', async () => {
+    service.obtenerMiSolicitud.mockReturnValue(of({ ...solicitud, estado: 'RECHAZADA',
+      motivoRechazo: 'Detalla los eventos propuestos', puedeSolicitar: false }));
+    await resolveInitial(user('RECHAZADA'));
+    expect(fixture.nativeElement.textContent).toContain('Detalla los eventos propuestos');
+    expect(fixture.componentInstance.puedeSolicitar()).toBe(false);
+  });
+  it('envia motivo y categorias del formulario sin usuarioId', async () => {
+    await resolveInitial(user());
+    fixture.componentInstance.form.setValue({ motivoSolicitud: 'Deseo organizar talleres educativos universitarios', tiposEventos: ['CURSOS_TALLERES'], informacionAdicional: 'Experiencia previa' });
+    fixture.componentInstance.solicitar();
+    expect(service.solicitar).toHaveBeenCalledWith({ motivoSolicitud: 'Deseo organizar talleres educativos universitarios', tiposEventos: ['CURSOS_TALLERES'], informacionAdicional: 'Experiencia previa' });
+  });
+  it('error de catalogo no habilita un formulario incompleto', async () => {
+    service.tiposEventos.mockReturnValue(new Subject());
+    await resolveInitial(user());
+    expect(fixture.componentInstance.loading()).toBe(true);
+    expect(fixture.componentInstance.puedeSolicitar()).toBe(false);
+  });
+
 });
