@@ -1,5 +1,7 @@
 package bo.uajms.eventos.modulos.asistencias.servicios;
 
+import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
+import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.core.excepciones.RecursoNoEncontradoException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.entidades.Asistencia;
@@ -27,6 +29,7 @@ class AsistenciaServiceAuthorizationTest {
 
     @Mock private AsistenciaRepository asistenciaRepository;
     @Mock private EventoRepository eventoRepository;
+    @Mock private InscripcionRepository inscripcionRepository;
     @Mock private UsuarioAutenticadoService usuarioAutenticadoService;
 
     @InjectMocks private AsistenciaService service;
@@ -76,4 +79,26 @@ class AsistenciaServiceAuthorizationTest {
 
         assertTrue(service.obtenerAsistenciasPorEvento(eventoId).isEmpty());
     }
+    @Test
+    void cuentaDualConsultaAsistenciasDeInscripcionPropiaEnEventoAjeno() {
+        when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(true);
+        UUID inscripcionId = UUID.randomUUID();
+        var inscripcion = Inscripcion.builder()
+                .usuario(organizador).evento(evento).build();
+        when(inscripcionRepository.findByIdAndUsuarioId(inscripcionId, organizadorId)).thenReturn(Optional.of(inscripcion));
+        List<Asistencia> existentes = List.of(Asistencia.builder().inscripcion(inscripcion).build());
+        when(asistenciaRepository.findByInscripcionId(inscripcionId)).thenReturn(existentes);
+        assertSame(existentes, service.obtenerAsistenciasPorInscripcion(inscripcionId));
+        verify(asistenciaRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void cuentaDualNoConsultaAsistenciasDeInscripcionAjena() {
+        when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(true);
+        assertThrows(RecursoNoEncontradoException.class,
+                () -> service.obtenerAsistenciasPorInscripcion(UUID.randomUUID()));
+        verify(asistenciaRepository, never()).findByInscripcionId(any());
+        verify(inscripcionRepository, never()).findById(any());
+    }
+
 }

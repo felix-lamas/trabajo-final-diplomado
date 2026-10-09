@@ -76,7 +76,7 @@ export class SolicitudesOrganizadorComponent implements OnInit {
       width: 'min(440px, 92vw)',
       data: {
         title: 'Aprobar organizador',
-        message: `Se reemplazara el rol USUARIO de ${solicitud.nombres} ${solicitud.apellidos} por ORGANIZADOR.`,
+        message: `Se agregara el rol ORGANIZADOR a ${solicitud.nombres} ${solicitud.apellidos}, conservando USUARIO y su actividad como participante.`,
         confirmText: 'Aprobar',
         tone: 'primary'
       }

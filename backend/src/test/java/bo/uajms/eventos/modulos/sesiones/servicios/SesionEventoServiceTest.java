@@ -1,5 +1,7 @@
 package bo.uajms.eventos.modulos.sesiones.servicios;
 
+import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
+import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
 import bo.uajms.eventos.core.excepciones.*;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.eventos.entidades.*;
@@ -140,4 +142,42 @@ class SesionEventoServiceTest {
     private SesionEventoRequest requestValido() { var r=new SesionEventoRequest(); r.setNombre("Sesion 1"); r.setFecha(ahora.toLocalDate().plusDays(1)); r.setHoraInicio(LocalTime.of(9,0)); r.setHoraFin(LocalTime.of(11,0)); r.setRequiereAsistencia(true); r.setLatitud(new BigDecimal("-21.5354900")); r.setLongitud(new BigDecimal("-64.7295600")); r.setRadioMetros(100); r.setActiva(true); return r; }
     private SesionEvento sesion(LocalDate f, LocalTime i, LocalTime fin) { var s=SesionEvento.builder().evento(evento).nombre("Sesion").fecha(f).horaInicio(i).horaFin(fin).requiereAsistencia(true).latitud(new BigDecimal("-21.53549")).longitud(new BigDecimal("-64.72956")).radioMetros(100).activa(true).historica(false).build(); s.setId(sesionId); return s; }
     private SesionEvento capturarSesion() { var c=ArgumentCaptor.forClass(SesionEvento.class); verify(sesionRepository).save(c.capture()); return c.getValue(); }
+    @Test
+    void cuentaDualConsultaSesionesComoParticipanteConfirmadoDeEventoAjeno() {
+        autenticarOrganizador();
+        when(auth.tieneRol("USUARIO")).thenReturn(true);
+        var existente = sesion(ahora.toLocalDate(), LocalTime.of(9, 0), LocalTime.of(11, 0));
+        var inscripcion = Inscripcion.builder()
+                .usuario(organizador).evento(evento)
+                .estado(EstadoInscripcion.CONFIRMADA).build();
+        evento.setOrganizador(Usuario.builder().build());
+        when(inscripcionRepository.findByUsuarioIdAndEventoIdAndEstado(organizadorId, eventoId,
+                EstadoInscripcion.CONFIRMADA)).thenReturn(Optional.of(inscripcion));
+        when(sesionRepository.findByEventoIdOrderByFechaAscHoraInicioAsc(eventoId)).thenReturn(List.of(existente));
+        when(sesionRepository.findById(sesionId)).thenReturn(Optional.of(existente));
+        assertEquals(1, service.listarPorEvento(eventoId).size());
+        assertEquals(sesionId, service.obtener(sesionId).getId());
+        verify(sesionRepository, never()).save(any());
+    }
+
+    @Test
+    void cuentaDualSinInscripcionConfirmadaNoConsultaSesionesAjenas() {
+        autenticarOrganizador();
+        when(auth.tieneRol("USUARIO")).thenReturn(true);
+        var existente = sesion(ahora.toLocalDate(), LocalTime.of(9, 0), LocalTime.of(11, 0));
+        when(sesionRepository.findById(sesionId)).thenReturn(Optional.of(existente));
+        assertThrows(RecursoNoEncontradoException.class, () -> service.listarPorEvento(eventoId));
+        assertThrows(RecursoNoEncontradoException.class, () -> service.obtener(sesionId));
+        verify(sesionRepository, never()).findByEventoIdOrderByFechaAscHoraInicioAsc(any());
+    }
+
+    @Test
+    void organizadorSinUsuarioNoConsultaSesionAjenaPorInscripcion() {
+        autenticarOrganizador();
+        assertThrows(RecursoNoEncontradoException.class, () -> service.listarPorEvento(eventoId));
+        assertThrows(RecursoNoEncontradoException.class, () -> service.obtener(sesionId));
+        verify(inscripcionRepository, never()).findByUsuarioIdAndEventoIdAndEstado(any(), any(), any());
+        verify(sesionRepository, never()).findById(any());
+    }
+
 }

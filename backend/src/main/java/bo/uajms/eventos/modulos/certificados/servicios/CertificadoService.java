@@ -32,6 +32,7 @@ import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -152,15 +153,18 @@ public class CertificadoService {
                     .orElseThrow(() -> new RecursoNoEncontradoException("Certificado", id));
         }
         UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        Optional<Certificado> visible = Optional.empty();
         if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
-            return certificadoRepository.findByIdAndEventoOrganizadorId(id, usuarioId)
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Certificado", id));
+            visible = certificadoRepository.findByIdAndEventoOrganizadorId(id, usuarioId);
         }
-        if (usuarioAutenticadoService.tieneRol("USUARIO")) {
-            return certificadoRepository.findByIdAndUsuarioId(id, usuarioId)
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Certificado", id));
+        if (visible.isEmpty() && usuarioAutenticadoService.tieneRol("USUARIO")) {
+            visible = certificadoRepository.findByIdAndUsuarioId(id, usuarioId);
         }
-        throw new AccessDeniedException("El rol no permite consultar certificados");
+        if (!usuarioAutenticadoService.tieneRol("ORGANIZADOR")
+                && !usuarioAutenticadoService.tieneRol("USUARIO")) {
+            throw new AccessDeniedException("El rol no permite consultar certificados");
+        }
+        return visible.orElseThrow(() -> new RecursoNoEncontradoException("Certificado", id));
     }
 
     private void validarCondicionesGenerales(Inscripcion inscripcion, Evento evento) {

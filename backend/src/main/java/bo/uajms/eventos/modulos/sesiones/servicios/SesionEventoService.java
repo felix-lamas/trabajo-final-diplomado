@@ -142,24 +142,38 @@ public class SesionEventoService {
     private void validarEventoVisible(UUID eventoId) {
         if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) {
             eventoRepository.findById(eventoId).orElseThrow(() -> new RecursoNoEncontradoException("Evento", eventoId));
-        } else if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
-            eventoRepository.findByIdAndOrganizadorId(eventoId, usuarioAutenticadoService.obtenerUsuario().getId())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Evento", eventoId));
-        } else if (usuarioAutenticadoService.tieneRol("USUARIO")) {
-            UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
-            if (inscripcionRepository.findByUsuarioIdAndEventoIdAndEstado(usuarioId, eventoId, EstadoInscripcion.CONFIRMADA).isEmpty())
-                throw new RecursoNoEncontradoException("Evento", eventoId);
-        } else throw new AccessDeniedException("El rol no permite consultar sesiones");
+            return;
+        }
+        UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")
+                && eventoRepository.findByIdAndOrganizadorId(eventoId, usuarioId).isPresent()) {
+            return;
+        }
+        if (usuarioAutenticadoService.tieneRol("USUARIO")
+                && inscripcionRepository.findByUsuarioIdAndEventoIdAndEstado(
+                        usuarioId, eventoId, EstadoInscripcion.CONFIRMADA).isPresent()) {
+            return;
+        }
+        if (!usuarioAutenticadoService.tieneRol("ORGANIZADOR")
+                && !usuarioAutenticadoService.tieneRol("USUARIO")) {
+            throw new AccessDeniedException("El rol no permite consultar sesiones");
+        }
+        throw new RecursoNoEncontradoException("Evento", eventoId);
     }
 
     private SesionEvento obtenerSesionVisible(UUID id) {
         if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) return sesionRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Sesion", id));
-        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) return sesionRepository
-                .findByIdAndEventoOrganizadorId(id, usuarioAutenticadoService.obtenerUsuario().getId())
-                .orElseThrow(() -> new RecursoNoEncontradoException("Sesion", id));
-        if (!usuarioAutenticadoService.tieneRol("USUARIO"))
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            var propia = sesionRepository.findByIdAndEventoOrganizadorId(
+                    id, usuarioAutenticadoService.obtenerUsuario().getId());
+            if (propia.isPresent()) return propia.get();
+        }
+        if (!usuarioAutenticadoService.tieneRol("USUARIO")) {
+            if (usuarioAutenticadoService.tieneRol("ORGANIZADOR"))
+                throw new RecursoNoEncontradoException("Sesion", id);
             throw new AccessDeniedException("El rol no permite consultar sesiones");
+        }
         SesionEvento sesion = sesionRepository.findById(id).orElseThrow(() -> new RecursoNoEncontradoException("Sesion", id));
         validarEventoVisible(sesion.getEvento().getId());
         return sesion;

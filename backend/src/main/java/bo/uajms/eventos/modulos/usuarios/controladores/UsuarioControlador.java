@@ -119,7 +119,7 @@ public class UsuarioControlador {
     @PatchMapping("/solicitudes-organizador/{usuarioId}/aprobar")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @Operation(summary = "Aprobar solicitud de organizador",
-            description = "Transicion atomica exclusiva de ADMINISTRADOR. Reemplaza USUARIO por ORGANIZADOR en una solicitud PENDIENTE y registra fecha y resolutor.")
+            description = "Transicion atomica exclusiva de ADMINISTRADOR. Conserva USUARIO y agrega ORGANIZADOR sin duplicarlo en una solicitud PENDIENTE y registra fecha y resolutor.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Solicitud aprobada", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "La solicitud no esta pendiente o el usuario no es elegible"),

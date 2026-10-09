@@ -400,4 +400,34 @@ class PagoServiceAuthorizationTest {
         request.setObservacion(motivo);
         return request;
     }
+    @Test
+    void cuentaDualConsultaPagoPropioEnEventoDeOtroOrganizador() {
+        autenticarOrganizador(usuarioA);
+        PagoResponse respuesta = respuesta(pagoAId);
+        when(pagoRepository.findByIdAndInscripcionUsuarioId(pagoAId, usuarioA.getId())).thenReturn(Optional.of(pagoA));
+        when(pagoMapper.toResponse(pagoA)).thenReturn(respuesta);
+        assertSame(respuesta, pagoService.obtenerPorId(pagoAId));
+        assertEquals(usuarioA.getId(), pagoA.getInscripcion().getUsuario().getId());
+        verify(pagoRepository, never()).save(any());
+        verify(pagoRepository, never()).delete(any());
+        verify(inscripcionRepository, never()).save(any());
+    }
+
+    @Test
+    void cuentaDualNoConsultaPagoAjenoFueraDeSusEventos() {
+        autenticarOrganizador(usuarioA);
+        assertThrows(RecursoNoEncontradoException.class, () -> pagoService.obtenerPorId(pagoBId));
+        verify(pagoRepository).findByIdAndInscripcionEventoOrganizadorId(pagoBId, usuarioA.getId());
+        verify(pagoRepository).findByIdAndInscripcionUsuarioId(pagoBId, usuarioA.getId());
+        verify(pagoRepository, never()).findById(any());
+    }
+
+    @Test
+    void organizadorSinUsuarioNoObtieneAlcancePersonal() {
+        autenticarOrganizador(usuarioA);
+        when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(false);
+        assertThrows(RecursoNoEncontradoException.class, () -> pagoService.obtenerPorId(pagoAId));
+        verify(pagoRepository, never()).findByIdAndInscripcionUsuarioId(any(), any());
+    }
+
 }

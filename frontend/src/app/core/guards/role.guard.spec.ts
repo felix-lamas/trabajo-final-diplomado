@@ -48,12 +48,15 @@ describe('roleGuard with refreshed roles', () => {
     expect(await execute({ data: { roles: ['ADMINISTRADOR'] } })).toBe(true);
   });
 
-  it('refresco de perfil reconoce inmediatamente USUARIO convertido en ORGANIZADOR', async () => {
+  it('refresco de perfil reconoce inmediatamente USUARIO con ORGANIZADOR adicional', async () => {
     currentRoles = ['USUARIO'];
-    refreshedRoles = ['ORGANIZADOR'];
+    refreshedRoles = ['USUARIO', 'ORGANIZADOR'];
 
     expect(await execute({ data: { roles: ['ORGANIZADOR'] } })).toBe(true);
     expect(auth.refrescarPerfil).toHaveBeenCalledOnce();
+    expect(await execute({ data: { roles: ['USUARIO'] } })).toBe(true);
+    const admin = await execute({ data: { roles: ['ADMINISTRADOR'] } });
+    expect(admin).toBeInstanceOf(UrlTree);
   });
 
   it('no usa roles cacheados cuando falla el refresco y conserva sesión local', async () => {

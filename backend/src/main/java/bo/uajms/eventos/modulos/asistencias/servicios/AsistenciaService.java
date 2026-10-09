@@ -96,11 +96,16 @@ public class AsistenciaService {
         Usuario usuario = usuarioAutenticadoService.obtenerUsuario();
         if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR"))
             inscripcionRepository.findById(inscripcionId).orElseThrow(() -> new RecursoNoEncontradoException("Inscripcion", inscripcionId));
-        else if (usuarioAutenticadoService.tieneRol("ORGANIZADOR"))
-            inscripcionRepository.findByIdAndEventoOrganizadorId(inscripcionId, usuario.getId())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Inscripcion", inscripcionId));
-        else inscripcionRepository.findByIdAndUsuarioId(inscripcionId, usuario.getId())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("Inscripcion", inscripcionId));
+        else {
+            Optional<Inscripcion> visible = Optional.empty();
+            if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+                visible = inscripcionRepository.findByIdAndEventoOrganizadorId(inscripcionId, usuario.getId());
+            }
+            if (visible.isEmpty() && usuarioAutenticadoService.tieneRol("USUARIO")) {
+                visible = inscripcionRepository.findByIdAndUsuarioId(inscripcionId, usuario.getId());
+            }
+            visible.orElseThrow(() -> new RecursoNoEncontradoException("Inscripcion", inscripcionId));
+        }
         return asistenciaRepository.findByInscripcionId(inscripcionId);
     }
 

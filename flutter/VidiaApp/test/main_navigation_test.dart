@@ -67,8 +67,9 @@ class _Fixture {
     this.activeSession = true,
     this.recorded = false,
     this.participant = true,
+    this.dual = false,
   });
-  final bool empty, paymentError, activeSession, recorded, participant;
+  final bool empty, paymentError, activeSession, recorded, participant, dual;
   final requests = <http.Request>[];
   bool enrolled = true;
   late final store = MemoryTokenStore();
@@ -85,7 +86,10 @@ class _Fixture {
         'apellidos': 'Prueba',
         'correoElectronico': 'felix@example.test',
         'correoVerificado': true,
-        'roles': [participant ? 'USUARIO' : 'ORGANIZADOR'],
+        'roles': [
+          if (participant) 'USUARIO',
+          if (dual || !participant) 'ORGANIZADOR',
+        ],
         'ci': '1234',
       };
       switch (path) {
@@ -231,6 +235,45 @@ Future<void> _tap(WidgetTester tester, String label) async {
 
 void main() {
   WidgetController.hitTestWarningShouldBeFatal = true;
+  testWidgets(
+    'dual account keeps participant destinations and existing activity',
+    (tester) async {
+      final fixture = _Fixture(dual: true);
+      await fixture.mount(tester);
+      expect(find.text('Hola, Felix'), findsOneWidget);
+      expect(find.byType(NavigationDestination), findsNWidgets(4));
+      await _tab(tester, 'Eventos');
+      expect(find.text('Curso de Vidia'), findsWidgets);
+      await _tab(tester, 'Actividad');
+      for (final label in [
+        'Mis inscripciones',
+        'Mis pagos',
+        'Mis asistencias',
+        'Mis certificados',
+        'Historial',
+      ]) {
+        await _tap(tester, label);
+        expect(tester.takeException(), isNull);
+        await _back(tester);
+      }
+      await _tab(tester, 'Perfil');
+      await _tap(tester, 'Informaci\u00f3n de la cuenta');
+      expect(find.text('USUARIO, ORGANIZADOR'), findsOneWidget);
+      for (final path in [
+        '/inscripciones/mis-inscripciones',
+        '/pagos/mis-pagos',
+        '/asistencias/mis-asistencias',
+        '/certificados/mis-certificados',
+        '/eventos/event-1/sesiones',
+      ]) {
+        expect(
+          fixture.requests.any((request) => request.url.path == '/api/v1$path'),
+          isTrue,
+        );
+      }
+      expect(tester.takeException(), isNull);
+    },
+  );
   testWidgets(
     'price filter uses existing query and clearing restores published events',
     (tester) async {

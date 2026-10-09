@@ -225,11 +225,14 @@ public class InscripcionService {
         }
 
         UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
+        Optional<Inscripcion> visible = Optional.empty();
         if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
-            return inscripcionRepository.findByIdAndEventoOrganizadorId(id, usuarioId);
+            visible = inscripcionRepository.findByIdAndEventoOrganizadorId(id, usuarioId);
         }
-
-        return inscripcionRepository.findByIdAndUsuarioId(id, usuarioId);
+        if (visible.isEmpty() && usuarioAutenticadoService.tieneRol("USUARIO")) {
+            visible = inscripcionRepository.findByIdAndUsuarioId(id, usuarioId);
+        }
+        return visible;
     }
 
     private void exigirUsuario() {

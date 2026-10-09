@@ -215,7 +215,7 @@ class UsuarioServicioTest {
     }
 
     @Test
-    void administradorApruebaYReemplazaRolUsuarioPorOrganizador() {
+    void administradorApruebaYConservaRolUsuarioAgregandoOrganizador() {
         prepararSolicitudPendiente();
         Rol rolOrganizador = rol("ORGANIZADOR");
         when(rolRepository.findByNombre("ORGANIZADOR")).thenReturn(Optional.of(rolOrganizador));
@@ -224,7 +224,7 @@ class UsuarioServicioTest {
         var response = servicio.aprobarSolicitudOrganizador(usuario.getId());
 
         assertEquals("APROBADA", response.getEstado());
-        verify(usuarioRolRepository).deleteByUsuarioId(usuario.getId());
+        verify(usuarioRolRepository, never()).deleteByUsuarioId(any());
         verify(usuarioRolRepository).save(argThat(relacion ->
                 relacion.getRol().getNombre().equals("ORGANIZADOR")));
         verify(usuarioRepository).findByIdForUpdate(usuario.getId());
@@ -258,7 +258,8 @@ class UsuarioServicioTest {
         servicio.aprobarSolicitudOrganizador(usuario.getId());
 
         assertThrows(NegocioException.class, () -> servicio.aprobarSolicitudOrganizador(usuario.getId()));
-        verify(usuarioRolRepository, times(1)).deleteByUsuarioId(usuario.getId());
+        verify(usuarioRolRepository, times(1)).save(any(UsuarioRol.class));
+        verify(usuarioRolRepository, never()).deleteByUsuarioId(any());
     }
 
     @Test
@@ -337,4 +338,56 @@ class UsuarioServicioTest {
         ReflectionTestUtils.setField(rol, "id", UUID.randomUUID());
         return rol;
     }
+    @Test
+    void aprobacionConservaIdentidadRolesYResolutor() {
+        prepararSolicitudPendiente();
+        UUID idOriginal = usuario.getId();
+        UsuarioRol usuarioOriginal = relacion(usuario, "USUARIO");
+        var asignaciones = new java.util.ArrayList<UsuarioRol>(List.of(usuarioOriginal));
+        when(usuarioRolRepository.findByUsuarioId(idOriginal)).thenReturn(asignaciones);
+        when(rolRepository.findByNombre("ORGANIZADOR")).thenReturn(Optional.of(rol("ORGANIZADOR")));
+        when(usuarioRolRepository.save(any(UsuarioRol.class))).thenAnswer(invocacion -> {
+            UsuarioRol nueva = invocacion.getArgument(0);
+            asignaciones.add(nueva);
+            return nueva;
+        });
+        when(usuarioRepository.save(usuario)).thenReturn(usuario);
+        var respuesta = servicio.aprobarSolicitudOrganizador(idOriginal);
+        when(usuarioAutenticadoService.obtenerUsuario()).thenReturn(usuario);
+        var perfil = servicio.obtenerPerfilActual();
+
+        assertEquals(idOriginal, perfil.getId());
+        assertEquals(List.of("USUARIO", "ORGANIZADOR"), perfil.getRoles());
+        assertSame(usuarioOriginal, asignaciones.getFirst());
+        assertEquals(administrador.getId(), respuesta.getResueltaPorId());
+        assertNotNull(respuesta.getFechaResolucion());
+        assertEquals("APROBADA", perfil.getEstadoSolicitudOrganizador());
+        verify(usuarioRolRepository, never()).deleteByUsuarioId(any());
+        verify(usuarioRepository, never()).delete(any());
+        verifyNoInteractions(sesionUsuarioServicio);
+    }
+
+    @Test
+    void solicitudPendienteConOrganizadorExistenteSeResuelveSinDuplicarlo() {
+        prepararSolicitudPendiente();
+        UsuarioRol rolUsuario = relacion(usuario, "USUARIO");
+        UsuarioRol rolOrganizador = relacion(usuario, "ORGANIZADOR");
+        when(usuarioRolRepository.findByUsuarioId(usuario.getId())).thenReturn(List.of(rolUsuario, rolOrganizador));
+        when(rolRepository.findByNombre("ORGANIZADOR")).thenReturn(Optional.of(rolOrganizador.getRol()));
+        when(usuarioRepository.save(usuario)).thenReturn(usuario);
+
+        assertEquals("APROBADA", servicio.aprobarSolicitudOrganizador(usuario.getId()).getEstado());
+        verify(usuarioRolRepository, never()).save(any());
+        verify(usuarioRolRepository, never()).deleteByUsuarioId(any());
+    }
+
+    @Test
+    void solicitudDeAdministradorNoSeApruebaNiSeEliminanSusRoles() {
+        prepararSolicitudPendiente();
+        when(usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuario.getId(), "ADMINISTRADOR")).thenReturn(true);
+        assertThrows(NegocioException.class, () -> servicio.aprobarSolicitudOrganizador(usuario.getId()));
+        verify(usuarioRolRepository, never()).save(any());
+        verify(usuarioRolRepository, never()).deleteByUsuarioId(any());
+    }
+
 }

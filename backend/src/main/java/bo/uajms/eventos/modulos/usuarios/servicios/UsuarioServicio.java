@@ -140,12 +140,16 @@ public class UsuarioServicio {
             throw new NegocioException("Un administrador no puede aprobar su propia solicitud");
         }
 
-        Usuario solicitante = obtenerSolicitudPendiente(usuarioId);
+        Usuario solicitante = obtenerSolicitudPendiente(usuarioId, true);
         Rol rolOrganizador = rolRepository.findByNombre("ORGANIZADOR")
                 .orElseThrow(() -> new NegocioException("Rol ORGANIZADOR no encontrado"));
 
-        usuarioRolRepository.deleteByUsuarioId(solicitante.getId());
-        usuarioRolRepository.save(UsuarioRol.builder().usuario(solicitante).rol(rolOrganizador).build());
+        List<UsuarioRol> rolesActuales = usuarioRolRepository.findByUsuarioId(solicitante.getId());
+        boolean tieneOrganizador = rolesActuales.stream()
+                .anyMatch(asignacion -> "ORGANIZADOR".equals(asignacion.getRol().getNombre()));
+        if (!tieneOrganizador) {
+            usuarioRolRepository.save(UsuarioRol.builder().usuario(solicitante).rol(rolOrganizador).build());
+        }
 
         solicitante.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.APROBADA);
         solicitante.setFechaResolucionOrganizador(LocalDateTime.now());
@@ -162,7 +166,7 @@ public class UsuarioServicio {
             throw new NegocioException("Un administrador no puede resolver su propia solicitud");
         }
 
-        Usuario solicitante = obtenerSolicitudPendiente(usuarioId);
+        Usuario solicitante = obtenerSolicitudPendiente(usuarioId, false);
         solicitante.setEstadoSolicitudOrganizador(Usuario.EstadoSolicitudOrganizador.RECHAZADA);
         solicitante.setFechaResolucionOrganizador(LocalDateTime.now());
         solicitante.setMotivoRechazoOrganizador(motivo.trim());
@@ -170,15 +174,16 @@ public class UsuarioServicio {
         return aSolicitudResponse(usuarioRepository.save(solicitante));
     }
 
-    private Usuario obtenerSolicitudPendiente(UUID usuarioId) {
+    private Usuario obtenerSolicitudPendiente(UUID usuarioId, boolean permitirOrganizadorExistente) {
         Usuario usuario = usuarioRepository.findByIdForUpdate(usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario", usuarioId));
         if (usuario.getEstadoSolicitudOrganizador() != Usuario.EstadoSolicitudOrganizador.PENDIENTE) {
             throw new NegocioException("El usuario no tiene una solicitud pendiente");
         }
         boolean esUsuario = usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuarioId, "USUARIO");
-        boolean tienePrivilegios = usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuarioId, "ORGANIZADOR")
-                || usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuarioId, "ADMINISTRADOR");
+        boolean tienePrivilegios = usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuarioId, "ADMINISTRADOR")
+                || (!permitirOrganizadorExistente
+                && usuarioRolRepository.existsByUsuarioIdAndRolNombre(usuarioId, "ORGANIZADOR"));
         if (!esUsuario || tienePrivilegios) {
             throw new NegocioException("La solicitud no pertenece a un usuario elegible");
         }

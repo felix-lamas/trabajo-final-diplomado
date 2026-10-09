@@ -82,8 +82,7 @@ export class AppShellComponent implements OnInit {
     { label: 'Asistencias', icon: 'how_to_reg', route: '/admin/asistencias', roles: ['ADMINISTRADOR'] },
     { label: 'Inicio', icon: 'home', route: '/privado/dashboard', roles: ['USUARIO'] },
     { label: 'Buscar eventos', icon: 'search', route: '/eventos', roles: ['USUARIO'] },
-    { label: 'Solicitar ser organizador', icon: 'workspace_premium', route: '/privado/solicitud-organizador', roles: ['USUARIO'] },
-    { label: 'Estado de organizador', icon: 'workspace_premium', route: '/privado/solicitud-organizador', roles: ['ORGANIZADOR'] },
+    { label: this.authService.hasAnyRole(['ORGANIZADOR']) ? 'Estado de organizador' : 'Solicitar ser organizador', icon: 'workspace_premium', route: '/privado/solicitud-organizador', roles: ['USUARIO', 'ORGANIZADOR'] },
     { label: 'Mis inscripciones', icon: 'how_to_reg', route: '/privado/inscripciones', roles: ['USUARIO'] },
     { label: 'Mis pagos', icon: 'payments', route: '/privado/pagos', roles: ['USUARIO'] },
     { label: 'Mis certificados', icon: 'workspace_premium', route: '/certificados/mis-certificados', roles: ['USUARIO'] },
@@ -118,7 +117,10 @@ export class AppShellComponent implements OnInit {
     const user = this.authService.usuarioActual();
     return user ? `${user.nombres} ${user.apellidos}`.trim() : 'Usuario';
   });
-  readonly userRole = computed(() => this.authService.roles()[0] ?? 'Acceso institucional');
+  readonly userRole = computed(() => {
+    const labels: Record<string, string> = { USUARIO: 'Usuario', ORGANIZADOR: 'Organizador', ADMINISTRADOR: 'Administrador' };
+    return this.authService.roles().map((role) => labels[role] ?? role).join(' · ') || 'Acceso institucional';
+  });
   readonly loggingOut = signal(false);
 
   ngOnInit(): void {

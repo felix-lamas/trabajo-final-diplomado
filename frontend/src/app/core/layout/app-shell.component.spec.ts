@@ -78,4 +78,17 @@ describe('AppShellComponent navigation by role', () => {
     expect(links.length).toBeGreaterThan(0);
     expect(links.every((link) => Boolean(link.getAttribute('aria-label')))).toBe(true);
   });
+  it('cuenta dual conserva actividad personal y gestion sin duplicar solicitud', () => {
+    currentRoles.set(['USUARIO', 'ORGANIZADOR']);
+    const shell = fixture.componentInstance;
+    const items = shell.navItems();
+    expect(items.some((item) => item.route === '/organizador/eventos')).toBe(true);
+    for (const route of ['/privado/dashboard', '/privado/inscripciones', '/privado/pagos', '/certificados/mis-certificados']) {
+      expect(items.some((item) => item.route === route)).toBe(true);
+    }
+    expect(items.filter((item) => item.route === '/privado/solicitud-organizador')).toHaveLength(1);
+    expect(items.some((item) => item.route.startsWith('/admin'))).toBe(false);
+    expect(shell.userRole()).toBe('Usuario · Organizador');
+  });
+
 });

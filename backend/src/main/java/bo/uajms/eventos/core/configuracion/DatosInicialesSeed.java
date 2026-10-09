@@ -68,7 +68,7 @@ public class DatosInicialesSeed implements CommandLineRunner {
 
         Usuario organizadorAprobado = crearUsuarioDemo(
                 "organizador1@demo.local", "DEMO-ORGANIZADOR-1", "RU-DEMO-ORG-1", "Organizador", "Demo Uno",
-                Usuario.TipoUsuario.INTERNO, roles.get("ORGANIZADOR"));
+                Usuario.TipoUsuario.INTERNO, roles.get("USUARIO"), roles.get("ORGANIZADOR"));
         configurarSolicitudOrganizadorDemo(organizadorAprobado,
                 Usuario.EstadoSolicitudOrganizador.APROBADA, administrador);
 
@@ -146,7 +146,7 @@ public class DatosInicialesSeed implements CommandLineRunner {
     }
 
     private Usuario crearUsuarioDemo(String correo, String ci, String ru, String nombres, String apellidos,
-                                     Usuario.TipoUsuario tipoUsuario, Rol rol) {
+                                     Usuario.TipoUsuario tipoUsuario, Rol... roles) {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(correo)
                 .map(existente -> {
                     existente.setContrasena(passwordEncoder.encode(demoPassword));
@@ -165,11 +165,10 @@ public class DatosInicialesSeed implements CommandLineRunner {
                         .tipoUsuario(tipoUsuario)
                         .build()));
         var rolesActuales = usuarioRolRepository.findByUsuarioId(usuario.getId());
-        boolean asignacionExacta = rolesActuales.size() == 1
-                && rolesActuales.getFirst().getRol().getId().equals(rol.getId());
-        if (!asignacionExacta) {
-            usuarioRolRepository.deleteByUsuarioId(usuario.getId());
-            usuarioRolRepository.save(UsuarioRol.builder().usuario(usuario).rol(rol).build());
+        for (Rol rol : roles) {
+            if (rolesActuales.stream().noneMatch(asignacion -> asignacion.getRol().getId().equals(rol.getId()))) {
+                usuarioRolRepository.save(UsuarioRol.builder().usuario(usuario).rol(rol).build());
+            }
         }
         return usuario;
     }

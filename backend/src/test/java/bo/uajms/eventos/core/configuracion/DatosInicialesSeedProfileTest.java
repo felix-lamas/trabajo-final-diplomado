@@ -232,16 +232,16 @@ class DatosInicialesSeedProfileTest {
         assertNull(participante.getFechaSolicitudOrganizador());
 
         ArgumentCaptor<UsuarioRol> rolCaptor = ArgumentCaptor.forClass(UsuarioRol.class);
-        verify(usuarioRolRepository, times(4)).save(rolCaptor.capture());
-        Map<String, String> rolesPorCorreo = rolCaptor.getAllValues().stream()
-                .collect(Collectors.toMap(
+        verify(usuarioRolRepository, times(5)).save(rolCaptor.capture());
+        Map<String, Set<String>> rolesPorCorreo = rolCaptor.getAllValues().stream()
+                .collect(Collectors.groupingBy(
                         relacion -> relacion.getUsuario().getCorreoElectronico(),
-                        relacion -> relacion.getRol().getNombre()));
+                        Collectors.mapping(relacion -> relacion.getRol().getNombre(), Collectors.toSet())));
 
-        assertEquals("ADMINISTRADOR", rolesPorCorreo.get("admin@demo.local"));
-        assertEquals("ORGANIZADOR", rolesPorCorreo.get("organizador1@demo.local"));
-        assertEquals("USUARIO", rolesPorCorreo.get("organizador2@demo.local"));
-        assertEquals("USUARIO", rolesPorCorreo.get("usuario@demo.local"));
+        assertEquals(Set.of("ADMINISTRADOR"), rolesPorCorreo.get("admin@demo.local"));
+        assertEquals(Set.of("USUARIO", "ORGANIZADOR"), rolesPorCorreo.get("organizador1@demo.local"));
+        assertEquals(Set.of("USUARIO"), rolesPorCorreo.get("organizador2@demo.local"));
+        assertEquals(Set.of("USUARIO"), rolesPorCorreo.get("usuario@demo.local"));
 
         ArgumentCaptor<Evento> eventoCaptor = ArgumentCaptor.forClass(Evento.class);
         verify(eventoRepository, times(8)).save(eventoCaptor.capture());
@@ -315,7 +315,7 @@ class DatosInicialesSeedProfileTest {
 
     private void crearAdministradorDemo() {
         ReflectionTestUtils.invokeMethod(seed, "crearUsuarioDemo", CORREO_DEMO, "DEMO-ADMIN",
-                "RU-DEMO-ADMIN", "Administrador", "Demo", Usuario.TipoUsuario.INTERNO, rolAdministrador);
+                "RU-DEMO-ADMIN", "Administrador", "Demo", Usuario.TipoUsuario.INTERNO, new Rol[]{rolAdministrador});
     }
 
     private Usuario usuarioExistente() {
@@ -354,4 +354,22 @@ class DatosInicialesSeedProfileTest {
         ReflectionTestUtils.setField(evento, "id", UUID.randomUUID());
         return evento;
     }
+    @Test
+    void seedAgregaUsuarioAlOrganizadorExistenteSinEliminarOtrosRoles() {
+        Usuario existente = usuarioExistente();
+        when(usuarioRepository.findByCorreoElectronico(CORREO_DEMO)).thenReturn(Optional.of(existente));
+        when(usuarioRepository.save(existente)).thenReturn(existente);
+        when(usuarioRolRepository.findByUsuarioId(existente.getId())).thenReturn(List.of(
+                UsuarioRol.builder().usuario(existente).rol(rolOrganizador).build(),
+                UsuarioRol.builder().usuario(existente).rol(rolAdministrador).build()));
+        ReflectionTestUtils.invokeMethod(seed, "crearUsuarioDemo", CORREO_DEMO, "DEMO-ADMIN",
+                "RU-DEMO-ADMIN", "Administrador", "Demo", Usuario.TipoUsuario.INTERNO,
+                new Rol[]{rolUsuario, rolOrganizador});
+        ArgumentCaptor<UsuarioRol> nueva = ArgumentCaptor.forClass(UsuarioRol.class);
+        verify(usuarioRolRepository).save(nueva.capture());
+        assertSame(rolUsuario, nueva.getValue().getRol());
+        assertSame(existente, nueva.getValue().getUsuario());
+        verify(usuarioRolRepository, never()).deleteByUsuarioId(any());
+    }
+
 }

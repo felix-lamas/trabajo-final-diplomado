@@ -131,13 +131,14 @@ describe('AuthService identity contract', () => {
 
   it('refresca perfil y roles sin reemplazar el JWT', () => {
     service.setSession(loginResponse);
-    const organizado = { ...usuario, estadoSolicitudOrganizador: 'APROBADA', roles: ['ORGANIZADOR'] };
+    const organizado = { ...usuario, estadoSolicitudOrganizador: 'APROBADA', roles: ['USUARIO', 'ORGANIZADOR'] };
 
     service.refrescarPerfil().subscribe();
     http.expectOne(`${environment.apiUrl}/usuarios/perfil`).flush(organizado);
 
-    expect(service.roles()).toEqual(['ORGANIZADOR']);
-    expect(service.hasAnyRole(['USUARIO'])).toBe(false);
+    expect(service.roles()).toEqual(['USUARIO', 'ORGANIZADOR']);
+    expect(service.hasAnyRole(['USUARIO'])).toBe(true);
+    expect(service.hasAnyRole(['ORGANIZADOR'])).toBe(true);
     expect(service.token()).toBe(token);
   });
 

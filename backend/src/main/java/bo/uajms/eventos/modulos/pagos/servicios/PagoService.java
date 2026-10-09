@@ -239,13 +239,18 @@ public class PagoService {
         if (usuarioAutenticadoService.tieneRol("ADMINISTRADOR")) return pagoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
         UUID usuarioId = usuarioAutenticadoService.obtenerUsuario().getId();
-        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) return pagoRepository
-                .findByIdAndInscripcionEventoOrganizadorId(id, usuarioId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
-        if (usuarioAutenticadoService.tieneRol("USUARIO")) return pagoRepository
-                .findByIdAndInscripcionUsuarioId(id, usuarioId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
-        throw new AccessDeniedException("El rol no permite consultar pagos");
+        Optional<Pago> visible = Optional.empty();
+        if (usuarioAutenticadoService.tieneRol("ORGANIZADOR")) {
+            visible = pagoRepository.findByIdAndInscripcionEventoOrganizadorId(id, usuarioId);
+        }
+        if (visible.isEmpty() && usuarioAutenticadoService.tieneRol("USUARIO")) {
+            visible = pagoRepository.findByIdAndInscripcionUsuarioId(id, usuarioId);
+        }
+        if (!usuarioAutenticadoService.tieneRol("ORGANIZADOR")
+                && !usuarioAutenticadoService.tieneRol("USUARIO")) {
+            throw new AccessDeniedException("El rol no permite consultar pagos");
+        }
+        return visible.orElseThrow(() -> new RecursoNoEncontradoException("Pago", id));
     }
 
     private Pago obtenerPagoPropioParaActualizar(UUID id) {

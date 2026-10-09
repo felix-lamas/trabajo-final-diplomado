@@ -113,7 +113,7 @@ describe('SolicitudOrganizadorComponent', () => {
   });
 
   it('estado aprobado actualiza rol y ofrece acceso a eventos', async () => {
-    await resolveInitial(user('APROBADA', ['ORGANIZADOR']));
+    await resolveInitial(user('APROBADA', ['USUARIO', 'ORGANIZADOR']));
 
     expect(fixture.nativeElement.textContent).toContain('Solicitud aprobada');
     expect(fixture.nativeElement.textContent).toContain('Ir a mis eventos');

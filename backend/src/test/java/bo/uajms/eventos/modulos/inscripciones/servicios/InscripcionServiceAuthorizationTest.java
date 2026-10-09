@@ -360,4 +360,34 @@ class InscripcionServiceAuthorizationTest {
         inscripcion.setId(id);
         return inscripcion;
     }
+    @Test
+    void cuentaDualConsultaInscripcionPropiaEnEventoDeOtroOrganizador() {
+        autenticarOrganizador(usuarioA);
+        DetalleInscripcionResponse respuesta = DetalleInscripcionResponse.builder().id(inscripcionAId).build();
+        when(inscripcionRepository.findByIdAndUsuarioId(inscripcionAId, usuarioA.getId())).thenReturn(Optional.of(inscripcionA));
+        when(inscripcionMapper.toDetalleResponse(inscripcionA)).thenReturn(respuesta);
+        assertSame(respuesta, inscripcionService.obtenerPorId(inscripcionAId));
+        assertEquals(usuarioA.getId(), inscripcionA.getUsuario().getId());
+        assertEquals(EstadoInscripcion.CONFIRMADA, inscripcionA.getEstado());
+        verify(inscripcionRepository, never()).save(any());
+        verify(inscripcionRepository, never()).delete(any());
+    }
+
+    @Test
+    void cuentaDualNoConsultaInscripcionAjenaFueraDeSusEventos() {
+        autenticarOrganizador(usuarioA);
+        assertThrows(RecursoNoEncontradoException.class, () -> inscripcionService.obtenerPorId(inscripcionBId));
+        verify(inscripcionRepository).findByIdAndEventoOrganizadorId(inscripcionBId, usuarioA.getId());
+        verify(inscripcionRepository).findByIdAndUsuarioId(inscripcionBId, usuarioA.getId());
+        verify(inscripcionRepository, never()).findById(any());
+    }
+
+    @Test
+    void organizadorSinUsuarioNoObtieneAlcancePersonal() {
+        autenticarOrganizador(usuarioA);
+        when(usuarioAutenticadoService.tieneRol("USUARIO")).thenReturn(false);
+        assertThrows(RecursoNoEncontradoException.class, () -> inscripcionService.obtenerPorId(inscripcionAId));
+        verify(inscripcionRepository, never()).findByIdAndUsuarioId(any(), any());
+    }
+
 }

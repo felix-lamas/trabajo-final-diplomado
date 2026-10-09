@@ -404,4 +404,31 @@ class CertificadoServiceTest {
         certificado.setId(UUID.randomUUID());
         return certificado;
     }
+    @Test
+    void cuentaDualConsultaYDescargaCertificadoPropioEnEventoAjeno() {
+        autenticarUsuario(participante);
+        when(auth.tieneRol("ORGANIZADOR")).thenReturn(true);
+        Certificado existente = certificado();
+        when(certificadoRepository.findByIdAndUsuarioId(existente.getId(), participante.getId())).thenReturn(Optional.of(existente));
+        byte[] pdf = new byte[]{1, 2, 3};
+        when(documentoService.generarPdf(existente)).thenReturn(pdf);
+        assertEquals(existente.getId(), service.obtenerPorId(existente.getId()).getId());
+        assertArrayEquals(pdf, service.descargarPdf(existente.getId()));
+        assertEquals(participante.getId(), existente.getUsuario().getId());
+        assertSame(inscripcion, existente.getInscripcion());
+        verify(certificadoRepository, never()).delete(any());
+    }
+
+    @Test
+    void cuentaDualNoConsultaNiDescargaCertificadoAjeno() {
+        autenticarUsuario(participante);
+        when(auth.tieneRol("ORGANIZADOR")).thenReturn(true);
+        UUID ajeno = UUID.randomUUID();
+        assertThrows(RecursoNoEncontradoException.class, () -> service.obtenerPorId(ajeno));
+        assertThrows(RecursoNoEncontradoException.class, () -> service.descargarPdf(ajeno));
+        verify(certificadoRepository, times(2)).findByIdAndUsuarioId(ajeno, participante.getId());
+        verify(certificadoRepository, never()).findById(any());
+        verify(documentoService, never()).generarPdf(any());
+    }
+
 }

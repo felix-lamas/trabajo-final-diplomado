@@ -58,8 +58,9 @@ class JwtAuthenticationFilterTest {
         verify(userDetailsService, never()).loadUserByUsername(org.mockito.ArgumentMatchers.anyString());
     }
 
-    @Test
-    void jwtConSesionValidaAutenticaYPermitePeticion() throws Exception {
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void jwtConSesionValidaAutenticaYPermitePeticion(boolean cuentaDual) throws Exception {
         JwtService jwtService = mock(JwtService.class);
         UserDetailsService userDetailsService = mock(UserDetailsService.class);
         SesionUsuarioServicio sesiones = mock(SesionUsuarioServicio.class);
@@ -71,7 +72,9 @@ class JwtAuthenticationFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         UUID sesionId = UUID.randomUUID();
         UserDetails details = User.withUsername("usuario@example.test")
-                .password("hash").authorities("ROLE_USUARIO").build();
+                .password("hash").authorities(cuentaDual
+                        ? new String[]{"ROLE_USUARIO", "ROLE_ORGANIZADOR"}
+                        : new String[]{"ROLE_USUARIO"}).build();
         when(jwtService.extraerNombreUsuario("jwt-prueba")).thenReturn("usuario@example.test");
         when(jwtService.extraerIdSesion("jwt-prueba")).thenReturn(sesionId);
         when(userDetailsService.loadUserByUsername("usuario@example.test")).thenReturn(details);
@@ -82,6 +85,8 @@ class JwtAuthenticationFilterTest {
 
         verify(chain).doFilter(request, response);
         assertEquals(sesionId, request.getAttribute(JwtAuthenticationFilter.SESION_ID_ATTRIBUTE));
+        assertEquals(new java.util.HashSet<>(details.getAuthorities()),
+                new java.util.HashSet<>(SecurityContextHolder.getContext().getAuthentication().getAuthorities()));
     }
 
     @ParameterizedTest(name = "JWT con sesion {0} devuelve 401")

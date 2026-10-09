@@ -85,7 +85,7 @@
           </a>
         </div>
         <app-icon-button class="shell__theme-toggle" [icon]="darkMode() ? 'light_mode' : 'dark_mode'" [ariaLabel]="themeActionLabel()" [tooltip]="themeActionLabel()" [ariaPressed]="darkMode()" (pressed)="toggleTheme()"></app-icon-button>
-        <div class="shell__profile" role="group" [attr.aria-label]="'Sesión de ' + userName() + ', rol ' + userRole()" [title]="userName() + ' · ' + userRole()">
+        <div class="shell__profile" role="group" [attr.aria-label]="'Sesión de ' + userName() + ', roles activos ' + userRole()" [title]="userName() + ' · ' + userRole()">
           <div class="shell__avatar" aria-hidden="true">{{ userName().slice(0, 1) }}</div>
           <div class="shell__profile-copy">
             <strong>{{ userName() }}</strong>

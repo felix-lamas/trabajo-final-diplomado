@@ -1,5 +1,9 @@
 package bo.uajms.eventos.modulos.asistencias.servicios;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepository;
 import bo.uajms.eventos.core.excepciones.NegocioException;
 import bo.uajms.eventos.core.seguridad.UsuarioAutenticadoService;
 import bo.uajms.eventos.modulos.asistencias.dtos.RegistrarAsistenciaRequest;
@@ -86,4 +90,29 @@ class AsistenciaRegistroTest {
     private void prepararHastaQr(){ autenticarUsuario(); when(qrService.resolverToken("token-valido")).thenReturn(qr); }
     private void autenticarUsuario(){ when(auth.tieneRol("USUARIO")).thenReturn(true);when(auth.obtenerUsuario()).thenReturn(usuario); }
     private void sinEscrituras(){verify(asistenciaRepository,never()).saveAndFlush(any());}
+    @Test
+    void cuentaDualRegistraAsistenciaConAutoridadesReales() {
+        when(qrService.resolverToken("token-valido")).thenReturn(qr);
+        when(inscripcionRepository.findByUsuarioIdAndEventoId(usuario.getId(), evento.getId())).thenReturn(Optional.of(inscripcion));
+        var repositorioUsuarios = mock(UsuarioRepository.class);
+        when(repositorioUsuarios.findByCorreoElectronicoIgnoreCase(usuario.getCorreoElectronico())).thenReturn(Optional.of(usuario));
+        var autenticacion = new UsernamePasswordAuthenticationToken(
+                usuario.getCorreoElectronico(), null, List.of(
+                        new SimpleGrantedAuthority("ROLE_USUARIO"),
+                        new SimpleGrantedAuthority("ROLE_ORGANIZADOR")));
+        SecurityContextHolder.getContext().setAuthentication(autenticacion);
+        var real = new AsistenciaService(asistenciaRepository, eventoRepository, inscripcionRepository,
+                qrService, new UsuarioAutenticadoService(repositorioUsuarios), clock);
+        when(asistenciaRepository.saveAndFlush(any())).thenAnswer(i -> i.getArgument(0));
+        try {
+            Asistencia registrada = real.registrar(request);
+            assertSame(usuario, registrada.getRegistradoPor());
+            assertSame(inscripcion, registrada.getInscripcion());
+            assertNotNull(registrada.getDistanciaMetros());
+            verify(qrService).validarVigencia(qr, ahora);
+        } finally {
+            SecurityContextHolder.clearContext();
+        }
+    }
+
 }
