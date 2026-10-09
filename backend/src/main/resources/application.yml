@@ -54,7 +54,11 @@ app:
   jwt:
     secreto: ${JWT_SECRET}
     expiracion-ms: ${JWT_EXPIRATION:86400000}
+  auth:
+    admin-invitation-expiration-hours: ${ADMIN_INVITATION_EXPIRATION_HOURS:24}
+    admin-invitation-resend-minutes: ${ADMIN_INVITATION_RESEND_MINUTES:5}
   frontend:
+    admin-activation-url: ${FRONTEND_ADMIN_ACTIVATION_URL:}
     reset-password-url: ${FRONTEND_RESET_PASSWORD_URL:http://localhost:4200/auth/restablecer-contrasena}
     verify-email-url: ${FRONTEND_VERIFY_EMAIL_URL:http://localhost:4200/auth/verificar-correo}
   mail:

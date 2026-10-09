@@ -50,6 +50,7 @@ public class DetallesUsuarioService implements UserDetailsService {
         return new User(
                 usuario.getCorreoElectronico(),
                 usuario.getContrasena(),
+                usuario.isActivo(), true, true, true,
                 authorities
         );
     }

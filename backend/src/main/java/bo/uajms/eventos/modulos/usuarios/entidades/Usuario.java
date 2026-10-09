@@ -75,6 +75,10 @@ public class Usuario extends EntidadBase {
     @JoinColumn(name = "solicitud_resuelta_por_id")
     private Usuario solicitudResueltaPor;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean activo = true;
+
     public enum TipoUsuario {
         INTERNO, EXTERNO
     }

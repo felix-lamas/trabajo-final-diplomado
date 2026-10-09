@@ -35,6 +35,16 @@ public class CorreoServicio {
                 """.formatted(enlace));
     }
 
+    public void enviarInvitacionAdministrador(String destinatario, String enlace, java.time.LocalDateTime expiracion) {
+        enviar(destinatario, "Invitacion administrativa - Vidia", """
+                Has recibido una invitacion para administrar Vidia.
+                Confirma tus datos y establece tu propia contrasena mediante este enlace:
+                %s
+                Expira el %s (hora del servidor). Solo puede utilizarse una vez.
+                Si no esperabas esta invitacion, ignora el mensaje o contacta al administrador.
+                """.formatted(enlace, expiracion));
+    }
+
     private void enviar(String destinatario, String asunto, String contenido) {
         proveedorCorreo.enviar(destinatario, asunto, contenido);
     }

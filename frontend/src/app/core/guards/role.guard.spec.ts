@@ -48,6 +48,13 @@ describe('roleGuard with refreshed roles', () => {
     expect(await execute({ data: { roles: ['ADMINISTRADOR'] } })).toBe(true);
   });
 
+  it.each(['USUARIO', 'ORGANIZADOR'])('%s no accede a Administradores', async (role) => {
+    currentRoles = [role];
+    refreshedRoles = [role];
+    const result = await execute({ data: { roles: ['ADMINISTRADOR'] } });
+    expect(result).toBeInstanceOf(UrlTree);
+  });
+
   it('refresco de perfil reconoce inmediatamente USUARIO con ORGANIZADOR adicional', async () => {
     currentRoles = ['USUARIO'];
     refreshedRoles = ['USUARIO', 'ORGANIZADOR'];

@@ -127,6 +127,9 @@ public class AutenticacionServicio {
         Usuario usuario = usuarioRepository.findByCorreoElectronicoIgnoreCaseForUpdate(correoNormalizado)
                 .orElseThrow();
 
+        if (!usuario.isActivo()) {
+            throw new org.springframework.security.authentication.DisabledException("Cuenta inactiva");
+        }
         if (!usuario.isCorreoVerificado()) {
             throw new NegocioException(CodigosError.EMAIL_NOT_VERIFIED,
                     "Debe verificar su correo antes de iniciar sesion");

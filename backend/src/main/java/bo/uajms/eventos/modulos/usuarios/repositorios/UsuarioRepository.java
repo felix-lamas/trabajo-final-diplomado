@@ -22,6 +22,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     boolean existsByCorreoElectronico(String correoElectronico);
     boolean existsByCorreoElectronicoIgnoreCase(String correoElectronico);
     boolean existsByCi(String ci);
+    @Query("select distinct u from Usuario u join UsuarioRol ur on ur.usuario = u where ur.rol.nombre = 'ADMINISTRADOR'")
+    List<Usuario> findAdministradores();
     boolean existsByRu(String ru);
     List<Usuario> findByEstadoSolicitudOrganizadorOrderByFechaSolicitudOrganizadorAsc(
             Usuario.EstadoSolicitudOrganizador estado);

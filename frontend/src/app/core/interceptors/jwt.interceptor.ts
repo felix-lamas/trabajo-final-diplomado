@@ -7,6 +7,8 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../services/auth.service';
 
 const publicAuthUrls = new Set([
+  `${environment.apiUrl}/auth/invitaciones-administrador/consultar`,
+  `${environment.apiUrl}/auth/invitaciones-administrador/aceptar`,
   `${environment.apiUrl}/auth/login`,
   `${environment.apiUrl}/auth/registro`,
   `${environment.apiUrl}/auth/verificar-correo`,

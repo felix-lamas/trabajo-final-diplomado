@@ -10,6 +10,8 @@ import { ValidarPagosListComponent } from './pagos/validar-pagos-list/validar-pa
 import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
 
 const routes: Routes = [
+  { path: 'administradores/invitar', loadComponent: () => import('./administradores/invitar-administrador.component').then(m => m.InvitarAdministradorComponent) },
+  { path: 'administradores', loadComponent: () => import('./administradores/administradores.component').then(m => m.AdministradoresComponent) },
   {
     path: '',
     pathMatch: 'full',

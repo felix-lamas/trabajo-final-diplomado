@@ -33,7 +33,7 @@ public class SesionUsuarioServicio {
     public boolean esSesionActiva(UUID sesionId, String correoUsuario) {
         return sesionRepository.findById(sesionId)
                 .filter(sesion -> sesion.getUsuario().getCorreoElectronico().equalsIgnoreCase(correoUsuario))
-                .map(sesion -> sesion.estaActiva(LocalDateTime.now()))
+                .map(sesion -> sesion.getUsuario().isActivo() && sesion.estaActiva(LocalDateTime.now()))
                 .orElse(false);
     }
 

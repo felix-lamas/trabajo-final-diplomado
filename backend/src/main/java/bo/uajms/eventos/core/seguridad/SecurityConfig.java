@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/v1/auth/invitaciones-administrador/consultar",
+                                "/api/v1/auth/invitaciones-administrador/aceptar",
                                 "/api/v1/auth/registro",
                                 "/api/v1/auth/login",
                                 "/api/v1/auth/recuperar-contrasena",

@@ -23,6 +23,7 @@ import { VerificarCorreoComponent } from './verificar-correo/verificar-correo.co
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: 'activar-administrador', loadComponent: () => import('./activar-administrador/activar-administrador.component').then(m => m.ActivarAdministradorComponent) },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'recuperar-contrasena', component: RecuperarContrasenaComponent },
