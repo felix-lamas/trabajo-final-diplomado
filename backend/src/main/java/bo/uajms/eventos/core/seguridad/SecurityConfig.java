@@ -75,6 +75,7 @@ public class SecurityConfig {
                                 "/api/v1/eventos/*",
                                 "/api/v1/eventos/*/qr-pago"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.HEAD, "/api/v1/salud").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
