@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.832" tests="41" errors="0" skipped="0" failures="0">
+  <testcase name="eventoQueNoEmiteCertificadosEsRechazado" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.43" />
+  <testcase name="organizadorListaSoloCertificadosDeEventoPropio" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.01" />
+  <testcase name="relacionesDeTrazabilidadNoSonActualizables" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.024" />
+  <testcase name="usuarioConsultaCertificadoPropio" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="usuarioNoPuedeGenerarCertificados" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.005" />
+  <testcase name="administradorConsultaCertificadoGlobalmente" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="cuentaDualConsultaYDescargaCertificadoPropioEnEventoAjeno" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="organizadorNoGeneraParaEventoAjeno" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.005" />
+  <testcase name="eventoPagadoConPagoAprobadoEsPermitido" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.01" />
+  <testcase name="inscripcionNoConfirmadaEsRechazada(EstadoInscripcion)[1]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.008" />
+  <testcase name="inscripcionNoConfirmadaEsRechazada(EstadoInscripcion)[2]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="inscripcionNoConfirmadaEsRechazada(EstadoInscripcion)[3]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.004" />
+  <testcase name="usuarioNoDescargaPdfDeCertificadoAjeno" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.01" />
+  <testcase name="certificadoNoCurricularValidoExigeAsistenciaPeroNoOchentaPorCiento" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.007" />
+  <testcase name="cuentaDualNoConsultaNiDescargaCertificadoAjeno" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.008" />
+  <testcase name="consultaDeAsistenciaCuentaDistintosYSoloRequeridasDeInscripcionYEvento" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="verificacionPublicaDeCodigoInexistenteEsControlada" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.009" />
+  <testcase name="curricularConMenosDelOchentaPorCientoEsRechazadoSinRedondear" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.007" />
+  <testcase name="eventoConSesionesPeroSinAsistenciaEsRechazado" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.007" />
+  <testcase name="eventoNoFinalizadoEsRechazado(EstadoEvento)[1]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.008" />
+  <testcase name="eventoNoFinalizadoEsRechazado(EstadoEvento)[2]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.007" />
+  <testcase name="eventoNoFinalizadoEsRechazado(EstadoEvento)[3]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.011" />
+  <testcase name="eventoNoFinalizadoEsRechazado(EstadoEvento)[4]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.009" />
+  <testcase name="eventoNoFinalizadoEsRechazado(EstadoEvento)[5]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="codigoEsNoPredecibleLargoYUnico" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.011" />
+  <testcase name="organizadorConsultaCertificadoDeEventoPropio" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.007" />
+  <testcase name="organizadorNoListaCertificadosDeEventoAjeno" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="usuarioNoConsultaCertificadoAjeno" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.008" />
+  <testcase name="eventoPagadoRechazaPagoNoAprobado(EstadoPago)[1]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.007" />
+  <testcase name="eventoPagadoRechazaPagoNoAprobado(EstadoPago)[2]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.004" />
+  <testcase name="eventoPagadoRechazaPagoNoAprobado(EstadoPago)[3]" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.005" />
+  <testcase name="eventoGratuitoNoConsultaPago" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.018" />
+  <testcase name="curricularExigeHorasAcademicasPositivas" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="organizadorNoConsultaNiGeneraPdfDeEventoAjeno" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.011" />
+  <testcase name="administradorTieneAccesoGlobal" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.01" />
+  <testcase name="certificadoCurricularValidoUsaTipoYHorasDelEvento" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.014" />
+  <testcase name="curricularConOchentaExactoEsPermitido" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.013" />
+  <testcase name="baseDeDatosImpideDuplicarInscripcionYCodigo" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.005" />
+  <testcase name="eventoSinSesionesRequeridasNoPuedeAcreditarAsistencia" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.006" />
+  <testcase name="verificacionPublicaValidaNoExponeCamposSensibles" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.008" />
+  <testcase name="generacionDuplicadaEsIdempotente" classname="bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest" time="0.007" />
+</testsuite>

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.286" tests="40" errors="0" skipped="0" failures="0">
+  <testcase name="organizadorNoAprobadoNoPuedeCrear(EstadoSolicitudOrganizador)[1]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.006" />
+  <testcase name="organizadorNoAprobadoNoPuedeCrear(EstadoSolicitudOrganizador)[2]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="organizadorNoAprobadoNoPuedeCrear(EstadoSolicitudOrganizador)[3]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="eventoVirtualValidoLimpiaDatosPresenciales" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.0" />
+  <testcase name="administradorFinalizaEventoYaTerminado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="canceladoNoPuedeReactivarseNiCancelarseOtraVez" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="cupoLimitadoRequiereCapacidad" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="eventoCurricularValidoConservaHoras" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="eventoGratuitoPuedeNoTenerCapacidadLimitada" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.005" />
+  <testcase name="organizadorEditaEventoRechazadoPropio" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.006" />
+  <testcase name="borradorCompletoPasaARevision" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.007" />
+  <testcase name="organizadorCreaEventoComoBorradorYEsPropietario" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.005" />
+  <testcase name="usuarioNoPuedeCrearEvento" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.005" />
+  <testcase name="administradorRechazaConMotivo" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.005" />
+  <testcase name="administradorPublicaEventoEnRevision" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="urlConEsquemaInseguroEsRechazada" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="rechazoSinMotivoNoEscribe" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.005" />
+  <testcase name="administradorNoPublicaEstadoInvalido(EstadoEvento)[1]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.002" />
+  <testcase name="administradorNoPublicaEstadoInvalido(EstadoEvento)[2]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.011" />
+  <testcase name="administradorNoPublicaEstadoInvalido(EstadoEvento)[3]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.007" />
+  <testcase name="administradorNoPublicaEstadoInvalido(EstadoEvento)[4]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.008" />
+  <testcase name="administradorNoPublicaEstadoInvalido(EstadoEvento)[5]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.01" />
+  <testcase name="noEditaEstadosBloqueados(EstadoEvento)[1]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.023" />
+  <testcase name="noEditaEstadosBloqueados(EstadoEvento)[2]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.007" />
+  <testcase name="noEditaEstadosBloqueados(EstadoEvento)[3]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="noEditaEstadosBloqueados(EstadoEvento)[4]" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="eventoPresencialRequiereDatosFisicosCompletos" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="rangoTemporalInvalidoEsRechazado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="eventoNoCurricularNoExigeNiConservaHoras" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="rechazadoVuelveABorradorPorSuOrganizador" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="eventoPagadoRequiereMontoPositivo" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="eventoPagadoValidoConservaConfiguracionEconomica" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="publicadoSeCancelaConMotivo" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="eventoVirtualRequiereEnlace" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="certificadoCurricularRequiereHoras" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.004" />
+  <testcase name="administradorNoFinalizaAntesDelFin" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="organizadorNoPublica" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.017" />
+  <testcase name="administradorNoPuedeCrearBorrador" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.003" />
+  <testcase name="borradorIncompletoNoPasaARevision" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.006" />
+  <testcase name="categoriaInactivaSeTrataComoNoDisponible" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest" time="0.007" />
+</testsuite>

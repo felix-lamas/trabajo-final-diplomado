@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.093" tests="16" errors="0" skipped="0" failures="0">
+  <testcase name="actualizacionInexistenteFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.009" />
+  <testcase name="listaCategoriasComoDtos" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.006" />
+  <testcase name="obtieneCategoriaComoDto" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.006" />
+  <testcase name="duplicadoConEspaciosFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.004" />
+  <testcase name="creaConNombreYDescripcionRecortados" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.003" />
+  <testcase name="duplicadoPorMayusculasFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.004" />
+  <testcase name="actualizacionDuplicadaFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.004" />
+  <testcase name="obtenerIdInexistenteFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.005" />
+  <testcase name="categoriaReferenciadaPorEventoNoSeElimina" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.006" />
+  <testcase name="restriccionFisicaResuelveCarreraConcurrente" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.005" />
+  <testcase name="eliminaCategoriaNoReferenciada" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.003" />
+  <testcase name="nombreMenorAlMinimoDespuesDeTrimFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.004" />
+  <testcase name="eliminacionInexistenteFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.004" />
+  <testcase name="nombreVacioDespuesDeTrimFalla" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.003" />
+  <testcase name="actualizaYRespetaUnicidadNormalizada" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.006" />
+  <testcase name="listaSoloCategoriasActivas" classname="bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest" time="0.003" />
+</testsuite>

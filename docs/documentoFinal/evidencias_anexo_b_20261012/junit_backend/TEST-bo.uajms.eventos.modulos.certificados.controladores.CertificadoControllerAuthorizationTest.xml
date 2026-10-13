@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest" time="0.263" tests="6" errors="0" skipped="0" failures="0">
+  <testcase name="usuarioNoPuedeListarCertificadosPorEvento" classname="bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest" time="0.009" />
+  <testcase name="descargaAutorizadaDevuelvePdfComoAdjunto" classname="bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest" time="0.01" />
+  <testcase name="usuarioNoPuedeGenerarCertificado" classname="bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest" time="0.006" />
+  <testcase name="administradorPuedeListarCertificadosPorEvento" classname="bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest" time="0.006" />
+  <testcase name="verificacionPublicaNoRequiereAutenticacion" classname="bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest" time="0.006" />
+  <testcase name="organizadorPuedeGenerarCertificado" classname="bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest" time="0.006" />
+</testsuite>

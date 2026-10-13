@@ -1,0 +1,160 @@
+Comando: npm test -- --watch=false
+Fecha de inicio: 2026-10-12T13:25:13.569997-04:00
+Copia aislada del proyecto.
+
+> frontend@0.0.0 test
+> ng test --watch=false
+
+❯ Building...
+✔ Building...
+Initial chunk files                                                                           | Names                                                                                      |  Raw size
+styles.css                                                                                    | styles                                                                                     | 332.30 kB | 
+chunk-VKSDPSSP.js                                                                             | -                                                                                          | 194.10 kB | 
+chunk-DKVAWMIB.js                                                                             | -                                                                                          | 168.75 kB | 
+chunk-TJEACQGH.js                                                                             | -                                                                                          | 119.95 kB | 
+chunk-GAM2BEQN.js                                                                             | -                                                                                          |  79.71 kB | 
+chunk-QMEVIOJB.js                                                                             | -                                                                                          |  55.81 kB | 
+chunk-NAYYIS6C.js                                                                             | -                                                                                          |  52.92 kB | 
+chunk-PTKJBL4S.js                                                                             | -                                                                                          |  50.86 kB | 
+chunk-3XD7UK7L.js                                                                             | -                                                                                          |  47.80 kB | 
+chunk-H3YDH5UL.js                                                                             | -                                                                                          |  44.30 kB | 
+chunk-FMZINL3S.js                                                                             | -                                                                                          |  43.12 kB | 
+chunk-SCLW56NY.js                                                                             | -                                                                                          |  38.57 kB | 
+chunk-VG7POQWZ.js                                                                             | -                                                                                          |  31.72 kB | 
+chunk-ZSFI3VUY.js                                                                             | -                                                                                          |  31.13 kB | 
+chunk-HUWZDU5S.js                                                                             | -                                                                                          |  30.71 kB | 
+chunk-U7YZWBFA.js                                                                             | -                                                                                          |  30.63 kB | 
+chunk-J7XBUTJ4.js                                                                             | -                                                                                          |  29.62 kB | 
+chunk-3DL6Y227.js                                                                             | -                                                                                          |  29.44 kB | 
+chunk-LBGPJJ3Z.js                                                                             | -                                                                                          |  29.03 kB | 
+chunk-6A7AT563.js                                                                             | -                                                                                          |  22.25 kB | 
+chunk-AB2EIINN.js                                                                             | -                                                                                          |  20.65 kB | 
+chunk-R7DEFV4K.js                                                                             | -                                                                                          |  18.78 kB | 
+spec-app-features-eventos-evento-detalle-publico-evento-detalle-publico.component.js          | spec-app-features-eventos-evento-detalle-publico-evento-detalle-publico.component          |  16.23 kB | 
+chunk-AAHL4PAT.js                                                                             | -                                                                                          |  14.88 kB | 
+chunk-AE65M5AB.js                                                                             | -                                                                                          |  13.79 kB | 
+chunk-5PL6QA6Z.js                                                                             | -                                                                                          |  13.28 kB | 
+spec-app-features-publico-catalogo-eventos-publico-catalogo-eventos-publico.component.js      | spec-app-features-publico-catalogo-eventos-publico-catalogo-eventos-publico.component      |  13.08 kB | 
+spec-app-features-admin-eventos-evento-form-evento-form.component.js                          | spec-app-features-admin-eventos-evento-form-evento-form.component                          |  11.84 kB | 
+chunk-ZEEHFCLD.js                                                                             | -                                                                                          |  11.30 kB | 
+chunk-WMPDSVNV.js                                                                             | -                                                                                          |  11.05 kB | 
+spec-app-features-privado-dashboard-privado-dashboard-privado.component.js                    | spec-app-features-privado-dashboard-privado-dashboard-privado.component                    |  10.89 kB | 
+spec-app-features-privado-solicitud-organizador-solicitud-organizador.component.js            | spec-app-features-privado-solicitud-organizador-solicitud-organizador.component            |  10.12 kB | 
+chunk-77ULGT5F.js                                                                             | -                                                                                          |   9.41 kB | 
+spec-app-features-privado-perfil-usuario-perfil-usuario.component.js                          | spec-app-features-privado-perfil-usuario-perfil-usuario.component                          |   9.31 kB | 
+spec-app-features-admin-eventos-evento-detail-evento-detail.component.js                      | spec-app-features-admin-eventos-evento-detail-evento-detail.component                      |   8.42 kB | 
+spec-app-features-privado-pagos-registrar-pago-registrar-pago.component.js                    | spec-app-features-privado-pagos-registrar-pago-registrar-pago.component                    |   8.29 kB | 
+spec-app-core-services-auth.service.js                                                        | spec-app-core-services-auth.service                                                        |   8.00 kB | 
+spec-app-features-admin-usuarios-solicitudes-organizador-solicitudes-organizador.component.js | spec-app-features-admin-usuarios-solicitudes-organizador-solicitudes-organizador.component |   7.92 kB | 
+spec-app-features-auth-login-login.component.js                                               | spec-app-features-auth-login-login.component                                               |   7.40 kB | 
+chunk-MO7DQVXX.js                                                                             | -                                                                                          |   7.36 kB | 
+chunk-ERQD6CO3.js                                                                             | -                                                                                          |   6.76 kB | 
+chunk-6QQQNXKV.js                                                                             | -                                                                                          |   6.66 kB | 
+spec-app-features-admin-categorias-categoria-form-categoria-form.component.js                 | spec-app-features-admin-categorias-categoria-form-categoria-form.component                 |   6.54 kB | 
+chunk-4JKXHZFH.js                                                                             | -                                                                                          |   6.41 kB | 
+spec-app-features-publico-inscripcion-publica-inscripcion-publica.component.js                | spec-app-features-publico-inscripcion-publica-inscripcion-publica.component                |   6.31 kB | 
+spec-app-shared-ui-responsive-table-responsive-table.component.js                             | spec-app-shared-ui-responsive-table-responsive-table.component                             |   5.98 kB | 
+spec-app-features-auth-activar-administrador-activar-administrador.component.js               | spec-app-features-auth-activar-administrador-activar-administrador.component               |   5.92 kB | 
+spec-app-features-privado-inscripciones-mis-inscripciones-mis-inscripciones.component.js      | spec-app-features-privado-inscripciones-mis-inscripciones-mis-inscripciones.component      |   5.88 kB | 
+spec-app-core-layout-app-shell.component.js                                                   | spec-app-core-layout-app-shell.component                                                   |   5.76 kB | 
+chunk-XXFAYS26.js                                                                             | -                                                                                          |   5.72 kB | 
+spec-app-features-admin-categorias-categoria-list-categoria-list.component.js                 | spec-app-features-admin-categorias-categoria-list-categoria-list.component                 |   5.67 kB | 
+chunk-XNDA3IA4.js                                                                             | -                                                                                          |   5.67 kB | 
+chunk-J5S53OB6.js                                                                             | -                                                                                          |   5.46 kB | 
+spec-app-features-admin-eventos-evento-list-evento-list.component.js                          | spec-app-features-admin-eventos-evento-list-evento-list.component                          |   5.41 kB | 
+spec-app-features-reportes-dashboard-panel-dashboard-panel.component.js                       | spec-app-features-reportes-dashboard-panel-dashboard-panel.component                       |   5.38 kB | 
+spec-app-features-certificados-mis-certificados-mis-certificados.component.js                 | spec-app-features-certificados-mis-certificados-mis-certificados.component                 |   5.18 kB | 
+spec-app-core-services-evento.service.js                                                      | spec-app-core-services-evento.service                                                      |   5.13 kB | 
+spec-app-features-auth-verificar-correo-verificar-correo.component.js                         | spec-app-features-auth-verificar-correo-verificar-correo.component                         |   4.95 kB | 
+spec-app-app.routes.js                                                                        | spec-app-app.routes                                                                        |   4.67 kB | 
+spec-app-features-asistencias-asistencia-list-asistencia-list.component.js                    | spec-app-features-asistencias-asistencia-list-asistencia-list.component                    |   4.59 kB | 
+spec-app-core-guards-role.guard.js                                                            | spec-app-core-guards-role.guard                                                            |   4.46 kB | 
+spec-app-features-auth-registro-registro.component.js                                         | spec-app-features-auth-registro-registro.component                                         |   4.23 kB | 
+spec-app-features-auth-reset-contrasena-reset-contrasena.component.js                         | spec-app-features-auth-reset-contrasena-reset-contrasena.component                         |   4.17 kB | 
+spec-app-features-eventos-gestion-sesiones-evento-sesiones-evento.component.js                | spec-app-features-eventos-gestion-sesiones-evento-sesiones-evento.component                |   4.17 kB | 
+spec-app-core-interceptors-jwt.interceptor.js                                                 | spec-app-core-interceptors-jwt.interceptor                                                 |   4.03 kB | 
+spec-app-features-admin-pagos-validar-pagos-list-validar-pagos-list.component.js              | spec-app-features-admin-pagos-validar-pagos-list-validar-pagos-list.component              |   3.94 kB | 
+spec-app-features-certificados-validacion-publica-validacion-publica.component.js             | spec-app-features-certificados-validacion-publica-validacion-publica.component             |   3.94 kB | 
+chunk-YX4QWCA7.js                                                                             | -                                                                                          |   3.85 kB | 
+spec-app-features-auth-recuperar-contrasena-recuperar-contrasena.component.js                 | spec-app-features-auth-recuperar-contrasena-recuperar-contrasena.component                 |   3.82 kB | 
+spec-app-features-admin-dashboard-admin-dashboard.component.js                                | spec-app-features-admin-dashboard-admin-dashboard.component                                |   3.81 kB | 
+spec-app-core-services-solicitud-organizador.service.js                                       | spec-app-core-services-solicitud-organizador.service                                       |   3.65 kB | 
+spec-app-core-services-administrador.service.js                                               | spec-app-core-services-administrador.service                                               |   3.61 kB | 
+spec-app-shared-ui-event-card-event-card.component.js                                         | spec-app-shared-ui-event-card-event-card.component                                         |   3.50 kB | 
+spec-app-features-admin-usuarios-usuario-list.component.js                                    | spec-app-features-admin-usuarios-usuario-list.component                                    |   3.30 kB | 
+spec-app-core-services-asistencia.service.js                                                  | spec-app-core-services-asistencia.service                                                  |   3.25 kB | 
+chunk-3IQTCYZJ.js                                                                             | -                                                                                          |   3.10 kB | 
+spec-app-features-admin-usuarios-usuario-detail.component.js                                  | spec-app-features-admin-usuarios-usuario-detail.component                                  |   3.08 kB | 
+chunk-RFCHJU5T.js                                                                             | -                                                                                          |   2.85 kB | 
+spec-app-app.js                                                                               | spec-app-app                                                                               |   2.60 kB | 
+spec-app-core-services-pago.service.js                                                        | spec-app-core-services-pago.service                                                        |   2.56 kB | 
+chunk-BPAE7ADH.js                                                                             | -                                                                                          |   2.38 kB | 
+spec-app-core-services-certificado.service.js                                                 | spec-app-core-services-certificado.service                                                 |   2.37 kB | 
+spec-app-core-services-inscripcion.service.js                                                 | spec-app-core-services-inscripcion.service                                                 |   2.35 kB | 
+chunk-VDIGYZ5X.js                                                                             | -                                                                                          |   2.34 kB | 
+spec-app-shared-ui-button-button.component.js                                                 | spec-app-shared-ui-button-button.component                                                 |   2.33 kB | 
+chunk-35DYOEKD.js                                                                             | -                                                                                          |   2.30 kB | 
+chunk-G5LUXVV2.js                                                                             | -                                                                                          |   2.26 kB | 
+chunk-CLJFANUM.js                                                                             | -                                                                                          |   2.19 kB | 
+chunk-OEDBDC6B.js                                                                             | -                                                                                          |   2.18 kB | 
+spec-app-features-admin-administradores-administradores.component.js                          | spec-app-features-admin-administradores-administradores.component                          |   2.13 kB | 
+spec-app-core-services-categoria-evento.service.js                                            | spec-app-core-services-categoria-evento.service                                            |   2.12 kB | 
+spec-app-features-admin-administradores-invitar-administrador.component.js                    | spec-app-features-admin-administradores-invitar-administrador.component                    |   2.12 kB | 
+chunk-6G7S66GN.js                                                                             | -                                                                                          |   2.11 kB | 
+chunk-JUGAR2HZ.js                                                                             | -                                                                                          |   2.08 kB | 
+chunk-CXLZYH5Q.js                                                                             | -                                                                                          |   2.04 kB | 
+chunk-PKRWFPUX.js                                                                             | -                                                                                          |   1.95 kB | 
+chunk-SXXZVBF3.js                                                                             | -                                                                                          |   1.93 kB | 
+spec-app-shared-ui-icon-button-icon-button.component.js                                       | spec-app-shared-ui-icon-button-icon-button.component                                       |   1.86 kB | 
+spec-app-core-services-theme.service.js                                                       | spec-app-core-services-theme.service                                                       |   1.67 kB | 
+spec-app-shared-ui-page-header-page-header.component.js                                       | spec-app-shared-ui-page-header-page-header.component                                       |   1.66 kB | 
+spec-app-core-services-dashboard.service.js                                                   | spec-app-core-services-dashboard.service                                                   |   1.66 kB | 
+chunk-O6I7NANY.js                                                                             | -                                                                                          |   1.63 kB | 
+chunk-D346V7JS.js                                                                             | -                                                                                          |   1.57 kB | 
+chunk-NCQWSF5S.js                                                                             | -                                                                                          |   1.50 kB | 
+spec-app-core-services-usuario-admin.service.js                                               | spec-app-core-services-usuario-admin.service                                               |   1.48 kB | 
+spec-app-shared-ui-stat-card-stat-card.component.js                                           | spec-app-shared-ui-stat-card-stat-card.component                                           |   1.42 kB | 
+spec-app-shared-ui-alert-alert.component.js                                                   | spec-app-shared-ui-alert-alert.component                                                   |   1.29 kB | 
+init-testbed.js                                                                               | init-testbed                                                                               |   1.27 kB | 
+spec-app-shared-ui-surface-surface.component.js                                               | spec-app-shared-ui-surface-surface.component                                               |   1.27 kB | 
+spec-app-shared-ui-badge-badge.component.js                                                   | spec-app-shared-ui-badge-badge.component                                                   |   1.23 kB | 
+chunk-COH4RIGX.js                                                                             | -                                                                                          |   1.08 kB | 
+vitest-mock-patch.js                                                                          | vitest-mock-patch                                                                          | 939 bytes | 
+chunk-LVPNJKVZ.js                                                                             | -                                                                                          | 687 bytes | 
+chunk-CNABNZMI.js                                                                             | -                                                                                          | 648 bytes | 
+chunk-L2MD3TMB.js                                                                             | -                                                                                          | 553 bytes | 
+chunk-YXDYSZP3.js                                                                             | -                                                                                          | 403 bytes | 
+polyfills.js                                                                                  | polyfills                                                                                  | 121 bytes | 
+
+                                                                                              | Initial total                                                                              |   1.94 MB
+
+Lazy chunk files                                                                              | Names                                                                                      |  Raw size
+chunk-VVUELYRR.js                                                                             | asistencias-module                                                                         |   3.62 kB | 
+chunk-U56NLD4U.js                                                                             | organizador-module                                                                         |   3.45 kB | 
+chunk-JK7GFX3G.js                                                                             | admin-module                                                                               | 884 bytes | 
+chunk-TAOKR5JX.js                                                                             | publico-module                                                                             | 742 bytes | 
+chunk-534D6QTO.js                                                                             | dashboard-privado-component                                                                | 702 bytes | 
+chunk-ZTU7LBM6.js                                                                             | reportes-module                                                                            | 554 bytes | 
+chunk-ESRUV5FS.js                                                                             | usuario-detail-component                                                                   | 510 bytes | 
+chunk-EMIY6OYK.js                                                                             | usuario-list-component                                                                     | 472 bytes | 
+chunk-DMCSCBIK.js                                                                             | privado-module                                                                             | 468 bytes | 
+chunk-PU3LTBUW.js                                                                             | certificados-module                                                                        | 462 bytes | 
+chunk-23Q6VAS5.js                                                                             | solicitudes-organizador-component                                                          | 426 bytes | 
+chunk-EL5TQDQU.js                                                                             | pagos-module                                                                               | 418 bytes | 
+chunk-L54IY6VF.js                                                                             | app-shell-component                                                                        | 400 bytes | 
+chunk-IFRUABBT.js                                                                             | solicitud-organizador-component                                                            | 388 bytes | 
+chunk-PWVJC235.js                                                                             | validacion-publica-component                                                               | 376 bytes | 
+...and 5 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [22.938 seconds] - 2026-10-12T17:25:41.477Z
+
+
+ RUN  v4.1.9 C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/frontend
+
+
+ Test Files  57 passed (57)
+      Tests  316 passed (316)
+   Start at  13:25:46
+   Duration  28.80s (transform 15.75s, setup 27.54s, import 60.81s, tests 79.80s, environment 512.73s)
+
+

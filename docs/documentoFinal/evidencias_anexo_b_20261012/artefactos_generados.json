@@ -1,0 +1,12 @@
+[
+  {
+    "path": "flutter\\VidiaApp\\build\\app\\outputs\\flutter-apk\\app-debug.apk",
+    "bytes": 176512607,
+    "sha256": "8f738c2f673e861e15ea91d6fc58017752376b58c6b461ac40cfa976d29fd7bf"
+  },
+  {
+    "path": "backend\\target\\eventos-uajms-0.0.1-SNAPSHOT.jar",
+    "bytes": 86053010,
+    "sha256": "a7fbb4b7a4707ed3ef15bfd89c66481f7ac042ed942c010415874ff2f02428e0"
+  }
+]

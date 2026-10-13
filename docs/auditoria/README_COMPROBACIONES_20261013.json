@@ -1,0 +1,135 @@
+{
+  "fecha": "2026-10-13",
+  "consultas": [
+    {
+      "url": "https://github.com/felix-lamas/trabajo-final-diplomado",
+      "fecha": "2026-10-13T00:05:54.564168-04:00",
+      "method": "GET",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "host_final": "github.com"
+    },
+    {
+      "url": "https://gitlab.com/lamasfelix/trabajo-final-diplomado",
+      "fecha": "2026-10-13T00:05:54.567003-04:00",
+      "method": "GET",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "host_final": "gitlab.com"
+    },
+    {
+      "url": "https://trabajo-final-diplomado-web.onrender.com/",
+      "fecha": "2026-10-13T00:05:54.567003-04:00",
+      "method": "GET",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "host_final": "trabajo-final-diplomado-web.onrender.com"
+    },
+    {
+      "url": "https://trabajo-final-diplomado.onrender.com/",
+      "fecha": "2026-10-13T00:05:54.568556-04:00",
+      "method": "GET",
+      "status": 401,
+      "content_type": "application/json;charset=UTF-8",
+      "host_final": "trabajo-final-diplomado.onrender.com"
+    },
+    {
+      "url": "https://trabajo-final-diplomado.onrender.com/swagger-ui/index.html",
+      "fecha": "2026-10-13T00:05:54.568556-04:00",
+      "method": "GET",
+      "status": 200,
+      "content_type": "text/html",
+      "host_final": "trabajo-final-diplomado.onrender.com"
+    },
+    {
+      "url": "https://trabajo-final-diplomado.onrender.com/api/v1/salud",
+      "fecha": "2026-10-13T00:05:54.569741-04:00",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"estado\":\"UP\"}",
+      "host_final": "trabajo-final-diplomado.onrender.com"
+    },
+    {
+      "url": "https://trabajo-final-diplomado.onrender.com/v3/api-docs",
+      "fecha": "2026-10-13T00:05:54.945161-04:00",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "paths": 77,
+      "host_final": "trabajo-final-diplomado.onrender.com"
+    },
+    {
+      "url": "https://trabajo-final-diplomado.onrender.com/api/v1/usuarios/perfil",
+      "fecha": "2026-10-13T00:05:55.046719-04:00",
+      "method": "GET",
+      "status": 401,
+      "content_type": "application/json;charset=UTF-8",
+      "host_final": "trabajo-final-diplomado.onrender.com"
+    },
+    {
+      "url": "https://github.com/felix-lamas/trabajo-final-diplomado/releases/tag/v1.0.0",
+      "fecha": "2026-10-13T00:05:55.336493-04:00",
+      "method": "GET",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "host_final": "github.com"
+    },
+    {
+      "url": "https://github.com/felix-lamas/trabajo-final-diplomado/releases/download/v1.0.0/app-release.apk",
+      "fecha": "2026-10-13T00:05:55.507516-04:00",
+      "method": "HEAD",
+      "status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "host_final": "release-assets.githubusercontent.com",
+      "redireccion_firmada_omitida": true
+    },
+    {
+      "url": "https://trabajo-final-diplomado-web.onrender.com/eventos",
+      "method": "GET",
+      "fecha": "2026-10-13T00:27:26.792962-04:00",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://trabajo-final-diplomado-web.onrender.com/verificar-certificado",
+      "method": "GET",
+      "fecha": "2026-10-13T00:27:27.252107-04:00",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://trabajo-final-diplomado-web.onrender.com/.well-known/assetlinks.json",
+      "method": "GET",
+      "fecha": "2026-10-13T00:27:27.352918-04:00",
+      "status": 200,
+      "content_type": "application/json"
+    }
+  ],
+  "versiones_locales": {
+    "Java": "21.0.11",
+    "Maven": "3.10.0",
+    "Node": "24.16.0",
+    "npm": "11.6.3",
+    "Flutter": "3.44.8",
+    "Dart": "3.12.2",
+    "Angular": "21.2.17",
+    "Angular_CLI": "21.2.16"
+  },
+  "main_github": "f6891ef3ffb5a89a31e323d37a7ae9d2f734725c",
+  "main_gitlab": "f6891ef3ffb5a89a31e323d37a7ae9d2f734725c",
+  "suites_re_ejecutadas": false,
+  "capturas_nuevas": false,
+  "validacion_documental": {
+    "originales_comparados": 1450,
+    "originales_modificados": [
+      "README.md",
+      "flutter\\VidiaApp\\README.md"
+    ],
+    "originales_faltantes": [],
+    "markdown_revisados": 7,
+    "enlaces_relativos_comprobados": 58,
+    "errores_documentales": [],
+    "imagenes_decodificadas": 9
+  }
+}

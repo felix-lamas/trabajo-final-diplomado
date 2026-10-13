@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest" time="0.186" tests="5" errors="0" skipped="0" failures="0">
+  <testcase name="jwtMalformadoDevuelve401UniformeYNoContinuaLaCadena" classname="bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest" time="0.132" />
+  <testcase name="jwtConSesionValidaAutenticaYPermitePeticion(boolean)[1]" classname="bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest" time="0.012" />
+  <testcase name="jwtConSesionValidaAutenticaYPermitePeticion(boolean)[2]" classname="bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest" time="0.008" />
+  <testcase name="jwtConSesionNoActivaDevuelve401(String)[1]" classname="bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest" time="0.009" />
+  <testcase name="jwtConSesionNoActivaDevuelve401(String)[2]" classname="bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest" time="0.009" />
+</testsuite>

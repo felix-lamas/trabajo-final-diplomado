@@ -1,0 +1,15 @@
+{
+  "name": "backend_verify",
+  "command": [
+    "mvn",
+    "-B",
+    "clean",
+    "verify"
+  ],
+  "directory": "backend",
+  "started": "2026-10-12T13:24:08.994558-04:00",
+  "finished": "2026-10-12T13:28:01.916434-04:00",
+  "seconds": 232.92,
+  "exit": 0,
+  "log": "backend_verify.txt"
+}

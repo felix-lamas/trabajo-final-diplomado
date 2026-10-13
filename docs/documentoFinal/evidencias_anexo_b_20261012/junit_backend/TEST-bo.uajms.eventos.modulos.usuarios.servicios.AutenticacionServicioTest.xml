@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.549" tests="16" errors="0" skipped="0" failures="0">
+  <testcase name="contratoDeRegistroNoPermiteSeleccionarAdministrador" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.501" />
+  <testcase name="registroExternoNoExigeRu" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.005" />
+  <testcase name="loginRechazaUsuarioNoVerificadoSinCrearSesion" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.002" />
+  <testcase name="loginRechazaContrasenaIncorrecta" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.003" />
+  <testcase name="rechazaRuDuplicadoSinPersistir" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.001" />
+  <testcase name="registroUajmsCreaUsuarioConRuYRolUsuario" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.002" />
+  <testcase name="rechazaRuAusenteParaUsuarioUajms" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.001" />
+  <testcase name="rechazaConfirmacionDeContrasenaDistinta" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.001" />
+  <testcase name="loginFuncionaParaCadaRolOficial(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.003" />
+  <testcase name="loginFuncionaParaCadaRolOficial(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.0" />
+  <testcase name="loginFuncionaParaCadaRolOficial(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.006" />
+  <testcase name="rechazaCorreoDuplicadoSinPersistir" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.0" />
+  <testcase name="contratoDeRegistroNoPermiteSeleccionarOrganizador" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.0" />
+  <testcase name="rechazaCiDuplicadoSinPersistir" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.0" />
+  <testcase name="registroDejaCorreoSinVerificarYPersisteHashDeTokenConExpiracion" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.002" />
+  <testcase name="falloDelProveedorEnRegistroSePropagaComoServicioNoDisponible" classname="bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest" time="0.004" />
+</testsuite>

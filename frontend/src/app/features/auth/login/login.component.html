@@ -1,3 +1,6 @@
+@if (logoutWarning) {
+  <p role="status" class="p-4 text-center">{{ logoutWarning }}</p>
+}
 <main class="auth-page">
   <section class="vidia-auth" aria-labelledby="login-title">
     <a class="vidia-auth__brand" routerLink="/eventos" aria-label="Vidia, ir a eventos">

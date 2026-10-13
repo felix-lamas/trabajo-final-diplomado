@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.951" tests="15" errors="0" skipped="0" failures="0">
+  <testcase name="lecturaDePublicadoDescargaSoloLaKeyYMarcaCachePublico" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.265" />
+  <testcase name="usuarioNoPuedeSubirQr" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.012" />
+  <testcase name="administradorPuedeSubirQrSegunSuAlcance" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.488" />
+  <testcase name="falloPersistenciaCompensaElNuevoObjeto" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.015" />
+  <testcase name="eliminarQrLimpiaReferenciaYEliminaObjetoDespuesDeCommit" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.021" />
+  <testcase name="aceptaExtensionJpegConMimeRealJpeg" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.024" />
+  <testcase name="eventoPublicadoNoAdmiteReemplazoDeQr" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.008" />
+  <testcase name="reemplazoConservaQrAnteriorHastaCommit" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.025" />
+  <testcase name="cargaPngValidoConKeyGeneradaPorBackendYResolucionOriginal" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.025" />
+  <testcase name="ownershipSeCompruebaAntesDeContactarStorage" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.004" />
+  <testcase name="rechazaMimeIncompatibleAntesDeAlmacenar" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.016" />
+  <testcase name="keyQrYComprobanteSonNamespacesSeparados" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.006" />
+  <testcase name="rechazaMasDeCincoMb" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.009" />
+  <testcase name="eventoGratuitoNoAdmiteQr" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.009" />
+  <testcase name="rechazaContenidoQueNoEsImagen" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest" time="0.01" />
+</testsuite>

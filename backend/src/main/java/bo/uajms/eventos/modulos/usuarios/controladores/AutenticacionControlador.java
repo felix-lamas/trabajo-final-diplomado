@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.security.core.Authentication;
 import bo.uajms.eventos.core.seguridad.JwtAuthenticationFilter;
+import bo.uajms.eventos.core.seguridad.IntentosAutenticacion;
 
 import java.util.UUID;
 
@@ -35,6 +36,7 @@ import java.util.UUID;
 public class AutenticacionControlador {
 
     private final AutenticacionServicio autenticacionServicio;
+    private final IntentosAutenticacion intentos;
 
     @PostMapping("/registro")
     @SecurityRequirements
@@ -54,14 +56,17 @@ public class AutenticacionControlador {
     @Operation(summary = "Iniciar sesion",
             description = "Valida una cuenta con correo verificado, revoca su sesion anterior y devuelve un JWT asociado a la nueva sesion.")
     @ApiResponses({
+            @ApiResponse(responseCode = "429", description = "Límite temporal excedido; Retry-After indica segundos de espera"),
             @ApiResponse(responseCode = "200", description = "Autenticacion correcta", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "400", description = "El correo todavia no fue verificado"),
             @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
     })
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        intentos.comprobarCorreo("login", request.getCorreoElectronico());
         return ResponseEntity.ok(autenticacionServicio.login(request));
     }
 
+    @ApiResponse(responseCode = "429", description = "Límite temporal excedido; consultar Retry-After")
     @PostMapping("/recuperar-contrasena")
     @SecurityRequirements
     @Operation(summary = "Solicitar recuperacion de contrasena",
@@ -71,10 +76,12 @@ public class AutenticacionControlador {
             @ApiResponse(responseCode = "400", description = "Datos de entrada invalidos")
     })
     public ResponseEntity<Void> solicitarRecuperacion(@Valid @RequestBody RecuperarContrasenaRequest request) {
+        intentos.comprobarCorreo("recuperacion", request.getCorreoElectronico());
         autenticacionServicio.solicitarRecuperacion(request);
         return ResponseEntity.ok().build();
     }
 
+    @ApiResponse(responseCode = "429", description = "Límite temporal excedido; consultar Retry-After")
     @PostMapping("/restablecer-contrasena")
     @SecurityRequirements
     @Operation(summary = "Restablecer contrasena con token",
@@ -84,10 +91,12 @@ public class AutenticacionControlador {
             @ApiResponse(responseCode = "400", description = "Token invalido, expirado, usado o contrasena insegura")
     })
     public ResponseEntity<Void> restablecerContrasena(@Valid @RequestBody ResetContrasenaRequest request) {
+        intentos.comprobar("restablecimiento", request.getToken());
         autenticacionServicio.restablecerContrasena(request);
         return ResponseEntity.ok().build();
     }
 
+    @ApiResponse(responseCode = "429", description = "Límite temporal excedido; consultar Retry-After")
     @PostMapping("/verificar-correo")
     @SecurityRequirements
     @Operation(summary = "Verificar correo",
@@ -97,10 +106,12 @@ public class AutenticacionControlador {
             @ApiResponse(responseCode = "400", description = "Token invalido, expirado o utilizado")
     })
     public ResponseEntity<Void> verificarCorreo(@Valid @RequestBody VerificarCorreoRequest request) {
+        intentos.comprobar("verificacion", request.getToken());
         autenticacionServicio.verificarCorreo(request);
         return ResponseEntity.ok().build();
     }
 
+    @ApiResponse(responseCode = "429", description = "Límite temporal excedido; consultar Retry-After")
     @PostMapping("/reenviar-verificacion")
     @SecurityRequirements
     @Operation(summary = "Reenviar verificacion de correo",
@@ -109,6 +120,7 @@ public class AutenticacionControlador {
             @ApiResponse(responseCode = "200", description = "Solicitud procesada de forma no enumerativa")
     })
     public ResponseEntity<Void> reenviarVerificacion(@Valid @RequestBody ReenviarVerificacionRequest request) {
+        intentos.comprobarCorreo("reenvio", request.getCorreoElectronico());
         autenticacionServicio.reenviarVerificacion(request);
         return ResponseEntity.ok().build();
     }

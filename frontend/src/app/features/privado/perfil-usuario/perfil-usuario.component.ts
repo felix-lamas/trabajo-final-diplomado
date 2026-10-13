@@ -192,7 +192,9 @@ export class PerfilUsuarioComponent implements OnInit {
     this.loggingOut.set(true);
     this.authService.logout().subscribe({
       next: () => void this.router.navigate(['/auth/login']),
-      error: () => void this.router.navigate(['/auth/login'])
+      error: () => void this.router.navigate(['/auth/login'], {
+        state: { logoutUnconfirmed: true }
+      })
     });
   }
 

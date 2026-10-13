@@ -1,0 +1,200 @@
+[
+  {
+    "case": "CP-SALUD",
+    "action": "Swagger_200",
+    "url": "https://trabajo-final-diplomado.onrender.com/swagger-ui/index.html#/Salud/salud",
+    "timestamp": "2026-10-11T19:26:54.526Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-SALUD_Swagger_200.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-02",
+    "action": "Swagger_401",
+    "url": "https://trabajo-final-diplomado.onrender.com/swagger-ui/index.html#/Usuarios/obtenerPerfil",
+    "timestamp": "2026-10-11T19:26:56.673Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-02_Swagger_401.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-LOGIN",
+    "action": "organizer_dashboard",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/organizador/eventos",
+    "timestamp": "2026-10-11T19:27:03.300Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-LOGIN_organizer_dashboard.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-04",
+    "action": "organizer_/organizador/eventos",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/organizador/eventos",
+    "timestamp": "2026-10-11T19:27:05.560Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-04_organizer__organizador_eventos.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-04",
+    "action": "organizer_/eventos/75a50675-31b4-4dc7-a677-9872a72e78bc",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/eventos/75a50675-31b4-4dc7-a677-9872a72e78bc",
+    "timestamp": "2026-10-11T19:27:07.850Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-04_organizer__eventos_75a50675_31b4_4dc7_a677_9872a72e78bc.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-LOGIN",
+    "action": "admin_dashboard",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/admin",
+    "timestamp": "2026-10-11T19:27:12.485Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-LOGIN_admin_dashboard.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-05",
+    "action": "admin_/admin/eventos",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/admin/eventos",
+    "timestamp": "2026-10-11T19:27:14.751Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-05_admin__admin_eventos.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-09",
+    "action": "admin_/admin/pagos",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/admin/pagos",
+    "timestamp": "2026-10-11T19:27:16.940Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-09_admin__admin_pagos.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-30",
+    "action": "admin_logout_204",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/auth/login",
+    "timestamp": "2026-10-11T19:27:18.247Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-30_admin_logout_204.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-LOGIN",
+    "action": "user_dashboard",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/privado/dashboard",
+    "timestamp": "2026-10-11T19:27:22.440Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-LOGIN_user_dashboard.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-06",
+    "action": "user_/privado/inscripciones",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/privado/inscripciones",
+    "timestamp": "2026-10-11T19:27:24.675Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-06_user__privado_inscripciones.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-06",
+    "action": "user_/privado/inscripciones/bc2e16bb-a354-41b1-bfe1-46c272148623",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/privado/inscripciones/bc2e16bb-a354-41b1-bfe1-46c272148623",
+    "timestamp": "2026-10-11T19:27:26.856Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-06_user__privado_inscripciones_bc2e16bb_a354_41b1_bfe1_46c272148623.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-08",
+    "action": "user_/privado/pagos",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/privado/pagos",
+    "timestamp": "2026-10-11T19:27:29.049Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-08_user__privado_pagos.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-08",
+    "action": "user /privado/pagos/825e7eb4-31e4-4a43-b770-2c77b47a865d",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/auth/login",
+    "timestamp": "2026-10-11T19:27:31.287Z",
+    "state": "FALLIDO",
+    "reason": "Redirigido a autenticación"
+  },
+  {
+    "case": "CP-CATALOGO",
+    "action": "user_/eventos",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/eventos",
+    "timestamp": "2026-10-11T19:27:33.730Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-CATALOGO_user__eventos.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-CATALOGO",
+    "action": "user_/eventos/df777f32-6b69-4569-8f26-65083de228e5",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/eventos/df777f32-6b69-4569-8f26-65083de228e5",
+    "timestamp": "2026-10-11T19:27:36.142Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-CATALOGO_user__eventos_df777f32_6b69_4569_8f26_65083de228e5.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-PERFIL",
+    "action": "user_/privado/perfil",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/privado/perfil",
+    "timestamp": "2026-10-11T19:27:38.521Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-PERFIL_user__privado_perfil.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-30",
+    "action": "user_logout_204",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/auth/login",
+    "timestamp": "2026-10-11T19:27:39.817Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-30_user_logout_204.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-13",
+    "action": "certificado_publico",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/verificar-certificado/UAJMS-4E7F1B803239424293B1E56B66CB2A63",
+    "timestamp": "2026-10-11T19:35:43.989Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-13_certificado_publico.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  },
+  {
+    "case": "CP-12",
+    "action": "certificados_usuario",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/certificados/mis-certificados",
+    "timestamp": "2026-10-11T19:35:50.936Z",
+    "browser": "153.0.8010.12",
+    "screenshot": "CP-12_certificados_usuario.png",
+    "state": "APROBADO",
+    "scope": "UI real de producción; captura de vista, no inferencia de mutación"
+  }
+]

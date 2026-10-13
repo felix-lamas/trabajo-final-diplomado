@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-10-11T19:40:02.729570+00:00",
+  "document": "Lamas_E3_2.8_validacion_produccion.docx",
+  "counts": {
+    "PENDIENTE": 2,
+    "APROBADO": 17,
+    "FALLIDO": 1
+  },
+  "case_count": 20,
+  "images": 29,
+  "original_unchanged": true,
+  "original_sha256": "9b224a971dce40fd7645def5fc88a2ca958138c0dfcc075983ab2091d34b4516",
+  "new_sha256": "4ecc95240e0e79e0ae83049c47a58df11310541903db1ae08633b2eec698324d",
+  "api_requests": 98,
+  "web_screenshots": 19,
+  "phone_screenshots": 16,
+  "syntax_xml_valid": true,
+  "secrets_xml_scan": "No credenciales encontradas",
+  "word_visual_review": "Apertura y repaginado Word confirmados; 51 paginas con anexos, cero paginas en blanco, cinco tablas de 468 puntos dentro de margenes. Sin exportacion PDF ni revision visual completa.",
+  "word_validation": {
+    "pages": 51,
+    "available_width_points": 468,
+    "pdf_export_executed": false,
+    "blank_pages": [],
+    "opened": true,
+    "table_width_points": [
+      467.99999618530273,
+      468.00001525878906,
+      468,
+      468,
+      468.00000762939453
+    ]
+  },
+  "git_diff_check": "exit 0; avisos CRLF preexistentes",
+  "credentials_temporary_deleted": true
+}

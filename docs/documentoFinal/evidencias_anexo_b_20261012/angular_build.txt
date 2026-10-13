@@ -1,0 +1,61 @@
+Comando: npm run build
+Fecha de inicio: 2026-10-12T13:26:16.620335-04:00
+Copia aislada del proyecto.
+
+> frontend@0.0.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files   | Names                       |  Raw size | Estimated transfer size
+chunk-VEVNDIWK.js     | -                           | 417.48 kB |               105.03 kB
+styles-N57KDXO4.css   | styles                      | 291.83 kB |                34.43 kB
+main-B5PZSXW4.js      | main                        |  67.19 kB |                18.08 kB
+chunk-OBVIF3YU.js     | -                           |  51.26 kB |                11.75 kB
+polyfills-5CFQRCPP.js | polyfills                   |  34.59 kB |                11.33 kB
+chunk-3NDAQWIM.js     | -                           |  15.26 kB |                 4.15 kB
+chunk-KU5XSPNU.js     | -                           |   6.78 kB |                 2.17 kB
+chunk-HZW5Q635.js     | -                           |   3.58 kB |                 1.07 kB
+chunk-LAAFGZN5.js     | -                           | 858 bytes |               858 bytes
+chunk-XCIOHDZZ.js     | -                           | 664 bytes |               664 bytes
+
+                      | Initial total               | 889.49 kB |               189.54 kB
+
+Lazy chunk files      | Names                       |  Raw size | Estimated transfer size
+chunk-5VMDFYOM.js     | -                           |  98.50 kB |                24.28 kB
+chunk-LHBX55NT.js     | -                           |  82.68 kB |                15.23 kB
+chunk-WEP54EAK.js     | publico-module              |  71.58 kB |                15.31 kB
+chunk-YR6TDX36.js     | -                           |  70.82 kB |                11.99 kB
+chunk-U5LX6BTJ.js     | auth-module                 |  63.45 kB |                12.48 kB
+chunk-OS2QHJXA.js     | app-shell-component         |  52.45 kB |                10.41 kB
+chunk-DNI6B2GK.js     | -                           |  42.97 kB |                 8.67 kB
+chunk-NMNLZR5T.js     | -                           |  40.11 kB |                 8.53 kB
+chunk-FQVBBWZD.js     | -                           |  36.06 kB |                 8.78 kB
+chunk-ZBCDIMIX.js     | -                           |  31.67 kB |                 7.45 kB
+chunk-FKSR32PP.js     | dashboard-privado-component |  28.83 kB |                 6.12 kB
+chunk-PSIOFBJI.js     | -                           |  28.78 kB |                 4.79 kB
+chunk-E4YSAJNX.js     | admin-module                |  25.05 kB |                 6.58 kB
+chunk-ZH5HORFD.js     | -                           |  17.64 kB |                 4.73 kB
+chunk-B6SP3VR5.js     | pagos-module                |  17.31 kB |                 4.81 kB
+...and 46 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [22.291 seconds] - 2026-10-12T17:26:42.599Z
+
+Output location: [COPIA AISLADA]\frontend\dist\frontend
+
+
+▲ [WARNING] bundle initial exceeded maximum budget. Budget 500.00 kB was not met by 389.49 kB with a total of 889.49 kB.
+
+
+▲ [WARNING] src/app/core/layout/app-shell.component.css exceeded maximum budget. Budget 4.00 kB was not met by 3.88 kB with a total of 7.88 kB.
+
+
+▲ [WARNING] src/app/features/publico/catalogo-eventos-publico/catalogo-eventos-publico.component.css exceeded maximum budget. Budget 4.00 kB was not met by 1.19 kB with a total of 5.19 kB.
+
+
+▲ [WARNING] src/app/features/privado/dashboard-privado/dashboard-privado.component.css exceeded maximum budget. Budget 4.00 kB was not met by 3.84 kB with a total of 7.84 kB.
+
+
+▲ [WARNING] src/app/features/eventos/evento-detalle-publico/evento-detalle-publico.component.css exceeded maximum budget. Budget 4.00 kB was not met by 3.84 kB with a total of 7.84 kB.
+
+

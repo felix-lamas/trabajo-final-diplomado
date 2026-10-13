@@ -1,0 +1,34 @@
+[
+  {
+    "file": "repositorio.png",
+    "url": "https://github.com/felix-lamas/trabajo-final-diplomado",
+    "timestamp": "2026-10-12T02:44:42.165Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Consulta publica de lectura; sin autenticacion ni operaciones persistentes"
+  },
+  {
+    "file": "release.png",
+    "url": "https://github.com/felix-lamas/trabajo-final-diplomado/releases/tag/v1.0.0",
+    "timestamp": "2026-10-12T02:44:44.486Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Consulta publica de lectura; sin autenticacion ni operaciones persistentes"
+  },
+  {
+    "file": "web_publica.png",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/auth/login",
+    "timestamp": "2026-10-12T02:44:47.247Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Consulta publica de lectura; sin autenticacion ni operaciones persistentes"
+  },
+  {
+    "file": "swagger.png",
+    "url": "https://trabajo-final-diplomado.onrender.com/swagger-ui/index.html",
+    "timestamp": "2026-10-12T02:44:52.108Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Consulta publica de lectura; sin autenticacion ni operaciones persistentes"
+  }
+]

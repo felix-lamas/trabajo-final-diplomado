@@ -1,0 +1,202 @@
+[
+  {
+    "id": "CP-01",
+    "scenario": "Registro y verificación por correo (RF-01)",
+    "expected": "Registro sin JWT; activación mediante correo real.",
+    "obtained": "Pendiente de ejecución integral; reglas unitarias aprobadas.",
+    "state": "PENDIENTE",
+    "tests": "AutenticacionServicioTest; VerificacionCorreoServicioTest",
+    "reproduce": "POST /api/v1/auth/registro y /verificar-correo. Falta bandeja controlada; H03–H05 no acredita el recorrido completo.",
+    "criterion": "Dado un participante nuevo, cuando se registra y abre el enlace del correo recibido, entonces registro sin JWT; activación mediante correo real."
+  },
+  {
+    "id": "CP-02",
+    "scenario": "Recurso protegido sin token (RNF-02)",
+    "expected": "GET perfil 401 sin datos privados; HEAD perfil comprobado localmente.",
+    "obtained": "Producción: GET perfil 401 por API y Swagger; figura F.2. HEAD protegido: evidencia local del Anexo A.",
+    "state": "APROBADO",
+    "tests": "SaludHttpIntegrationTest; SaludControllerTest",
+    "reproduce": "GET/HEAD /api/v1/usuarios/perfil sin Authorization; http_local_sanitizado.json.",
+    "criterion": "Dado una solicitud sin token, cuando se consulta GET/HEAD del perfil, entonces gET/HEAD del perfil: 401 sin datos privados."
+  },
+  {
+    "id": "CP-03",
+    "scenario": "Rol insuficiente en administración (RF-02; RNF-02)",
+    "expected": "USUARIO y ORGANIZADOR reciben 403 al consultar solicitudes administrativas.",
+    "obtained": "Producción: ambos roles 403; registro F-API. Perfil dual conserva USUARIO; figura F.15.",
+    "state": "APROBADO",
+    "tests": "UsuarioControladorAuthorizationTest; SolicitudOrganizadorIntegrationTest",
+    "reproduce": "GET /api/v1/usuarios/solicitudes-organizador requiere ADMINISTRADOR. Repetir con USUARIO ficticio; no registrar JWT.",
+    "criterion": "Dado un USUARIO autenticado, cuando consulta solicitudes administrativas, entonces uSUARIO autenticado recibe 403."
+  },
+  {
+    "id": "CP-04",
+    "scenario": "Crear evento y enviar a revisión (RF-03)",
+    "expected": "POST 201 BORRADOR; PATCH 200 EN_REVISION; conserva propietario.",
+    "obtained": "Producción: dos eventos ficticios creados 201 y enviados a revisión 200; F-API; figura F.3.",
+    "state": "APROBADO",
+    "tests": "EventoServiceLifecycleTest",
+    "reproduce": "POST /api/v1/eventos; PATCH /api/v1/eventos/{id}/enviar-revision. ORGANIZADOR aprobado propietario. Preparar EventoDatosRequest y categoría válida; envío actual acreditado con mocks.",
+    "criterion": "Dado un ORGANIZADOR aprobado y datos válidos, cuando crea su evento y lo envía a revisión, entonces bORRADOR propio; luego EN_REVISION, no PUBLICADO."
+  },
+  {
+    "id": "CP-05",
+    "scenario": "Publicación administrativa (RF-04)",
+    "expected": "ADMINISTRADOR publica; USUARIO y ORGANIZADOR reciben 403.",
+    "obtained": "Producción: publicación administrativa 200; otros dos roles 403; F-API y figura F.4.",
+    "state": "APROBADO",
+    "tests": "EventoServiceLifecycleTest; EventoControllerAuthorizationTest",
+    "reproduce": "PATCH /api/v1/eventos/{id}/publicar. No atribuir HTTP del GET histórico al PATCH; el artefacto registra el GET final del catálogo.",
+    "criterion": "Dado un evento EN_REVISION, cuando un ADMINISTRADOR lo publica y un usuario sin permisos intenta la misma acción, entonces aDMINISTRADOR publica EN_REVISION; otros roles no publican."
+  },
+  {
+    "id": "CP-06",
+    "scenario": "Inscripción propia y cancelación por reglas (RF-06)",
+    "expected": "Inscripción propia 201; cancelación solo si las reglas lo permiten.",
+    "obtained": "Producción: participante y cuenta dual 201; detalle propio 200. Cancelación: pruebas locales del Anexo B; no ejecutada en producción. Figuras F.5 y F.11.",
+    "state": "APROBADO",
+    "tests": "InscripcionPagoFlowTest; InscripcionServiceAuthorizationTest",
+    "reproduce": "POST /api/v1/inscripciones, body eventoId; PATCH /api/v1/inscripciones/{id}/cancelar. USUARIO propietario. Cancelación integral actual pendiente.",
+    "criterion": "Dado un USUARIO y evento gratuito PUBLICADO elegible, cuando se inscribe y solicita cancelación en condiciones permitidas, entonces cONFIRMADA sin pago; cancelación permitida según reglas."
+  },
+  {
+    "id": "CP-07",
+    "scenario": "Prevención de inscripción duplicada (RF-06)",
+    "expected": "Segundo POST al mismo evento rechazado con 409.",
+    "obtained": "Producción: inscripción repetida 409 en ambos eventos; F-API.",
+    "state": "APROBADO",
+    "tests": "InscripcionPagoFlowTest.inscripcionDuplicadaNoCreaInscripcionNiPago",
+    "reproduce": "POST /api/v1/inscripciones con eventoId ya inscrito. El JSON histórico contiene GET final, no status del POST duplicado; no inventar HTTP.",
+    "criterion": "Dado una inscripción existente del participante al evento, cuando intenta inscribirse otra vez, entonces rechazar segunda inscripción sin registros nuevos."
+  },
+  {
+    "id": "CP-08",
+    "scenario": "Carga y descarga de comprobante ficticio (RF-07)",
+    "expected": "PDF admisible 200; consulta y descarga propias autorizadas.",
+    "obtained": "Producción: carga PDF 200 y descarga 200 application/pdf; F-API y figura F.6. No se realizó transferencia de dinero.",
+    "state": "APROBADO",
+    "tests": "PagoServiceFlowTest; ArchivoSeguroServicioTest",
+    "reproduce": "POST /api/v1/pagos/{id}/comprobante, multipart archivo; USUARIO propietario. Para E2E preparar pago pendiente y archivo técnico. No acredita Supabase real.",
+    "criterion": "Dado un pago propio pendiente, cuando se carga un comprobante válido, entonces pago e inscripción PENDIENTE_VALIDACION; referencia privada."
+  },
+  {
+    "id": "CP-09",
+    "scenario": "Validación autorizada de pago (RF-07)",
+    "expected": "ADMINISTRADOR valida; USUARIO recibe 403.",
+    "obtained": "Producción: comprobante ficticio validado 200; USUARIO 403; F-API y figura F.7.",
+    "state": "APROBADO",
+    "tests": "PagoServiceAuthorizationTest.administradorValidaPagoGlobalmente; PagoServiceFlowTest",
+    "reproduce": "PATCH /api/v1/pagos/{id}/validar; ADMINISTRADOR u ORGANIZADOR propietario. Preparar comprobante pendiente y ValidarPagoRequest. H18 muestra diálogo, no aprobación.",
+    "criterion": "Dado un pago con comprobante pendiente de validación, cuando lo aprueba un administrador autorizado, entonces pago APROBADO e inscripción CONFIRMADA por autorizado."
+  },
+  {
+    "id": "CP-10",
+    "scenario": "QR temporal y rotación (RF-08)",
+    "expected": "Generación 201; rotación invalida el QR anterior.",
+    "obtained": "Producción: generación y rotación 201; QR anterior rechazado 400. Sesión virtual; tokens excluidos de evidencias. F-API.",
+    "state": "APROBADO",
+    "tests": "QrAsistenciaServiceTest",
+    "reproduce": "POST /api/v1/sesiones/{sesionId}/qr/generar; ADMINISTRADOR u ORGANIZADOR propietario. Sesión activa y ventana vigente. QR compartido: no es globalmente de un solo uso.",
+    "criterion": "Dado una sesión propia dentro de horario, cuando se genera un QR y posteriormente otro, entonces qR vigente ligado a sesión; hash persistido; anterior revocado."
+  },
+  {
+    "id": "CP-11",
+    "scenario": "Asistencia Flutter, QR y GPS físicos (RF-08)",
+    "expected": "Escaneo físico y GPS válidos producen 201 y registro propio.",
+    "obtained": "Pendiente del escaneo físico y GPS. API virtual: asistencia 201; visible en teléfono (figura F.18). Esto no acredita sensores físicos.",
+    "state": "PENDIENTE",
+    "tests": "AsistenciaRegistroTest; flutter/VidiaApp/test/asistencia_repository_test.dart",
+    "reproduce": "GET /api/v1/eventos/{eventoId}/sesiones; POST /api/v1/asistencias. USUARIO; cuenta dual conserva USUARIO. Teléfono con cámara/GPS, sesión presencial, coordenadas/radio y ventana válidos. Esperar 201 y consultar registro.",
+    "criterion": "Dado una inscripción CONFIRMADA y sesión activa, cuando se escanea QR vigente y envía GPS dentro del radio con precisión admisible, entonces participante CONFIRMADO, sesión/QR vigentes y GPS válido: registro."
+  },
+  {
+    "id": "CP-12",
+    "scenario": "Generación y descarga de certificado (RF-09)",
+    "expected": "Evento finalizado elegible; generar y descargar PDF: 200.",
+    "obtained": "Producción: finalización, generación y descarga 200; PDF conservado y verificado como archivo; figuras F.16 y F.17. F-API.",
+    "state": "APROBADO",
+    "tests": "CertificadoServiceTest; CertificadoDocumentoServiceTest; CertificadoControllerAuthorizationTest",
+    "reproduce": "POST /api/v1/certificados/generar/{inscripcionId}; GET /api/v1/certificados/{id}/descargar. Generar: ADMINISTRADOR/ORGANIZADOR propietario; descargar según alcance. PDF real unitario; repositorios y servicio del controlador simulados.",
+    "criterion": "Dado una inscripción elegible de evento finalizado, cuando se genera certificado y se descarga con permiso, entonces inscripción elegible genera certificado único y descarga PDF."
+  },
+  {
+    "id": "CP-13",
+    "scenario": "Verificación pública de certificado (RF-13)",
+    "expected": "Código válido: válido; inexistente: NO_REGISTRADO; sin JWT.",
+    "obtained": "Producción: ambos GET 200; código emitido válido y desconocido NO_REGISTRADO. Figura F.19 y F-API.",
+    "state": "APROBADO",
+    "tests": "CertificadoServiceTest; CertificadoControllerAuthorizationTest",
+    "reproduce": "GET /api/v1/certificados/verificar/{codigo}, público. Código inexistente actual en http_local_sanitizado.json; caso válido integral requiere certificado de prueba.",
+    "criterion": "Dado un código válido o inexistente, cuando se consulta públicamente sin JWT, entonces código válido sin JWT; inexistente: 200 y NO_REGISTRADO."
+  },
+  {
+    "id": "CP-14",
+    "scenario": "Flutter contra API de producción (RF-05; RNF-04)",
+    "expected": "Login, cuatro secciones y actividad personal visibles en teléfono.",
+    "obtained": "Android 12, APK 1.0.0: login dual, Inicio, Eventos, Actividad, Perfil, inscripción/pago e historial visibles. Figuras F.8–F.15.",
+    "state": "APROBADO",
+    "tests": "flutter/VidiaApp/test/main_navigation_test.dart",
+    "reproduce": "GET /api/v1/eventos/publicados y /api/v1/eventos/{id}. Configurar API_BASE_URL de pruebas accesible; registrar Android/APK y dispositivo anonimizado. Widgets no prueban conectividad física.",
+    "criterion": "Dado Flutter conectado a API de pruebas alcanzable, cuando se consultan catálogo/detalle y se regresa en teléfono, entonces catálogo/detalle desde API real y navegación correcta."
+  },
+  {
+    "id": "CP-16",
+    "scenario": "Credenciales inválidas (RF-01; RNF-02)",
+    "expected": "Login inválido 401; no entrega JWT.",
+    "obtained": "Producción: once intentos con correo ficticio inexistente devuelven 401; F-API. Contraseña incorrecta de cuenta existente: prueba local.",
+    "state": "APROBADO",
+    "tests": "AutenticacionServicioTest.loginRechazaContrasenaIncorrecta",
+    "reproduce": "POST /api/v1/auth/login público. HTTP actual usa correo ficticio inexistente; contraseña incorrecta de cuenta existente validada unitariamente; no almacenar credenciales.",
+    "criterion": "Dado credenciales inválidas, cuando se intenta iniciar sesión, entonces 401 sin JWT ni sesión nueva."
+  },
+  {
+    "id": "CP-17",
+    "scenario": "Datos y archivos inválidos (RF-03; RF-07)",
+    "expected": "Evento vacío y archivo no permitido rechazados 400.",
+    "obtained": "Producción: POST evento {} 400; comprobante .exe 400; F-API. Otras restricciones cubiertas localmente.",
+    "state": "APROBADO",
+    "tests": "EventoDatosRequestValidationTest; ArchivoSeguroServicioTest; EventoQrPagoTest",
+    "reproduce": "POST /api/v1/eventos; POST /api/v1/pagos/{id}/comprobante. Pruebas de MIME, extensión, vacío y tamaño; Tika no es antivirus. No atribuir HTTP a tests unitarios.",
+    "criterion": "Dado datos incompletos o un archivo no permitido, cuando se procesa la entrada, entonces datos incompletos y archivos no permitidos rechazados."
+  },
+  {
+    "id": "CP-22",
+    "scenario": "QR inválido y asistencia duplicada (RF-08)",
+    "expected": "QR inválido/revocado: 400; duplicado inscripción/sesión: 409.",
+    "obtained": "Producción virtual: inválido y revocado 400, duplicado 409; F-API. GPS fuera de regla: solo pruebas locales, no teléfono.",
+    "state": "APROBADO",
+    "tests": "AsistenciaRegistroTest; QrAsistenciaServiceTest",
+    "reproduce": "POST /api/v1/asistencias, USUARIO inscrito. Rechazar QR inválido/expirado/revocado, GPS fuera de regla y duplicado por inscripción/sesión; uso por otro participante no consume globalmente QR.",
+    "criterion": "Dado QR inválido/expirado/revocado, GPS inadmisible o asistencia existente, cuando se intenta registrar asistencia, entonces rechazar sin nueva asistencia."
+  },
+  {
+    "id": "CP-24",
+    "scenario": "Catálogo bajo carga local (RF-05; RNF-01)",
+    "expected": "≥95 % de respuestas 200 en ≤3 s; 20 clientes concurrentes.",
+    "obtained": "60/60 dentro de 3 s; P95 52,644 ms; tres eventos publicados.",
+    "state": "APROBADO",
+    "tests": "CP-24_rendimiento_local.json",
+    "reproduce": "GET /api/v1/eventos/publicados. Cinco calentamientos; tres oleadas de veinte consultas; duración hasta consumir cuerpo. Local, no producción.",
+    "criterion": "Dado un catálogo local de tres eventos publicados, cuando se ejecutan tres oleadas de veinte consultas concurrentes, entonces ≥95 % de respuestas 200 en ≤3 s; 20 clientes concurrentes."
+  },
+  {
+    "id": "CP-29",
+    "scenario": "Limitación temporal de login (RNF-02)",
+    "expected": "Con umbral local de diez intentos, el siguiente devuelve 429 y Retry-After.",
+    "obtained": "Local: APROBADO. Producción: once respuestas 401, ninguna 429 ni Retry-After. FALLIDO respecto al umbral local; configuración/despliegue no verificables. F-API.",
+    "state": "FALLIDO",
+    "tests": "IntentosAutenticacionTest; AutenticacionLimitesHttpTest",
+    "reproduce": "POST /api/v1/auth/login; recuperar-contrasena; reenviar-verificacion; verificar-correo; restablecer-contrasena. HTTP real solo login; otras rutas MockMvc. Memoria por instancia, reinicio restablece contadores.",
+    "criterion": "Dado un identificador que alcanzó el límite temporal, cuando repite la solicitud, entonces 429, AUTH_RATE_LIMITED y Retry-After al exceder límite."
+  },
+  {
+    "id": "CP-30",
+    "scenario": "Logout y revocación de sesión (RF-01; RNF-02)",
+    "expected": "Logout confirmado conforme al contrato; JWT revocado rechazado. Fallo de comunicación: aviso sin afirmar revocación.",
+    "obtained": "Producción: logout 204 según OpenAPI y JWT posterior 401; capturas Web. Flutter avisa cierre local sin confirmación ante sesión ya invalidada. Fallo de red: tests locales. F-API, figura F.20.",
+    "state": "APROBADO",
+    "tests": "SesionUsuarioServicioTest; JwtAuthenticationFilterTest; auth.service.spec.ts; session_controller_test.dart",
+    "reproduce": "POST /api/v1/auth/logout; GET /api/v1/usuarios/perfil. JWT solo en memoria. Ante fallo de comunicación, sesión local borrada y aviso de revocación no confirmada.",
+    "criterion": "Dado una sesión activa, cuando se solicita logout correctamente o falla la comunicación, entonces revocar sesión; JWT rechazado; fallo de red sin afirmar revocación."
+  }
+]

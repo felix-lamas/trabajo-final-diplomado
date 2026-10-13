@@ -1,0 +1,19 @@
+{
+  "admin_user": "267ebb60-950e-43c1-8dd4-4cc73cbe0581",
+  "user_user": "7ad07b6f-73bb-4d60-87da-17f3965a0046",
+  "organizer_user": "d25985f8-51d7-48d5-8ef4-8c3d361a855a",
+  "free_event": "75a50675-31b4-4dc7-a677-9872a72e78bc",
+  "free_title": "[PRUEBA E3] 20261011T192502Z FREE",
+  "free_end": "2026-10-11T15:33:08.512429-04:00",
+  "free_inscription": "bc2e16bb-a354-41b1-bfe1-46c272148623",
+  "virtual_session": "99eb9517-9f04-4a06-8aa0-247a9df75a3c",
+  "paid_event": "df777f32-6b69-4569-8f26-65083de228e5",
+  "paid_title": "[PRUEBA E3] 20261011T192502Z PAID",
+  "paid_end": "2026-10-11T16:15:08.512429-04:00",
+  "paid_inscription": "ce5f7735-6a55-489c-97e6-7bc85a194fd4",
+  "payment": "825e7eb4-31e4-4a43-b770-2c77b47a865d",
+  "dual_inscription": "b2d42bff-8236-4e6f-8db3-1eb63e6d9b15",
+  "dual_payment": "f5efa34a-4fc8-49f5-9fdf-1e7751ec3b85",
+  "certificate": "2c0980e9-d9ad-4581-9b3f-09944389a932",
+  "certificate_code": "UAJMS-4E7F1B803239424293B1E56B66CB2A63"
+}

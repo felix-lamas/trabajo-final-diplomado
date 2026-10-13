@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="8.079" tests="10" errors="0" skipped="0" failures="0">
+  <testcase name="debeActivarseExclusivamenteConElPerfilDemo" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="7.057">
+    </testcase>
+  <testcase name="seedAgregaUsuarioAlOrganizadorExistenteSinEliminarOtrosRoles" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.132" />
+  <testcase name="noDebeDuplicarNiModificarEventosDemoExistentes" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.05" />
+  <testcase name="debePrepararOrganizadoresDemoAprobadoYPendienteConRolesCoherentes" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.08" />
+  <testcase name="noDebeRegistrarseEnPerfilesNormales" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.533" />
+  <testcase name="debeAsignarElRolEsperadoCuandoFalta" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.017" />
+  <testcase name="noDebeDuplicarUsuarioNiRolEnEjecucionesRepetidas" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.014" />
+  <testcase name="debeCrearUsuarioInexistenteConContrasenaCodificada" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.012" />
+  <testcase name="debeRegistrarseCuandoElPerfilDemoSeActivaExplicitamente" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.082" />
+  <testcase name="debeActualizarSoloLaContrasenaDelUsuarioExistente" classname="bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest" time="0.034" />
+</testsuite>

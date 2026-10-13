@@ -4,7 +4,7 @@ import bo.uajms.eventos.modulos.inscripciones.entidades.Inscripcion;
 import bo.uajms.eventos.modulos.inscripciones.entidades.EstadoInscripcion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.stereotype.Repository;
+//import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
+//@Repository
 public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> {
     boolean existsByUsuarioIdAndEventoId(UUID usuarioId, UUID eventoId);
     @EntityGraph(attributePaths = "evento")

@@ -3,7 +3,7 @@ import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { provideRouter, Router } from '@angular/router';
-import { Subject, of, tap } from 'rxjs';
+import { Subject, of, tap, throwError } from 'rxjs';
 import { AuthService, AuthUser } from '../../../core/services/auth.service';
 import { PerfilUsuarioComponent } from './perfil-usuario.component';
 
@@ -64,6 +64,12 @@ describe('PerfilUsuarioComponent reactive profile', () => {
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
     fixture = TestBed.createComponent(PerfilUsuarioComponent);
     fixture.detectChanges();
+  });
+
+  it('logout sin red informa revocación no confirmada al navegar', () => {
+    auth.logout.mockReturnValue(throwError(() => new Error('sin red')));
+    fixture.componentInstance.cerrarSesion();
+    expect(router.navigate).toHaveBeenCalledWith(['/auth/login'], { state: { logoutUnconfirmed: true } });
   });
 
   it('muestra loading y luego el perfil real inmediatamente al resolver HTTP', async () => {

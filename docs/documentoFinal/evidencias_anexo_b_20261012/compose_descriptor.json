@@ -1,0 +1,10 @@
+{
+  "command": "docker compose --env-file [archivo temporal local] -f docker/docker-compose.yml config --services",
+  "exit": 0,
+  "services": [
+    "database",
+    "pgadmin"
+  ],
+  "stderr": "",
+  "note": "Validacion estatica; sin daemon, sin creacion de contenedores."
+}

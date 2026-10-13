@@ -1,0 +1,15 @@
+{
+  "name": "angular_version",
+  "command": [
+    "npx",
+    "--no-install",
+    "ng",
+    "version"
+  ],
+  "directory": "frontend",
+  "started": "2026-10-12T13:25:05.535672-04:00",
+  "finished": "2026-10-12T13:25:13.567967-04:00",
+  "seconds": 8.03,
+  "exit": 0,
+  "log": "angular_version.txt"
+}

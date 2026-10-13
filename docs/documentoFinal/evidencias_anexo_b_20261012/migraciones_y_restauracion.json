@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-12T13:33:05.628644-04:00",
+  "postgresql": "16.15",
+  "flyway_history": [
+    "1 agregar qr pago storage key eventos true",
+    "2 agregar nombre normalizado categorias evento true",
+    "3 reconciliar esquema actual true",
+    "4 invitaciones administrador true",
+    "5 completar solicitud organizador true"
+  ],
+  "public_base_tables": 20,
+  "domain_tables": 19,
+  "ddl_auto": "validate",
+  "db_role": "vidia_local, LOGIN, NOSUPERUSER, NOCREATEDB, NOCREATEROLE; propietario solo de la base temporal",
+  "backup_pg_dump_exit": 0,
+  "restore_pg_restore_exit": 0,
+  "categories_source": 1,
+  "categories_restored": 1,
+  "flyway_history_restored_equal": true,
+  "scope": "Solo cluster temporal 127.0.0.1:55439; una categoria ficticia. No certifica restauracion productiva ni respaldo de archivos externos."
+}

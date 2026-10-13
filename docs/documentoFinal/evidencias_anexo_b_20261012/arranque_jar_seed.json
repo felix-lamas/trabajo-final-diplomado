@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-12T13:54:25.428526-04:00",
+  "command": "java -jar target/eventos-uajms-0.0.1-SNAPSHOT.jar --server.address=127.0.0.1",
+  "profiles": "dev,demo",
+  "scope": "Solo base local temporal. No envio de correos ni integraciones externas.",
+  "roles": [
+    {
+      "cuenta_demo_local": "admin@demo.local",
+      "login_http": 200,
+      "perfil_http": 200,
+      "roles": [
+        "ADMINISTRADOR"
+      ]
+    },
+    {
+      "cuenta_demo_local": "organizador1@demo.local",
+      "login_http": 200,
+      "perfil_http": 200,
+      "roles": [
+        "USUARIO",
+        "ORGANIZADOR"
+      ]
+    }
+  ],
+  "events_public_read": "Catálogo demo disponible; al menos tres eventos."
+}

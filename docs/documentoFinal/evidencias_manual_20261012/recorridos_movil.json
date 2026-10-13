@@ -1,0 +1,257 @@
+[
+  {
+    "file": "movil_inicio.png",
+    "date": "2026-10-12T12:27:18.399198-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Hola, Usuario",
+      "Descubre los próximos eventos de Vidia.",
+      "Tu próxima actividad",
+      "No pudimos consultar tu próxima actividad\nConsulta tus inscripciones o desliza para actualizar.",
+      "Para ti",
+      "Certificados disponibles\n1 para consultar",
+      "Próximos eventos",
+      "Congreso de Innovación Tecnológica UAJMS\n28/10/2026 · PRESENCIAL\nGratuito",
+      "Taller de Desarrollo Web\n12/11/2026 · VIRTUAL\nGratuito",
+      "Jornada de Emprendimiento Universitario\n27/11/2026 · PRESENCIAL\nGratuito",
+      "Explorar eventos",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ]
+  },
+  {
+    "file": "movil_actividad.png",
+    "date": "2026-10-12T12:27:27.157993-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Actividad",
+      "Tu participación en Vidia",
+      "Consulta tus inscripciones, pagos y logros en un solo lugar.",
+      "Mis inscripciones\n3 inscripciones",
+      "Mis pagos\n1 pago · 0 pendientes",
+      "Mis asistencias\n1 registro",
+      "Mis certificados\n1 certificado",
+      "Historial\nTodas tus actividades registradas",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ]
+  },
+  {
+    "file": "movil_sesion_expirada.png",
+    "date": "2026-10-12T12:29:59.052222-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Donde los eventos cobran vida",
+      "Tu sesión expiró. Inicia sesión nuevamente.",
+      "Ingresar",
+      "Reenviar verificación",
+      "Crear cuenta",
+      "¿Olvidaste tu contraseña?"
+    ],
+    "interpretation": "Retorno al acceso al revocarse la sesion por inicio de sesion de la misma cuenta en web; no es la lista de inscripciones."
+  },
+  {
+    "file": "movil_lista_inscripciones.png",
+    "date": "2026-10-12T12:34:31.820171-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Mis inscripciones",
+      "[PRUEBA E3] 20261011T192502Z FREE\nInscripción: 11/10/2026 15:25",
+      "Show menu",
+      "Confirmada",
+      "Congreso de Innovación Tecnológica UAJMS\nInscripción: 07/10/2026 18:09",
+      "Show menu",
+      "Confirmada",
+      "[PRUEBA E3] 20261011T192502Z PAID\nInscripción: 11/10/2026 15:25",
+      "Show menu",
+      "Confirmada"
+    ]
+  },
+  {
+    "file": "movil_pagos.png",
+    "date": "2026-10-12T12:35:04.180153-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Mis pagos",
+      "Consulta el estado de tus pagos y gestiona los comprobantes desde cada detalle.",
+      "[PRUEBA E3] 20261011T192502Z PAID\nBs. 1.00",
+      "APROBADO"
+    ]
+  },
+  {
+    "file": "movil_asistencias.png",
+    "date": "2026-10-12T12:35:31.633577-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Mis asistencias",
+      "Registrar asistencia",
+      "[PRUEBA E3] 20261011T192502Z FREE",
+      "Sesión virtual de prueba E3\nVALIDADA\n11/10/2026 15:25"
+    ]
+  },
+  {
+    "file": "movil_historial.png",
+    "date": "2026-10-12T12:36:07.620653-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Historial",
+      "[PRUEBA E3] 20261011T192502Z FREE\nCertificado · No curricular\n11/10/2026 15:33",
+      "DESCARGADO",
+      "[PRUEBA E3] 20261011T192502Z PAID\nPago · Bs. 1.00\n11/10/2026 15:25",
+      "APROBADO",
+      "[PRUEBA E3] 20261011T192502Z PAID\nInscripción\n11/10/2026 15:25",
+      "CONFIRMADA",
+      "[PRUEBA E3] 20261011T192502Z FREE\nAsistencia · Sesión virtual de prueba E3\n11/10/2026 15:25",
+      "VALIDADA",
+      "[PRUEBA E3] 20261011T192502Z FREE\nInscripción\n11/10/2026 15:25",
+      "CONFIRMADA",
+      "Congreso de Innovación Tecnológica UAJMS\nInscripción\n07/10/2026 18:09"
+    ]
+  },
+  {
+    "file": "movil_certificados.png",
+    "date": "2026-10-12T12:36:38.098583-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Mis certificados",
+      "Verificar certificado",
+      "[PRUEBA E3] 20261011T192502Z FREE\nCertificado no curricular\nEmisión: 11/10/2026\nCódigo: UAJMS-4E7F1B803239424293B1E56B66CB2A63",
+      "DESCARGADO"
+    ]
+  },
+  {
+    "file": "movil_registrar_asistencia.png",
+    "date": "2026-10-12T12:37:43.251548-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Registrar asistencia",
+      "Elige tu evento para consultar las sesiones y abrir el lector QR cuando la asistencia esté disponible.",
+      "[PRUEBA E3] 20261011T192502Z FREE\nConsultar sesiones",
+      "Congreso de Innovación Tecnológica UAJMS\nConsultar sesiones",
+      "[PRUEBA E3] 20261011T192502Z PAID\nConsultar sesiones"
+    ]
+  },
+  {
+    "file": "movil_sesiones_asistencia.png",
+    "date": "2026-10-12T12:38:57.795466-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Registrar asistencia",
+      "Elige tu evento para consultar las sesiones y abrir el lector QR cuando la asistencia esté disponible.",
+      "[PRUEBA E3] 20261011T192502Z FREE\nConsultar sesiones",
+      "Congreso de Innovación Tecnológica UAJMS\nConsultar sesiones",
+      "[PRUEBA E3] 20261011T192502Z PAID\nConsultar sesiones",
+      "No pudimos abrir las sesiones. Inténtalo nuevamente."
+    ]
+  },
+  {
+    "file": "movil_solicitud_formulario.png",
+    "date": "2026-10-12T12:40:16.767629-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Solicitud de organizador",
+      "Solicita permiso para gestionar eventos desde la Web. Tu cuenta conserva sus funciones de participante.",
+      "Estado: NINGUNA",
+      "Entre 30 y 1000 caracteres.",
+      "1000 characters remaining",
+      "Tipos de eventos que te interesa publicar",
+      "Conferencias y charlas",
+      "Cursos y talleres",
+      "Diplomados y capacitación",
+      "Actividades culturales",
+      "Actividades deportivas",
+      "Otros eventos universitarios",
+      "1000 characters remaining",
+      "Solicitar ser organizador",
+      "Actualizar estado"
+    ]
+  },
+  {
+    "file": "movil_eventos.png",
+    "date": "2026-10-12T12:41:16.737932-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Eventos",
+      "Encuentra tu próximo evento",
+      "Collapsed",
+      "Filtrar eventos, Collapsed",
+      "Congreso de Innovación Tecnológica UAJMS\nEvento ficticio de demostración para el flujo E2 de la plataforma UAJMS.\n28/10/2026 · 09:00 · PRESENCIAL",
+      "Conferencia",
+      "Gratuito",
+      "99 cupos",
+      "Jornada de Emprendimiento Universitario\nEvento ficticio de demostración para el flujo E2 de la plataforma UAJMS.\n27/11/2026 · 09:00 · PRESENCIAL",
+      "Curso",
+      "Gratuito",
+      "99 cupos",
+      "Seminario de Inteligencia Artificial\nEvento ficticio de demostración para el flujo E2 de la plataforma UAJMS.\n12/12/2026 · 09:00 · VIRTUAL",
+      "Seminario",
+      "Gratuito",
+      "100 cupos",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ]
+  },
+  {
+    "file": "movil_detalle_evento.png",
+    "date": "2026-10-12T12:42:29.336542-04:00",
+    "platform": "Android 12",
+    "app": "Vidia 1.0.0 (1)",
+    "package": "bo.edu.uajms.vidia",
+    "labels": [
+      "Back",
+      "Detalle del evento",
+      "Seminario de Inteligencia Artificial",
+      "Seminario",
+      "VIRTUAL",
+      "Gratuito",
+      "AMBOS",
+      "Evento ficticio de demostración para el flujo E2 de la plataforma UAJMS.",
+      "Objetivos",
+      "Demostrar el flujo de revisión, publicación e inscripción gratuita.",
+      "12/12/2026 – 13/12/2026",
+      "09:00 – 17:00",
+      "https://demo.local/eventos/virtual",
+      "Cupos disponibles: 100",
+      "Estado: PUBLICADO",
+      "Inscribirme"
+    ]
+  }
+]

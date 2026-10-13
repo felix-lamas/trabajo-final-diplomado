@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.pagos.servicios.SupabaseS3StorageServiceTest" time="1.213" tests="3" errors="0" skipped="0" failures="0">
+  <testcase name="claveConPathTraversalSeRechazaAntesDeLlamarAlProveedor" classname="bo.uajms.eventos.modulos.pagos.servicios.SupabaseS3StorageServiceTest" time="0.978" />
+  <testcase name="uploadDownloadExistsAndDeleteDelegateToS3WithPrivateBucketKey" classname="bo.uajms.eventos.modulos.pagos.servicios.SupabaseS3StorageServiceTest" time="0.234" />
+  <testcase name="falloDeProveedorSeTraduceSinPropagarDetallesDelCliente" classname="bo.uajms.eventos.modulos.pagos.servicios.SupabaseS3StorageServiceTest" time="0.0">
+    </testcase>
+</testsuite>

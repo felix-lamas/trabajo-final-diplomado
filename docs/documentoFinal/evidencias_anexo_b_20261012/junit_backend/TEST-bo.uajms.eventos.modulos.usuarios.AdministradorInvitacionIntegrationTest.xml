@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="43.53" tests="16" errors="0" skipped="0" failures="0">
+  <testcase name="desactivacionesConcurrentesConservanUltimoAdministrador" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="1.407">
+    </testcase>
+  <testcase name="revocacionYReenvioInvalidanTokenAnterior" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.613" />
+  <testcase name="expiracionYUuidAjenoNoCreanNiModificanCuentas" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.691" />
+  <testcase name="migracionForwardOnlyConservaDatos(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="2.544">
+    </testcase>
+  <testcase name="migracionForwardOnlyConservaDatos(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="2.563">
+    </testcase>
+  <testcase name="migracionForwardOnlyConservaDatos(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="2.426">
+    </testcase>
+  <testcase name="migracionForwardOnlyConservaDatos(String)[4]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="2.437">
+    </testcase>
+  <testcase name="migracionForwardOnlyConservaDatos(String)[5]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="2.663">
+    </testcase>
+  <testcase name="revocacionConcurrenteNoPermiteActivarEnlaceRevocado" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.461" />
+  <testcase name="dosAceptacionesConcurrentesSoloCreanUnaCuenta" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.416" />
+  <testcase name="seedDemoSigueCreandoAdministradorQuePuedeIniciarSesion" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.793" />
+  <testcase name="falloDeCorreoRevierteInvitacionPersistida" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="1.379" />
+  <testcase name="participanteYOrganizadorReciben403(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.374" />
+  <testcase name="participanteYOrganizadorReciben403(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.41" />
+  <testcase name="participanteYOrganizadorReciben403(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="0.44" />
+  <testcase name="flujoHttpRealLoginRolesPermisosSwaggerYDesactivacion" classname="bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest" time="5.774">
+    </testcase>
+</testsuite>

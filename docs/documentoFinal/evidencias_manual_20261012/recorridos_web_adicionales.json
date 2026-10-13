@@ -1,0 +1,1173 @@
+{
+  "date": "2026-10-12T16:34:09.197Z",
+  "records": [
+    {
+      "file": "certificado_listado.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/certificados/mis-certificados",
+      "date": "2026-10-12T16:32:49.319Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumSolicitar ser organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Mis Certificados",
+        "explore",
+        "dark_mode",
+        "workspace_premiumCertificados",
+        "Mis certificados",
+        "[PRUEBA E3] 20261011T192502Z FREE",
+        "Ver detalle",
+        "Descargar PDF"
+      ]
+    },
+    {
+      "file": "certificado_detalle.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/certificados/mis-certificados",
+      "date": "2026-10-12T16:32:51.249Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumSolicitar ser organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Mis Certificados",
+        "explore",
+        "dark_mode",
+        "workspace_premiumCertificados",
+        "Mis certificados",
+        "[PRUEBA E3] 20261011T192502Z FREE",
+        "Ocultar detalle",
+        "Descargar PDF",
+        "Información del certificado",
+        "Abrir verificación pública"
+      ]
+    },
+    {
+      "action": "Descargar PDF propio de demostracion",
+      "state": "CONSULTADO",
+      "date": "2026-10-12T16:32:51.933Z"
+    },
+    {
+      "file": "certificado_verificacion.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/verificar-certificado",
+      "date": "2026-10-12T16:32:54.889Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Verificación pública de certificados",
+        "Consultar código",
+        "Código de certificado",
+        "Verificar código",
+        "Nueva consulta",
+        "Certificado válido"
+      ]
+    },
+    {
+      "action": "Enlace de certificado",
+      "state": "ORIGEN_LOCALHOST_INCORRECTO",
+      "alternative": "Consulta manual con codigo real en la interfaz publica"
+    },
+    {
+      "file": "inscripciones_existentes.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/privado/inscripciones",
+      "date": "2026-10-12T16:32:58.662Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumSolicitar ser organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Inscripciones",
+        "explore",
+        "dark_mode",
+        "account_circlePortal estudiante",
+        "Mis inscripciones",
+        "explore Explorar eventos",
+        "Todas",
+        "Confirmadas",
+        "Pendiente de pago",
+        "En validacion",
+        "Canceladas",
+        "[PRUEBA E3] 20261011T192502Z FREE",
+        "Ver detalle",
+        "Cancelar",
+        "Congreso de Innovación Tecnológica UAJMS",
+        "[PRUEBA E3] 20261011T192502Z PAID"
+      ]
+    },
+    {
+      "file": "inscripcion_pagada_detalle.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/privado/inscripciones/ce5f7735-6a55-489c-97e6-7bc85a194fd4",
+      "date": "2026-10-12T16:33:00.557Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumSolicitar ser organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Detalle",
+        "explore",
+        "dark_mode",
+        "account_circlePortal estudiante",
+        "Inscripciones",
+        "Detalle de inscripcion",
+        "arrow_back Volver",
+        "[PRUEBA E3] 20261011T192502Z PAID",
+        "Modalidad",
+        "Ubicacion",
+        "Participante",
+        "Observacion",
+        "Cancelar inscripcion",
+        "Comprobante de inscripcion"
+      ]
+    },
+    {
+      "file": "catalogo_opciones.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/eventos",
+      "date": "2026-10-12T16:33:04.477Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Descubre eventos",
+        "arrow_back Volver al inicio",
+        "Buscar eventos",
+        "Categoría",
+        "Precio",
+        "Modalidad",
+        "filter_alt_off Limpiar filtros",
+        "Congreso de Innovación Tecnológica UAJMS",
+        "Ver evento",
+        "Jornada de Emprendimiento Universitario",
+        "Seminario de Inteligencia Artificial",
+        "[PRUEBA E3] 20261011T192502Z PAID",
+        "Jornada Cultural en Preparacion",
+        "Taller de Desarrollo Web"
+      ]
+    },
+    {
+      "file": "comprobante_formulario.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/privado/inscripciones",
+      "date": "2026-10-12T16:33:26.190Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumSolicitar ser organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Inscripciones",
+        "explore",
+        "dark_mode",
+        "account_circlePortal estudiante",
+        "Mis inscripciones",
+        "explore Explorar eventos",
+        "Todas",
+        "Confirmadas",
+        "Pendiente de pago",
+        "En validacion",
+        "Canceladas",
+        "[PRUEBA E3] 20261011T192502Z FREE",
+        "Ver detalle",
+        "Cancelar",
+        "Congreso de Innovación Tecnológica UAJMS",
+        "[PRUEBA E3] 20261011T192502Z PAID"
+      ],
+      "interpretation": "Sin contexto de inscripcion pendiente; redirige a Mis inscripciones. No es evidencia del formulario de carga."
+    },
+    {
+      "file": "organizador_lista_segura.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/organizador/eventos",
+      "date": "2026-10-12T16:33:35.559Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Gestión de eventos",
+        "eventMis eventos",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumEstado de organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Eventos",
+        "add_circle",
+        "explore",
+        "dark_mode",
+        "Organizador",
+        "Mis eventos",
+        "add Nuevo evento",
+        "prueba1",
+        "Curso de Gestión de Proyectos",
+        "Conferencia de Innovación y Tecnología",
+        "Buscar evento",
+        "Todos",
+        "Borradores",
+        "Publicados",
+        "En revision",
+        "visibility",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "file": "organizador_detalle_evento.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/organizador/eventos/6ff86ae9-10da-4d77-af9a-1de5ec28d49e",
+      "date": "2026-10-12T16:33:37.473Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Gestión de eventos",
+        "eventMis eventos",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumEstado de organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Detalle",
+        "add_circle",
+        "explore",
+        "dark_mode",
+        "Organizador",
+        "Eventos",
+        "prueba1",
+        "arrow_back Volver",
+        "send Enviar a revision",
+        "edit Editar",
+        "Fecha",
+        "Horario",
+        "Modalidad",
+        "Costo",
+        "Control de cupos",
+        "Descripcion",
+        "Objetivos",
+        "Organizador Demo Uno",
+        "Sesiones y asistencia",
+        "Nombre",
+        "Inicio",
+        "Fin",
+        "Radio (m)",
+        "Latitud",
+        "Longitud",
+        "addCrear sesion",
+        "Sin sesiones",
+        "Inscripciones del evento",
+        "Aún no hay inscripciones"
+      ]
+    },
+    {
+      "file": "organizador_editar_sin_guardar.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/organizador/eventos/editar/6ff86ae9-10da-4d77-af9a-1de5ec28d49e",
+      "date": "2026-10-12T16:33:41.416Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Gestión de eventos",
+        "eventMis eventos",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumEstado de organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Detalle",
+        "add_circle",
+        "explore",
+        "dark_mode",
+        "Organizador",
+        "Eventos",
+        "Editar",
+        "Editar evento",
+        "arrow_back Volver",
+        "Informacion general",
+        "Titulo",
+        "Categoria",
+        "Audiencia",
+        "Descripcion",
+        "Objetivos",
+        "Imagen de portada (URL)",
+        "Fecha y modalidad",
+        "Fecha inicio",
+        "Hora inicio",
+        "Fecha fin",
+        "Hora fin",
+        "Modalidad",
+        "Ubicacion",
+        "Direccion",
+        "Latitud",
+        "Longitud",
+        "Radio de asistencia (m)",
+        "Inscripcion, capacidad y precio",
+        "Permite inscripcion",
+        "Capacidad limitada",
+        "Capacidad maxima",
+        "Precio",
+        "Certificado y contacto",
+        "Emite certificado",
+        "Telefono",
+        "Correo",
+        "WhatsApp",
+        "Cancelar",
+        "save Guardar borrador"
+      ]
+    },
+    {
+      "file": "organizador_form_general.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/organizador/eventos/nuevo",
+      "date": "2026-10-12T16:33:45.783Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Gestión de eventos",
+        "eventMis eventos",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumEstado de organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Nuevo",
+        "add_circle",
+        "explore",
+        "dark_mode",
+        "Organizador",
+        "Eventos",
+        "Nuevo evento",
+        "arrow_back Volver",
+        "Informacion general",
+        "Titulo",
+        "Categoria",
+        "Audiencia",
+        "Descripcion",
+        "Objetivos",
+        "Imagen de portada (URL)",
+        "Fecha y modalidad",
+        "Fecha inicio",
+        "Hora inicio",
+        "Fecha fin",
+        "Hora fin",
+        "Modalidad",
+        "Ubicacion",
+        "Direccion",
+        "Latitud",
+        "Longitud",
+        "Radio de asistencia (m)",
+        "Inscripcion, capacidad y precio",
+        "Permite inscripcion",
+        "Capacidad limitada",
+        "Capacidad maxima",
+        "Precio",
+        "Certificado y contacto",
+        "Emite certificado",
+        "Telefono",
+        "Correo",
+        "WhatsApp",
+        "Cancelar",
+        "save Guardar borrador"
+      ]
+    },
+    {
+      "file": "organizador_form_precio.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/organizador/eventos/nuevo",
+      "date": "2026-10-12T16:33:47.661Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Gestión de eventos",
+        "eventMis eventos",
+        "Explorar",
+        "homeInicio",
+        "searchBuscar eventos",
+        "Cuenta",
+        "workspace_premiumEstado de organizador",
+        "account_circleMi perfil",
+        "Mi actividad",
+        "how_to_regMis inscripciones",
+        "paymentsMis pagos",
+        "workspace_premiumMis certificados",
+        "logoutCerrar sesión",
+        "menu",
+        "Nuevo",
+        "add_circle",
+        "explore",
+        "dark_mode",
+        "Organizador",
+        "Eventos",
+        "Nuevo evento",
+        "arrow_back Volver",
+        "Informacion general",
+        "Titulo",
+        "Categoria",
+        "Audiencia",
+        "Descripcion",
+        "Objetivos",
+        "Imagen de portada (URL)",
+        "Fecha y modalidad",
+        "Fecha inicio",
+        "Hora inicio",
+        "Fecha fin",
+        "Hora fin",
+        "Modalidad",
+        "Ubicacion",
+        "Direccion",
+        "Latitud",
+        "Longitud",
+        "Radio de asistencia (m)",
+        "Inscripcion, capacidad y precio",
+        "Permite inscripcion",
+        "Capacidad limitada",
+        "Capacidad maxima",
+        "Precio",
+        "Certificado y contacto",
+        "Emite certificado",
+        "Telefono",
+        "Correo",
+        "WhatsApp",
+        "Cancelar",
+        "save Guardar borrador"
+      ]
+    },
+    {
+      "file": "admin_cuentas_protegidas.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/admin/administradores",
+      "date": "2026-10-12T16:33:57.421Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Administración",
+        "space_dashboardPanel administrativo",
+        "fact_checkRevisar eventos",
+        "admin_panel_settingsAdministradores",
+        "groupsUsuarios",
+        "categoryCategorías",
+        "manage_accountsSolicitudes de organizador",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Cuenta",
+        "account_circleMi perfil",
+        "logoutCerrar sesión",
+        "menu",
+        "Administradores",
+        "fact_check",
+        "dark_mode",
+        "space_dashboardAdministracion",
+        "Invitar administrador",
+        "Cuentas administrativas",
+        "Desactivar",
+        "Invitaciones"
+      ]
+    },
+    {
+      "file": "admin_panel_seguro.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/admin",
+      "date": "2026-10-12T16:34:01.191Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Administración",
+        "space_dashboardPanel administrativo",
+        "fact_checkRevisar eventos",
+        "admin_panel_settingsAdministradores",
+        "groupsUsuarios",
+        "categoryCategorías",
+        "manage_accountsSolicitudes de organizador",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Cuenta",
+        "account_circleMi perfil",
+        "logoutCerrar sesión",
+        "menu",
+        "Administracion",
+        "fact_check",
+        "dark_mode",
+        "admin_panel_settingsAdministración",
+        "Panel administrativo",
+        "fact_check Revisar eventos",
+        "groups Usuarios",
+        "manage_accounts Solicitudes",
+        "Resumen institucional",
+        "Operación",
+        "Eventos por categoría",
+        "Gestionar categorías",
+        "Eventos",
+        "Ver eventos",
+        "prueba1",
+        "Curso de Gestión de Proyectos",
+        "Conferencia de Innovación y Tecnología",
+        "Encuentro Deportivo por Corregir",
+        "Pagos pendientes",
+        "Abrir bandeja",
+        "Sin pagos pendientes"
+      ]
+    },
+    {
+      "file": "admin_lista_segura.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/admin/eventos",
+      "date": "2026-10-12T16:34:04.980Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Administración",
+        "space_dashboardPanel administrativo",
+        "fact_checkRevisar eventos",
+        "admin_panel_settingsAdministradores",
+        "groupsUsuarios",
+        "categoryCategorías",
+        "manage_accountsSolicitudes de organizador",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Cuenta",
+        "account_circleMi perfil",
+        "logoutCerrar sesión",
+        "menu",
+        "Eventos",
+        "fact_check",
+        "dark_mode",
+        "space_dashboardAdministracion",
+        "Gestion de eventos",
+        "prueba1",
+        "Curso de Gestión de Proyectos",
+        "Conferencia de Innovación y Tecnología",
+        "Buscar evento",
+        "visibility",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "file": "admin_revision_detalle.png",
+      "url": "https://trabajo-final-diplomado-web.onrender.com/admin/eventos/ed200d57-2290-45f2-82b6-290f2fe3f2d1",
+      "date": "2026-10-12T16:34:06.906Z",
+      "browser": "153.0.8010.12",
+      "masked": false,
+      "labels": [
+        "Saltar al contenido principal",
+        "Administración",
+        "space_dashboardPanel administrativo",
+        "fact_checkRevisar eventos",
+        "admin_panel_settingsAdministradores",
+        "groupsUsuarios",
+        "categoryCategorías",
+        "manage_accountsSolicitudes de organizador",
+        "Operaciones",
+        "analyticsReportes",
+        "fact_checkValidar pagos",
+        "how_to_regAsistencias",
+        "Cuenta",
+        "account_circleMi perfil",
+        "logoutCerrar sesión",
+        "menu",
+        "Detalle",
+        "fact_check",
+        "dark_mode",
+        "space_dashboardAdministracion",
+        "Eventos",
+        "Curso de Gestión de Proyectos",
+        "arrow_back Volver",
+        "publish Publicar",
+        "thumb_down Rechazar",
+        "Fecha",
+        "Horario",
+        "Modalidad",
+        "Costo",
+        "Control de cupos",
+        "Descripcion",
+        "Objetivos",
+        "Organizador",
+        "Organizador Demo Uno",
+        "Sesiones y asistencia",
+        "Nombre",
+        "Inicio",
+        "Fin",
+        "Radio (m)",
+        "Latitud",
+        "Longitud",
+        "addCrear sesion",
+        "Sin sesiones",
+        "Inscripciones del evento",
+        "Aún no hay inscripciones"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pagos/mis-pagos",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/certificados/mis-certificados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/certificados/mis-certificados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/certificados/2c0980e9-d9ad-4581-9b3f-09944389a932/descargar",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/certificados/mis-certificados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/certificados/verificar/UAJMS-4E7F1B803239424293B1E56B66CB2A63",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/ce5f7735-6a55-489c-97e6-7bc85a194fd4",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/ce5f7735-6a55-489c-97e6-7bc85a194fd4/comprobante",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/762dbe91-763a-4e8c-b249-5eba600540f3",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/78c3f6d2-b052-4e72-9b1b-94db6e67bbb2",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/89c73425-9748-4ac6-9d19-4d2c9ab08097",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/df777f32-6b69-4569-8f26-65083de228e5",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/1310c7c0-fe32-41bb-aea0-5baacb1cb4e7",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/13de0d20-2712-4b1e-b5f2-139f2bd37914",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/publicados",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/mis-inscripciones",
+      "http": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "http": 204
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/6ff86ae9-10da-4d77-af9a-1de5ec28d49e",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/evento/6ff86ae9-10da-4d77-af9a-1de5ec28d49e",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/6ff86ae9-10da-4d77-af9a-1de5ec28d49e/sesiones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/categorias-evento/activas",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/6ff86ae9-10da-4d77-af9a-1de5ec28d49e",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/categorias-evento/activas",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "http": 204
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard/academico",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard/ejecutivo",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pagos/pendientes",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard/operativo",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/administradores",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/administradores/invitaciones",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pagos/pendientes",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard/academico",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard/ejecutivo",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard/operativo",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/usuarios/perfil",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/ed200d57-2290-45f2-82b6-290f2fe3f2d1",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/inscripciones/evento/ed200d57-2290-45f2-82b6-290f2fe3f2d1",
+      "http": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eventos/ed200d57-2290-45f2-82b6-290f2fe3f2d1/sesiones",
+      "http": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "http": 204
+    }
+  ],
+  "policy": "Consultas y autenticacion; formularios sin enviar"
+}

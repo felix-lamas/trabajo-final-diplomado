@@ -1,0 +1,42 @@
+[
+  {
+    "archivo": "Formato-Trabajo-Final-Diplomado-Distintas-Areas.pdf",
+    "sha256": "632daa30a408fa3eb17a7272a67ba72e4dc9463483cce4ca6ecb5fbcfba40dac",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\Formato-Trabajo-Final-Diplomado-Distintas-Areas.pdf"
+  },
+  {
+    "archivo": "Lamas-monografia-F.docx",
+    "sha256": "f13e6db1c53c867ebecc30284b3bd4f8a3fd681d48f0579c744533ef9af2c206",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\Lamas-monografia-F.docx"
+  },
+  {
+    "archivo": "Lamas_E3_2.8_revision_final_lineamientos.docx",
+    "sha256": "c78734a96a3be81e45a762d04ca3c1c8fac54c000ffce5b35a577c4f6cbb4d63",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\Lamas_E3_2.8_revision_final_lineamientos.docx"
+  },
+  {
+    "archivo": "Lineamientos-Tecnicos-Trabajo-Final-Diplomado-Desarrollo-Web-y-Apps-Moviles.pdf",
+    "sha256": "aa4e2e0a2b2c4a7960d19b90c32c1828cd09f8339073d337db94fa77bfc12a53",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\Lineamientos-Tecnicos-Trabajo-Final-Diplomado-Desarrollo-Web-y-Apps-Moviles.pdf"
+  },
+  {
+    "archivo": "P1_Apertura_Modulo4.pdf",
+    "sha256": "defdb54d86ece64abba6b148a204abbf19bfeb8faee7bfccadcfd7dec8167651",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\P1_Apertura_Modulo4.pdf"
+  },
+  {
+    "archivo": "P2_Problema_al_Proyecto_Modulo4.pdf",
+    "sha256": "232cfff1809361f6990c2817e989b6ed8ee5666fff002cb7661817e9ea9db40e",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\P2_Problema_al_Proyecto_Modulo4.pdf"
+  },
+  {
+    "archivo": "P3_Arquitectura_API_Seguridad_Modulo4.pdf",
+    "sha256": "18978adf12189c2d07fd35856bdc916357b0343b821670041978d3ac1b8234bb",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\P3_Arquitectura_API_Seguridad_Modulo4.pdf"
+  },
+  {
+    "archivo": "P4_Pruebas_Despliegue_Defensa_Modulo4.pdf",
+    "sha256": "7ba1c63c23e9473dadf9bade483cdfcbe5d8dffe009ed26347efae0a41ed0f2d",
+    "copia": "docs\\documentoFinal\\fuentes_preservadas\\P4_Pruebas_Despliegue_Defensa_Modulo4.pdf"
+  }
+]

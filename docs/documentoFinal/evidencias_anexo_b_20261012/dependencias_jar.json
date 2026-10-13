@@ -1,0 +1,7 @@
+[
+  "flyway-core-10.10.0.jar",
+  "flyway-database-postgresql-10.10.0.jar",
+  "hibernate-core-6.5.2.Final.jar",
+  "postgresql-42.7.3.jar",
+  "spring-security-core-6.3.0.jar"
+]

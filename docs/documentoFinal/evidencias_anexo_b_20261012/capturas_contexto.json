@@ -1,0 +1,82 @@
+[
+  {
+    "file": "estructura.png",
+    "url": "file:///C:/Trabajo_Final_Vidia/plataforma-eventos-uajms/",
+    "date": "2026-10-12T18:15:38.742Z",
+    "http": 0,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de lectura; encuadre ajustado para legibilidad."
+  },
+  {
+    "file": "web_local.png",
+    "url": "http://localhost:4200/auth/login",
+    "date": "2026-10-12T17:34:37.166Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de consulta de lectura; sin credenciales ni operaciones de negocio"
+  },
+  {
+    "file": "catalogo_local.png",
+    "url": "http://localhost:4200/eventos",
+    "date": "2026-10-12T17:34:38.783Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de consulta de lectura; sin credenciales ni operaciones de negocio"
+  },
+  {
+    "file": "swagger_local.png",
+    "url": "http://127.0.0.1:8080/swagger-ui/index.html",
+    "date": "2026-10-12T18:15:34.252Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de lectura; encuadre ajustado para legibilidad."
+  },
+  {
+    "file": "salud_local.png",
+    "url": "http://localhost:8080/api/v1/salud",
+    "date": "2026-10-12T17:34:42.024Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de consulta de lectura; sin credenciales ni operaciones de negocio"
+  },
+  {
+    "file": "web_publica.png",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/auth/login",
+    "date": "2026-10-12T17:34:44.584Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de consulta de lectura; sin credenciales ni operaciones de negocio"
+  },
+  {
+    "file": "swagger_publico.png",
+    "url": "https://trabajo-final-diplomado.onrender.com/swagger-ui/index.html",
+    "date": "2026-10-12T17:34:48.922Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de consulta de lectura; sin credenciales ni operaciones de negocio"
+  },
+  {
+    "file": "salud_publica.png",
+    "url": "https://trabajo-final-diplomado.onrender.com/api/v1/salud",
+    "date": "2026-10-12T18:15:35.984Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de lectura; encuadre ajustado para legibilidad."
+  },
+  {
+    "file": "release_publica.png",
+    "url": "https://github.com/felix-lamas/trabajo-final-diplomado/releases/tag/v1.0.0",
+    "date": "2026-10-12T17:34:53.706Z",
+    "http": 200,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de consulta de lectura; sin credenciales ni operaciones de negocio"
+  },
+  {
+    "file": "apk_debug.png",
+    "url": "file:///C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/build/app/outputs/flutter-apk/",
+    "date": "2026-10-12T18:15:37.349Z",
+    "http": 0,
+    "browser": "153.0.8010.12",
+    "scope": "Captura real de lectura; encuadre ajustado para legibilidad."
+  }
+]

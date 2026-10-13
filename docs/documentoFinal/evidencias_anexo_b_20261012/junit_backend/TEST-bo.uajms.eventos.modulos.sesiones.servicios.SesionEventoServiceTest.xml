@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.102" tests="20" errors="0" skipped="0" failures="0">
+  <testcase name="horarioValidoEsAceptado" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.013" />
+  <testcase name="sesionNoPuedeTerminarDespuesDelEvento" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.002" />
+  <testcase name="cuentaDualConsultaSesionesComoParticipanteConfirmadoDeEventoAjeno" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.0" />
+  <testcase name="sesionIniciadaNoModificaUbicacion" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.005" />
+  <testcase name="eventoCanceladoNoAdmiteSesion" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.003" />
+  <testcase name="radio500EsAceptado" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.004" />
+  <testcase name="sesionIniciadaNoPuedeDesactivarse" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.004" />
+  <testcase name="organizadorSinUsuarioNoConsultaSesionAjenaPorInscripcion" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.003" />
+  <testcase name="organizadorPropietarioCreaSesion" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.002" />
+  <testcase name="sesionQueCruzaMedianocheEsRechazada" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.0" />
+  <testcase name="cuentaDualSinInscripcionConfirmadaNoConsultaSesionesAjenas" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.011" />
+  <testcase name="organizadorNoCreaSesionEnEventoAjeno" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.004" />
+  <testcase name="eventoFinalizadoNoAdmiteSesion" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.003" />
+  <testcase name="radioMayorA500EsRechazado" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.003" />
+  <testcase name="coordenadasInvalidasSonRechazadasPorElServicio" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.001" />
+  <testcase name="usuarioNoCreaSesion" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.0" />
+  <testcase name="eventoCanceladoNoPermiteActivarSesion" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.012" />
+  <testcase name="sesionIniciadaNoModificaHorario" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.006" />
+  <testcase name="horaFinIgualAInicioEsRechazada" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.003" />
+  <testcase name="sesionNoPuedeComenzarAntesDelEvento" classname="bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest" time="0.003" />
+</testsuite>

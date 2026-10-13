@@ -2,11 +2,13 @@
 
 Aplicación Flutter de Vidia para el participante (`USUARIO`). La app forma parte del alcance final; E2 fue una entrega académica intermedia y no limita este alcance.
 
-## Estado de implementación al corte E3.4
+## Implementación actual y guías
 
-**Implementado en el árbol actual:** login/sesión, catálogo y detalle de eventos publicados, inscripción y consulta de mis inscripciones.
+**Implementado en el árbol revisado el 13/10/2026:** registro/verificación/recuperación, login/sesión, catálogo y detalle, inscripción y actividad/historial propios, gestión de pago externo y comprobantes, pantalla de escaneo QR con ubicación y consulta/descarga de certificados. La solicitud de organizador está disponible desde el perfil; las funciones de gestión siguen siendo web.
 
-**Pendiente de implementación:** registro/verificación/recuperación móvil (si se decide permitir alta autónoma desde móvil), flujo de pago externo y comprobantes, escaneo QR de asistencia con captura de ubicación, consulta/descarga de certificados e historial móvil de pagos/asistencias/certificados. El detalle de evento todavía informa que pagos estarán disponibles posteriormente. No se afirma que estos flujos estén listos porque existan en backend o Web.
+**Pendiente de validación completa:** correo, flujos que modifican registros y escaneo físico QR/GPS. El manual del 12/10 documenta una incidencia al consultar sesiones, sin comprobación posterior de resolución. Implementación no equivale a funcionamiento productivo validado.
+
+Consulte las guías actuales: [instalación local](../../docs/manuales/instalacion-local.md), [despliegue y operación](../../docs/manuales/despliegue-produccion.md) y [uso del sistema](../../docs/manuales/uso-del-sistema.md). Los comandos de este README son referencias específicas del cliente; los resultados de suites conservados tienen su propia fecha.
 
 No hay funciones móviles de Administrador u Organizador. El backend conserva autorización, ownership, reglas y estados; Flutter no conecta directamente a Supabase.
 
@@ -74,7 +76,7 @@ flutter test
 flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080/api/v1
 ```
 
-Al corte E3.4 no se registró un resultado concluyente de `flutter test`. En E3.6-B, `flutter analyze` y los 6 tests terminaron correctamente y se generó un APK debug con la URL del emulador. El AVD disponible quedó sin autorización ADB, por lo que no se verificó la conexión desde Android; Render tampoco fue accesible desde el entorno de auditoría. No se declara APK release validado ni publicado.
+Los resultados de E3.4/E3.6-B corresponden a cortes históricos. La evidencia del Anexo B del 12/10/2026 registra 139 pruebas aprobadas, `flutter analyze` con salida 1 y 17 observaciones informativas, y un APK debug generado sin instalación. La release Android v1.0.0 ya está publicada en GitHub; no se verificaron nuevamente su firma ni instalación al revisar esta documentación. Las suites no se repitieron el 13/10. Consulte las guías actuales y sus fuentes de resultados.
 
 
 ## Autenticación móvil y App Links - fase 1
@@ -105,25 +107,26 @@ Un error de red permite reintentar desde la pantalla; un token expirado, inváli
 o utilizado conduce a solicitar otro enlace. La deduplicación no persiste tras
 cerrar el proceso; el backend sigue validando la vigencia y uso del token.
 
-Esta fase usa Flutter >=3.44 / Dart >=3.12. Se fijó app_links 7.2.2 porque su
-implementación Android no imprime los intents/URLs; versiones anteriores como
-6.4.1 exponen la URI en logs nativos. No se modificó la firma Android.
+El pubspec declara Dart `>=3.12.0 <4.0.0` y app_links 7.2.2; no fija una versión
+exacta de Flutter. El entorno comprobado utiliza Flutter 3.44.8 y Dart 3.12.2.
+No se modificó la firma Android durante la actualización documental.
 
 ### Límite de esta fase
 
 El Manifest prepara VIEW/DEFAULT/BROWSABLE y autoVerify para los dos paths.
-**App Links aún no está verificado**: falta publicar un JSON válido en
-`https://trabajo-final-diplomado-web.onrender.com/.well-known/assetlinks.json`
-con el paquete `bo.edu.uajms.vidia` y la huella SHA-256 de la firma de distribución.
-La respuesta debe ser JSON real, no el fallback HTML de Angular.
-Este archivo público y la configuración de hosting no se implementan aquí.
+El 13/10/2026 se consultó
+`https://trabajo-final-diplomado-web.onrender.com/.well-known/assetlinks.json`:
+respondió 200, application/json y un arreglo con el paquete `bo.edu.uajms.vidia`.
+Esto confirma publicación del descriptor, no la asociación verificada por Android:
+queda comprobar la huella contra la firma de la APK instalada y el estado del dispositivo.
 La app instalada debe permitir abrir enlaces compatibles; el correo puede usar
 un navegador interno y el usuario puede cambiar las preferencias de apertura.
 Sin asociación verificada o sin app, el enlace sigue el flujo web.
 
-El Gradle existente usa la firma debug en release si no existe `key.properties`.
-Antes de distribución hay que confirmar la firma efectiva y asociar su huella;
-no se deben asumir verificadas las URLs por haber compilado un APK.
+El Gradle actual exige `android/key.properties` y una configuración release completa;
+no utiliza una firma debug de respaldo si faltan esos datos. Antes de distribuir
+hay que comprobar la firma efectiva y su correspondencia con assetlinks; no se
+asumen verificadas las URLs por compilar un APK.
 
 ### Validación
 
@@ -131,7 +134,7 @@ no se deben asumir verificadas las URLs por haber compilado un APK.
 para enlaces, rechazo de URIs, deduplicación, errores de red y tokens inválidos,
 expirados/utilizados, además de pruebas de Navigator con inicio frío, app abierta
 y background simulados. No envían correos reales. La validación Android real
-requiere posteriormente instalar el APK firmado, publicar la asociación y
+requiere comprobar el APK firmado, la correspondencia del descriptor publicado y
 comprobar `adb shell pm get-app-links bo.edu.uajms.vidia` y ambos correos con
 una cuenta de prueba. Una prueba que fuerce el paquete con ADB no demuestra
 que Android haya verificado el dominio.

@@ -1,0 +1,10 @@
+{
+  "apksigner": {
+    "exit": 0,
+    "output": "Verifies\r\nVerified using v1 scheme (JAR signing): false\r\nVerified using v2 scheme (APK Signature Scheme v2): true\r\nVerified using v3 scheme (APK Signature Scheme v3): false\r\nVerified using v3.1 scheme (APK Signature Scheme v3.1): false\r\nVerified using v4 scheme (APK Signature Scheme v4): false\r\nVerified for SourceStamp: false\r\nNumber of signers: 1\r\n"
+  },
+  "aapt2": {
+    "exit": 0,
+    "output": "package: name='bo.edu.uajms.vidia' versionCode='1' versionName='1.0.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'\r\nminSdkVersion:'24'\r\ntargetSdkVersion:'36'\r\nuses-permission: name='android.permission.INTERNET'\r\nuses-permission: name='android.permission.ACCESS_NETWORK_STATE'\r\nuses-permission: name='android.permission.CAMERA'\r\nuses-permission: name='android.permission.ACCESS_COARSE_LOCATION'\r\nuses-permission: name='android.permission.ACCESS_FINE_LOCATION'\r\nuses-permission: name='android.permission.READ_EXTERNAL_STORAGE' maxSdkVersion='32'\r\nuses-permission: name='android.permission.READ_MEDIA_IMAGES'\r\nuses-permission: name='android.permission.READ_MEDIA_VIDEO'\r\nuses-permission: name='android.permission.READ_MEDIA_AUDIO'\r\nuses-permission: name='bo.edu.uajms.vidia.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'\r\napplication-label:'Vidia'\r\napplication-label-af:'Vidia'\r\napplication-label-am:'Vidia'\r\napplication-label-ar:'Vidia'\r\napplication-label-as:'Vidia'\r\napplication-label-az:'Vidia'\r\napplication-label-be:'Vidia'\r\napplication-label-bg:'Vidia'\r\napplication-label-bn:'Vidia'\r\napplication-label-bs:'Vidia'\r\napplication-label-ca:'Vidia'\r\napplication-label-cs:'Vidia'\r\napplication-label-da:'Vidia'\r\napplication-label-de:'Vidia'\r\napplication-label-el:'Vidia'\r\napplication-label-en-AU:'Vidia'\r\napplication-label-en-CA:'Vidia'\r\napplication-label-en-GB:'Vidia'\r\napplication-label-en-IN:'Vidia'\r\napplication-label-en-XC:'Vidia'\r\napplication-label-es:'Vidia'\r\napplication-label-es-US:'Vidia'\r\napplication-label-et:'Vidia'\r\napplication"
+  }
+}

@@ -1,0 +1,103 @@
+[
+  {
+    "name": "web",
+    "method": "GET",
+    "url": "https://trabajo-final-diplomado-web.onrender.com/",
+    "http": 200,
+    "date": "2026-10-12T13:25:31.477381-04:00",
+    "seconds": 0.64,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 62373
+  },
+  {
+    "name": "backend_root",
+    "method": "GET",
+    "url": "https://trabajo-final-diplomado.onrender.com/",
+    "http": 401,
+    "date": "2026-10-12T13:25:32.235935-04:00",
+    "seconds": 0.766,
+    "content_type": "application/json;charset=UTF-8",
+    "bytes": 135
+  },
+  {
+    "name": "salud_get",
+    "method": "GET",
+    "url": "https://trabajo-final-diplomado.onrender.com/api/v1/salud",
+    "http": 200,
+    "date": "2026-10-12T13:25:32.604341-04:00",
+    "seconds": 0.359,
+    "content_type": "application/json",
+    "bytes": 15,
+    "response": {
+      "estado": "UP"
+    }
+  },
+  {
+    "name": "salud_head",
+    "method": "HEAD",
+    "url": "https://trabajo-final-diplomado.onrender.com/api/v1/salud",
+    "http": 200,
+    "date": "2026-10-12T13:25:32.923672-04:00",
+    "seconds": 0.328,
+    "content_type": "application/json",
+    "bytes": 0
+  },
+  {
+    "name": "swagger",
+    "method": "GET",
+    "url": "https://trabajo-final-diplomado.onrender.com/swagger-ui/index.html",
+    "http": 200,
+    "date": "2026-10-12T13:25:33.249076-04:00",
+    "seconds": 0.328,
+    "content_type": "text/html",
+    "bytes": 734
+  },
+  {
+    "name": "openapi",
+    "method": "GET",
+    "url": "https://trabajo-final-diplomado.onrender.com/v3/api-docs",
+    "http": 200,
+    "date": "2026-10-12T13:25:33.584321-04:00",
+    "seconds": 0.329,
+    "content_type": "application/json",
+    "bytes": 132698,
+    "openapi_version": "3.0.1",
+    "paths_count": 77
+  },
+  {
+    "name": "perfil_anonimo",
+    "method": "GET",
+    "url": "https://trabajo-final-diplomado.onrender.com/api/v1/usuarios/perfil",
+    "http": 401,
+    "date": "2026-10-12T13:25:33.879969-04:00",
+    "seconds": 0.281,
+    "content_type": "application/json;charset=UTF-8",
+    "bytes": 157,
+    "response": {
+      "codigo": "AUTH_REQUIRED",
+      "mensaje": "Se requiere autenticacion",
+      "detalles": null,
+      "timestamp": "2026-10-12T17:25:34.123924301",
+      "ruta": "/api/v1/usuarios/perfil"
+    }
+  },
+  {
+    "name": "release",
+    "method": "GET",
+    "url": "https://api.github.com/repos/felix-lamas/trabajo-final-diplomado/releases/tags/v1.0.0",
+    "http": 200,
+    "date": "2026-10-12T13:25:34.437751-04:00",
+    "seconds": 0.563,
+    "content_type": "application/json; charset=utf-8",
+    "bytes": 4174,
+    "tag": "v1.0.0",
+    "assets": [
+      {
+        "name": "app-release.apk",
+        "size": 70655028,
+        "url": "https://github.com/felix-lamas/trabajo-final-diplomado/releases/download/v1.0.0/app-release.apk"
+      }
+    ],
+    "published_at": "2026-10-11T23:51:22Z"
+  }
+]

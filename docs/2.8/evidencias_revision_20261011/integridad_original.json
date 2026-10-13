@@ -1,0 +1,20 @@
+{
+  "original": "docs\\2.8\\Lamas_E3_2.8_con_evidencias_CP01_CP28.docx",
+  "sha256": "9b224a971dce40fd7645def5fc88a2ca958138c0dfcc075983ab2091d34b4516",
+  "images_original": 21,
+  "images_reused_sanitized": 18,
+  "excluded_from_copy": [
+    {
+      "image": 19,
+      "reason": "Registro t?cnico de dispositivo/firma; no acredita los casos seleccionados; permanece en el original."
+    },
+    {
+      "image": 20,
+      "reason": "Registro t?cnico de dispositivo/firma; no acredita los casos seleccionados; permanece en el original."
+    },
+    {
+      "image": 21,
+      "reason": "Registro t?cnico de dispositivo/firma; no acredita los casos seleccionados; permanece en el original."
+    }
+  ]
+}

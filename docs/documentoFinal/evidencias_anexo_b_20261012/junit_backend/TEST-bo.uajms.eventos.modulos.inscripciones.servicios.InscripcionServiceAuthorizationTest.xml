@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.14" tests="18" errors="0" skipped="0" failures="0">
+  <testcase name="usuarioPuedeConsultarSuInscripcion" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.008" />
+  <testcase name="organizadorPuedeListarInscritosDeSuEvento" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.01" />
+  <testcase name="organizadorSinUsuarioNoObtieneAlcancePersonal" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.005" />
+  <testcase name="usuarioNoPuedeConsultarInscripcionAjena" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.007" />
+  <testcase name="administradorPuedeListarInscritosDeCualquierEvento" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.017" />
+  <testcase name="administradorNoPuedeUsarFlujoPersonalDeInscripcion" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.007" />
+  <testcase name="usuarioNoPuedeCancelarInscripcionAjenaNiGenerarEfectosSecundarios" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.006" />
+  <testcase name="comprobanteAjenoNoSeExpone" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.005" />
+  <testcase name="comprobantePropioUsaMontoYEstadoOficialDelPago" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.008" />
+  <testcase name="organizadorNoPuedeConsultarInscripcionDeEventoAjeno" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.001" />
+  <testcase name="administradorPuedeConsultarCualquierInscripcion" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.007" />
+  <testcase name="cuentaDualNoConsultaInscripcionAjenaFueraDeSusEventos" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.004" />
+  <testcase name="cuentaDualConsultaInscripcionPropiaEnEventoDeOtroOrganizador" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.004" />
+  <testcase name="organizadorPuedeConsultarInscripcionDeSuEvento" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.003" />
+  <testcase name="usuarioPuedeCancelarSuInscripcion" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.012" />
+  <testcase name="listarMisInscripcionesDevuelveSoloLasPropias" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.006" />
+  <testcase name="inscripcionNuevaPerteneceAlUsuarioAutenticado" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.006" />
+  <testcase name="organizadorNoPuedeListarInscritosDeEventoAjeno" classname="bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest" time="0.006" />
+</testsuite>

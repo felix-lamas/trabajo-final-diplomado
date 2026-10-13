@@ -167,4 +167,21 @@ void main() {
     expect(controller.isAuthenticated, isFalse);
     expect(store.token, isNull);
   });
+  test('logout sin red comunica revocación no confirmada', () async {
+    final store = MemoryTokenStore()..token = 'active-test-token';
+    final api = ApiService(
+      baseUrl: 'https://api.example.test/api/v1',
+      tokenStore: store,
+      client: MockClient((request) async {
+        if (request.url.path.endsWith('/logout')) throw Exception('sin red');
+        return http.Response(jsonEncode(profile(['USUARIO'], 'NINGUNA')), 200);
+      }),
+    );
+    final controller = SessionController(AuthService(api, store));
+    await controller.restore();
+    await controller.logout();
+    expect(controller.isAuthenticated, isFalse);
+    expect(store.token, isNull);
+    expect(controller.message, contains('no se confirmó en el servidor'));
+  });
 }

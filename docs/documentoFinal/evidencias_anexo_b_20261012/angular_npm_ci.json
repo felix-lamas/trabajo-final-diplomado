@@ -1,0 +1,15 @@
+{
+  "name": "angular_npm_ci",
+  "command": [
+    "npm",
+    "ci",
+    "--no-audit",
+    "--fund=false"
+  ],
+  "directory": "frontend",
+  "started": "2026-10-12T13:24:09.009519-04:00",
+  "finished": "2026-10-12T13:25:05.534670-04:00",
+  "seconds": 56.53,
+  "exit": 0,
+  "log": "angular_npm_ci.txt"
+}

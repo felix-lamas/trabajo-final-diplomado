@@ -1,0 +1,16 @@
+﻿{
+    "WordVersion":  "16.0",
+    "Pages":  22,
+    "EmptyPages":  [
+
+                   ],
+    "TableWidthsPt":  [
+                          467.99999618530273,
+                          468.00001525878906,
+                          468,
+                          468
+                      ],
+    "AvailableWidthPt":  468,
+    "Images":  9,
+    "PdfPreview":  "No disponible: exportacion PDF de Word bloqueada; se verificaron apertura, paginacion y anchos mediante Word."
+}

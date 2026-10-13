@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest" time="1.034" tests="5" errors="0" skipped="0" failures="0">
+  <testcase name="responde429AntesDelNegocio(String, String)[1]" classname="bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest" time="0.655">
+    </testcase>
+  <testcase name="responde429AntesDelNegocio(String, String)[2]" classname="bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest" time="0.041">
+    </testcase>
+  <testcase name="responde429AntesDelNegocio(String, String)[3]" classname="bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest" time="0.057">
+    </testcase>
+  <testcase name="responde429AntesDelNegocio(String, String)[4]" classname="bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest" time="0.068">
+    </testcase>
+  <testcase name="responde429AntesDelNegocio(String, String)[5]" classname="bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest" time="0.084">
+    </testcase>
+</testsuite>

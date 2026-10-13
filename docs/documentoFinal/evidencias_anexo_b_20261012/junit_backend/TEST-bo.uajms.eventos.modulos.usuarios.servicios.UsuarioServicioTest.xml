@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.128" tests="36" errors="0" skipped="0" failures="0">
+  <testcase name="solicitudDeAdministradorNoSeApruebaNiSeEliminanSusRoles" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.005" />
+  <testcase name="aprobarSolicitudNoPendienteFalla" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="solicitudConservaMotivoTiposEInformacionOpcional" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="cambiaContrasenaDelUsuarioAutenticado" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="validaCamposAntesDePersistir(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="validaCamposAntesDePersistir(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="validaCamposAntesDePersistir(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="validaCamposAntesDePersistir(String)[4]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="validaCamposAntesDePersistir(String)[5]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.005" />
+  <testcase name="validaCamposAntesDePersistir(String)[6]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.001" />
+  <testcase name="validaCamposAntesDePersistir(String)[7]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.001" />
+  <testcase name="validaCamposAntesDePersistir(String)[8]" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="solicitudPendienteConOrganizadorExistenteSeResuelveSinDuplicarlo" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="usuarioSolicitaSerOrganizador" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="cambioDeContrasenaNoPermiteElegirOtroUsuario" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.001" />
+  <testcase name="categoriasArbitrariasNoSonParteDelContrato" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.005" />
+  <testcase name="consultaExclusivamenteElPerfilAutenticado" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="cuentaAdministrativaNoPuedeSolicitarInclusoConRolUsuarioInconsistente" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="administradorApruebaYConservaRolUsuarioAgregandoOrganizador" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="aprobacionConservaIdentidadRolesYResolutor" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.008" />
+  <testcase name="rechazaReutilizarContrasenaActual" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="aprobarSolicitudInexistenteFalla" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="solicitudRechazadaPuedePresentarseNuevamenteSinEspera" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="dosAprobacionesSoloPermitenUnaTransicion" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.004" />
+  <testcase name="rechazaContrasenaActualIncorrectaSinPersistir" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="administradorNoPuedeAprobarseASiMismo" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="administradorRechazaYUsuarioPermaneceConSuRol" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+  <testcase name="solicitudPendienteNoPuedeDuplicarse" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.003" />
+  <testcase name="rechazaConfirmacionDiferenteSinPersistirNiRevocar" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.004" />
+  <testcase name="reenvioArchivaRechazoAnteriorSinInventarMotivoHistorico" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.0" />
+  <testcase name="actualizaSoloDatosEditablesDelPerfilPropio" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.0" />
+  <testcase name="actualizacionPerfilNoExponeCamposProtegidosNiOtroUsuario" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.0" />
+  <testcase name="organizadorNoPuedeSolicitarNuevamente" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.006" />
+  <testcase name="aprobarYRechazarSoloPermitenLaPrimeraTransicion" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.004" />
+  <testcase name="administradorListaSolicitudesPendientes" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.004" />
+  <testcase name="estadoPropioAutorizaReenvioSegunRolesYEstadoActuales" classname="bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest" time="0.002" />
+</testsuite>

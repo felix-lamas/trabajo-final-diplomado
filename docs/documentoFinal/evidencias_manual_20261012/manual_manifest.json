@@ -1,0 +1,280 @@
+{
+  "documento": "Anexo_A_Manual_de_Usuario_Vidia.docx",
+  "creado": "2026-10-12T12:47:50.270110-04:00",
+  "capturas_incorporadas": [
+    {
+      "archivo": "web_inicio_recorte.png",
+      "titulo": "Pantalla de acceso web",
+      "apartado": "A.2",
+      "fecha": "12/10/2026 12:25"
+    },
+    {
+      "archivo": "web_registro_recorte.png",
+      "titulo": "Formulario web de creación de cuenta",
+      "apartado": "A.2",
+      "fecha": "12/10/2026 12:25"
+    },
+    {
+      "archivo": "participante_inicio.png",
+      "titulo": "Inicio web del participante",
+      "apartado": "A.2",
+      "fecha": "12/10/2026 12:25"
+    },
+    {
+      "archivo": "movil_login.png",
+      "titulo": "Acceso de la aplicación Android",
+      "apartado": "A.2",
+      "fecha": "12/10/2026 12:26"
+    },
+    {
+      "archivo": "web_catalogo_publico.png",
+      "titulo": "Catálogo web y filtros de búsqueda",
+      "apartado": "A.3.1",
+      "fecha": "12/10/2026 12:25"
+    },
+    {
+      "archivo": "movil_detalle_evento.png",
+      "titulo": "Detalle de un evento ficticio en Android",
+      "apartado": "A.3.1",
+      "fecha": "12/10/2026 12:42"
+    },
+    {
+      "archivo": "formulario_inscripcion_sin_enviar.png",
+      "titulo": "Confirmación web de inscripción, sin enviar",
+      "apartado": "A.3.2",
+      "fecha": "12/10/2026 12:38"
+    },
+    {
+      "archivo": "participante_inscripciones.png",
+      "titulo": "Listado web de inscripciones existentes",
+      "apartado": "A.3.3",
+      "fecha": "12/10/2026 12:25"
+    },
+    {
+      "archivo": "movil_actividad.png",
+      "titulo": "Actividad del participante en Android",
+      "apartado": "A.3.3",
+      "fecha": "12/10/2026 12:27"
+    },
+    {
+      "archivo": "movil_historial.png",
+      "titulo": "Historial personal con registros existentes",
+      "apartado": "A.3.3",
+      "fecha": "12/10/2026 12:36"
+    },
+    {
+      "archivo": "participante_pagos.png",
+      "titulo": "Consulta web de un pago de demostración existente",
+      "apartado": "A.3.3",
+      "fecha": "12/10/2026 12:25"
+    },
+    {
+      "archivo": "movil_registrar_asistencia.png",
+      "titulo": "Selección de evento para consultar sesiones",
+      "apartado": "A.3.4",
+      "fecha": "12/10/2026 12:37"
+    },
+    {
+      "archivo": "certificado_detalle.png",
+      "titulo": "Detalle web del certificado de demostración",
+      "apartado": "A.3.5",
+      "fecha": "12/10/2026 12:32"
+    },
+    {
+      "archivo": "participante_solicitud.png",
+      "titulo": "Formulario web de solicitud de organizador",
+      "apartado": "A.4.1",
+      "fecha": "12/10/2026 12:26"
+    },
+    {
+      "archivo": "movil_solicitud_formulario.png",
+      "titulo": "Solicitud de organizador desde Perfil en Android",
+      "apartado": "A.4.1",
+      "fecha": "12/10/2026 12:40"
+    },
+    {
+      "archivo": "solicitud_pendiente.png",
+      "titulo": "Solicitud de demostración en estado pendiente",
+      "apartado": "A.4.1",
+      "fecha": "12/10/2026 12:26"
+    },
+    {
+      "archivo": "organizador_lista_segura.png",
+      "titulo": "Listado de eventos propios del organizador",
+      "apartado": "A.4.2",
+      "fecha": "12/10/2026 12:33"
+    },
+    {
+      "archivo": "organizador_form_general.png",
+      "titulo": "Formulario de creación: información general y modalidad",
+      "apartado": "A.4.2",
+      "fecha": "12/10/2026 12:33"
+    },
+    {
+      "archivo": "organizador_form_precio.png",
+      "titulo": "Formulario de creación: inscripción, precio y certificado",
+      "apartado": "A.4.2",
+      "fecha": "12/10/2026 12:33"
+    },
+    {
+      "archivo": "organizador_detalle_evento.png",
+      "titulo": "Detalle de borrador con opción de envío a revisión",
+      "apartado": "A.4.2",
+      "fecha": "12/10/2026 12:33"
+    },
+    {
+      "archivo": "sesiones_sin_crear.png",
+      "titulo": "Sección de sesiones de un borrador, sin crear registros",
+      "apartado": "A.4.3",
+      "fecha": "12/10/2026 12:38"
+    },
+    {
+      "archivo": "organizador_pagos.png",
+      "titulo": "Bandeja del organizador sin pagos pendientes",
+      "apartado": "A.4.3",
+      "fecha": "12/10/2026 12:26"
+    },
+    {
+      "archivo": "admin_panel_seguro.png",
+      "titulo": "Panel administrativo de Vidia",
+      "apartado": "A.5",
+      "fecha": "12/10/2026 12:34"
+    },
+    {
+      "archivo": "admin_solicitudes_protegidas.png",
+      "titulo": "Bandeja administrativa de solicitudes; datos identificativos ocultos",
+      "apartado": "A.5",
+      "fecha": "12/10/2026 12:38"
+    },
+    {
+      "archivo": "admin_revision_detalle.png",
+      "titulo": "Detalle administrativo de un evento en revisión",
+      "apartado": "A.5",
+      "fecha": "12/10/2026 12:34"
+    },
+    {
+      "archivo": "admin_categorias.png",
+      "titulo": "Gestión administrativa de categorías",
+      "apartado": "A.5",
+      "fecha": "12/10/2026 12:27"
+    },
+    {
+      "archivo": "admin_reportes.png",
+      "titulo": "Opciones visibles del generador de reportes",
+      "apartado": "A.5",
+      "fecha": "12/10/2026 12:27"
+    },
+    {
+      "archivo": "admin_cuentas_protegidas.png",
+      "titulo": "Administradores e invitaciones, con datos identificativos ocultos",
+      "apartado": "A.5",
+      "fecha": "12/10/2026 12:33"
+    },
+    {
+      "archivo": "certificado_verificacion.png",
+      "titulo": "Resultado real de la verificación pública de un certificado de demostración",
+      "apartado": "A.6",
+      "fecha": "12/10/2026 12:32"
+    }
+  ],
+  "marcadores_pendientes": [
+    {
+      "titulo": "verificación de correo y activación de una cuenta participante",
+      "indicacion": "Debe mostrar el aviso recibido por una cuenta ficticia controlada y la confirmación de activación. Oculte el enlace o token y los datos de acceso.",
+      "apartado": "A.2"
+    },
+    {
+      "titulo": "recuperación y restablecimiento de contraseña",
+      "indicacion": "Incluya el formulario, el correo con enlace oculto y el acceso posterior de una cuenta de demostración, sin mostrar contraseñas.",
+      "apartado": "A.2"
+    },
+    {
+      "titulo": "resultado de una inscripción nueva desde la interfaz",
+      "indicacion": "Debe mostrar el resultado de una cuenta ficticia y su estado en Mis inscripciones. La captura del formulario previo no demuestra el envío.",
+      "apartado": "A.3.2"
+    },
+    {
+      "titulo": "formulario de presentación de comprobante",
+      "indicacion": "Debe mostrar una inscripción ficticia habilitada, instrucciones de pago, monto, selector de archivo y botón Presentar comprobante, sin cargar documentos falsos ni transferir dinero.",
+      "apartado": "A.3.3"
+    },
+    {
+      "titulo": "sesiones disponibles y lector QR presencial",
+      "indicacion": "Debe mostrar una sesión habilitada y el lector en un teléfono autorizado. Oculte cualquier QR temporal vigente y la ubicación personal.",
+      "apartado": "A.3.4"
+    },
+    {
+      "titulo": "resultado de asistencia presencial con QR y GPS",
+      "indicacion": "Debe mostrar la confirmación real y el registro en Mis asistencias de la misma cuenta ficticia. No simule el resultado ni publique coordenadas.",
+      "apartado": "A.3.4"
+    },
+    {
+      "titulo": "solicitud enviada, resolución y motivo de rechazo cuando corresponda",
+      "indicacion": "Debe mostrar el resultado de envío y la resolución de una cuenta ficticia autorizada. No apruebe ni rechace solicitudes existentes únicamente para obtener la imagen.",
+      "apartado": "A.4.1"
+    },
+    {
+      "titulo": "borrador guardado y evento enviado a revisión",
+      "indicacion": "Debe mostrar un evento ficticio tras Guardar borrador y el estado posterior al envío a revisión. No basta con fotografiar el botón previo.",
+      "apartado": "A.4.2"
+    },
+    {
+      "titulo": "revisión de un comprobante pendiente de demostración",
+      "indicacion": "Debe mostrar un pago ficticio pendiente y sus acciones reales, con el documento y datos sensibles ocultos. No cambie estados para obtener una captura.",
+      "apartado": "A.4.3"
+    },
+    {
+      "titulo": "sesión habilitada y presentación del QR de asistencia",
+      "indicacion": "Debe mostrar la preparación de una sesión ficticia válida y las opciones reales de QR. Oculte el QR vigente; no cree sesiones ni códigos solo para ilustrar el manual.",
+      "apartado": "A.4.3"
+    },
+    {
+      "titulo": "resultado de una resolución administrativa de demostración",
+      "indicacion": "Debe mostrar el estado posterior a una resolución previamente autorizada, sin publicar ni alterar eventos reales para preparar el documento.",
+      "apartado": "A.5"
+    },
+    {
+      "titulo": "invitación y activación de un administrador de demostración",
+      "indicacion": "Debe mostrar el formulario y la activación real de una invitación autorizada, sin exponer enlace, token, correo personal ni contraseña. No envíe correos para completar únicamente esta ilustración.",
+      "apartado": "A.5"
+    }
+  ],
+  "cantidad_imagenes": 29,
+  "cantidad_marcadores": 12,
+  "documentos_previos_intactos": true,
+  "validacion_word_pdf": {
+    "paginas": 41,
+    "word_version": "16.0",
+    "abre_word": true,
+    "pdf_abierto": true,
+    "zip_integridad": true,
+    "imagenes_dentro_margenes": true,
+    "texto_fuera_pagina": [],
+    "paginas_vacias": [],
+    "revision_visual": "Hojas de contacto y ampliaciones; revisadas correcciones de recorte y pies de imagen.",
+    "figuras_sin_numeracion_definitiva": true,
+    "documentos_previos_intactos": 11
+  },
+  "operaciones": "Consulta de datos existentes y autenticación; no se enviaron formularios de negocio.",
+  "accesos_web_confirmados": [
+    "usuario@demo.local",
+    "organizador1@demo.local",
+    "organizador2@demo.local",
+    "admin@demo.local"
+  ],
+  "acceso_android_confirmado": "usuario@demo.local",
+  "incidencias_observadas": [
+    "Enlace de verificacion del certificado apunta a localhost; consulta manual del codigo real en el formulario publico muestra Certificado valido.",
+    "Android Inicio muestra No pudimos consultar tu proxima actividad.",
+    "Android consultar sesiones muestra No pudimos abrir las sesiones. Intentalo nuevamente.; lector y registro fisico QR/GPS no comprobados."
+  ],
+  "limitaciones": [
+    "Solo consultas y autenticacion; envios de formularios de negocio no ejecutados.",
+    "Cuenta organizador2 con solicitud PENDIENTE; conserva funciones de participante.",
+    "No habia pago propio pendiente para abrir la carga con contexto valido.",
+    "Sesion unica: login web de la misma cuenta revoco la sesion del telefono; se reautentico despues.",
+    "No se cambiaron permisos del dispositivo ni se instalo APK."
+  ],
+  "alcance_datos": "No se crearon ni modificaron cuentas, roles, eventos, inscripciones, pagos, asistencias ni certificados. La autenticacion normal creo/revoco sesiones. El certificado descargado ya estaba en estado DESCARGADO antes de esta consulta.",
+  "validado": "2026-10-12T12:59:39.668464-04:00"
+}

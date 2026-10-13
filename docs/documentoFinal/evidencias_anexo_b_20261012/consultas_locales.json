@@ -1,0 +1,44 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/v1/salud",
+    "http": 200,
+    "bytes": 15,
+    "date": "2026-10-12T13:33:01.277696-04:00"
+  },
+  {
+    "method": "HEAD",
+    "path": "/api/v1/salud",
+    "http": 200,
+    "bytes": 0,
+    "date": "2026-10-12T13:33:01.286694-04:00"
+  },
+  {
+    "method": "GET",
+    "path": "/v3/api-docs",
+    "http": 200,
+    "bytes": 133510,
+    "date": "2026-10-12T13:33:03.455048-04:00"
+  },
+  {
+    "method": "GET",
+    "path": "/swagger-ui/index.html",
+    "http": 200,
+    "bytes": 734,
+    "date": "2026-10-12T13:33:03.480356-04:00"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/eventos/publicados",
+    "http": 200,
+    "bytes": 2,
+    "date": "2026-10-12T13:33:03.648641-04:00"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/usuarios/perfil",
+    "http": 401,
+    "bytes": 155,
+    "date": "2026-10-12T13:33:03.656866-04:00"
+  }
+]

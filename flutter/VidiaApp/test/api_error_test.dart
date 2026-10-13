@@ -10,6 +10,40 @@ import 'package:vidia/services/api_service.dart';
 import 'support/memory_token_store.dart';
 
 void main() {
+  test(
+    '429 público conserva mensaje y no invalida otra sesión local',
+    () async {
+      final store = MemoryTokenStore()..token = 'jwt';
+      final api = ApiService(
+        baseUrl: 'https://api.example.test/api/v1',
+        tokenStore: store,
+        client: MockClient(
+          (_) async => http.Response(
+            jsonEncode({
+              'codigo': 'AUTH_RATE_LIMITED',
+              'mensaje':
+                  'Demasiados intentos. Espere antes de volver a intentar.',
+            }),
+            429,
+          ),
+        ),
+      );
+      await expectLater(
+        api.post('/auth/login', authenticated: false, body: {}),
+        throwsA(
+          isA<ApiException>()
+              .having((e) => e.statusCode, 'status', 429)
+              .having(
+                (e) => e.message,
+                'mensaje',
+                contains('Demasiados intentos'),
+              ),
+        ),
+      );
+      expect(store.token, 'jwt');
+    },
+  );
+
   test('pagos mapea los errores de ownership, estado y archivo', () async {
     for (final (status, code, expected) in [
       (401, 'AUTH_REQUIRED', 'Tu sesión expiró o fue revocada. Inicia sesión nuevamente.'),

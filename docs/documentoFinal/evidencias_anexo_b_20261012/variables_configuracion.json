@@ -1,0 +1,282 @@
+[
+  {
+    "property": "spring.application.name",
+    "variables": [
+      "APP_NAME"
+    ]
+  },
+  {
+    "property": "spring.profiles.active",
+    "variables": [
+      "SPRING_PROFILES_ACTIVE"
+    ]
+  },
+  {
+    "property": "spring.mail.host",
+    "variables": [
+      "SPRING_MAIL_HOST"
+    ]
+  },
+  {
+    "property": "spring.mail.port",
+    "variables": [
+      "SPRING_MAIL_PORT"
+    ]
+  },
+  {
+    "property": "spring.mail.username",
+    "variables": [
+      "SPRING_MAIL_USERNAME"
+    ]
+  },
+  {
+    "property": "spring.mail.password",
+    "variables": [
+      "SPRING_MAIL_PASSWORD"
+    ]
+  },
+  {
+    "property": "spring.mail.properties.[mail.smtp.auth]",
+    "variables": [
+      "SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH"
+    ]
+  },
+  {
+    "property": "spring.mail.properties.[mail.smtp.starttls.enable]",
+    "variables": [
+      "SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE"
+    ]
+  },
+  {
+    "property": "spring.mail.properties.[mail.smtp.connectiontimeout]",
+    "variables": [
+      "SPRING_MAIL_PROPERTIES_MAIL_SMTP_CONNECTIONTIMEOUT"
+    ]
+  },
+  {
+    "property": "spring.mail.properties.[mail.smtp.timeout]",
+    "variables": [
+      "SPRING_MAIL_PROPERTIES_MAIL_SMTP_TIMEOUT"
+    ]
+  },
+  {
+    "property": "spring.mail.properties.[mail.smtp.writetimeout]",
+    "variables": [
+      "SPRING_MAIL_PROPERTIES_MAIL_SMTP_WRITETIMEOUT"
+    ]
+  },
+  {
+    "property": "spring.servlet.multipart.max-file-size",
+    "variables": [
+      "MAX_FILE_SIZE"
+    ]
+  },
+  {
+    "property": "spring.servlet.multipart.max-request-size",
+    "variables": [
+      "MAX_REQUEST_SIZE"
+    ]
+  },
+  {
+    "property": "spring.datasource.url",
+    "variables": [
+      "DB_URL",
+      "DB_HOST",
+      "DB_PORT",
+      "DB_NAME"
+    ]
+  },
+  {
+    "property": "spring.datasource.username",
+    "variables": [
+      "DB_USER"
+    ]
+  },
+  {
+    "property": "spring.datasource.password",
+    "variables": [
+      "DB_PASS"
+    ]
+  },
+  {
+    "property": "spring.jpa.hibernate.ddl-auto",
+    "variables": [
+      "JPA_DDL_AUTO"
+    ]
+  },
+  {
+    "property": "spring.jpa.show-sql",
+    "variables": [
+      "JPA_SHOW_SQL"
+    ]
+  },
+  {
+    "property": "spring.jpa.properties.hibernate.format_sql",
+    "variables": [
+      "JPA_FORMAT_SQL"
+    ]
+  },
+  {
+    "property": "server.port",
+    "variables": [
+      "SERVER_PORT",
+      "PORT"
+    ]
+  },
+  {
+    "property": "app.cors.allowed-origins",
+    "variables": [
+      "CORS_ALLOWED_ORIGINS"
+    ]
+  },
+  {
+    "property": "app.seed.demo-password",
+    "variables": [
+      "DEMO_PASSWORD"
+    ]
+  },
+  {
+    "property": "app.jwt.secreto",
+    "variables": [
+      "JWT_SECRET"
+    ]
+  },
+  {
+    "property": "app.jwt.expiracion-ms",
+    "variables": [
+      "JWT_EXPIRATION"
+    ]
+  },
+  {
+    "property": "app.auth.rate-limit.identifier-limit",
+    "variables": [
+      "AUTH_RATE_IDENTIFIER_LIMIT"
+    ]
+  },
+  {
+    "property": "app.auth.rate-limit.operation-limit",
+    "variables": [
+      "AUTH_RATE_OPERATION_LIMIT"
+    ]
+  },
+  {
+    "property": "app.auth.rate-limit.window-seconds",
+    "variables": [
+      "AUTH_RATE_WINDOW_SECONDS"
+    ]
+  },
+  {
+    "property": "app.auth.rate-limit.max-identifiers",
+    "variables": [
+      "AUTH_RATE_MAX_IDENTIFIERS"
+    ]
+  },
+  {
+    "property": "app.auth.admin-invitation-expiration-hours",
+    "variables": [
+      "ADMIN_INVITATION_EXPIRATION_HOURS"
+    ]
+  },
+  {
+    "property": "app.auth.admin-invitation-resend-minutes",
+    "variables": [
+      "ADMIN_INVITATION_RESEND_MINUTES"
+    ]
+  },
+  {
+    "property": "app.frontend.admin-activation-url",
+    "variables": [
+      "FRONTEND_ADMIN_ACTIVATION_URL"
+    ]
+  },
+  {
+    "property": "app.frontend.reset-password-url",
+    "variables": [
+      "FRONTEND_RESET_PASSWORD_URL"
+    ]
+  },
+  {
+    "property": "app.frontend.verify-email-url",
+    "variables": [
+      "FRONTEND_VERIFY_EMAIL_URL"
+    ]
+  },
+  {
+    "property": "app.mail.provider",
+    "variables": [
+      "MAIL_PROVIDER"
+    ]
+  },
+  {
+    "property": "app.mail.from",
+    "variables": [
+      "MAIL_FROM"
+    ]
+  },
+  {
+    "property": "app.mail.from-name",
+    "variables": [
+      "MAIL_FROM_NAME"
+    ]
+  },
+  {
+    "property": "app.uploads.base-dir",
+    "variables": [
+      "UPLOADS_BASE_DIR"
+    ]
+  },
+  {
+    "property": "app.storage.provider",
+    "variables": [
+      "APP_STORAGE_PROVIDER"
+    ]
+  },
+  {
+    "property": "app.storage.supabase.endpoint",
+    "variables": [
+      "SUPABASE_STORAGE_ENDPOINT"
+    ]
+  },
+  {
+    "property": "app.storage.supabase.region",
+    "variables": [
+      "SUPABASE_STORAGE_REGION"
+    ]
+  },
+  {
+    "property": "app.storage.supabase.bucket",
+    "variables": [
+      "SUPABASE_STORAGE_BUCKET"
+    ]
+  },
+  {
+    "property": "app.storage.supabase.access-key",
+    "variables": [
+      "SUPABASE_STORAGE_ACCESS_KEY"
+    ]
+  },
+  {
+    "property": "app.storage.supabase.secret-key",
+    "variables": [
+      "SUPABASE_STORAGE_SECRET_KEY"
+    ]
+  },
+  {
+    "property": "app.storage.supabase.connection-timeout-ms",
+    "variables": [
+      "SUPABASE_STORAGE_CONNECTION_TIMEOUT_MS"
+    ]
+  },
+  {
+    "property": "app.storage.supabase.api-timeout-ms",
+    "variables": [
+      "SUPABASE_STORAGE_API_TIMEOUT_MS"
+    ]
+  },
+  {
+    "property": "app.certificados.verificacion-base-url",
+    "variables": [
+      "CERTIFICATE_VERIFICATION_BASE_URL"
+    ]
+  }
+]

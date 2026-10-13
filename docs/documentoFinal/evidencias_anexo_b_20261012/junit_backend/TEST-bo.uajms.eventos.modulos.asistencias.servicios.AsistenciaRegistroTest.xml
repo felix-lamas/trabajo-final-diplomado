@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="1.166" tests="29" errors="0" skipped="0" failures="0">
+  <testcase name="sesionAntesDeHorarioEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.836" />
+  <testcase name="constraintDeBaseResuelveCarreraConcurrente" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.022" />
+  <testcase name="inscripcionCanceladaEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.009" />
+  <testcase name="precisionMayorA30EsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.011" />
+  <testcase name="qrExpiradoEsRechazado" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.016" />
+  <testcase name="organizadorNoRegistraComoParticipante" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.01" />
+  <testcase name="eventoPublicadoPermiteAsistencia" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.009" />
+  <testcase name="duplicadoDetectadoAntesDeGuardar" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.008" />
+  <testcase name="cuentaDualRegistraAsistenciaConAutoridadesReales" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.013" />
+  <testcase name="gpsFueraDeRangoEsRechazado" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.008" />
+  <testcase name="noSeAlmacenanCoordenadasDelParticipante" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.013" />
+  <testcase name="inscripcionPendientePagoEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.012" />
+  <testcase name="registroNoEliminaAsistenciaHistorica" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.012" />
+  <testcase name="eventoBorradorRechazaAsistencia" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.013" />
+  <testcase name="inscripcionPendienteValidacionEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.009" />
+  <testcase name="qrInvalidoEsRechazado" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.011" />
+  <testcase name="distanciaMasPrecisionDentroDelRadioEsAceptada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.012" />
+  <testcase name="inscripcionDeOtroEventoEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.009" />
+  <testcase name="usuarioNoInscritoEsRechazado" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.01" />
+  <testcase name="eventoVirtualSinPuntoGpsNoExigeUbicacion" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.01" />
+  <testcase name="haversineMismoPuntoEsCero" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.006" />
+  <testcase name="inscripcionDeOtroUsuarioEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.009" />
+  <testcase name="eventoCanceladoRechazaAsistencia" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.006" />
+  <testcase name="eventoFinalizadoRechazaAsistencia" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.01" />
+  <testcase name="sesionDespuesDeHorarioEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.007" />
+  <testcase name="usuarioInscritoRegistraSuAsistencia" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.008" />
+  <testcase name="distanciaMasPrecisionFueraDelRadioEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.008" />
+  <testcase name="inscripcionPendienteDeValidacionEsRechazada" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.006" />
+  <testcase name="qrRevocadoEsRechazado" classname="bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest" time="0.01" />
+</testsuite>

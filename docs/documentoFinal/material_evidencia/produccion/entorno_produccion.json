@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-10-11T19:37:15.937974+00:00",
+  "android": "12",
+  "apk_versionName": "1.0.0",
+  "apk_versionCode": "1",
+  "device": "Telefono fisico anonimizado, USB, 720x1484",
+  "package": "bo.edu.uajms.vidia",
+  "apk_build_commit": "No verificable desde package manager; no afirmar coincidencia con Git",
+  "production_commit": "No verificable: no acceso autorizado al dashboard de Render ni SHA expuesto",
+  "web_headers": {
+    "strict-transport-security": "max-age=315360000; includeSubdomains; preload",
+    "x-content-type-options": "nosniff"
+  },
+  "csp_meta_present": false
+}

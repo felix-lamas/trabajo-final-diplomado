@@ -1,0 +1,7 @@
+Comando: npm ci --no-audit --fund=false
+Fecha de inicio: 2026-10-12T13:24:09.009519-04:00
+Copia aislada del proyecto.
+
+added 521 packages in 56s
+
+npm warn deprecated @angular/animations@21.2.17: @angular/animations is deprecated. Use `animate.enter` and `animate.leave` instead. For more information see: https://v22.angular.dev/guide/animations.

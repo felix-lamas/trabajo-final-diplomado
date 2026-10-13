@@ -1,0 +1,15 @@
+{
+  "name": "angular_test",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "--watch=false"
+  ],
+  "directory": "frontend",
+  "started": "2026-10-12T13:25:13.569997-04:00",
+  "finished": "2026-10-12T13:26:16.617870-04:00",
+  "seconds": 63.05,
+  "exit": 0,
+  "log": "angular_test.txt"
+}

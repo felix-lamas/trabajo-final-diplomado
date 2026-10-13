@@ -1,0 +1,11 @@
+{
+  "key_properties_exists": true,
+  "effective_parameters_available": {
+    "storeFile": true,
+    "storePassword": false,
+    "keyAlias": true,
+    "keyPassword": false
+  },
+  "release_attempted": false,
+  "reason": "Credenciales efectivas incompletas; no se genera ni modifica firma."
+}

@@ -1,0 +1,75 @@
+[
+  {
+    "archivo": "catalogo-web.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/web_catalogo_publico.png",
+    "captura_original": "2026-10-12",
+    "recorte": null,
+    "sha256": "d54095c99435af2c20918f2523cf6c9769814bab4535acd1e31dadc8891e7b17"
+  },
+  {
+    "archivo": "acceso-web.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/web_inicio_recorte.png",
+    "captura_original": "2026-10-12",
+    "recorte": null,
+    "sha256": "e0e64d6883bf53bd09583d07bc2cbf842ee7f71d98f76aab69da7217193b8378"
+  },
+  {
+    "archivo": "nuevo-evento.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/organizador_form_general.png",
+    "captura_original": "2026-10-12",
+    "recorte": null,
+    "sha256": "72ff9ccc598b8534c7951e1cefb5923a29f3039cce52ddcb0722504049c2dcc3"
+  },
+  {
+    "archivo": "pagos-web.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/participante_pagos.png",
+    "captura_original": "2026-10-12",
+    "recorte": null,
+    "sha256": "276856ffef779894425dbb28f183ed5d611e03279a20931c092e69ebace6ac0f"
+  },
+  {
+    "archivo": "asistencias-web.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/organizador_asistencias.png",
+    "captura_original": "2026-10-12",
+    "recorte": null,
+    "sha256": "416706e036786178ca4540b4fddfef9c969225cd224de37e5e952a08eae13012"
+  },
+  {
+    "archivo": "categorias-web.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/admin_categorias.png",
+    "captura_original": "2026-10-12",
+    "recorte": null,
+    "sha256": "c5bdded3f34b5830591f50eaf93eacc74c1aa182cd0c41ed99074697ddb9a29b"
+  },
+  {
+    "archivo": "acceso-android.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/movil_login.png",
+    "captura_original": "2026-10-12",
+    "recorte": null,
+    "sha256": "02e48e25139676e76c2ecf420818b19bee0ed277981ed9753a04cbe72ee01e39"
+  },
+  {
+    "archivo": "detalle-android.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/movil_detalle_evento.png",
+    "captura_original": "2026-10-12",
+    "recorte": [
+      0,
+      0,
+      720,
+      780
+    ],
+    "sha256": "dc296cbc20ddea55b0a6eb3a2978a8a7698b1d80c9243e04ddbfe82024ca8a6f"
+  },
+  {
+    "archivo": "verificacion-certificado.png",
+    "fuente": "docs/documentoFinal/evidencias_manual_20261012/certificado_verificacion.png",
+    "captura_original": "2026-10-12",
+    "recorte": [
+      500,
+      95,
+      1418,
+      430
+    ],
+    "sha256": "573aad990b43cda9499305cd109383e9031c54783569d7d8fd886220afb2da3a"
+  }
+]

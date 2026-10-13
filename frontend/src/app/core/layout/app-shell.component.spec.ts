@@ -1,8 +1,8 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { provideRouter, Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
 import { AppShellComponent } from './app-shell.component';
@@ -32,6 +32,20 @@ describe('AppShellComponent navigation by role', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppShellComponent);
+  });
+
+  it('logout sin red navega al login indicando revocación no confirmada', () => {
+    const auth = TestBed.inject(AuthService);
+    vi.mocked(auth.logout).mockReturnValue(throwError(() => new Error('sin red')));
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    fixture.componentInstance.cerrarSesion();
+    expect(navigate).toHaveBeenCalledWith(['/auth/login'], { state: { logoutUnconfirmed: true } });
+  });
+
+  it('logout confirmado navega al login sin aviso', () => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    fixture.componentInstance.cerrarSesion();
+    expect(navigate).toHaveBeenCalledWith(['/auth/login']);
   });
 
   it('USUARIO ve Inicio y Buscar eventos, no Eventos publicados', () => {

@@ -1,0 +1,537 @@
+{
+  "tests": 591,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 1,
+  "suites": 66,
+  "classes": [
+    {
+      "name": "bo.uajms.eventos.arquitectura.ModeloConceptualOficialTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.238"
+    },
+    {
+      "name": "bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "8.079"
+    },
+    {
+      "name": "bo.uajms.eventos.core.configuracion.OpenApiContractTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.568"
+    },
+    {
+      "name": "bo.uajms.eventos.core.controladores.SaludControllerTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "15.483"
+    },
+    {
+      "name": "bo.uajms.eventos.core.controladores.SaludHttpIntegrationTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "13.197"
+    },
+    {
+      "name": "bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.035"
+    },
+    {
+      "name": "bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.034"
+    },
+    {
+      "name": "bo.uajms.eventos.core.seguridad.DetallesUsuarioServiceRoleRefreshTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.037"
+    },
+    {
+      "name": "bo.uajms.eventos.core.seguridad.IntentosAutenticacionTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.035"
+    },
+    {
+      "name": "bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.186"
+    },
+    {
+      "name": "bo.uajms.eventos.core.seguridad.JwtServiceSesionTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.313"
+    },
+    {
+      "name": "bo.uajms.eventos.core.seguridad.RolSistemaTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.006"
+    },
+    {
+      "name": "bo.uajms.eventos.core.seguridad.SecurityErrorResponseWriterTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.016"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.asistencias.AsistenciaPersistenceContractTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.011"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.asistencias.controladores.AsistenciaApiSecurityContractTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.021"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest",
+      "tests": "29",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.166"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaServiceAuthorizationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.047"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.asistencias.servicios.QrAsistenciaServiceTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.491"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.categorias.controladores.CategoriaEventoControllerTest",
+      "tests": "18",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.687"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.093"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.certificados.CertificadoPersistenceContractTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.006"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.263"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.certificados.servicios.CertificadoDocumentoServiceTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.144"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest",
+      "tests": "41",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.832"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest",
+      "tests": "11",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.038"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.eventos.controladores.EventoControllerTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.511"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.eventos.dtos.EventoDatosRequestValidationTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.175"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.eventos.mappers.EventoMapperQrPagoTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.007"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.951"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.11"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest",
+      "tests": "40",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.286"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.inscripciones.controladores.InscripcionControllerTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.057"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.inscripciones.InscripcionPersistenceContractTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.004"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionEventoEligibilityTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.139"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionPagoFlowTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.047"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest",
+      "tests": "18",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.14"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.controladores.PagoControllerAuthorizationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.254"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.PagoPersistenceContractTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.007"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.servicios.ArchivoSeguroServicioTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.241"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.servicios.FilesystemStorageServiceTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.024"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.477"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.servicios.PagoServiceAuthorizationTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.122"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.servicios.PagoServiceFlowTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.067"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.servicios.SupabaseS3StorageServiceTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.213"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.pagos.servicios.SupabaseStorageSmokeTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "1",
+      "time": "0.018"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceAsistenciaAuthorizationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.016"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceCertificadoAuthorizationTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.019"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.reportes.servicios.DashboardServicePagoAuthorizationTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.017"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceScopeTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.039"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.reportes.servicios.ReporteArchivoServiceTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.072"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.102"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "43.53"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.controladores.UsuarioControladorAuthorizationTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.386"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.dtos.PerfilYCambioContrasenaValidacionTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.026"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepositoryLockTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.001"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest",
+      "tests": "34",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.547"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.549"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.BrevoApiCorreoProveedorTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.101"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.CorreoConfiguracionTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.086"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.CorreoServicioTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.006"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.CuentaDualHistorialTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.252"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.RecuperacionContrasenaHashTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.236"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.SesionUsuarioServicioTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.232"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest",
+      "tests": "36",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.128"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.servicios.VerificacionCorreoServicioTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.04"
+    },
+    {
+      "name": "bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest",
+      "tests": "22",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "38.27"
+    }
+  ]
+}

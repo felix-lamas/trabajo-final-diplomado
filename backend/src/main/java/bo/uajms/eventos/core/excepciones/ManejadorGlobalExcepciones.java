@@ -1,6 +1,7 @@
 package bo.uajms.eventos.core.excepciones;
 
 import org.springframework.http.HttpStatus;
+import bo.uajms.eventos.core.seguridad.DemasiadosIntentosException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,6 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class ManejadorGlobalExcepciones {
+
+    @ExceptionHandler(DemasiadosIntentosException.class)
+    public ResponseEntity<ErrorRespuesta> manejarLimite(
+            DemasiadosIntentosException ex, WebRequest request) {
+        ErrorRespuesta error = ErrorRespuesta.builder().codigo("AUTH_RATE_LIMITED")
+                .mensaje(ex.getMessage()).timestamp(LocalDateTime.now())
+                .ruta(request.getDescription(false)).build();
+        return ResponseEntity.status(429).header("Retry-After", Long.toString(ex.getSegundos())).body(error);
+    }
 
     @ExceptionHandler(RecursoNoEncontradoException.class)
     public ResponseEntity<ErrorRespuesta> manejarRecursoNoEncontrado(RecursoNoEncontradoException ex, WebRequest request) {

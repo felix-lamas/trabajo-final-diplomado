@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-11T18:24:06.164983+00:00",
+  "backend": {
+    "command": "mvn -o -q test; VIDIA_TEST_PG_URL apunta a PostgreSQL local temporal en 127.0.0.1:55439",
+    "exit": 0,
+    "total": 591,
+    "passed": 590,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "angular": {
+    "command": "npm test -- --watch=false",
+    "exit": 0,
+    "files_passed": 57,
+    "passed": 316
+  },
+  "flutter": {
+    "command": "flutter test --no-pub",
+    "exit": 0,
+    "passed": 139
+  },
+  "csp": {
+    "command": "node --test frontend/security-tests/csp.test.mjs",
+    "exit": 0,
+    "passed": 1
+  },
+  "scope": "Las suites Angular/Flutter usan dobles de prueba; pruebas PostgreSQL de invitación/solicitud usan correo simulado. No acredita Brevo ni GPS físico."
+}

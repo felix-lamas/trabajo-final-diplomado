@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest" time="0.035" tests="5" errors="0" skipped="0" failures="0">
+  <testcase name="tamanoMultipartExcesivoDevuelve413SinExponerDetalle" classname="bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest" time="0.004" />
+  <testcase name="proveedorDeCorreoNoDisponibleDevuelve503" classname="bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest" time="0.002" />
+  <testcase name="errorInesperadoNoExponeDetalle" classname="bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest" time="0.016">
+    </testcase>
+  <testcase name="accesoDenegadoDevuelve403Estable" classname="bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest" time="0.002" />
+  <testcase name="conflictoDevuelve409" classname="bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest" time="0.004" />
+</testsuite>

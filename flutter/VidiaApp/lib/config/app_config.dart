@@ -21,7 +21,7 @@ abstract final class ApiConfig {
         uri.path != '/api/v1' ||
         (uri.scheme != 'http' && uri.scheme != 'https')) {
       throw StateError(
-        'API_BASE_URL debe ser una URL HTTP(S) que termine en /api/v1.',
+        'https://trabajo-final-diplomado.onrender.com/api/v1.',
       );
     }
     if (kReleaseMode && uri.scheme != 'https') {

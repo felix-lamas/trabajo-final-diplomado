@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="38.27" tests="22" errors="0" skipped="0" failures="0">
+  <testcase name="validaServidor(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.473">
+    </testcase>
+  <testcase name="validaServidor(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.236" />
+  <testcase name="validaServidor(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.223" />
+  <testcase name="validaServidor(String)[4]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.235" />
+  <testcase name="validaServidor(String)[5]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.233" />
+  <testcase name="validaServidor(String)[6]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.236" />
+  <testcase name="validaServidor(String)[7]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.261" />
+  <testcase name="validaServidor(String)[8]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.225" />
+  <testcase name="validaServidor(String)[9]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.213" />
+  <testcase name="solicitudValidaPersisteDatosYEstadoPropio" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.33" />
+  <testcase name="rechazoYReenvioConservanHistorialYAprobacionDual" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.779" />
+  <testcase name="migracionV5LimpiaEHistorica(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="9.433">
+    </testcase>
+  <testcase name="migracionV5LimpiaEHistorica(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="2.884">
+    </testcase>
+  <testcase name="migracionV5LimpiaEHistorica(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="2.913">
+    </testcase>
+  <testcase name="migracionV5LimpiaEHistorica(String)[4]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="3.246">
+    </testcase>
+  <testcase name="migracionV5LimpiaEHistorica(String)[5]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="2.83">
+    </testcase>
+  <testcase name="migracionV5LimpiaEHistorica(String)[6]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="3.247">
+    </testcase>
+  <testcase name="idorNoAceptaOtroUsuarioNiPermiteAdministrar" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.558" />
+  <testcase name="opcionalOmitidoYDuplicadaBloqueada" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.298" />
+  <testcase name="openApiDocumentaContrato" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="2.461">
+    </testcase>
+  <testcase name="rolesNoParticipantesBloqueados(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.258" />
+  <testcase name="rolesNoParticipantesBloqueados(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest" time="0.251" />
+</testsuite>

@@ -1,0 +1,145 @@
+Comando: flutter test --reporter expanded
+Fecha de inicio: 2026-10-12T13:24:39.843433-04:00
+Copia aislada del proyecto.
+00:00 +0: loading C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/api_error_test.dart
+00:00 +0: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/api_error_test.dart: 429 público conserva mensaje y no invalida otra sesión local
+00:00 +1: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/api_error_test.dart: pagos mapea los errores de ownership, estado y archivo
+00:00 +2: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/api_error_test.dart: 409 se presenta como inscripción duplicada
+00:00 +3: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/api_error_test.dart: 401 protegido limpia el token y notifica expiración
+00:00 +4: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/api_error_test.dart: 409 interpreta los códigos reales de duplicado y capacidad
+00:00 +5: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/api_error_test.dart: concurrent 401 responses share one session-expiration callback
+00:00 +6: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/archivo_comprobante_test.dart: acepta los MIME/extension permitidos por el backend
+00:00 +7: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/archivo_comprobante_test.dart: rechaza una extensión no permitida
+00:00 +8: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/archivo_comprobante_test.dart: rechaza un archivo vacío
+00:00 +9: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/archivo_comprobante_test.dart: limita el tamaño al máximo real de 5 MiB
+00:01 +10: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: modelo de sesión interpreta fechas, horas y GPS del contrato
+00:01 +11: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: respuesta de asistencia parsea solo campos móviles de la respuesta
+00:01 +12: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: lista sesiones usa GET autenticado del evento
+00:02 +13: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: envía al POST el token sin sessionId ni usuarioId
+00:02 +14: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: envía latitud, longitud y precisión con los nombres reales
+00:02 +15: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: consulta únicamente mis asistencias con JWT
+00:02 +16: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: conserva código de error backend 401 AUTH_INVALID_SESSION
+00:02 +17: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: conserva código de error backend 403 ACCESS_DENIED
+00:02 +18: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: conserva código de error backend 409 ATTENDANCE_DUPLICATED
+00:02 +19: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: conserva código de error backend 400 QR_EXPIRED
+00:02 +20: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: conserva código de error backend 400 ATTENDANCE_OUTSIDE_RADIUS
+00:02 +21: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: flujo virtual sin GPS no solicita ubicación
+00:02 +22: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: flujo GPS obtiene fix y envía precisión recibida del dispositivo
+00:02 +23: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: evento presencial exige captura GPS aunque no haya coordenadas de sesión
+00:02 +24: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/asistencia_repository_test.dart: errores backend se traducen a mensajes de participante
+00:03 +25: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/attendance_scanner_screen_test.dart: escaneo solicita ubicación explicada y muestra respuesta real
+00:04 +26: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/attendance_scanner_screen_test.dart: escaneo solicita ubicación explicada y muestra respuesta real
+00:04 +27: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/attendance_scanner_screen_test.dart: escaneo solicita ubicación explicada y muestra respuesta real
+00:04 +28: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/attendance_scanner_screen_test.dart: escaneo solicita ubicación explicada y muestra respuesta real
+00:04 +29: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/attendance_scanner_screen_test.dart: escaneo solicita ubicación explicada y muestra respuesta real
+00:04 +30: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/attendance_scanner_screen_test.dart: escaneo solicita ubicación explicada y muestra respuesta real
+00:04 +31: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/attendance_scanner_screen_test.dart: escaneo solicita ubicación explicada y muestra respuesta real
+00:16 +32: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +33: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +34: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +35: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +36: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +37: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +38: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +39: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +40: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:17 +41: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:19 +42: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:19 +43: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:19 +44: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:19 +45: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:19 +46: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +47: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +48: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +49: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +50: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +51: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +52: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +53: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +54: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +55: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +56: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/auth_link_navigation_test.dart: real Navigator handles link with app closed
+00:20 +57: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_detail_screen_test.dart: actualiza el estado después de descargar el PDF
+00:21 +58: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_detail_screen_test.dart: actualiza el estado después de descargar el PDF
+00:21 +59: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_detail_screen_test.dart: actualiza el estado después de descargar el PDF
+00:22 +60: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_detail_screen_test.dart: actualiza el estado después de descargar el PDF
+00:23 +61: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_history_screen_test.dart: Mis certificados muestra lista y estado real del backend
+00:24 +62: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_history_screen_test.dart: Mis certificados muestra lista y estado real del backend
+00:24 +63: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_history_screen_test.dart: Mis certificados muestra lista y estado real del backend
+00:24 +64: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_history_screen_test.dart: Mis certificados muestra lista y estado real del backend
+00:24 +65: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_history_screen_test.dart: Mis certificados muestra lista y estado real del backend
+00:24 +66: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_history_screen_test.dart: Mis certificados muestra lista y estado real del backend
+00:24 +67: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/certificate_history_screen_test.dart: Mis certificados muestra lista y estado real del backend
+00:25 +68: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:25 +69: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:25 +70: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:25 +71: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:25 +72: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:25 +73: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:25 +74: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:26 +75: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:26 +76: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/email_auth_screens_test.dart: recovery only requires email
+00:27 +77: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:27 +78: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:28 +79: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:28 +80: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +81: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +82: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +83: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +84: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +85: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +86: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +87: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +88: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +89: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +90: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:29 +91: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:30 +92: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:30 +93: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:30 +94: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:32 +95: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:33 +96: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:33 +97: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:33 +98: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:33 +99: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +100: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +101: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +102: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +103: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +104: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +105: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +106: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +107: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:34 +108: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:35 +109: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:35 +110: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:35 +111: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:35 +112: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:36 +113: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:36 +114: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:36 +115: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:36 +116: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:37 +117: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:37 +118: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:37 +119: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:37 +120: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:38 +121: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: dual account keeps participant destinations and existing activity
+00:38 +122: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/organizer_application_test.dart: error de red al cargar permite reintentar
+00:38 +123: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: price filter uses existing query and clearing restores published events
+00:39 +124: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: price filter uses existing query and clearing restores published events
+00:40 +125: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: four destinations, real summary, lazy tabs and system back
+00:42 +126: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: Activity preserves payments, certificates, registrations and history routes
+00:49 +127: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: attendance groups records and reuses the existing sessions/QR entry
+00:51 +128: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: active unrecorded session keeps QR action, inactive session does not advertise availability
+00:52 +129: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: Profile information, password entry and logout preserve authentication
+00:55 +130: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: event enrollment and confirmation return to the Events tab
+00:56 +131: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: failed section is not a zero count and other sections remain available
+00:56 +132: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: empty states and no confirmed registrations do not invent activity
+00:57 +133: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: organizer restrictions remain and Profile is still available
+00:57 +134: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: no overflow across main tabs, filters and information at Size(320.0, 568.0) scale 1.0
+00:59 +135: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: no overflow across main tabs, filters and information at Size(412.0, 915.0) scale 1.0
+01:00 +136: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: no overflow across main tabs, filters and information at Size(740.0, 360.0) scale 1.0
+01:01 +137: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: no overflow across main tabs, filters and information at Size(320.0, 568.0) scale 1.8
+01:03 +138: C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/flutter/VidiaApp/test/main_navigation_test.dart: Perfil abre solicitud existente y volver conserva navegacion
+01:04 +139: All tests passed!
+

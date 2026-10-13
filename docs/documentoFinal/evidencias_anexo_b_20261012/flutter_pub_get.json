@@ -1,0 +1,14 @@
+{
+  "name": "flutter_pub_get",
+  "command": [
+    "flutter",
+    "pub",
+    "get"
+  ],
+  "directory": "flutter\\VidiaApp",
+  "started": "2026-10-12T13:24:31.569199-04:00",
+  "finished": "2026-10-12T13:24:39.841038-04:00",
+  "seconds": 8.28,
+  "exit": 0,
+  "log": "flutter_pub_get.txt"
+}

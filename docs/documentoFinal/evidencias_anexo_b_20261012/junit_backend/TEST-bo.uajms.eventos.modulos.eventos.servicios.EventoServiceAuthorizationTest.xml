@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.11" tests="19" errors="0" skipped="0" failures="0">
+  <testcase name="filtroPublicoPorCategoriaNoDependeDelRolAutenticado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.005" />
+  <testcase name="organizadorNoPuedeModificarEventoAjeno" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.006" />
+  <testcase name="participanteSoloListaEventosPublicados" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.004" />
+  <testcase name="organizadorNoPuedeFinalizarEventoAjenoNiCambiarSuEstado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.006" />
+  <testcase name="administradorPuedePublicarEventoEnRevision" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.005" />
+  <testcase name="organizadorNoPuedeEliminarEventoAjeno" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.007" />
+  <testcase name="organizadorPuedeConsultarSuEventoNoPublicado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.005" />
+  <testcase name="organizadorNoPuedePublicarEventoAunqueSeaConocidoPorId" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.004" />
+  <testcase name="organizadorNoPuedeCancelarEventoAjenoNiCambiarSuEstado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.004" />
+  <testcase name="administradorPuedeOperarEventoDeOtroOrganizador" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.009" />
+  <testcase name="participanteSoloListaPublicadosDeLaCategoria" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.003" />
+  <testcase name="publicoNoPuedeConsultarEventoBorrador" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.004" />
+  <testcase name="organizadorListaSusEventosYLosPublicados" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.003" />
+  <testcase name="organizadorPuedeModificarSuEventoBorrador" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.004" />
+  <testcase name="administradorListaTodosLosEventos" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.004" />
+  <testcase name="publicoPuedeConsultarEventoPublicado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.002" />
+  <testcase name="publicoNoPuedeConsultarEventoFinalizado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.003" />
+  <testcase name="publicoNoPuedeConsultarEventoCancelado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.006" />
+  <testcase name="publicoNoPuedeConsultarEventoRechazado" classname="bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest" time="0.004" />
+</testsuite>

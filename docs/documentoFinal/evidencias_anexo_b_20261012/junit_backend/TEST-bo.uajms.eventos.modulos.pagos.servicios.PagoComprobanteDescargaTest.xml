@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.477" tests="7" errors="0" skipped="0" failures="0">
+  <testcase name="comprobanteInexistenteDevuelveNoEncontrado" classname="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.417" />
+  <testcase name="administradorDescargaComprobanteGlobal" classname="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.006" />
+  <testcase name="usuarioAjenoNoResuelveArchivo" classname="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.005" />
+  <testcase name="organizadorAjenoNoResuelveArchivo" classname="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.005" />
+  <testcase name="usuarioPropietarioDescargaComprobante" classname="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.004" />
+  <testcase name="organizadorPropietarioDescargaComprobante" classname="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.003" />
+  <testcase name="comprobanteDeStorageSeDescargaDesdeElAdaptador" classname="bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest" time="0.028" />
+</testsuite>

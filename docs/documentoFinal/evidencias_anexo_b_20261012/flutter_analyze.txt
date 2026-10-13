@@ -1,0 +1,25 @@
+Comando: flutter analyze
+Fecha de inicio: 2026-10-12T13:26:22.722666-04:00
+Copia aislada del proyecto.
+Analyzing VidiaApp...                                           
+
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\event_detail_screen.dart:155:33 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\event_detail_screen.dart:155:37 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\events_screen.dart:336:33 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\events_screen.dart:336:37 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\history_screen.dart:184:51 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\my_certificates_screen.dart:87:51 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\my_registrations_screen.dart:106:51 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\payment_management_screen.dart:234:37 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\screens\payment_management_screen.dart:234:41 - unnecessary_underscores
+   info - Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._baseUrl') to initialize the field - lib\services\api_service.dart:15:9 - prefer_initializing_formals
+   info - Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._tokenStore') to initialize the field - lib\services\api_service.dart:16:9 - prefer_initializing_formals
+   info - Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._repository') to initialize the field - lib\services\asistencia_flow.dart:10:9 - prefer_initializing_formals
+   info - Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._locationSource') to initialize the field - lib\services\asistencia_flow.dart:11:9 - prefer_initializing_formals
+   info - Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._repository') to initialize the field - lib\services\certificado_document_manager.dart:11:9 - prefer_initializing_formals
+   info - Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._files') to initialize the field - lib\services\certificado_document_manager.dart:12:9 - prefer_initializing_formals
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\widgets\vidia_logo.dart:24:27 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores. Try using '_' - lib\widgets\vidia_logo.dart:24:31 - unnecessary_underscores
+
+
+17 issues found. (ran in 12.0s)

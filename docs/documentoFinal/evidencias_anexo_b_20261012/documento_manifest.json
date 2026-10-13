@@ -1,0 +1,143 @@
+{
+  "docx": "Anexo_B_Manual_de_Instalacion_Despliegue_Mantenimiento_Vidia.docx",
+  "date": "2026-10-12T14:05:04.860868-04:00",
+  "captures": [
+    {
+      "file": "estructura.png",
+      "title": "Estructura observada del checkout local, no de una clonación nueva",
+      "section": "B.4",
+      "source": "estructura.png"
+    },
+    {
+      "file": "swagger_local.png",
+      "title": "Swagger del backend iniciado en la base aislada",
+      "section": "B.6",
+      "source": "swagger_local.png"
+    },
+    {
+      "file": "web_local.png",
+      "title": "Interfaz web de desarrollo servida desde la copia temporal",
+      "section": "B.7",
+      "source": "web_local.png"
+    },
+    {
+      "file": "catalogo_local.png",
+      "title": "Catálogo local antes de habilitar datos de demostración",
+      "section": "B.7",
+      "source": "catalogo_local.png"
+    },
+    {
+      "file": "apk_debug_recorte.png",
+      "title": "Artefacto APK debug realmente generado en la copia temporal",
+      "section": "B.8",
+      "source": "apk_debug.png"
+    },
+    {
+      "file": "release_publica.png",
+      "title": "Publicación Android existente en GitHub Releases",
+      "section": "B.9",
+      "source": "release_publica.png"
+    },
+    {
+      "file": "salud_publica_recorte.png",
+      "title": "Respuesta pública real de salud del backend",
+      "section": "B.10",
+      "source": "salud_publica.png"
+    },
+    {
+      "file": "swagger_publico.png",
+      "title": "Swagger UI del backend publicado",
+      "section": "B.10",
+      "source": "swagger_publico.png"
+    },
+    {
+      "file": "web_publica.png",
+      "title": "Página pública de acceso de Vidia",
+      "section": "B.10",
+      "source": "web_publica.png"
+    }
+  ],
+  "markers": [
+    {
+      "apartado": "B.3",
+      "titulo": "versiones instaladas de las herramientas",
+      "contenido": "Capturar la consola real con java -version, mvn -version, node --version, npm --version, flutter --version y dart --version. Los resultados ya están en versiones_instaladas.json; no recrear una terminal."
+    },
+    {
+      "apartado": "B.5",
+      "titulo": "contenedores PostgreSQL y pgAdmin en ejecución",
+      "contenido": "Mostrar docker compose ps y disponibilidad de la base aislada, sin imprimir variables ni credenciales. La validación estática no acredita contenedores iniciados."
+    },
+    {
+      "apartado": "B.5",
+      "titulo": "historial de migraciones locales",
+      "contenido": "Capturar la consulta real de flyway_schema_history. El resultado está conservado en migraciones_y_restauracion.json; no mostrar una conexión productiva."
+    },
+    {
+      "apartado": "B.6",
+      "titulo": "compilación y pruebas del backend",
+      "contenido": "Capturar el BUILD SUCCESS y resumen del runner real. Reportes conservados: backend_verify.txt, backend_junit_resumen.json y junit_backend/. No se obtuvo una captura de terminal gráfica."
+    },
+    {
+      "apartado": "B.6",
+      "titulo": "arranque efectivo del backend",
+      "contenido": "Mostrar Tomcat started on port 8080 y la URL local de salud. Logs reales: backend_arranque.txt, backend_jar_seed.txt y el primer fallo backend_jar_puerto_ocupado.txt."
+    },
+    {
+      "apartado": "B.7",
+      "titulo": "instalación, pruebas y build de Angular",
+      "contenido": "Capturar la consola real de npm ci, el resumen 316/316 y el resultado del build. Los registros están en angular_npm_ci.txt, angular_test.txt y angular_build.txt."
+    },
+    {
+      "apartado": "B.8",
+      "titulo": "Flutter doctor, pruebas y análisis",
+      "contenido": "Capturar el resultado real de doctor, las 139 pruebas y los 17 avisos de análisis. Los archivos flutter_doctor.txt, flutter_test.txt y flutter_analyze.txt conservan la ejecución."
+    },
+    {
+      "apartado": "B.8",
+      "titulo": "compilación Android release y verificación de firma",
+      "contenido": "Debe mostrar una compilación real y apksigner verify de app-release.apk, sin contenidos de key.properties, claves, contraseñas ni sustitución de la firma actual."
+    },
+    {
+      "apartado": "B.9",
+      "titulo": "configuración real de Render",
+      "contenido": "Mostrar raíz, buildCommand, directorio publicado, Dockerfile, perfil y nombres de variables desde el panel autorizado, ocultando todos los valores sensibles. No se obtuvo acceso al panel."
+    },
+    {
+      "apartado": "B.11",
+      "titulo": "respaldo y restauración locales",
+      "contenido": "Capturar pg_dump, pg_restore y consultas de comparación del clúster aislado. La ejecución y su alcance están en migraciones_y_restauracion.json; no insertar datos o credenciales de producción."
+    },
+    {
+      "apartado": "B.14",
+      "titulo": "construcción y arranque del contenedor backend",
+      "contenido": "Debe mostrar docker build y ejecución real con una base aislada. Hoy el daemon no estaba disponible; el arranque del JAR no sustituye esa prueba."
+    },
+    {
+      "apartado": "B.14",
+      "titulo": "correo y almacenamiento en un entorno de prueba",
+      "contenido": "Mostrar resultados reales con cuentas y bucket aislados autorizados, sin secretos ni envíos a usuarios reales. La prueba Supabase opt-in fue omitida deliberadamente."
+    }
+  ],
+  "images": 9,
+  "tables": 24,
+  "rendering": {
+    "blank_pages": [],
+    "available_width_points": 413.5499954223633,
+    "fields_updated": true,
+    "pdf_exported": true,
+    "tables_exceeding_width": [],
+    "images": 9,
+    "timestamp": "2026-10-12T14:56:12.1167251-04:00",
+    "images_exceeding_width": [],
+    "word_version": "16.0",
+    "tables": 24,
+    "pages": 35
+  },
+  "scope": "Fuentes originales intactas; operaciones locales en copias aisladas; producción solo lectura.",
+  "pdf_text_outside_pages": [],
+  "originals_unchanged": 613,
+  "visual_review": "Hojas de contacto completas y ampliaciones de Swagger, salud, tablas y cierre; correcciones comprobadas.",
+  "temporary_services": "Backend, frontend y PostgreSQL de ensayo detenidos; archivo privado de claves temporales retirado.",
+  "precision_storage": "prod declara Supabase; proveedor efectivo y prioridades deben verificarse. Sin prohibicion adicional por perfil localizada en FilesystemStorageService."
+}

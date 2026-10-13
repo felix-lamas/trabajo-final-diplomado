@@ -17,6 +17,9 @@ export class LoginComponent {
   private readonly unverifiedState = signal(false);
   private readonly resendState = signal<'idle' | 'loading' | 'success'>('idle');
   readonly errorMessage = signal('');
+  readonly logoutWarning = typeof history !== 'undefined' && history.state?.logoutUnconfirmed === true
+    ? 'Se cerró la sesión localmente; no se confirmó la revocación en el servidor.' : '';
+
   readonly resendError = signal('');
   readonly passwordVisible = signal(false);
   get loading(): boolean { return this.loadingState(); }

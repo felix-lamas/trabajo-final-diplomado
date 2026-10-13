@@ -119,14 +119,26 @@ describe('AuthService identity contract', () => {
 
   it('logout con 401 tambien limpia la sesion local', () => {
     service.setSession(loginResponse);
-    service.logout().subscribe();
+    let failed = false;
+    service.logout().subscribe({ error: () => failed = true });
     http.expectOne(`${environment.apiUrl}/auth/logout`).flush(
       { codigo: 'AUTH_INVALID_SESSION' },
       { status: 401, statusText: 'Unauthorized' }
     );
 
+    expect(failed).toBe(true);
     expect(service.autenticado()).toBe(false);
     expect(service.getToken()).toBeNull();
+  });
+
+  it('logout sin red propaga error y elimina JWT local', () => {
+    service.setSession(loginResponse);
+    let failed = false;
+    service.logout().subscribe({ error: () => failed = true });
+    http.expectOne(`${environment.apiUrl}/auth/logout`).error(new ProgressEvent('error'));
+    expect(failed).toBe(true);
+    expect(service.autenticado()).toBe(false);
+    expect(localStorage.getItem('token')).toBeNull();
   });
 
   it('refresca perfil y roles sin reemplazar el JWT', () => {

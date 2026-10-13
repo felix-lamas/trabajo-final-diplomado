@@ -1,0 +1,18 @@
+[
+  {
+    "id": "SWAGGER",
+    "url": "http://127.0.0.1:58080/swagger-ui/index.html",
+    "status": 200,
+    "timestamp": "2026-10-11T18:25:59.815Z",
+    "browser": "153.0.8010.12",
+    "context": "Swagger del backend completo con PostgreSQL temporal; sin autorización ni datos sensibles"
+  },
+  {
+    "id": "CATALOGO",
+    "url": "http://127.0.0.1:58081/eventos",
+    "status": 200,
+    "timestamp": "2026-10-11T18:26:02.102Z",
+    "browser": "153.0.8010.12",
+    "context": "Build Angular; GET de API redirigidos al backend real local 58080; sin API de producción"
+  }
+]

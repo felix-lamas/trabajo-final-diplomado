@@ -1,0 +1,710 @@
+Comando: mvn -B clean verify
+Fecha de inicio: 2026-10-12T13:24:08.994558-04:00
+Copia aislada del proyecto.
+[INFO] Scanning for projects...
+[INFO] Loaded 24065 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] 
+[INFO] -----------------------< bo.uajms:eventos-uajms >-----------------------
+[INFO] Building Plataforma Eventos UAJMS 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Loaded 74 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[INFO] Loaded 24065 auto-discovered prefixes for remote repository maven-central (prefixes-maven-central.txt)
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to spring-release (https://repo.spring.io/release): HTTP Status: 401
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to flyway-repo (https://nexus.flywaydb.org/repository/flyway/): Host desconocido (nexus.flywaydb.org)
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to flyway-community-db-support (https://maven.pkg.github.com/flyway/flyway-community-db-support): HTTP Status: 401
+[INFO] Loaded 24051 auto-discovered prefixes for remote repository google-maven-central (prefixes-google-maven-central.txt)
+[WARNING] The artifact com.itextpdf:itext7-core:pom:8.0.4 has been relocated to com.itextpdf:itext-core:pom:8.0.4
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ eventos-uajms ---
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ eventos-uajms ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 5 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ eventos-uajms ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 168 source files with javac [debug parameters release 21] to target\classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ eventos-uajms ---
+[INFO] skip non existing resourceDirectory [COPIA AISLADA]\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ eventos-uajms ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 66 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] /C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/backend/src/test/java/bo/uajms/eventos/modulos/usuarios/SolicitudOrganizadorIntegrationTest.java: [COPIA AISLADA]\backend\src\test\java\bo\uajms\eventos\modulos\usuarios\SolicitudOrganizadorIntegrationTest.java uses unchecked or unsafe operations.
+[INFO] /C:/Users/compu/AppData/Local/Temp/vidia-anexo-b-pxaw2c81/backend/src/test/java/bo/uajms/eventos/modulos/usuarios/SolicitudOrganizadorIntegrationTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ eventos-uajms ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running bo.uajms.eventos.arquitectura.ModeloConceptualOficialTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.238 s -- in bo.uajms.eventos.arquitectura.ModeloConceptualOficialTest
+[INFO] Running bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest
+WARNING: A Java agent has been loaded dynamically ([USUARIO LOCAL]\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.16\byte-buddy-agent-1.14.16.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.079 s -- in bo.uajms.eventos.core.configuracion.DatosInicialesSeedProfileTest
+[INFO] Running bo.uajms.eventos.core.configuracion.OpenApiContractTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.568 s -- in bo.uajms.eventos.core.configuracion.OpenApiContractTest
+[INFO] Running bo.uajms.eventos.core.controladores.SaludControllerTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-10-12T13:25:49.829-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.c.c.SaludControllerTest            : Starting SaludControllerTest using Java 21.0.11 with PID 24544 (started by Usuario in [COPIA AISLADA]\backend)
+2026-10-12T13:25:49.840-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.c.c.SaludControllerTest            : The following 1 profile is active: "dev"
+2026-10-12T13:25:56.050-04:00  INFO 24544 --- [eventos-uajms] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-12T13:25:56.053-04:00  WARN 24544 --- [eventos-uajms] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-10-12T13:25:57.907-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@320e179f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@24731caf, org.springframework.security.web.context.SecurityContextHolderFilter@5cfe28e1, org.springframework.security.web.header.HeaderWriterFilter@66fff42f, org.springframework.web.filter.CorsFilter@6e1ad658, org.springframework.security.web.authentication.logout.LogoutFilter@614361fa, bo.uajms.eventos.core.seguridad.JwtAuthenticationFilter@5f369fc6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@40d370fa, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@31a024ea, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@486dd616, org.springframework.security.web.session.SessionManagementFilter@71eaef6a, org.springframework.security.web.access.ExceptionTranslationFilter@783f5f71, org.springframework.security.web.access.intercept.AuthorizationFilter@4c1b4e07]
+2026-10-12T13:25:59.718-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:25:59.719-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:25:59.724-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 5 ms
+2026-10-12T13:25:59.788-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.c.c.SaludControllerTest            : Started SaludControllerTest in 13.506 seconds (process running for 27.53)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.48 s -- in bo.uajms.eventos.core.controladores.SaludControllerTest
+[INFO] Running bo.uajms.eventos.core.controladores.SaludHttpIntegrationTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-10-12T13:26:01.249-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.c.c.SaludHttpIntegrationTest       : Starting SaludHttpIntegrationTest using Java 21.0.11 with PID 24544 (started by Usuario in [COPIA AISLADA]\backend)
+2026-10-12T13:26:01.250-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.c.c.SaludHttpIntegrationTest       : The following 1 profile is active: "dev"
+2026-10-12T13:26:05.616-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-10-12T13:26:05.685-04:00  INFO 24544 --- [eventos-uajms] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-12T13:26:05.686-04:00  INFO 24544 --- [eventos-uajms] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-10-12T13:26:06.312-04:00  INFO 24544 --- [eventos-uajms] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-12T13:26:06.313-04:00  INFO 24544 --- [eventos-uajms] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 5057 ms
+2026-10-12T13:26:07.547-04:00  INFO 24544 --- [eventos-uajms] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-12T13:26:07.548-04:00  WARN 24544 --- [eventos-uajms] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-10-12T13:26:12.086-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1f4d9c7f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6dcb4f30, org.springframework.security.web.context.SecurityContextHolderFilter@15b882a0, org.springframework.security.web.header.HeaderWriterFilter@7843b65e, org.springframework.web.filter.CorsFilter@77f66138, org.springframework.security.web.authentication.logout.LogoutFilter@6f404bc6, bo.uajms.eventos.core.seguridad.JwtAuthenticationFilter@2ab1c7a9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6ade4ac6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@fcae085, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7271320c, org.springframework.security.web.session.SessionManagementFilter@4d6f951a, org.springframework.security.web.access.ExceptionTranslationFilter@55854382, org.springframework.security.web.access.intercept.AuthorizationFilter@72bef795]
+2026-10-12T13:26:13.350-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 64736 (http) with context path '/'
+2026-10-12T13:26:13.363-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.c.c.SaludHttpIntegrationTest       : Started SaludHttpIntegrationTest in 12.386 seconds (process running for 41.104)
+2026-10-12T13:26:13.805-04:00  INFO 24544 --- [eventos-uajms] [o-auto-1-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-12T13:26:13.805-04:00  INFO 24544 --- [eventos-uajms] [o-auto-1-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T13:26:13.807-04:00  INFO 24544 --- [eventos-uajms] [o-auto-1-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.20 s -- in bo.uajms.eventos.core.controladores.SaludHttpIntegrationTest
+[INFO] Running bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest
+2026-10-12T13:26:14.077-04:00 ERROR 24544 --- [eventos-uajms] [           main] b.u.e.c.e.ManejadorGlobalExcepciones     : Error inesperado procesando uri=/api/protegido
+
+java.lang.RuntimeException: SELECT secreto FROM tabla
+	at bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest.errorInesperadoNoExponeDetalle(ManejadorGlobalExcepcionesTest.java:52) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728) ~[junit-platform-commons-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69) ~[junit-jupiter-engine-5.10.2.jar:5.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54) ~[junit-platform-engine-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.10.2.jar:1.10.2]
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56) ~[surefire-junit-platform-3.2.5.jar:3.2.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184) ~[surefire-junit-platform-3.2.5.jar:3.2.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148) ~[surefire-junit-platform-3.2.5.jar:3.2.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122) ~[surefire-junit-platform-3.2.5.jar:3.2.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.2.5.jar:3.2.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.2.5.jar:3.2.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.2.5.jar:3.2.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.2.5.jar:3.2.5]
+
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in bo.uajms.eventos.core.excepciones.ManejadorGlobalExcepcionesTest
+[INFO] Running bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest
+2026-10-12T13:26:14.487-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:14.487-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:14.488-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-12T13:26:14.896-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:14.896-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:14.897-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-12T13:26:14.953-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:14.953-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:14.954-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-10-12T13:26:15.008-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:15.009-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:15.010-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-12T13:26:15.076-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:15.077-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:15.077-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.034 s -- in bo.uajms.eventos.core.seguridad.AutenticacionLimitesHttpTest
+[INFO] Running bo.uajms.eventos.core.seguridad.DetallesUsuarioServiceRoleRefreshTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in bo.uajms.eventos.core.seguridad.DetallesUsuarioServiceRoleRefreshTest
+[INFO] Running bo.uajms.eventos.core.seguridad.IntentosAutenticacionTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in bo.uajms.eventos.core.seguridad.IntentosAutenticacionTest
+[INFO] Running bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.186 s -- in bo.uajms.eventos.core.seguridad.JwtAuthenticationFilterTest
+[INFO] Running bo.uajms.eventos.core.seguridad.JwtServiceSesionTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.313 s -- in bo.uajms.eventos.core.seguridad.JwtServiceSesionTest
+[INFO] Running bo.uajms.eventos.core.seguridad.RolSistemaTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in bo.uajms.eventos.core.seguridad.RolSistemaTest
+[INFO] Running bo.uajms.eventos.core.seguridad.SecurityErrorResponseWriterTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in bo.uajms.eventos.core.seguridad.SecurityErrorResponseWriterTest
+[INFO] Running bo.uajms.eventos.modulos.asistencias.AsistenciaPersistenceContractTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in bo.uajms.eventos.modulos.asistencias.AsistenciaPersistenceContractTest
+[INFO] Running bo.uajms.eventos.modulos.asistencias.controladores.AsistenciaApiSecurityContractTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in bo.uajms.eventos.modulos.asistencias.controladores.AsistenciaApiSecurityContractTest
+[INFO] Running bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest
+[INFO] Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.166 s -- in bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaRegistroTest
+[INFO] Running bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaServiceAuthorizationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in bo.uajms.eventos.modulos.asistencias.servicios.AsistenciaServiceAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.asistencias.servicios.QrAsistenciaServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.491 s -- in bo.uajms.eventos.modulos.asistencias.servicios.QrAsistenciaServiceTest
+[INFO] Running bo.uajms.eventos.modulos.categorias.controladores.CategoriaEventoControllerTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-10-12T13:26:17.679-04:00  INFO 24544 --- [eventos-uajms] [           main] .u.e.m.c.c.CategoriaEventoControllerTest : Starting CategoriaEventoControllerTest using Java 21.0.11 with PID 24544 (started by Usuario in [COPIA AISLADA]\backend)
+2026-10-12T13:26:17.680-04:00  INFO 24544 --- [eventos-uajms] [           main] .u.e.m.c.c.CategoriaEventoControllerTest : The following 1 profile is active: "dev"
+2026-10-12T13:26:18.391-04:00  WARN 24544 --- [eventos-uajms] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: [VALOR OCULTO]
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-10-12T13:26:18.397-04:00  INFO 24544 --- [eventos-uajms] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-10-12T13:26:18.548-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@11869005, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4589bc66, org.springframework.security.web.context.SecurityContextHolderFilter@3dc455f6, org.springframework.security.web.header.HeaderWriterFilter@12f12982, org.springframework.web.filter.CorsFilter@731ccdfc, org.springframework.security.web.authentication.logout.LogoutFilter@f5a1b27, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5441309e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@b8812fb, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@734fcb45, org.springframework.security.web.access.ExceptionTranslationFilter@5ea036c3, org.springframework.security.web.access.intercept.AuthorizationFilter@7e4fc391]
+2026-10-12T13:26:18.713-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:18.714-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:18.715-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-12T13:26:18.753-04:00  INFO 24544 --- [eventos-uajms] [           main] .u.e.m.c.c.CategoriaEventoControllerTest : Started CategoriaEventoControllerTest in 1.174 seconds (process running for 46.495)
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.687 s -- in bo.uajms.eventos.modulos.categorias.controladores.CategoriaEventoControllerTest
+[INFO] Running bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.093 s -- in bo.uajms.eventos.modulos.categorias.servicios.CategoriaEventoServiceTest
+[INFO] Running bo.uajms.eventos.modulos.certificados.CertificadoPersistenceContractTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in bo.uajms.eventos.modulos.certificados.CertificadoPersistenceContractTest
+[INFO] Running bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.263 s -- in bo.uajms.eventos.modulos.certificados.controladores.CertificadoControllerAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.certificados.servicios.CertificadoDocumentoServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.144 s -- in bo.uajms.eventos.modulos.certificados.servicios.CertificadoDocumentoServiceTest
+[INFO] Running bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.832 s -- in bo.uajms.eventos.modulos.certificados.servicios.CertificadoServiceTest
+[INFO] Running bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest
+[INFO] Running bo.uajms.eventos.modulos.eventos.controladores.EventoControllerTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-10-12T13:26:21.753-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.m.e.c.EventoControllerTest         : Starting EventoControllerTest using Java 21.0.11 with PID 24544 (started by Usuario in [COPIA AISLADA]\backend)
+2026-10-12T13:26:21.754-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.m.e.c.EventoControllerTest         : The following 1 profile is active: "dev"
+2026-10-12T13:26:22.358-04:00  WARN 24544 --- [eventos-uajms] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: [VALOR OCULTO]
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-10-12T13:26:22.361-04:00  INFO 24544 --- [eventos-uajms] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-10-12T13:26:22.582-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@251d3913, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2280c0f5, org.springframework.security.web.context.SecurityContextHolderFilter@4a25da63, org.springframework.security.web.header.HeaderWriterFilter@3f67d229, org.springframework.web.filter.CorsFilter@543eacd5, org.springframework.security.web.authentication.logout.LogoutFilter@797ec046, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@49ce2726, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1c9b887a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@435a2e1f, org.springframework.security.web.access.ExceptionTranslationFilter@40f2ae53, org.springframework.security.web.access.intercept.AuthorizationFilter@652e4bb6]
+2026-10-12T13:26:22.702-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:22.702-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:22.703-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-12T13:26:22.715-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.m.e.c.EventoControllerTest         : Started EventoControllerTest in 1.032 seconds (process running for 50.457)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.511 s -- in bo.uajms.eventos.modulos.eventos.controladores.EventoControllerTest
+[INFO] Running bo.uajms.eventos.modulos.eventos.dtos.EventoDatosRequestValidationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.175 s -- in bo.uajms.eventos.modulos.eventos.dtos.EventoDatosRequestValidationTest
+[INFO] Running bo.uajms.eventos.modulos.eventos.mappers.EventoMapperQrPagoTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in bo.uajms.eventos.modulos.eventos.mappers.EventoMapperQrPagoTest
+[INFO] Running bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.951 s -- in bo.uajms.eventos.modulos.eventos.servicios.EventoQrPagoTest
+[INFO] Running bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.110 s -- in bo.uajms.eventos.modulos.eventos.servicios.EventoServiceAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest
+[INFO] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.286 s -- in bo.uajms.eventos.modulos.eventos.servicios.EventoServiceLifecycleTest
+[INFO] Running bo.uajms.eventos.modulos.inscripciones.controladores.InscripcionControllerTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-10-12T13:26:24.793-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.m.i.c.InscripcionControllerTest    : Starting InscripcionControllerTest using Java 21.0.11 with PID 24544 (started by Usuario in [COPIA AISLADA]\backend)
+2026-10-12T13:26:24.794-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.m.i.c.InscripcionControllerTest    : The following 1 profile is active: "dev"
+2026-10-12T13:26:25.352-04:00  WARN 24544 --- [eventos-uajms] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: [VALOR OCULTO]
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-10-12T13:26:25.355-04:00  INFO 24544 --- [eventos-uajms] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-10-12T13:26:25.496-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4b7288f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3fddd5c8, org.springframework.security.web.context.SecurityContextHolderFilter@3b73cc75, org.springframework.security.web.header.HeaderWriterFilter@26300f29, org.springframework.web.filter.CorsFilter@4f0c3b5e, org.springframework.security.web.authentication.logout.LogoutFilter@6e44d39e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@c4fad0e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6d1ead2c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2b14a654, org.springframework.security.web.access.ExceptionTranslationFilter@63ce19a, org.springframework.security.web.access.intercept.AuthorizationFilter@27787083]
+2026-10-12T13:26:25.606-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-12T13:26:25.606-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-12T13:26:25.608-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-10-12T13:26:25.619-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.m.i.c.InscripcionControllerTest    : Started InscripcionControllerTest in 0.902 seconds (process running for 53.36)
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.057 s -- in bo.uajms.eventos.modulos.inscripciones.controladores.InscripcionControllerTest
+[INFO] Running bo.uajms.eventos.modulos.inscripciones.InscripcionPersistenceContractTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in bo.uajms.eventos.modulos.inscripciones.InscripcionPersistenceContractTest
+[INFO] Running bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionEventoEligibilityTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.139 s -- in bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionEventoEligibilityTest
+[INFO] Running bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionPagoFlowTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionPagoFlowTest
+[INFO] Running bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.140 s -- in bo.uajms.eventos.modulos.inscripciones.servicios.InscripcionServiceAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.controladores.PagoControllerAuthorizationTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.254 s -- in bo.uajms.eventos.modulos.pagos.controladores.PagoControllerAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.PagoPersistenceContractTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in bo.uajms.eventos.modulos.pagos.PagoPersistenceContractTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.servicios.ArchivoSeguroServicioTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.241 s -- in bo.uajms.eventos.modulos.pagos.servicios.ArchivoSeguroServicioTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.servicios.FilesystemStorageServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in bo.uajms.eventos.modulos.pagos.servicios.FilesystemStorageServiceTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.477 s -- in bo.uajms.eventos.modulos.pagos.servicios.PagoComprobanteDescargaTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.servicios.PagoServiceAuthorizationTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.122 s -- in bo.uajms.eventos.modulos.pagos.servicios.PagoServiceAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.servicios.PagoServiceFlowTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in bo.uajms.eventos.modulos.pagos.servicios.PagoServiceFlowTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.servicios.SupabaseS3StorageServiceTest
+2026-10-12T13:26:28.526-04:00  WARN 24544 --- [eventos-uajms] [           main] b.u.e.m.p.s.SupabaseS3StorageService     : Fallo de transporte al descargar objeto de storage
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.213 s -- in bo.uajms.eventos.modulos.pagos.servicios.SupabaseS3StorageServiceTest
+[INFO] Running bo.uajms.eventos.modulos.pagos.servicios.SupabaseStorageSmokeTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.018 s -- in bo.uajms.eventos.modulos.pagos.servicios.SupabaseStorageSmokeTest
+[INFO] Running bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceAsistenciaAuthorizationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceAsistenciaAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceCertificadoAuthorizationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceCertificadoAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.reportes.servicios.DashboardServicePagoAuthorizationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in bo.uajms.eventos.modulos.reportes.servicios.DashboardServicePagoAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceScopeTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in bo.uajms.eventos.modulos.reportes.servicios.DashboardServiceScopeTest
+[INFO] Running bo.uajms.eventos.modulos.reportes.servicios.ReporteArchivoServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in bo.uajms.eventos.modulos.reportes.servicios.ReporteArchivoServiceTest
+[INFO] Running bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 s -- in bo.uajms.eventos.modulos.sesiones.servicios.SesionEventoServiceTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest
+2026-10-12T13:26:28.840-04:00  INFO 24544 --- [eventos-uajms] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest]: AdministradorInvitacionIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-12T13:26:28.970-04:00  INFO 24544 --- [eventos-uajms] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration bo.uajms.eventos.EventosUajmsApplication for test class bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-10-12T13:26:29.873-04:00  INFO 24544 --- [eventos-uajms] [           main] u.AdministradorInvitacionIntegrationTest : Starting AdministradorInvitacionIntegrationTest using Java 21.0.11 with PID 24544 (started by Usuario in [COPIA AISLADA]\backend)
+2026-10-12T13:26:29.873-04:00  INFO 24544 --- [eventos-uajms] [           main] u.AdministradorInvitacionIntegrationTest : The following 1 profile is active: "admin-invitation-test"
+2026-10-12T13:26:30.876-04:00  INFO 24544 --- [eventos-uajms] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-12T13:26:31.122-04:00  INFO 24544 --- [eventos-uajms] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 222 ms. Found 18 JPA repository interfaces.
+2026-10-12T13:26:32.415-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-10-12T13:26:32.418-04:00  INFO 24544 --- [eventos-uajms] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-12T13:26:32.418-04:00  INFO 24544 --- [eventos-uajms] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-10-12T13:26:32.484-04:00  INFO 24544 --- [eventos-uajms] [           main] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-10-12T13:26:32.484-04:00  INFO 24544 --- [eventos-uajms] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2598 ms
+2026-10-12T13:26:32.859-04:00  INFO 24544 --- [eventos-uajms] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-12T13:26:33.035-04:00  INFO 24544 --- [eventos-uajms] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5e9771a5
+2026-10-12T13:26:33.040-04:00  INFO 24544 --- [eventos-uajms] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-12T13:26:33.112-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/admin_e2e_250ee3522e0d4951a80d7d08ef51b551 (PostgreSQL 16.15)
+2026-10-12T13:26:33.199-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:26:33.206-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.046s)
+2026-10-12T13:26:33.232-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:26:33.315-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:26:33.327-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:26:33.358-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:26:33.514-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:26:35.658-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:35.695-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:35.819-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:26:35.894-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:26:35.984-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 5 migrations to schema "public", now at version v5 (execution time 00:02.421s)
+2026-10-12T13:26:36.880-04:00  INFO 24544 --- [eventos-uajms] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-12T13:26:37.273-04:00  INFO 24544 --- [eventos-uajms] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-10-12T13:26:37.442-04:00  INFO 24544 --- [eventos-uajms] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-12T13:26:38.556-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-12T13:26:38.822-04:00  WARN 24544 --- [eventos-uajms] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-10-12T13:26:42.339-04:00  INFO 24544 --- [eventos-uajms] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-12T13:26:42.448-04:00  INFO 24544 --- [eventos-uajms] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-12T13:26:43.180-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-12T13:26:46.191-04:00  INFO 24544 --- [eventos-uajms] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-12T13:26:46.191-04:00  WARN 24544 --- [eventos-uajms] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-10-12T13:26:46.443-04:00  WARN 24544 --- [eventos-uajms] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-12T13:26:46.628-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@27719e44, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1cc68302, org.springframework.security.web.context.SecurityContextHolderFilter@4dec66bf, org.springframework.security.web.header.HeaderWriterFilter@12387785, org.springframework.web.filter.CorsFilter@61bf3586, org.springframework.security.web.authentication.logout.LogoutFilter@4cdb78fd, bo.uajms.eventos.core.seguridad.JwtAuthenticationFilter@321a6778, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@66d746b5, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@378281b5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1045633, org.springframework.security.web.session.SessionManagementFilter@6bc7c793, org.springframework.security.web.access.ExceptionTranslationFilter@4ddcd99e, org.springframework.security.web.access.intercept.AuthorizationFilter@30fa0436]
+2026-10-12T13:26:46.919-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 64759 (http) with context path '/'
+2026-10-12T13:26:46.927-04:00  INFO 24544 --- [eventos-uajms] [           main] u.AdministradorInvitacionIntegrationTest : Started AdministradorInvitacionIntegrationTest in 17.948 seconds (process running for 74.668)
+2026-10-12T13:26:47.602-04:00  INFO 24544 --- [eventos-uajms] [o-auto-2-exec-1] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-12T13:26:47.602-04:00  INFO 24544 --- [eventos-uajms] [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T13:26:47.606-04:00  INFO 24544 --- [eventos-uajms] [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-10-12T13:26:50.200-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_3d085e4d75b84ced97ee686896feb458 (PostgreSQL 16.15)
+2026-10-12T13:26:50.219-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:26:50.220-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.013s)
+2026-10-12T13:26:50.229-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:26:50.349-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:26:50.352-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:26:50.378-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:26:50.463-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:26:51.905-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:51.917-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:51.983-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:26:52.017-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:26:52.045-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 5 migrations to schema "public", now at version v5 (execution time 00:01.569s)
+2026-10-12T13:26:52.791-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_0c49c46819d24cd9a91cf62db1443497 (PostgreSQL 16.15)
+2026-10-12T13:26:52.812-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:26:52.814-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.016s)
+2026-10-12T13:26:52.836-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:26:52.920-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:26:52.926-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:26:52.944-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v1 (execution time 00:00.006s)
+2026-10-12T13:26:53.128-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_0c49c46819d24cd9a91cf62db1443497 (PostgreSQL 16.15)
+2026-10-12T13:26:53.150-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.015s)
+2026-10-12T13:26:53.204-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1
+2026-10-12T13:26:53.208-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:26:53.252-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:26:54.558-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:54.570-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:54.642-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:26:54.678-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:26:54.709-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v5 (execution time 00:01.428s)
+2026-10-12T13:26:55.274-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_8e9cdc913d2642e3b64bf33a2de7dca9 (PostgreSQL 16.15)
+2026-10-12T13:26:55.289-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:26:55.289-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.010s)
+2026-10-12T13:26:55.298-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:26:55.361-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:26:55.365-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:26:55.379-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:26:55.386-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v2 (execution time 00:00.006s)
+2026-10-12T13:26:55.441-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_8e9cdc913d2642e3b64bf33a2de7dca9 (PostgreSQL 16.15)
+2026-10-12T13:26:55.456-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.010s)
+2026-10-12T13:26:55.501-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-10-12T13:26:55.541-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:26:56.889-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:56.901-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:56.962-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:26:56.996-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:26:57.025-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v5 (execution time 00:01.458s)
+2026-10-12T13:26:57.702-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_2f21b918e3f748c79abb0a1be7ed7996 (PostgreSQL 16.15)
+2026-10-12T13:26:57.714-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:26:57.715-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.008s)
+2026-10-12T13:26:57.728-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:26:57.804-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:26:57.808-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:26:57.822-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:26:57.872-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:26:59.270-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:59.284-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:26:59.350-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:01.478s)
+2026-10-12T13:26:59.413-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_2f21b918e3f748c79abb0a1be7ed7996 (PostgreSQL 16.15)
+2026-10-12T13:26:59.431-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.013s)
+2026-10-12T13:26:59.482-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 3
+2026-10-12T13:26:59.488-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:26:59.532-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:26:59.573-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v5 (execution time 00:00.065s)
+2026-10-12T13:27:00.259-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_c5569f46587a400a99565793fcd729a8 (PostgreSQL 16.15)
+2026-10-12T13:27:00.274-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:00.275-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.010s)
+2026-10-12T13:27:00.287-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:00.467-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:00.471-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:00.487-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:00.538-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:01.837-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:01.848-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:01.909-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:01.365s)
+2026-10-12T13:27:02.069-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/mig_c5569f46587a400a99565793fcd729a8 (PostgreSQL 16.15)
+2026-10-12T13:27:02.093-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.016s)
+2026-10-12T13:27:02.160-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 3
+2026-10-12T13:27:02.165-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:02.213-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:02.243-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v5 (execution time 00:00.062s)
+2026-10-12T13:27:12.219-04:00  INFO 24544 --- [eventos-uajms] [o-auto-2-exec-5] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 4776 ms
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 43.53 s -- in bo.uajms.eventos.modulos.usuarios.AdministradorInvitacionIntegrationTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.controladores.UsuarioControladorAuthorizationTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.386 s -- in bo.uajms.eventos.modulos.usuarios.controladores.UsuarioControladorAuthorizationTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.dtos.PerfilYCambioContrasenaValidacionTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in bo.uajms.eventos.modulos.usuarios.dtos.PerfilYCambioContrasenaValidacionTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepositoryLockTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in bo.uajms.eventos.modulos.usuarios.repositorios.UsuarioRepositoryLockTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest
+[INFO] Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.547 s -- in bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.549 s -- in bo.uajms.eventos.modulos.usuarios.servicios.AutenticacionServicioTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.BrevoApiCorreoProveedorTest
+2026-10-12T13:27:13.954-04:00 ERROR 24544 --- [eventos-uajms] [           main] b.u.e.m.u.s.BrevoApiCorreoProveedor      : Brevo API rechazo el correo transaccional; HTTP 503
+2026-10-12T13:27:13.958-04:00 ERROR 24544 --- [eventos-uajms] [           main] b.u.e.m.u.s.BrevoApiCorreoProveedor      : Brevo API rechazo el correo transaccional; HTTP 503
+2026-10-12T13:27:13.988-04:00  INFO 24544 --- [eventos-uajms] [           main] b.u.e.m.u.s.BrevoApiCorreoProveedor      : Correo transaccional aceptado por Brevo API
+2026-10-12T13:27:13.991-04:00 ERROR 24544 --- [eventos-uajms] [           main] b.u.e.m.u.s.BrevoApiCorreoProveedor      : Proveedor Brevo API no configurado: falta la clave de API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 s -- in bo.uajms.eventos.modulos.usuarios.servicios.BrevoApiCorreoProveedorTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.CorreoConfiguracionTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.086 s -- in bo.uajms.eventos.modulos.usuarios.servicios.CorreoConfiguracionTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.CorreoServicioTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in bo.uajms.eventos.modulos.usuarios.servicios.CorreoServicioTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.CuentaDualHistorialTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.252 s -- in bo.uajms.eventos.modulos.usuarios.servicios.CuentaDualHistorialTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.RecuperacionContrasenaHashTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.236 s -- in bo.uajms.eventos.modulos.usuarios.servicios.RecuperacionContrasenaHashTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.SesionUsuarioServicioTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.232 s -- in bo.uajms.eventos.modulos.usuarios.servicios.SesionUsuarioServicioTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest
+[INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.128 s -- in bo.uajms.eventos.modulos.usuarios.servicios.UsuarioServicioTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.servicios.VerificacionCorreoServicioTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.040 s -- in bo.uajms.eventos.modulos.usuarios.servicios.VerificacionCorreoServicioTest
+[INFO] Running bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest
+2026-10-12T13:27:14.995-04:00  INFO 24544 --- [eventos-uajms] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest]: SolicitudOrganizadorIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-12T13:27:14.999-04:00  INFO 24544 --- [eventos-uajms] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration bo.uajms.eventos.EventosUajmsApplication for test class bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-10-12T13:27:15.516-04:00  INFO 24544 --- [eventos-uajms] [           main] .m.u.SolicitudOrganizadorIntegrationTest : Starting SolicitudOrganizadorIntegrationTest using Java 21.0.11 with PID 24544 (started by Usuario in [COPIA AISLADA]\backend)
+2026-10-12T13:27:15.516-04:00  INFO 24544 --- [eventos-uajms] [           main] .m.u.SolicitudOrganizadorIntegrationTest : The following 1 profile is active: "organizer-application-test"
+2026-10-12T13:27:16.188-04:00  INFO 24544 --- [eventos-uajms] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-12T13:27:16.316-04:00  INFO 24544 --- [eventos-uajms] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 120 ms. Found 18 JPA repository interfaces.
+2026-10-12T13:27:16.823-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-10-12T13:27:16.825-04:00  INFO 24544 --- [eventos-uajms] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-12T13:27:16.826-04:00  INFO 24544 --- [eventos-uajms] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-10-12T13:27:16.885-04:00  INFO 24544 --- [eventos-uajms] [           main] o.a.c.c.C.[Tomcat-2].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-10-12T13:27:16.885-04:00  INFO 24544 --- [eventos-uajms] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1365 ms
+2026-10-12T13:27:17.000-04:00  INFO 24544 --- [eventos-uajms] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-12T13:27:17.079-04:00  INFO 24544 --- [eventos-uajms] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@6862857a
+2026-10-12T13:27:17.079-04:00  INFO 24544 --- [eventos-uajms] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-12T13:27:17.081-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/organizer_e2e_644c3238457d4cc883fb585fc61f103f (PostgreSQL 16.15)
+2026-10-12T13:27:17.102-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:17.103-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.012s)
+2026-10-12T13:27:17.118-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:17.205-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:17.209-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:17.225-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:17.266-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:18.763-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:18.779-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:18.884-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:18.935-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:18.977-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 5 migrations to schema "public", now at version v5 (execution time 00:01.684s)
+2026-10-12T13:27:19.041-04:00  INFO 24544 --- [eventos-uajms] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-12T13:27:19.070-04:00  INFO 24544 --- [eventos-uajms] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-12T13:27:19.099-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-12T13:27:19.115-04:00  WARN 24544 --- [eventos-uajms] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-10-12T13:27:19.865-04:00  INFO 24544 --- [eventos-uajms] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-12T13:27:19.898-04:00  INFO 24544 --- [eventos-uajms] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-12T13:27:20.671-04:00  INFO 24544 --- [eventos-uajms] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-12T13:27:20.672-04:00  WARN 24544 --- [eventos-uajms] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-10-12T13:27:20.760-04:00  WARN 24544 --- [eventos-uajms] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-12T13:27:20.907-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@a79f15d, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@277b2863, org.springframework.security.web.context.SecurityContextHolderFilter@5ee29674, org.springframework.security.web.header.HeaderWriterFilter@11747be9, org.springframework.web.filter.CorsFilter@befa776, org.springframework.security.web.authentication.logout.LogoutFilter@65683016, bo.uajms.eventos.core.seguridad.JwtAuthenticationFilter@3bd096e1, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2ffbbedb, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1d6223fe, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@9b807e2, org.springframework.security.web.session.SessionManagementFilter@666a9929, org.springframework.security.web.access.ExceptionTranslationFilter@5d359ba8, org.springframework.security.web.access.intercept.AuthorizationFilter@2e358c0d]
+2026-10-12T13:27:21.128-04:00  INFO 24544 --- [eventos-uajms] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 64822 (http) with context path '/'
+2026-10-12T13:27:21.130-04:00  INFO 24544 --- [eventos-uajms] [           main] .m.u.SolicitudOrganizadorIntegrationTest : Started SolicitudOrganizadorIntegrationTest in 6.123 seconds (process running for 108.872)
+2026-10-12T13:27:21.273-04:00  INFO 24544 --- [eventos-uajms] [o-auto-3-exec-1] o.a.c.c.C.[Tomcat-2].[localhost].[/]     : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-12T13:27:21.273-04:00  INFO 24544 --- [eventos-uajms] [o-auto-3-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-12T13:27:21.274-04:00  INFO 24544 --- [eventos-uajms] [o-auto-3-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-10-12T13:27:25.180-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_04c82c7c743f4c739ffb5e2f6e3dd6fb (PostgreSQL 16.15)
+2026-10-12T13:27:25.198-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:25.199-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.012s)
+2026-10-12T13:27:25.214-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:25.299-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:25.303-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:25.322-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:25.363-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:26.957-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:26.970-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:27.045-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:27.101-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:27.134-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 5 migrations to schema "public", now at version v5 (execution time 00:01.743s)
+2026-10-12T13:27:27.209-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.013s)
+2026-10-12T13:27:34.500-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_c906674d02ab48de929d6904fc610b86 (PostgreSQL 16.15)
+2026-10-12T13:27:34.523-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:34.524-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.014s)
+2026-10-12T13:27:34.538-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:34.624-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:34.627-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:34.639-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v1 (execution time 00:00.004s)
+2026-10-12T13:27:34.707-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_c906674d02ab48de929d6904fc610b86 (PostgreSQL 16.15)
+2026-10-12T13:27:34.730-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.015s)
+2026-10-12T13:27:34.795-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1
+2026-10-12T13:27:34.802-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:34.850-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:36.308-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:36.320-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:36.384-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:36.417-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:36.449-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v5 (execution time 00:01.579s)
+2026-10-12T13:27:36.508-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.012s)
+2026-10-12T13:27:37.344-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_c8f9f48667644ed089e69c920c9d1b69 (PostgreSQL 16.15)
+2026-10-12T13:27:37.357-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:37.358-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.009s)
+2026-10-12T13:27:37.368-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:37.428-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:37.436-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:37.447-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:37.454-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v2 (execution time 00:00.006s)
+2026-10-12T13:27:37.507-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_c8f9f48667644ed089e69c920c9d1b69 (PostgreSQL 16.15)
+2026-10-12T13:27:37.523-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.010s)
+2026-10-12T13:27:37.576-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-10-12T13:27:37.614-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:39.205-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:39.217-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:39.279-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:39.311-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:39.338-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v5 (execution time 00:01.701s)
+2026-10-12T13:27:39.404-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.010s)
+2026-10-12T13:27:40.549-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_6e1849f35a66430d9540e7363f23f549 (PostgreSQL 16.15)
+2026-10-12T13:27:40.567-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:40.569-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.013s)
+2026-10-12T13:27:40.579-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:40.650-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:40.655-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:40.670-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:40.712-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:42.191-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:42.206-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:42.270-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:01.559s)
+2026-10-12T13:27:42.330-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_6e1849f35a66430d9540e7363f23f549 (PostgreSQL 16.15)
+2026-10-12T13:27:42.348-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.012s)
+2026-10-12T13:27:42.398-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 3
+2026-10-12T13:27:42.401-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:42.442-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:42.474-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v5 (execution time 00:00.061s)
+2026-10-12T13:27:42.573-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.014s)
+2026-10-12T13:27:43.570-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_c524118df2e84805a7427ae05f5ca591 (PostgreSQL 16.15)
+2026-10-12T13:27:43.589-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:43.591-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.014s)
+2026-10-12T13:27:43.605-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:43.717-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:43.721-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:43.737-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:43.784-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:45.210-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:45.224-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:45.286-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:45.314-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:01.525s)
+2026-10-12T13:27:45.370-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_c524118df2e84805a7427ae05f5ca591 (PostgreSQL 16.15)
+2026-10-12T13:27:45.383-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.008s)
+2026-10-12T13:27:45.439-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2026-10-12T13:27:45.439-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:45.475-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v5 (execution time 00:00.027s)
+2026-10-12T13:27:45.542-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.011s)
+2026-10-12T13:27:46.384-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_9ab402c7a7144f5f8df2d3291ba3dc0b (PostgreSQL 16.15)
+2026-10-12T13:27:46.403-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-12T13:27:46.404-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.011s)
+2026-10-12T13:27:46.417-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-12T13:27:46.520-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-12T13:27:46.520-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - agregar qr pago storage key eventos"
+2026-10-12T13:27:46.544-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - agregar nombre normalizado categorias evento"
+2026-10-12T13:27:46.592-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - reconciliar esquema actual"
+2026-10-12T13:27:48.221-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "uk_certificado_inscripcion" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:48.238-04:00  WARN 24544 --- [eventos-uajms] [           main] o.f.c.i.s.DefaultSqlScriptExecutor       : DB: relation "ukcmeveyyrpuai5j5frvbigmkd4" already exists, skipping (SQL State: 42P07 - Error Code: 0)
+2026-10-12T13:27:48.339-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - invitaciones administrador"
+2026-10-12T13:27:48.395-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:01.790s)
+2026-10-12T13:27:48.547-04:00  INFO 24544 --- [eventos-uajms] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://127.0.0.1:55439/org_mig_9ab402c7a7144f5f8df2d3291ba3dc0b (PostgreSQL 16.15)
+2026-10-12T13:27:48.566-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.012s)
+2026-10-12T13:27:48.620-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2026-10-12T13:27:48.625-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - completar solicitud organizador"
+2026-10-12T13:27:48.664-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v5 (execution time 00:00.031s)
+2026-10-12T13:27:48.734-04:00  INFO 24544 --- [eventos-uajms] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.009s)
+2026-10-12T13:27:52.422-04:00  INFO 24544 --- [eventos-uajms] [o-auto-3-exec-2] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 2400 ms
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 38.27 s -- in bo.uajms.eventos.modulos.usuarios.SolicitudOrganizadorIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[WARNING] Tests run: 591, Failures: 0, Errors: 0, Skipped: 1
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.1:jar (default-jar) @ eventos-uajms ---
+[INFO] Building jar: [COPIA AISLADA]\backend\target\eventos-uajms-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.3.0:repackage (repackage) @ eventos-uajms ---
+[INFO] Loaded 50 auto-discovered prefixes for remote repository ow2-snapshot (prefixes-ow2-snapshot.txt)
+[INFO] Replacing main artifact [COPIA AISLADA]\backend\target\eventos-uajms-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to [COPIA AISLADA]\backend\target\eventos-uajms-0.0.1-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:48 min
+[INFO] Finished at: 2026-10-12T13:28:01-04:00
+[INFO] ------------------------------------------------------------------------
+

@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
-import { Observable, catchError, defer, finalize, of, tap, throwError } from 'rxjs';
+import { Observable, defer, finalize, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface LoginRequest {
@@ -125,12 +125,6 @@ export class AuthService {
 
     return this.trackRequest(
       this.http.post<void>(`${this.apiUrl}/logout`, {}).pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            return of(void 0);
-          }
-          return throwError(() => error);
-        }),
         finalize(() => this.clearLocalSession())
       )
     );

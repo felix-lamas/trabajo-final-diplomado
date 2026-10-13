@@ -1,0 +1,14 @@
+{
+  "name": "angular_build",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "directory": "frontend",
+  "started": "2026-10-12T13:26:16.620335-04:00",
+  "finished": "2026-10-12T13:26:44.772333-04:00",
+  "seconds": 28.14,
+  "exit": 0,
+  "log": "angular_build.txt"
+}

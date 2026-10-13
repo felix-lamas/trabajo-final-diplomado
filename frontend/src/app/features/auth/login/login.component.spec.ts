@@ -39,6 +39,27 @@ describe('LoginComponent identity flow', () => {
     fixture.componentInstance.form.setValue({ correoElectronico: 'ana@example.test', contrasena: 'Segura1!' });
   });
 
+  it('muestra aviso de logout sin revocación confirmada', async () => {
+    history.replaceState({ logoutUnconfirmed: true }, '');
+    try {
+      const warningFixture = TestBed.createComponent(LoginComponent);
+      warningFixture.detectChanges();
+      await warningFixture.whenStable();
+      expect(warningFixture.nativeElement.querySelector('[role="status"]').textContent)
+        .toContain('no se confirmó la revocación en el servidor');
+      warningFixture.destroy();
+    } finally { history.replaceState({}, ''); }
+  });
+
+  it('429 presenta el límite temporal sin navegar ni confundirlo con credenciales', () => {
+    fixture.componentInstance.onSubmit();
+    loginResponse.error(new HttpErrorResponse({ status: 429,
+      error: { codigo: 'AUTH_RATE_LIMITED', mensaje: 'Demasiados intentos. Espere antes de volver a intentar.' } }));
+    expect(fixture.componentInstance.errorMessage()).toContain('Demasiados intentos');
+    expect(fixture.componentInstance.loading).toBe(false);
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
   it('muestra loading y navega segun rol al resolver login', async () => {
     fixture.componentInstance.onSubmit();
     await fixture.whenStable();

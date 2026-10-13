@@ -55,6 +55,11 @@ app:
     secreto: ${JWT_SECRET}
     expiracion-ms: ${JWT_EXPIRATION:86400000}
   auth:
+    rate-limit:
+      identifier-limit: ${AUTH_RATE_IDENTIFIER_LIMIT:10}
+      operation-limit: ${AUTH_RATE_OPERATION_LIMIT:120}
+      window-seconds: ${AUTH_RATE_WINDOW_SECONDS:60}
+      max-identifiers: ${AUTH_RATE_MAX_IDENTIFIERS:10000}
     admin-invitation-expiration-hours: ${ADMIN_INVITATION_EXPIRATION_HOURS:24}
     admin-invitation-resend-minutes: ${ADMIN_INVITATION_RESEND_MINUTES:5}
   frontend:

@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.038" tests="11" errors="0" skipped="0" failures="0">
+  <testcase name="dtoDeEventoNoAceptaKeysNiUrlsQrDeCliente" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.004" />
+  <testcase name="dtoCreacionNoPermiteAsignarOrganizadorEstadoNiAuditoria" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.002" />
+  <testcase name="publicarEstaReservadoAlAdministrador" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.002" />
+  <testcase name="cancelarEstaReservadoAlAdministrador" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.001" />
+  <testcase name="lecturaQrEsPublicaEnElContratoYRestringidaPorServicioParaNoPublicados" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.002" />
+  <testcase name="enviarRevisionEstaReservadoAlOrganizador" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.001" />
+  <testcase name="cargarYEliminarQrExigenRolDeGestion" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.002" />
+  <testcase name="crearEstaReservadoAlOrganizador" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.002" />
+  <testcase name="rechazarEstaReservadoAlAdministrador" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.002" />
+  <testcase name="finalizarEstaReservadoAlAdministrador" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.002" />
+  <testcase name="dtoActualizacionNoPermiteCambiarOwnershipNiEstado" classname="bo.uajms.eventos.modulos.eventos.controladores.EventoControllerSecurityContractTest" time="0.003" />
+</testsuite>

@@ -1,0 +1,207 @@
+[
+  {
+    "case": "CP-01",
+    "title": "CP-01 — login, perfil protegido, logout y revocación de sesión",
+    "timestamp": "2026-10-07T14:59:12.915Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/usuarios/perfil",
+    "method": "GET",
+    "status": 401,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-01-—--798c9-gout-y-revocación-de-sesión-api/attachments/CP-01-login-perfil-protegido-logout-y-revocaci-n-de-sesi-n-api-json-0aec46c821b0ff1c9c379e36c55f65f576e73f84.json",
+    "source_sha256": "928d92384c1e183c4552eb00164f08a4ba02b1bddf08e057ad8db8c7057abf9f",
+    "relevant_response": {
+      "codigo": "AUTH_INVALID_SESSION",
+      "mensaje": "La sesion no existe, expiro o fue revocada"
+    }
+  },
+  {
+    "case": "CP-02",
+    "title": "CP-02 — endpoint protegido devuelve 401 sin Authorization",
+    "timestamp": "2026-10-07T14:59:13.510Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/usuarios/perfil",
+    "method": "GET",
+    "status": 401,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-02-—--44498-uelve-401-sin-Authorization-api/attachments/CP-02-endpoint-protegido-devuelve-401-sin-authorization-api-json-04dbe77482ae5081c787482a8f4a952b16a73981.json",
+    "source_sha256": "a7630f9ccc32b611b4160064be7b9b9e680e95b938b8c256e8adaf01f782a627",
+    "relevant_response": {
+      "codigo": "AUTH_REQUIRED",
+      "mensaje": "Se requiere autenticacion"
+    }
+  },
+  {
+    "case": "CP-03",
+    "title": "CP-03 — USUARIO autenticado recibe 403 en consulta exclusiva de administración",
+    "timestamp": "2026-10-07T14:59:13.866Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/usuarios/solicitudes-organizador",
+    "method": "GET",
+    "status": 403,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-03-—--b5a5d-exclusiva-de-administración-api/attachments/CP-03-usuario-autenticado-recibe-403-en-consulta-exclusiva-d-api-json-ce1efe43c1adc55532a219402f8baad244cf66a3.json",
+    "source_sha256": "ed0725e6b56b60e665d2ade6e447f9369ea482a43efb822138a3a3544d494025",
+    "relevant_response": {
+      "codigo": "ACCESS_DENIED",
+      "mensaje": "No tiene permisos para realizar esta operacion"
+    }
+  },
+  {
+    "case": "CP-16",
+    "title": "CP-16 — login correcto emite JWT solo para credenciales de cuenta de prueba",
+    "timestamp": "2026-10-07T14:59:14.636Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/usuarios/perfil",
+    "method": "GET",
+    "status": 200,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-16-—--9e720-nciales-de-cuenta-de-prueba-api/attachments/CP-16-login-correcto-emite-jwt-solo-para-credenciales-de-cue-api-json-89e96666a3a6a7d72dbde45626ba709075de9752.json",
+    "source_sha256": "027d2061f5b48c0240578e05efbc056fa3aaeae55386eb209e427ac49a4440ea",
+    "relevant_response": {}
+  },
+  {
+    "case": "CP-16",
+    "title": "CP-16 — credenciales inválidas y JWT inválido se rechazan",
+    "timestamp": "2026-10-07T14:59:13.995Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/usuarios/perfil",
+    "method": "GET",
+    "status": 401,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-16-—--a9b90--y-JWT-inválido-se-rechazan-api/attachments/CP-16-credenciales-inv-lidas-y-jwt-inv-lido-se-rechazan-api-json-a48db44129e29777b4b5384f98201b294486b983.json",
+    "source_sha256": "3f2b409f806e8fb37516a4e7d0618f0e24c7083b905632106540b63bc216c2a8",
+    "relevant_response": {
+      "codigo": "AUTH_INVALID_TOKEN",
+      "mensaje": "El token de autenticacion no es valido"
+    }
+  },
+  {
+    "case": "CP-17",
+    "title": "CP-17 — datos incompletos de evento son rechazados por validación real",
+    "timestamp": "2026-10-07T14:59:14.344Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/eventos",
+    "method": "POST",
+    "status": 400,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-17-—--36605-hazados-por-validación-real-api/attachments/CP-17-datos-incompletos-de-evento-son-rechazados-por-validac-api-json-aff6f11785657f30951da63097535365d92fed05.json",
+    "source_sha256": "d58a9b4141b618b5e5fcdc29071c6f8a6bd380c8be9dc9c2918206ded01750f7",
+    "relevant_response": {
+      "codigo": "VALIDATION_ERROR",
+      "mensaje": "El cuerpo de la solicitud no es valido"
+    }
+  },
+  {
+    "case": "CP-18",
+    "title": "CP-18 — USUARIO no publica ni rechaza eventos",
+    "timestamp": "2026-10-07T14:59:14.176Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/eventos/00000000-0000-4000-8000-000000000001/rechazar",
+    "method": "PATCH",
+    "status": 403,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-18-—--bbb07--publica-ni-rechaza-eventos-api/attachments/CP-18-usuario-no-publica-ni-rechaza-eventos-api-json-7bacfab085b4ba048427fd7f933cae3918c50d15.json",
+    "source_sha256": "4e54c2d65dfcd1ca16e7847e23b32dd1f9eabb265642da81e3b25168b4467cea",
+    "relevant_response": {
+      "codigo": "ACCESS_DENIED",
+      "mensaje": "No tiene permisos para realizar esta operacion"
+    }
+  },
+  {
+    "case": "CP-19",
+    "title": "CP-19 — catálogo y búsqueda pública usan rutas reales y solo datos publicados",
+    "timestamp": "2026-10-07T14:59:14.401Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/eventos/publicados/buscar?texto=E3-NO-COINCIDENCIA&tipo=GRATUITO&modalidad=VIRTUAL",
+    "method": "GET",
+    "status": 200,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-19-—--58a6b-les-y-solo-datos-publicados-api/attachments/CP-19-cat-logo-y-b-squeda-p-blica-usan-rutas-reales-y-solo-d-api-json-e4d36daacec0e3d85f3b452a36e575fdd72bbfe6.json",
+    "source_sha256": "062b13b8f7913979e1944904c5e54331ea111f6685a397af5be8a92e6ea6221c",
+    "response_items": 0
+  },
+  {
+    "case": "CP-20",
+    "title": "CP-20 — búsqueda vacía y detalle inexistente se responden según contrato",
+    "timestamp": "2026-10-07T14:59:14.449Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/eventos/d8f2ca76-08c1-4eb7-8813-4d0ec2456896",
+    "method": "GET",
+    "status": 404,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-20-—--4a4d8-se-responden-según-contrato-api/attachments/CP-20-b-squeda-vac-a-y-detalle-inexistente-se-responden-seg--api-json-ade0c36d14224969a6292354b73cb9261153a923.json",
+    "source_sha256": "a272b85e2e7a52ddd3e09886be392dfbfcecf743d798b62eb03db6e07dd6a483",
+    "relevant_response": {
+      "codigo": "RESOURCE_NOT_FOUND",
+      "mensaje": "Evento no encontrado: d8f2ca76-08c1-4eb7-8813-4d0ec2456896"
+    }
+  },
+  {
+    "case": "CP-23",
+    "title": "CP-23 — verificación pública distingue un código no registrado sin JWT",
+    "timestamp": "2026-10-07T14:59:14.482Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/certificados/verificar/E3-NO-REGISTRADO-15366a37-6d56-4e39-be4b-651711c41704",
+    "method": "GET",
+    "status": 200,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/auth-security.api-CP-23-—--7a97c-ódigo-no-registrado-sin-JWT-api/attachments/CP-23-verificaci-n-p-blica-distingue-un-c-digo-no-registrado-api-json-243e16d68884363515f1cbdb1ee9387f8af76643.json",
+    "source_sha256": "402f98554291549ca95ecfe12cdfe8daf1b4d8d4daaa9b0326860960662e42ce",
+    "relevant_response": {
+      "mensaje": "Certificado no registrado",
+      "estado": "NO_REGISTRADO",
+      "valido": false
+    }
+  },
+  {
+    "case": "CP-07",
+    "title": "CP-07 — segunda inscripción del mismo usuario es rechazada",
+    "timestamp": "2026-10-07T14:59:18.241Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/inscripciones/mis-inscripciones",
+    "method": "GET",
+    "status": 200,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-04a1c--mismo-usuario-es-rechazada-api/attachments/CP-07-segunda-inscripci-n-del-mismo-usuario-es-rechazada-api-json-d6f7ea9c182e80d90cf31f781c44e8a54690ece2.json",
+    "source_sha256": "7af21e489bef88c72fff19d346283f9902c860f4653c5db09f953bb3919f63b5",
+    "response_items": 3
+  },
+  {
+    "case": "CP-05",
+    "title": "CP-05 — ADMINISTRADOR publica evento y este aparece en catálogo público",
+    "timestamp": "2026-10-07T14:59:16.871Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/eventos/publicados",
+    "method": "GET",
+    "status": 200,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-0b167-aparece-en-catálogo-público-api/attachments/CP-05-administrador-publica-evento-y-este-aparece-en-cat-log-api-json-0839bcad51753d46aadd31e2a9a3c75f844b632a.json",
+    "source_sha256": "2615c488b8872ed2466aa90080f0c228d471c4003347e8c2f9b7ee17fa29e2ae",
+    "response_items": 4
+  },
+  {
+    "case": "CP-04",
+    "title": "CP-04 — ORGANIZADOR aprobado crea evento de prueba en BORRADOR",
+    "timestamp": "2026-10-07T14:59:15.943Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/eventos",
+    "method": "POST",
+    "status": 201,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-6673b-vento-de-prueba-en-BORRADOR-api/attachments/CP-04-organizador-aprobado-crea-evento-de-prueba-en-borrador-api-json-e0f673bfe9606085f59434aacf2846d4bf891aab.json",
+    "source_sha256": "82077bc73133fceb404dd9db94bea32e21251d3be6859363289fab48245f381e",
+    "relevant_response": {
+      "estado": "BORRADOR"
+    }
+  },
+  {
+    "case": "CP-06",
+    "title": "CP-06 — inscripción gratuita produce estado confirmado",
+    "timestamp": "2026-10-07T14:59:18.006Z",
+    "environment": "local-e3-isolated",
+    "endpoint": "/inscripciones",
+    "method": "POST",
+    "status": 201,
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/events.api-Flujos-de-event-db77d-a-produce-estado-confirmado-api/attachments/CP-06-inscripci-n-gratuita-produce-estado-confirmado-api-json-672c44e2b195e2653fe23ae4e75480896e524b1f.json",
+    "source_sha256": "5c19ae3b658ef2044537e71927cc8cd3a098d48f33027e2f3776d860fa037346",
+    "relevant_response": {
+      "estado": "CONFIRMADA"
+    }
+  },
+  {
+    "case": "CP-25",
+    "title": "CP-25 — matriz de autenticación y roles basada en anotaciones actuales",
+    "timestamp": "2026-10-07T14:59:19.276Z",
+    "environment": "local-e3-isolated",
+    "source": "docs/pruebas/e3/resultados/playwright-artifacts/security-matrix.api-CP-25--a26dd-ada-en-anotaciones-actuales-api/attachments/CP-25-matriz-de-autenticaci-n-y-roles-basada-en-anotaciones--api-json-ef745180e3eba707c02c6e03a340675296a41d51.json",
+    "source_sha256": "c44ea59cf7919f8aabfdead313c70a63695bfd73f6f1e09d48fe185d858a3a94"
+  }
+]

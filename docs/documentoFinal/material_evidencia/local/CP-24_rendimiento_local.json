@@ -1,0 +1,446 @@
+{
+  "date": "2026-10-11T18:24:06.030118+00:00",
+  "environment": "Windows local; Java 21 / Spring Boot 3.3.0; PostgreSQL 16 aislado; perfil demo; HTTP loopback; cliente Python urllib",
+  "hardware": {
+    "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+    "os": "Windows-10-10.0.22631-SP0"
+  },
+  "endpoint": "http://127.0.0.1:58080/api/v1/eventos/publicados",
+  "tool": "Python 3.11 urllib.request / ThreadPoolExecutor / time.perf_counter",
+  "data_count_published": 3,
+  "warmup": 5,
+  "waves": 3,
+  "concurrency": 20,
+  "requests": 60,
+  "threshold_ms": 3000,
+  "threshold_percentage": 95,
+  "within_threshold": 60,
+  "percentage": 100.0,
+  "mean_ms": 36.229166666666664,
+  "p95_ms": 52.644,
+  "max_ms": 62.913,
+  "state": "APROBADO",
+  "samples": [
+    {
+      "wave": 1,
+      "client": 1,
+      "http": 200,
+      "milliseconds": 36.154,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 2,
+      "http": 200,
+      "milliseconds": 28.564,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 3,
+      "http": 200,
+      "milliseconds": 43.798,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 4,
+      "http": 200,
+      "milliseconds": 33.762,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 5,
+      "http": 200,
+      "milliseconds": 61.653,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 6,
+      "http": 200,
+      "milliseconds": 39.004,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 7,
+      "http": 200,
+      "milliseconds": 62.913,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 8,
+      "http": 200,
+      "milliseconds": 40.675,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 9,
+      "http": 200,
+      "milliseconds": 50.139,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 10,
+      "http": 200,
+      "milliseconds": 46.065,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 11,
+      "http": 200,
+      "milliseconds": 39.953,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 12,
+      "http": 200,
+      "milliseconds": 41.463,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 13,
+      "http": 200,
+      "milliseconds": 37.743,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 14,
+      "http": 200,
+      "milliseconds": 29.92,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 15,
+      "http": 200,
+      "milliseconds": 29.176,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 16,
+      "http": 200,
+      "milliseconds": 34.47,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 17,
+      "http": 200,
+      "milliseconds": 38.213,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 18,
+      "http": 200,
+      "milliseconds": 37.767,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 19,
+      "http": 200,
+      "milliseconds": 35.77,
+      "items": 3
+    },
+    {
+      "wave": 1,
+      "client": 20,
+      "http": 200,
+      "milliseconds": 27.076,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 1,
+      "http": 200,
+      "milliseconds": 28.876,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 2,
+      "http": 200,
+      "milliseconds": 38.613,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 3,
+      "http": 200,
+      "milliseconds": 31.519,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 4,
+      "http": 200,
+      "milliseconds": 35.529,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 5,
+      "http": 200,
+      "milliseconds": 29.456,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 6,
+      "http": 200,
+      "milliseconds": 53.241,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 7,
+      "http": 200,
+      "milliseconds": 29.361,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 8,
+      "http": 200,
+      "milliseconds": 28.637,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 9,
+      "http": 200,
+      "milliseconds": 32.777,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 10,
+      "http": 200,
+      "milliseconds": 37.466,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 11,
+      "http": 200,
+      "milliseconds": 34.77,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 12,
+      "http": 200,
+      "milliseconds": 31.618,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 13,
+      "http": 200,
+      "milliseconds": 48.617,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 14,
+      "http": 200,
+      "milliseconds": 41.777,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 15,
+      "http": 200,
+      "milliseconds": 37.76,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 16,
+      "http": 200,
+      "milliseconds": 31.331,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 17,
+      "http": 200,
+      "milliseconds": 41.708,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 18,
+      "http": 200,
+      "milliseconds": 41.414,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 19,
+      "http": 200,
+      "milliseconds": 38.7,
+      "items": 3
+    },
+    {
+      "wave": 2,
+      "client": 20,
+      "http": 200,
+      "milliseconds": 29.303,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 1,
+      "http": 200,
+      "milliseconds": 35.569,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 2,
+      "http": 200,
+      "milliseconds": 25.882,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 3,
+      "http": 200,
+      "milliseconds": 25.274,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 4,
+      "http": 200,
+      "milliseconds": 31.109,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 5,
+      "http": 200,
+      "milliseconds": 27.62,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 6,
+      "http": 200,
+      "milliseconds": 27.519,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 7,
+      "http": 200,
+      "milliseconds": 52.644,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 8,
+      "http": 200,
+      "milliseconds": 29.203,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 9,
+      "http": 200,
+      "milliseconds": 42.914,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 10,
+      "http": 200,
+      "milliseconds": 36.466,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 11,
+      "http": 200,
+      "milliseconds": 49.31,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 12,
+      "http": 200,
+      "milliseconds": 23.465,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 13,
+      "http": 200,
+      "milliseconds": 44.464,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 14,
+      "http": 200,
+      "milliseconds": 27.609,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 15,
+      "http": 200,
+      "milliseconds": 33.805,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 16,
+      "http": 200,
+      "milliseconds": 24.36,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 17,
+      "http": 200,
+      "milliseconds": 24.08,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 18,
+      "http": 200,
+      "milliseconds": 23.812,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 19,
+      "http": 200,
+      "milliseconds": 39.156,
+      "items": 3
+    },
+    {
+      "wave": 3,
+      "client": 20,
+      "http": 200,
+      "milliseconds": 32.738,
+      "items": 3
+    }
+  ],
+  "limitation": "Muestra corta local y catálogo demo; no demuestra escalabilidad o rendimiento de producción."
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "command": [
+      "java",
+      "-version"
+    ],
+    "exit": 0,
+    "output": "openjdk version \"21.0.11\" 2026-04-21 LTS\r\nOpenJDK Runtime Environment Temurin-21.0.11+10 (build 21.0.11+10-LTS)\r\nOpenJDK 64-Bit Server VM Temurin-21.0.11+10 (build 21.0.11+10-LTS, mixed mode, sharing)\r\n"
+  },
+  {
+    "command": [
+      "mvn",
+      "-version"
+    ],
+    "exit": 0,
+    "output": "Apache Maven 3.10.0 (c43a36b8d67be7e0805a411bc0898af1a51f5472)\r\nMaven home: [USUARIO LOCAL]\\AppData\\Roaming\\Code\\User\\globalStorage\\pleiades.java-extension-pack-jdk\\maven\\latest\r\nJava version: 21.0.11, vendor: Eclipse Adoptium, runtime: C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.11.10-hotspot\r\nDefault locale: es_BO, platform encoding: UTF-8, time zone: America/La_Paz\r\nOS name: \"windows 11\", version: \"10.0\", arch: \"amd64\", family: \"windows\"\r\n"
+  },
+  {
+    "command": [
+      "node",
+      "--version"
+    ],
+    "exit": 0,
+    "output": "v24.16.0\r\n"
+  },
+  {
+    "command": [
+      "npm",
+      "--version"
+    ],
+    "exit": 0,
+    "output": "11.6.3\n"
+  },
+  {
+    "command": [
+      "flutter",
+      "--version"
+    ],
+    "exit": 0,
+    "output": "Flutter 3.44.8 • channel stable • https://github.com/flutter/flutter.git\nFramework • revision 058e0af2c2 (3 months ago) • 2026-07-23 10:56:21 -0700\nEngine • hash 13ffd72b2f9a5ca4db2a74ea52d5353ec2e8f939 (revision 0cd610717b) (2 months ago) • 2026-07-23 16:11:34.000Z\nTools • Dart 3.12.2 • DevTools 2.57.0\n"
+  },
+  {
+    "command": [
+      "dart",
+      "--version"
+    ],
+    "exit": 0,
+    "output": "Dart SDK version: 3.12.2 (stable) (Tue Jun 9 01:11:39 2026 -0700) on \"windows_x64\"\r\n"
+  },
+  {
+    "command": [
+      "docker",
+      "version"
+    ],
+    "exit": 1,
+    "output": "Client:\n Cloud integration: v1.0.35+desktop.13\n Version:           26.1.1\n API version:       1.45\n Go version:        go1.21.9\n Git commit:        4cf5afa\n Built:             Tue Apr 30 11:48:43 2024\n OS/Arch:           windows/amd64\n Context:           default\nerror during connect: this error may indicate that the docker daemon is not running: Get \"http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.45/version\": open //./pipe/docker_engine: The system cannot find the file specified.\n"
+  }
+]

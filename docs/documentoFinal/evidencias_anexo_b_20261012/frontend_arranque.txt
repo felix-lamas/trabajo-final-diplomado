@@ -1,0 +1,40 @@
+
+> frontend@0.0.0 start
+> ng serve --host 127.0.0.1 --port 4200
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                             |  Raw size
+styles.css          | styles                            | 332.34 kB | 
+main.js             | main                              |   7.99 kB | 
+chunk-J3ZV42TX.js   | -                                 |   6.60 kB | 
+chunk-6IZ3GUSA.js   | -                                 |   2.03 kB | 
+chunk-I33YTORI.js   | -                                 |   1.81 kB | 
+chunk-5NYK2MAX.js   | -                                 |   1.68 kB | 
+polyfills.js        | polyfills                         |  95 bytes | 
+
+                    | Initial total                     | 352.55 kB
+
+Lazy chunk files    | Names                             |  Raw size
+chunk-FHKIHPOK.js   | -                                 | 236.01 kB | 
+chunk-6WY5K6GS.js   | publico-module                    | 177.20 kB | 
+chunk-YJI5H7JZ.js   | auth-module                       | 128.69 kB | 
+chunk-6GVSXDQS.js   | admin-module                      |  81.90 kB | 
+chunk-LA35QCNC.js   | dashboard-privado-component       |  79.21 kB | 
+chunk-C3PPPPY4.js   | app-shell-component               |  62.53 kB | 
+chunk-Q3T3OZ22.js   | privado-module                    |  55.90 kB | 
+chunk-UMZ4CIXU.js   | pagos-module                      |  55.12 kB | 
+chunk-K4UQYKAM.js   | reportes-module                   |  53.47 kB | 
+chunk-KPEU3VOJ.js   | perfil-usuario-component          |  44.25 kB | 
+chunk-JUC53AMZ.js   | asistencias-module                |  43.13 kB | 
+chunk-G4SQHNIU.js   | validacion-publica-component      |  32.09 kB | 
+chunk-KCDDAW7P.js   | certificados-module               |  31.96 kB | 
+chunk-5LG4AVW6.js   | solicitudes-organizador-component |  31.94 kB | 
+chunk-HEEDQHC3.js   | solicitud-organizador-component   |  30.75 kB | 
+...and 30 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [12.595 seconds] - 2026-10-12T17:30:48.556Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://127.0.0.1:4200/

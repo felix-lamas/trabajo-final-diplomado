@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.547" tests="34" errors="0" skipped="0" failures="0">
+  <testcase name="variosAdminsPermitenDesactivarYRevocarSesiones" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.399" />
+  <testcase name="protegeUltimoAdministrador" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="noRevocaAceptada" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.005" />
+  <testcase name="noDesactivaParticipantePorUuid" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="reenvioRotaHash" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.004" />
+  <testcase name="invitacionPendienteDuplicada" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="noReenviaRevocada" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.004" />
+  <testcase name="reenvioTieneEspera" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="consultaPublicaSoloEstado" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="recursoInexistenteNoManipulado" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.001" />
+  <testcase name="estadosNoAceptables(Estado)[1]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.005" />
+  <testcase name="estadosNoAceptables(Estado)[2]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.004" />
+  <testcase name="estadosNoAceptables(Estado)[3]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.0" />
+  <testcase name="tokenSoloUnUso" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.0" />
+  <testcase name="ciRegistradoSeRechaza" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="confirmacionContrasenaDistinta" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="aceptarSoloAdministradorVerificadoActivo" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="correoRegistradoNoSeConvierte" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="invitaGuardaHashYEnviaCorreoSinDevolverToken" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.007" />
+  <testcase name="revocaPendiente" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.0" />
+  <testcase name="tokenDesconocidoRechazado" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.012" />
+  <testcase name="noAdministradorNoInvita(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="noAdministradorNoInvita(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="noAdministradorNoInvita(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="fechaExpiradaRechazaAceptacion" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="revalidaCorreoAlAceptar" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.004" />
+  <testcase name="limitaInvitacionesPorAdministrador" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="cuentaDemoProtegida" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="ciDebeCoincidir" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="secretosNoSeSerializanNiAparecenEnToString" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.007" />
+  <testcase name="formatoInvalidoRechazado(String)[1]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.003" />
+  <testcase name="formatoInvalidoRechazado(String)[2]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.0" />
+  <testcase name="formatoInvalidoRechazado(String)[3]" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+  <testcase name="invitanteNoPuedeInvitarse" classname="bo.uajms.eventos.modulos.usuarios.servicios.AdministradorServicioTest" time="0.002" />
+</testsuite>

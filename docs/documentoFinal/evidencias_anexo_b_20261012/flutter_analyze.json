@@ -1,0 +1,13 @@
+{
+  "name": "flutter_analyze",
+  "command": [
+    "flutter",
+    "analyze"
+  ],
+  "directory": "flutter\\VidiaApp",
+  "started": "2026-10-12T13:26:22.722666-04:00",
+  "finished": "2026-10-12T13:26:42.183707-04:00",
+  "seconds": 19.47,
+  "exit": 1,
+  "log": "flutter_analyze.txt"
+}

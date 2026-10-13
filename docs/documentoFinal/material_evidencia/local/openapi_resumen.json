@@ -1,0 +1,1396 @@
+{
+  "date": "2026-10-11T18:24:05.553833+00:00",
+  "base": "http://127.0.0.1:58080",
+  "http": 200,
+  "openapi": "3.0.1",
+  "paths": {
+    "/api/v1/usuarios/perfil": {
+      "get": {
+        "responses": [
+          "401",
+          "200",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "responses": [
+          "400",
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sesiones/{id}": {
+      "get": {
+        "responses": [
+          "404",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "responses": [
+          "404",
+          "400",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}": {
+      "get": {
+        "responses": [
+          "404",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "responses": [
+          "401",
+          "404",
+          "403",
+          "409",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "responses": [
+          "204",
+          "401",
+          "404",
+          "403",
+          "409",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}/qr-pago": {
+      "get": {
+        "responses": [
+          "200",
+          "404",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "responses": [
+          "413",
+          "401",
+          "404",
+          "204",
+          "400",
+          "409",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "responses": [
+          "204",
+          "401",
+          "404",
+          "409",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/categorias-evento/{id}": {
+      "get": {
+        "responses": [
+          "401",
+          "404",
+          "400",
+          "200",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "responses": [
+          "401",
+          "404",
+          "409",
+          "200",
+          "403",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "responses": [
+          "401",
+          "404",
+          "204",
+          "409",
+          "400",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios/solicitud-organizador": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "responses": [
+          "401",
+          "403",
+          "400",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios/cambiar-contrasena": {
+      "post": {
+        "responses": [
+          "400",
+          "401",
+          "200",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sesiones/{sesionId}/qr/generar": {
+      "post": {
+        "responses": [
+          "403",
+          "400",
+          "401",
+          "201",
+          "404",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pagos": {
+      "get": {
+        "responses": [
+          "500",
+          "401",
+          "403",
+          "200"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "responses": [
+          "201",
+          "500",
+          "401",
+          "409",
+          "403",
+          "404",
+          "400"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pagos/{id}/comprobante": {
+      "get": {
+        "responses": [
+          "200",
+          "404",
+          "500",
+          "401",
+          "403"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "responses": [
+          "404",
+          "200",
+          "500",
+          "401",
+          "409",
+          "400",
+          "403"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/inscripciones": {
+      "post": {
+        "responses": [
+          "403",
+          "401",
+          "404",
+          "201",
+          "400",
+          "409",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos": {
+      "get": {
+        "responses": [
+          "200",
+          "403",
+          "401",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "responses": [
+          "401",
+          "400",
+          "201",
+          "404",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{eventoId}/sesiones": {
+      "get": {
+        "responses": [
+          "404",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "responses": [
+          "404",
+          "201",
+          "400",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/certificados/generar/{inscripcionId}": {
+      "post": {
+        "responses": [
+          "404",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/categorias-evento": {
+      "get": {
+        "responses": [
+          "401",
+          "200",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "responses": [
+          "401",
+          "409",
+          "403",
+          "201",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/verificar-correo": {
+      "post": {
+        "responses": [
+          "400",
+          "200",
+          "429",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/auth/restablecer-contrasena": {
+      "post": {
+        "responses": [
+          "400",
+          "429",
+          "200",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/auth/registro": {
+      "post": {
+        "responses": [
+          "400",
+          "503",
+          "200",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/auth/reenviar-verificacion": {
+      "post": {
+        "responses": [
+          "200",
+          "429",
+          "400",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/auth/recuperar-contrasena": {
+      "post": {
+        "responses": [
+          "400",
+          "429",
+          "200",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "responses": [
+          "204",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "responses": [
+          "400",
+          "200",
+          "401",
+          "429",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/auth/invitaciones-administrador/consultar": {
+      "post": {
+        "responses": [
+          "200",
+          "400",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/auth/invitaciones-administrador/aceptar": {
+      "post": {
+        "responses": [
+          "400",
+          "204",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/asistencias": {
+      "post": {
+        "responses": [
+          "403",
+          "409",
+          "401",
+          "201",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/administradores/invitaciones": {
+      "get": {
+        "responses": [
+          "503",
+          "403",
+          "404",
+          "401",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "responses": [
+          "503",
+          "403",
+          "404",
+          "401",
+          "400",
+          "201",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/administradores/invitaciones/{id}/reenviar": {
+      "post": {
+        "responses": [
+          "503",
+          "403",
+          "404",
+          "401",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios/solicitudes-organizador/{usuarioId}/rechazar": {
+      "patch": {
+        "responses": [
+          "404",
+          "403",
+          "400",
+          "401",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios/solicitudes-organizador/{usuarioId}/aprobar": {
+      "patch": {
+        "responses": [
+          "404",
+          "403",
+          "401",
+          "400",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sesiones/{id}/estado": {
+      "patch": {
+        "responses": [
+          "404",
+          "400",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pagos/{id}/validar": {
+      "patch": {
+        "responses": [
+          "404",
+          "500",
+          "401",
+          "403",
+          "400",
+          "409"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pagos/{id}/rechazar": {
+      "patch": {
+        "responses": [
+          "404",
+          "500",
+          "401",
+          "403",
+          "400",
+          "409"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/inscripciones/{id}/cancelar": {
+      "patch": {
+        "responses": [
+          "403",
+          "401",
+          "409",
+          "400",
+          "200",
+          "404",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}/volver-borrador": {
+      "patch": {
+        "responses": [
+          "403",
+          "404",
+          "401",
+          "409",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}/rechazar": {
+      "patch": {
+        "responses": [
+          "404",
+          "400",
+          "401",
+          "403",
+          "409",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}/publicar": {
+      "patch": {
+        "responses": [
+          "409",
+          "404",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}/finalizar": {
+      "patch": {
+        "responses": [
+          "404",
+          "400",
+          "401",
+          "403",
+          "409",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}/enviar-revision": {
+      "patch": {
+        "responses": [
+          "403",
+          "404",
+          "401",
+          "400",
+          "409",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{id}/cancelar": {
+      "patch": {
+        "responses": [
+          "400",
+          "401",
+          "404",
+          "403",
+          "409",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/administradores/{id}/desactivar": {
+      "patch": {
+        "responses": [
+          "503",
+          "403",
+          "404",
+          "401",
+          "400",
+          "204",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/administradores/invitaciones/{id}/revocar": {
+      "patch": {
+        "responses": [
+          "503",
+          "403",
+          "404",
+          "401",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios/{id}": {
+      "get": {
+        "responses": [
+          "404",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios/solicitudes-organizador": {
+      "get": {
+        "responses": [
+          "200",
+          "400",
+          "403",
+          "401",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/usuarios/solicitud-organizador/tipos-eventos": {
+      "get": {
+        "responses": [
+          "401",
+          "403",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sesiones/{sesionId}/qr": {
+      "get": {
+        "responses": [
+          "403",
+          "404",
+          "401",
+          "400",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/salud": {
+      "get": {
+        "responses": [
+          "200",
+          "500"
+        ],
+        "security": []
+      }
+    },
+    "/api/v1/reportes/participantes": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reportes/pagos": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reportes/exportar/pdf": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reportes/exportar/excel": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reportes/eventos": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reportes/certificados": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pagos/{id}": {
+      "get": {
+        "responses": [
+          "404",
+          "500",
+          "401",
+          "403"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pagos/pendientes": {
+      "get": {
+        "responses": [
+          "200",
+          "500",
+          "401",
+          "403"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pagos/mis-pagos": {
+      "get": {
+        "responses": [
+          "500",
+          "401",
+          "200",
+          "403"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/inscripciones/{id}": {
+      "get": {
+        "responses": [
+          "401",
+          "403",
+          "200",
+          "404",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/inscripciones/{id}/comprobante": {
+      "get": {
+        "responses": [
+          "403",
+          "200",
+          "401",
+          "404",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/inscripciones/mis-inscripciones": {
+      "get": {
+        "responses": [
+          "403",
+          "401",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/inscripciones/evento/{eventoId}": {
+      "get": {
+        "responses": [
+          "401",
+          "200",
+          "403",
+          "404",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/{eventoId}/certificados": {
+      "get": {
+        "responses": [
+          "404",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/revision": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/publicados": {
+      "get": {
+        "responses": [
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/publicados/buscar": {
+      "get": {
+        "responses": [
+          "400",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/eventos/categoria/{id}": {
+      "get": {
+        "responses": [
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dashboard": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dashboard/operativo": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dashboard/ejecutivo": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dashboard/academico": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/certificados/{id}": {
+      "get": {
+        "responses": [
+          "404",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/certificados/{id}/descargar": {
+      "get": {
+        "responses": [
+          "404",
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/certificados/verificar/{codigo}": {
+      "get": {
+        "responses": [
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/certificados/mis-certificados": {
+      "get": {
+        "responses": [
+          "200",
+          "401",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/categorias-evento/activas": {
+      "get": {
+        "responses": [
+          "401",
+          "200",
+          "403",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/asistencias/mis-asistencias": {
+      "get": {
+        "responses": [
+          "403",
+          "401",
+          "200",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/asistencias/evento/{id}": {
+      "get": {
+        "responses": [
+          "403",
+          "401",
+          "200",
+          "404",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/administradores": {
+      "get": {
+        "responses": [
+          "503",
+          "403",
+          "404",
+          "401",
+          "400",
+          "500"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

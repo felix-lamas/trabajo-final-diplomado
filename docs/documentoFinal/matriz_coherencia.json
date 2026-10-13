@@ -1,0 +1,38 @@
+[
+  [
+    "OE-01",
+    "RF-01–13 / RNF-01–05",
+    "1.1–1.6; 2.3",
+    "F.9/F.10; validación institucional pendiente"
+  ],
+  [
+    "OE-02",
+    "Diseño y contratos",
+    "2.4",
+    "E/F.6/F.7; exportación de figuras pendiente"
+  ],
+  [
+    "OE-03",
+    "RF-03/04/06/07/08/09/13",
+    "2.6",
+    "CP-04/11 pendientes; demás alcances declarados"
+  ],
+  [
+    "OE-04",
+    "RF-01 / RNF-02",
+    "2.7",
+    "CP-29 fallido; matriz pendiente"
+  ],
+  [
+    "OE-05",
+    "RF/RNF seleccionados",
+    "2.8",
+    "15 aprobados; 1 fallido; 4 pendientes"
+  ],
+  [
+    "OE-06",
+    "RNF-04/05 y operación",
+    "2.9",
+    "A–D; monitoreo/restauración pendientes"
+  ]
+]

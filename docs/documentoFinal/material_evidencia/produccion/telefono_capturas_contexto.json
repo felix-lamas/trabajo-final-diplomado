@@ -1,0 +1,314 @@
+[
+  {
+    "file": "PHONE_logout_intento.png",
+    "timestamp": "2026-10-11T19:30:57.164660+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Cerrar sesion de sesion previamente invalidada",
+    "visible_labels": [
+      "Donde los eventos cobran vida",
+      "Se cerró la sesión localmente; no se confirmó en el servidor.",
+      "Ingresar",
+      "Reenviar verificación",
+      "Crear cuenta",
+      "¿Olvidaste tu contraseña?"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_inicio_dual.png",
+    "timestamp": "2026-10-11T19:31:41.753266+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Inicio visible tras login de cuenta USUARIO+ORGANIZADOR",
+    "visible_labels": [
+      "Hola, Organizador",
+      "Descubre los próximos eventos de Vidia.",
+      "Tu próxima actividad",
+      "Taller de Desarrollo Web\n12/11/2026 · 09:00",
+      "Para ti",
+      "Tienes pagos pendientes\n2 por completar o validar",
+      "Próximos eventos",
+      "[PRUEBA E3] 20261011T192502Z PAID\n11/10/2026 · VIRTUAL\nBs. 1.00",
+      "[PRUEBA E3] 20261011T192502Z FREE\n11/10/2026 · VIRTUAL\nGratuito",
+      "Congreso de Innovación Tecnológica UAJMS\n28/10/2026 · PRESENCIAL\nGratuito",
+      "Explorar eventos",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_eventos_dual.png",
+    "timestamp": "2026-10-11T19:31:47.387944+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Catalogo de eventos en Flutter",
+    "visible_labels": [
+      "Eventos",
+      "Encuentra tu próximo evento",
+      "Collapsed",
+      "Filtrar eventos, Collapsed",
+      "Congreso de Innovación Tecnológica UAJMS\nEvento ficticio de demostración para el flujo E2 de la plataforma UAJMS.\n28/10/2026 · 09:00 · PRESENCIAL",
+      "Conferencia",
+      "Gratuito",
+      "99 cupos",
+      "Jornada de Emprendimiento Universitario\nEvento ficticio de demostración para el flujo E2 de la plataforma UAJMS.\n27/11/2026 · 09:00 · PRESENCIAL",
+      "Curso",
+      "Gratuito",
+      "99 cupos",
+      "prueba de asitencia\npreubas\n10/10/2026 · 11:00 · PRESENCIAL",
+      "Taller",
+      "Bs. 60.00",
+      "48 cupos",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_actividad_dual.png",
+    "timestamp": "2026-10-11T19:31:53.006160+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Actividad personal",
+    "visible_labels": [
+      "Actividad",
+      "Tu participación en Vidia",
+      "Consulta tus inscripciones, pagos y logros en un solo lugar.",
+      "Mis inscripciones\n3 inscripciones",
+      "Mis pagos\n2 pagos · 2 pendientes",
+      "Mis asistencias\n0 registros",
+      "Mis certificados\n0 certificados",
+      "Historial\nTodas tus actividades registradas",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_inscripciones_dual.png",
+    "timestamp": "2026-10-11T19:32:13.483512+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Inscripciones de participante para cuenta dual",
+    "visible_labels": [
+      "Back",
+      "Mis inscripciones",
+      "Taller de Desarrollo Web\nInscripción: 10/10/2026 22:45",
+      "Confirmada",
+      "Show menu",
+      "prueba de asitencia\nInscripción: 10/10/2026 23:15",
+      "Pendiente Pago",
+      "Show menu",
+      "[PRUEBA E3] 20261011T192502Z PAID\nInscripción: 11/10/2026 15:29",
+      "Show menu",
+      "Pendiente Pago"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_inscripcion_detalle_dual.png",
+    "timestamp": "2026-10-11T19:32:28.708899+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Detalle de la inscripcion propia",
+    "visible_labels": [
+      "Back",
+      "Detalle del evento",
+      "[PRUEBA E3] 20261011T192502Z PAID",
+      "Conferencia",
+      "VIRTUAL",
+      "Bs. 1.00",
+      "AMBOS",
+      "Prueba autorizada de Vidia; datos ficticios; no realizar pagos reales.",
+      "Objetivos",
+      "Validar contratos y conservar evidencia de pruebas E3.",
+      "11/10/2026 – 11/10/2026",
+      "15:23 – 16:15",
+      "https://example.invalid/vidia-e3",
+      "Estado: PUBLICADO",
+      "e3@example.invalid",
+      "PRUEBA TECNICA: no realizar pago real. Comprobante ficticio para validar el flujo.",
+      "Ya tienes una inscripción\nPendiente Pago",
+      "Ver estado de pago"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_pago_dual.png",
+    "timestamp": "2026-10-11T19:32:55.922615+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Pago propio pendiente visible",
+    "visible_labels": [
+      "Back",
+      "Gestión de pago",
+      "[PRUEBA E3] 20261011T192502Z PAID",
+      "Monto informado por el backend\nBs. 1.00",
+      "Pendiente de pago",
+      "Instrucciones de pago",
+      "PRUEBA TECNICA: no realizar pago real. Comprobante ficticio para validar el flujo.",
+      "Después de realizar el pago externamente, puedes enviar el comprobante para revisión.",
+      "Seleccionar comprobante",
+      "Consultar constancia de inscripción",
+      "El pago se realiza externamente. Vidia no procesa ni confirma transferencias."
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_asistencias_dual.png",
+    "timestamp": "2026-10-11T19:33:21.319420+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Mis asistencias de cuenta dual",
+    "visible_labels": [
+      "Back",
+      "Mis asistencias",
+      "Registrar asistencia",
+      "Todavía no tienes asistencias registradas."
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_registrar_asistencia_dual.png",
+    "timestamp": "2026-10-11T19:33:50.805427+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Acceso al flujo de asistencia sin escaneo fisico",
+    "visible_labels": [
+      "Back",
+      "Registrar asistencia",
+      "Elige tu evento para consultar las sesiones y abrir el lector QR cuando la asistencia esté disponible.",
+      "Taller de Desarrollo Web\nConsultar sesiones"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_sesiones_dual.png",
+    "timestamp": "2026-10-11T19:34:15.518914+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Consulta de sesiones para inscripcion confirmada dual",
+    "visible_labels": [
+      "Back",
+      "Asistencia",
+      "Todavía no hay sesiones de asistencia para Taller de Desarrollo Web."
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_certificados_dual.png",
+    "timestamp": "2026-10-11T19:34:30.323800+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Pantalla certificados de cuenta dual; estado vacio real",
+    "visible_labels": [
+      "Back",
+      "Mis certificados",
+      "Verificar certificado",
+      "Sin certificados todavía."
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_historial_dual.png",
+    "timestamp": "2026-10-11T19:34:51.169958+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Historial de la misma cuenta dual",
+    "visible_labels": [
+      "Back",
+      "Historial",
+      "[PRUEBA E3] 20261011T192502Z PAID\nPago · Bs. 1.00\n11/10/2026 15:29",
+      "PENDIENTE_PAGO",
+      "[PRUEBA E3] 20261011T192502Z PAID\nInscripción\n11/10/2026 15:29",
+      "PENDIENTE_PAGO",
+      "prueba de asitencia\nPago · Bs. 60.00\n10/10/2026 23:15",
+      "PENDIENTE_PAGO",
+      "prueba de asitencia\nInscripción\n10/10/2026 23:15",
+      "PENDIENTE_PAGO",
+      "Taller de Desarrollo Web\nInscripción\n10/10/2026 22:45",
+      "CONFIRMADA"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_perfil_dual.png",
+    "timestamp": "2026-10-11T19:35:12.289751+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Perfil muestra roles USUARIO y ORGANIZADOR",
+    "visible_labels": [
+      "Perfil",
+      "Organizador Demo Uno",
+      "organizador1@demo.local",
+      "CI: DEMO-ORGANIZADOR-1",
+      "RU: RU-DEMO-ORG-1",
+      "Cuenta",
+      "Celular\n70000000",
+      "Verificación de correo\nCorreo verificado",
+      "Cambiar contraseña",
+      "Solicitud de organizador\nAPROBADA",
+      "Collapsed",
+      "Información de la cuenta, Collapsed",
+      "Ayuda e información",
+      "Ayuda",
+      "Contacto",
+      "Acerca de Vidia",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_perfil_roles_dual.png",
+    "timestamp": "2026-10-11T19:35:36.796046+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Roles activos y solicitud aprobada",
+    "visible_labels": [
+      "Perfil",
+      "Verificación de correo\nCorreo verificado",
+      "Cambiar contraseña",
+      "Solicitud de organizador\nAPROBADA",
+      "Expanded",
+      "Información de la cuenta, Expanded",
+      "Tipo de usuario\nINTERNO",
+      "Roles\nORGANIZADOR, USUARIO",
+      "Estado de solicitud de organizador\nAPROBADA",
+      "Ayuda e información",
+      "Ayuda",
+      "Contacto",
+      "Acerca de Vidia",
+      "Cerrar sesión",
+      "Inicio\nTab 1 of 4",
+      "Eventos\nTab 2 of 4",
+      "Actividad\nTab 3 of 4",
+      "Perfil\nTab 4 of 4"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_certificado_usuario.png",
+    "timestamp": "2026-10-11T19:36:37.484969+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Certificado emitido visible desde Flutter contra produccion",
+    "visible_labels": [
+      "Back",
+      "Mis certificados",
+      "Verificar certificado",
+      "[PRUEBA E3] 20261011T192502Z FREE\nCertificado no curricular\nEmisión: 11/10/2026\nCódigo: UAJMS-4E7F1B803239424293B1E56B66CB2A63",
+      "DESCARGADO"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  },
+  {
+    "file": "PHONE_asistencia_usuario.png",
+    "timestamp": "2026-10-11T19:36:58.531622+00:00",
+    "package": "bo.edu.uajms.vidia",
+    "expected": "Asistencia de prueba por API visible en Flutter",
+    "visible_labels": [
+      "Back",
+      "Mis asistencias",
+      "Registrar asistencia",
+      "[PRUEBA E3] 20261011T192502Z FREE",
+      "Sesión virtual de prueba E3\nVALIDADA\n11/10/2026 15:25"
+    ],
+    "scope": "Interfaz real en telefono USB; no implica prueba fisica QR/GPS"
+  }
+]
