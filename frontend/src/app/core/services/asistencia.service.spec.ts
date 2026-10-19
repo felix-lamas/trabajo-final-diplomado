@@ -40,6 +40,14 @@ describe('AsistenciaService contrato canonico', () => {
     expect(http.expectOne(`${environment.apiUrl}/sesiones/sesion/qr/generar`).request.method).toBe('POST');
   });
 
+  it('resuelve enlaces compartidos de Maps mediante el endpoint protegido de coordenadas', () => {
+    service.resolverEnlaceGoogleMaps('https://maps.app.goo.gl/example').subscribe();
+    const req = http.expectOne(`${environment.apiUrl}/maps/coordenadas-compartidas`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ url: 'https://maps.app.goo.gl/example' });
+    req.flush({ latitud: -21.5, longitud: -64.7 });
+  });
+
   it('consulta asistencia del evento con el DTO oficial, incluido registradoPor nulo', () => {
     const registrada = vi.fn();
     service.listarPorEvento('evento').subscribe(registrada);

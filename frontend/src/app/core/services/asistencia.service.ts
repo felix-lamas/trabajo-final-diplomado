@@ -26,6 +26,10 @@ export class AsistenciaService {
     return this.http.put<SesionEvento>(`${this.apiUrl}/sesiones/${sesionId}`, request);
   }
 
+  resolverEnlaceGoogleMaps(url: string): Observable<{ latitud: number; longitud: number }> {
+    return this.http.post<{ latitud: number; longitud: number }>(`${this.apiUrl}/maps/coordenadas-compartidas`, { url });
+  }
+
   cambiarEstado(sesionId: string, activa: boolean): Observable<SesionEvento> {
     return this.http.patch<SesionEvento>(`${this.apiUrl}/sesiones/${sesionId}/estado`, { activa });
   }

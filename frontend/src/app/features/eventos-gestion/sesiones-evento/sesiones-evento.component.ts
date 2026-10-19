@@ -1,5 +1,5 @@
 import { Component, DestroyRef, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import QRCode from 'qrcode';
@@ -28,6 +28,9 @@ export class SesionesEventoComponent implements OnChanges {
   readonly generandoQrId = signal<string | null>(null);
   readonly qrActual = signal<QrAsistencia | null>(null);
   readonly qrDataUrl = signal<string | null>(null);
+  readonly mapsLink = new FormControl('', { nonNullable: true });
+  readonly mapsLinkMessage = signal('');
+  readonly mapsLinkResolving = signal(false);
 
   readonly form = this.fb.group({
     nombre: ['', [Validators.required, Validators.maxLength(150)]],
@@ -88,7 +91,115 @@ export class SesionesEventoComponent implements OnChanges {
     });
   }
 
+  obtenerCoordenadas(): void {
+    const result = this.extraerCoordenadas(this.mapsLink.value);
+    if (result.ok === false) {
+      if (this.esEnlaceCortoGoogleMaps(this.mapsLink.value)) {
+        this.resolverEnlaceCortoGoogleMaps();
+        return;
+      }
+      this.mapsLinkMessage.set(result.message);
+      return;
+    }
+
+    this.form.patchValue({ latitud: result.latitud, longitud: result.longitud });
+    this.mapsLinkMessage.set('Coordenadas obtenidas. Revise los valores antes de guardar.');
+  }
+
+  private resolverEnlaceCortoGoogleMaps(): void {
+    this.mapsLink.disable({ emitEvent: false });
+    this.mapsLinkResolving.set(true);
+    this.mapsLinkMessage.set('Resolviendo el enlace compartido de Google Maps…');
+    this.asistenciaService.resolverEnlaceGoogleMaps(this.mapsLink.value).pipe(
+      finalize(() => {
+        this.mapsLink.enable({ emitEvent: false });
+        this.mapsLinkResolving.set(false);
+      }), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: ({ latitud, longitud }) => {
+        if (!this.coordenadasValidas(latitud, longitud)) {
+          this.mapsLinkMessage.set('Google Maps devolvió coordenadas inválidas. Revise el enlace e intente nuevamente.');
+          return;
+        }
+        this.form.patchValue({ latitud, longitud });
+        this.mapsLinkMessage.set('Coordenadas obtenidas. Revise los valores antes de guardar.');
+      },
+      error: (err) => this.mapsLinkMessage.set(apiErrorMessage(
+        err, 'No se pudieron obtener coordenadas de este enlace. Revise el enlace e intente nuevamente.'
+      ))
+    });
+  }
+
+  private esEnlaceCortoGoogleMaps(value: string): boolean {
+    try {
+      const url = new URL(value.trim());
+      if (url.protocol !== 'https:' || url.username || url.password || url.port) return false;
+      const host = url.hostname.toLowerCase();
+      return (host === 'maps.app.goo.gl' && url.pathname.length > 1)
+        || (host === 'goo.gl' && url.pathname.startsWith('/maps/'));
+    } catch {
+      return false;
+    }
+  }
+
+  private coordenadasValidas(latitud: number, longitud: number): boolean {
+    return Number.isFinite(latitud) && Number.isFinite(longitud)
+      && latitud >= -90 && latitud <= 90 && longitud >= -180 && longitud <= 180;
+  }
+
+  private extraerCoordenadas(value: string):
+    | { ok: true; latitud: number; longitud: number }
+    | { ok: false; message: string } {
+    let url: URL;
+    try {
+      url = new URL(value.trim());
+    } catch {
+      return { ok: false, message: 'Ingrese un enlace válido de Google Maps.' };
+    }
+
+    const host = url.hostname.toLowerCase();
+    if (host === 'maps.app.goo.gl' || host === 'goo.gl') {
+      return { ok: false, message: 'Los enlaces cortos requieren resolver una redirección y no se procesan automáticamente.' };
+    }
+    if (url.protocol !== 'https:' || url.username || url.password || url.port ||
+        !(host === 'google.com' || host.endsWith('.google.com')) ||
+        !(url.pathname === '/maps' || url.pathname.startsWith('/maps/'))) {
+      return { ok: false, message: 'Use una URL HTTPS de Google Maps que contenga coordenadas explícitas.' };
+    }
+
+    const pairs: Array<[number, number]> = [];
+    const coordinatePattern = '([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+))';
+    const explicitPair = new RegExp(`^${coordinatePattern},\\s*${coordinatePattern}$`);
+    const parameters = [...url.searchParams.entries()].filter(([key]) => key === 'q' || key === 'query');
+    for (const [, value] of parameters) {
+      const match = value.trim().match(explicitPair);
+      if (match) pairs.push([Number(match[1]), Number(match[2])]);
+    }
+    const searchPath = url.pathname.match(/\/maps\/search\/([+-]?(?:\d+(?:\.\d*)?|\.\d+)),\+([+-]?(?:\d+(?:\.\d*)?|\.\d+))(?:\/|$)/);
+    if (searchPath) pairs.push([Number(searchPath[1]), Number(searchPath[2])]);
+    for (const match of url.pathname.matchAll(/!3d([+-]?(?:\d+(?:\.\d*)?|\.\d+))!4d([+-]?(?:\d+(?:\.\d*)?|\.\d+))/g)) {
+      pairs.push([Number(match[1]), Number(match[2])]);
+    }
+
+    const distinctPairs = [...new Map(pairs.map(([latitud, longitud]) =>
+      [`${latitud},${longitud}`, [latitud, longitud] as [number, number]])).values()];
+    if (distinctPairs.length > 1) {
+      return { ok: false, message: 'El enlace contiene coordenadas distintas y es ambiguo.' };
+    }
+    const pair = distinctPairs[0];
+    if (!pair) {
+      return { ok: false, message: 'No se encontraron coordenadas explícitas. Los enlaces que necesitan redirección no se resuelven.' };
+    }
+    const [latitud, longitud] = pair;
+    if (!Number.isFinite(latitud) || !Number.isFinite(longitud) ||
+        latitud < -90 || latitud > 90 || longitud < -180 || longitud > 180) {
+      return { ok: false, message: 'Las coordenadas del enlace están fuera de rango.' };
+    }
+    return { ok: true, latitud, longitud };
+  }
+
   editar(sesion: SesionEvento): void {
+    this.limpiarEnlaceMaps();
     this.editandoId.set(sesion.id);
     this.form.reset({
       nombre: sesion.nombre,
@@ -138,6 +249,7 @@ export class SesionesEventoComponent implements OnChanges {
   }
 
   private inicializarFormulario(): void {
+    this.limpiarEnlaceMaps();
     const presencial = this.evento.modalidad === Modalidad.PRESENCIAL;
     this.form.reset({
       nombre: '', descripcion: '', fecha: this.evento.fechaInicio,
@@ -149,5 +261,11 @@ export class SesionesEventoComponent implements OnChanges {
       radioMetros: this.evento.radioMetros ?? 100,
       activa: true
     });
+  }
+
+  private limpiarEnlaceMaps(): void {
+    this.mapsLink.enable({ emitEvent: false });
+    this.mapsLink.reset('');
+    this.mapsLinkMessage.set('');
   }
 }
