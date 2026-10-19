@@ -84,6 +84,14 @@ app:
       api-timeout-ms: ${SUPABASE_STORAGE_API_TIMEOUT_MS:20000}
   certificados:
     verificacion-base-url: ${CERTIFICATE_VERIFICATION_BASE_URL:http://localhost:4200/verificar-certificado}
+    facultad: ${CERTIFICATE_FACULTY:}
+    logotipo-path: ${CERTIFICATE_LOGO_PATH:}
+    autoridad-1-nombre: ${CERTIFICATE_AUTHORITY_1_NAME:}
+    autoridad-1-cargo: ${CERTIFICATE_AUTHORITY_1_TITLE:Autoridad institucional}
+    autoridad-1-firma-path: ${CERTIFICATE_AUTHORITY_1_SIGNATURE_PATH:}
+    autoridad-2-nombre: ${CERTIFICATE_AUTHORITY_2_NAME:}
+    autoridad-2-cargo: ${CERTIFICATE_AUTHORITY_2_TITLE:Representante del evento}
+    autoridad-2-firma-path: ${CERTIFICATE_AUTHORITY_2_SIGNATURE_PATH:}
 
 springdoc:
   paths-to-match: /api/v1/**
