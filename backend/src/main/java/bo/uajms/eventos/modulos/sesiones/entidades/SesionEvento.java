@@ -63,4 +63,8 @@ public class SesionEvento extends EntidadBase {
     @Column(nullable = false)
     @Builder.Default
     private Boolean historica = false;
+
+    @Column(name = "control_asistencia_activo", nullable = false)
+    @Builder.Default
+    private Boolean controlAsistenciaActivo = false;
 }

@@ -41,4 +41,8 @@ export class AsistenciaService {
   generarQr(sesionId: string): Observable<QrAsistencia> {
     return this.http.post<QrAsistencia>(`${this.apiUrl}/sesiones/${sesionId}/qr/generar`, {});
   }
+
+  detenerControlQr(sesionId: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/sesiones/${sesionId}/qr/detener`, {});
+  }
 }

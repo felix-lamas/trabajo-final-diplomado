@@ -50,7 +50,8 @@
       <div class="student-card__footer">
         <button mat-button type="button" (click)="editar(sesion)" [disabled]="saving() || sesion.historica"><mat-icon>edit</mat-icon> Editar</button>
         <button mat-button type="button" (click)="cambiarEstado(sesion)" [disabled]="saving() || sesion.historica"><mat-icon>toggle_on</mat-icon> {{ sesion.activa ? 'Desactivar' : 'Activar' }}</button>
-        <button mat-flat-button color="primary" type="button" *ngIf="sesion.requiereAsistencia" (click)="generarQr(sesion)" [disabled]="!!generandoQrId() || !sesion.activa"><mat-icon>qr_code_2</mat-icon> Generar QR</button>
+        <span *ngIf="qrSesionId() === sesion.id" role="status">Control de asistencia activo</span>
+        <button mat-flat-button color="primary" type="button" *ngIf="sesion.requiereAsistencia && qrSesionId() !== sesion.id" (click)="generarQr(sesion)" [disabled]="!!generandoQrId() || !!qrSesionId() || !sesion.activa"><mat-icon>qr_code_2</mat-icon> Generar QR</button>
       </div>
     </mat-card>
   </div>
@@ -59,6 +60,10 @@
     <h3>QR temporal</h3>
     <img *ngIf="qrDataUrl()" [src]="qrDataUrl()" alt="QR temporal de asistencia" width="280" height="280">
     <p>Expira: {{ qr.expiraEn | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-    <p class="app-muted">Al generar uno nuevo, el anterior queda revocado.</p>
+    <p>Estado: {{ qrEstado() || (qr.activo ? 'Activo' : 'Inactivo') }}</p>
+    <p class="app-muted">El QR rota al registrar una asistencia válida o al vencer.</p>
+    <button mat-button type="button" (click)="detenerControl(qr.sesionId)" [disabled]="!!deteniendoQrId()">
+      <mat-icon>stop_circle</mat-icon> Detener control
+    </button>
   </mat-card>
 </section>

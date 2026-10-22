@@ -1,7 +1,7 @@
 import { Component, DestroyRef, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { finalize, timer, switchMap, catchError, of, Subscription } from 'rxjs';
 import QRCode from 'qrcode';
 
 import { Evento, Modalidad } from '../../../core/models/evento.model';
@@ -19,6 +19,7 @@ export class SesionesEventoComponent implements OnChanges {
   @Input({ required: true }) evento!: Evento;
 
   private readonly destroyRef = inject(DestroyRef);
+  private qrPoll?: Subscription;
   private readonly fb = inject(FormBuilder);
   readonly sesiones = signal<SesionEvento[]>([]);
   readonly loading = signal(false);
@@ -28,6 +29,9 @@ export class SesionesEventoComponent implements OnChanges {
   readonly generandoQrId = signal<string | null>(null);
   readonly qrActual = signal<QrAsistencia | null>(null);
   readonly qrDataUrl = signal<string | null>(null);
+  readonly qrEstado = signal('');
+  readonly qrSesionId = signal<string | null>(null);
+  readonly deteniendoQrId = signal<string | null>(null);
   readonly mapsLink = new FormControl('', { nonNullable: true });
   readonly mapsLinkMessage = signal('');
   readonly mapsLinkResolving = signal(false);
@@ -243,8 +247,47 @@ export class SesionesEventoComponent implements OnChanges {
         if (!qr.token) return;
         this.qrActual.set(qr);
         this.qrDataUrl.set(await QRCode.toDataURL(qr.token, { width: 280, margin: 2, errorCorrectionLevel: 'M' }));
+        this.qrEstado.set('Activo');
+        this.qrSesionId.set(sesion.id);
+        this.seguirQr(sesion.id);
       },
       error: (err) => this.toast.error(apiErrorMessage(err, 'No fue posible generar el QR'))
+    });
+  }
+
+  detenerControl(sesionId: string): void {
+    if (this.deteniendoQrId()) return;
+    this.deteniendoQrId.set(sesionId);
+    this.asistenciaService.detenerControlQr(sesionId).pipe(
+      finalize(() => this.deteniendoQrId.set(null)), takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        if (this.qrSesionId() === sesionId) this.qrPoll?.unsubscribe();
+        if (this.qrSesionId() === sesionId) {
+          this.qrSesionId.set(null); this.qrActual.set(null); this.qrDataUrl.set(null);
+          this.qrEstado.set('Detenido');
+        }
+        this.toast.success('Control de asistencia detenido');
+      },
+      error: (err) => this.toast.error(apiErrorMessage(err, 'No fue posible detener el control'))
+    });
+  }
+
+  private seguirQr(sesionId: string): void {
+    this.qrPoll?.unsubscribe();
+    this.qrPoll = timer(3000, 3000).pipe(
+      switchMap(() => {
+        const actual = this.qrActual();
+        if (actual && Date.parse(actual.expiraEn) <= Date.now()) this.qrEstado.set('Expirado; esperando renovación');
+        return this.asistenciaService.obtenerQrActivo(sesionId).pipe(catchError(() => of(null)));
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(async (qr) => {
+      if (!qr || this.qrSesionId() !== sesionId || !qr.token) return;
+      if (qr.id === this.qrActual()?.id) return;
+      this.qrActual.set(qr);
+      this.qrDataUrl.set(await QRCode.toDataURL(qr.token, { width: 280, margin: 2, errorCorrectionLevel: 'M' }));
+      this.qrEstado.set('Activo');
     });
   }
 

@@ -38,6 +38,8 @@ describe('AsistenciaService contrato canonico', () => {
     expect(http.expectOne(`${environment.apiUrl}/sesiones/sesion/qr`).request.method).toBe('GET');
     service.generarQr('sesion').subscribe();
     expect(http.expectOne(`${environment.apiUrl}/sesiones/sesion/qr/generar`).request.method).toBe('POST');
+    service.detenerControlQr('sesion').subscribe();
+    expect(http.expectOne(`${environment.apiUrl}/sesiones/sesion/qr/detener`).request.method).toBe('POST');
   });
 
   it('resuelve enlaces compartidos de Maps mediante el endpoint protegido de coordenadas', () => {

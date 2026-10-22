@@ -4,10 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = "bo.uajms.eventos")
 @EntityScan(basePackages = "bo.uajms.eventos")
 @EnableJpaRepositories(basePackages = "bo.uajms.eventos")
+@EnableScheduling
 public class EventosUajmsApplication {
 
     public static void main(String[] args) {

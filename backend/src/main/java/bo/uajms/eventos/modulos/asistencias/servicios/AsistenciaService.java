@@ -16,7 +16,6 @@ import bo.uajms.eventos.modulos.inscripciones.entidades.*;
 import bo.uajms.eventos.modulos.inscripciones.repositorios.InscripcionRepository;
 import bo.uajms.eventos.modulos.sesiones.entidades.SesionEvento;
 import bo.uajms.eventos.modulos.usuarios.entidades.Usuario;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ import java.time.*;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class AsistenciaService {
     private static final BigDecimal PRECISION_MAXIMA = new BigDecimal("30.00");
     private static final double RADIO_TIERRA_METROS = 6_371_000d;
@@ -38,6 +36,17 @@ public class AsistenciaService {
     private final QrAsistenciaService qrService;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
     private final Clock clock;
+
+    public AsistenciaService(AsistenciaRepository asistenciaRepository, EventoRepository eventoRepository,
+            InscripcionRepository inscripcionRepository, QrAsistenciaService qrService,
+            UsuarioAutenticadoService usuarioAutenticadoService, Clock clock) {
+        this.asistenciaRepository = asistenciaRepository;
+        this.eventoRepository = eventoRepository;
+        this.inscripcionRepository = inscripcionRepository;
+        this.qrService = qrService;
+        this.usuarioAutenticadoService = usuarioAutenticadoService;
+        this.clock = clock;
+    }
 
     @Transactional
     public Asistencia registrar(RegistrarAsistenciaRequest request) {
@@ -72,7 +81,9 @@ public class AsistenciaService {
                 .precisionGpsMetros(precision)
                 .resultadoValidacion(Asistencia.ResultadoValidacion.VALIDADA).build();
         try {
-            return asistenciaRepository.saveAndFlush(asistencia);
+            Asistencia registrada = asistenciaRepository.saveAndFlush(asistencia);
+            qrService.consumirYRotar(qr, ahora);
+            return registrada;
         } catch (DataIntegrityViolationException ex) {
             throw new ConflictoException(CodigosError.ATTENDANCE_DUPLICATED,
                     "La asistencia ya fue registrada para esta sesion");

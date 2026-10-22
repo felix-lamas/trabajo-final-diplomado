@@ -51,6 +51,21 @@ describe('SesionesEventoComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('Sin sesiones');
   });
 
+  it('actualiza automáticamente la imagen cuando cambia el QR del backend', async () => {
+    const nuevoQr = { id: 'qr-1', sesionId: 'sesion-1', token: 'token-segundo',
+      emitidoEn: '2026-10-01T10:01:00', expiraEn: '2026-10-01T10:03:00', activo: true, revocadoEn: null };
+    service['generarQr'].mockReturnValue(of({ ...nuevoQr, id: 'qr-0', token: 'token-inicial' }));
+    service['obtenerQrActivo'].mockReturnValue(of(nuevoQr));
+    component.generarQr({ id: 'sesion-1', activa: true, requiereAsistencia: true } as never);
+    await fixture.whenStable();
+    expect(component.qrActual()?.id).toBe('qr-0');
+    await new Promise(resolve => setTimeout(resolve, 3100));
+    await fixture.whenStable();
+    expect(service['obtenerQrActivo']).toHaveBeenCalledWith('sesion-1');
+    expect(component.qrActual()?.id).toBe('qr-1');
+    expect(fixture.nativeElement.querySelector('img')?.getAttribute('alt')).toContain('QR temporal');
+  });
+
   it('evita doble envio mientras crea una sesion', () => {
     component.form.patchValue({ nombre: 'Sesion 1' });
     component.guardar();

@@ -21,6 +21,9 @@ public class QrAsistenciaTemporal extends EntidadBase {
     @Column(name = "token_hash", nullable = false, length = 64, updatable = false)
     private String tokenHash;
 
+    @Column(name = "token_cifrado", length = 512)
+    private String tokenCifrado;
+
     @Column(name = "emitido_en", nullable = false, updatable = false)
     private LocalDateTime emitidoEn;
 

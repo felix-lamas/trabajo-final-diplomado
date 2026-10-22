@@ -17,9 +17,13 @@ public interface QrAsistenciaTemporalRepository extends JpaRepository<QrAsistenc
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT q FROM QrAsistenciaTemporal q WHERE q.tokenHash = :tokenHash")
     Optional<QrAsistenciaTemporal> findByTokenHashForUpdate(@Param("tokenHash") String tokenHash);
+    Optional<QrAsistenciaTemporal> findByTokenHash(String tokenHash);
     Optional<QrAsistenciaTemporal> findFirstBySesionEventoIdAndActivoTrueOrderByEmitidoEnDesc(UUID sesionId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT q FROM QrAsistenciaTemporal q WHERE q.sesionEvento.id = :sesionId AND q.activo = true")
     List<QrAsistenciaTemporal> findActivosBySesionIdForUpdate(@Param("sesionId") UUID sesionId);
+
+    @Query("SELECT q FROM QrAsistenciaTemporal q WHERE q.sesionEvento.id = :sesionId AND q.activo = true ORDER BY q.emitidoEn DESC")
+    List<QrAsistenciaTemporal> findActivosBySesionId(@Param("sesionId") UUID sesionId);
 }

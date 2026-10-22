@@ -25,4 +25,7 @@ public interface SesionEventoRepository extends JpaRepository<SesionEvento, UUID
     @Query("SELECT s FROM SesionEvento s WHERE s.id = :id AND s.evento.organizador.id = :organizadorId")
     Optional<SesionEvento> findByIdAndEventoOrganizadorIdForUpdate(@Param("id") UUID id,
                                                                     @Param("organizadorId") UUID organizadorId);
+
+    @Query("SELECT s.id FROM SesionEvento s WHERE s.controlAsistenciaActivo = true")
+    List<UUID> findIdsConControlAsistenciaActivo();
 }
