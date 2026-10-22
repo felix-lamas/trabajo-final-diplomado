@@ -146,6 +146,14 @@ class QrAsistenciaServiceTest {
         service.consumirYRotar(qr,ahora);
         assertFalse(qr.getActivo());
         assertNotNull(qr.getRevocadoEn());
+        var guardados=ArgumentCaptor.forClass(QrAsistenciaTemporal.class);
+        verify(qrRepository, times(2)).save(guardados.capture());
+        QrAsistenciaTemporal siguiente=guardados.getAllValues().get(1);
+        assertNotSame(qr, siguiente);
+        assertTrue(siguiente.getActivo());
+        assertEquals(ahora, siguiente.getEmitidoEn());
+        assertEquals(ahora.plusMinutes(2), siguiente.getExpiraEn());
+        assertNotEquals(qr.getTokenHash(), siguiente.getTokenHash());
         assertThrows(NegocioException.class,()->service.consumirYRotar(qr,ahora));
         verify(qrRepository,times(2)).save(any());
     }

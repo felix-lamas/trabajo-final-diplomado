@@ -1,7 +1,7 @@
 import { Component, DestroyRef, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, timer, switchMap, catchError, of, Subscription } from 'rxjs';
+import { catchError, exhaustMap, finalize, of, Subscription, tap, timeout, timer } from 'rxjs';
 import QRCode from 'qrcode';
 
 import { Evento, Modalidad } from '../../../core/models/evento.model';
@@ -246,9 +246,16 @@ export class SesionesEventoComponent implements OnChanges {
       next: async (qr) => {
         if (!qr.token) return;
         this.qrActual.set(qr);
-        this.qrDataUrl.set(await QRCode.toDataURL(qr.token, { width: 280, margin: 2, errorCorrectionLevel: 'M' }));
-        this.qrEstado.set('Activo');
         this.qrSesionId.set(sesion.id);
+        if (Date.parse(qr.expiraEn) <= Date.now()) {
+          this.qrDataUrl.set(null);
+          this.qrEstado.set('Expirado; esperando renovación');
+        } else {
+          const dataUrl = await QRCode.toDataURL(qr.token, { width: 280, margin: 2, errorCorrectionLevel: 'M' });
+          if (this.qrSesionId() !== sesion.id || this.qrActual()?.id !== qr.id) return;
+          this.qrDataUrl.set(dataUrl);
+          this.qrEstado.set('Activo');
+        }
         this.seguirQr(sesion.id);
       },
       error: (err) => this.toast.error(apiErrorMessage(err, 'No fue posible generar el QR'))
@@ -275,18 +282,45 @@ export class SesionesEventoComponent implements OnChanges {
 
   private seguirQr(sesionId: string): void {
     this.qrPoll?.unsubscribe();
-    this.qrPoll = timer(3000, 3000).pipe(
-      switchMap(() => {
+    this.qrPoll = timer(1500, 1500).pipe(
+      tap(() => {
         const actual = this.qrActual();
-        if (actual && Date.parse(actual.expiraEn) <= Date.now()) this.qrEstado.set('Expirado; esperando renovación');
-        return this.asistenciaService.obtenerQrActivo(sesionId).pipe(catchError(() => of(null)));
+        if (actual && Date.parse(actual.expiraEn) <= Date.now()) {
+          this.qrDataUrl.set(null);
+          this.qrEstado.set('Expirado; esperando renovación');
+        }
+      }),
+      exhaustMap(() => {
+        return this.asistenciaService.obtenerQrActivo(sesionId).pipe(timeout({ first: 5000 }), catchError(() => {
+          if (this.qrSesionId() === sesionId) {
+            // Ante un fallo no podemos afirmar que el QR mostrado siga vigente.
+            this.qrDataUrl.set(null);
+            this.qrEstado.set('Sin conexión; verificando QR');
+          }
+          return of(null);
+        }));
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(async (qr) => {
       if (!qr || this.qrSesionId() !== sesionId || !qr.token) return;
-      if (qr.id === this.qrActual()?.id) return;
+      if (Date.parse(qr.expiraEn) <= Date.now()) {
+        this.qrDataUrl.set(null);
+        this.qrEstado.set('Expirado; esperando renovación');
+        return;
+      }
+      const cambioQr = qr.id !== this.qrActual()?.id;
+      if (!cambioQr && this.qrDataUrl()) {
+        this.qrEstado.set('Activo');
+        return;
+      }
       this.qrActual.set(qr);
-      this.qrDataUrl.set(await QRCode.toDataURL(qr.token, { width: 280, margin: 2, errorCorrectionLevel: 'M' }));
+      this.qrDataUrl.set(null);
+      this.qrEstado.set('Actualizando QR');
+      // A changed id replaces the image; a same id restores it only after
+      // the backend confirms the QR is still active.
+      const dataUrl = await QRCode.toDataURL(qr.token, { width: 280, margin: 2, errorCorrectionLevel: 'M' });
+      if (this.qrSesionId() !== sesionId || this.qrActual()?.id !== qr.id) return;
+      this.qrDataUrl.set(dataUrl);
       this.qrEstado.set('Activo');
     });
   }

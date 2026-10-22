@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AsistenciaResponse, QrAsistencia, SesionEvento, SesionEventoRequest } from '../models/asistencia.model';
@@ -35,7 +35,11 @@ export class AsistenciaService {
   }
 
   obtenerQrActivo(sesionId: string): Observable<QrAsistencia> {
-    return this.http.get<QrAsistencia>(`${this.apiUrl}/sesiones/${sesionId}/qr`);
+    // El QR cambia sin cambiar la URL. Evita que el navegador o un proxy
+    // reutilice una respuesta anterior durante el sondeo del organizador.
+    return this.http.get<QrAsistencia>(`${this.apiUrl}/sesiones/${sesionId}/qr`, {
+      params: new HttpParams().set('_', Date.now().toString())
+    });
   }
 
   generarQr(sesionId: string): Observable<QrAsistencia> {

@@ -53,17 +53,52 @@ describe('SesionesEventoComponent', () => {
 
   it('actualiza automáticamente la imagen cuando cambia el QR del backend', async () => {
     const nuevoQr = { id: 'qr-1', sesionId: 'sesion-1', token: 'token-segundo',
-      emitidoEn: '2026-10-01T10:01:00', expiraEn: '2026-10-01T10:03:00', activo: true, revocadoEn: null };
+      emitidoEn: '2099-10-01T10:01:00', expiraEn: '2099-10-01T10:03:00', activo: true, revocadoEn: null };
     service['generarQr'].mockReturnValue(of({ ...nuevoQr, id: 'qr-0', token: 'token-inicial' }));
     service['obtenerQrActivo'].mockReturnValue(of(nuevoQr));
     component.generarQr({ id: 'sesion-1', activa: true, requiereAsistencia: true } as never);
     await fixture.whenStable();
     expect(component.qrActual()?.id).toBe('qr-0');
+    const imagenAnterior = component.qrDataUrl();
     await new Promise(resolve => setTimeout(resolve, 3100));
     await fixture.whenStable();
     expect(service['obtenerQrActivo']).toHaveBeenCalledWith('sesion-1');
     expect(component.qrActual()?.id).toBe('qr-1');
-    expect(fixture.nativeElement.querySelector('img')?.getAttribute('alt')).toContain('QR temporal');
+    expect(component.qrDataUrl()).not.toBe(imagenAnterior);
+    const imagenActual = fixture.nativeElement.querySelector('img');
+    expect(imagenActual?.getAttribute('alt')).toContain('QR temporal');
+    expect(imagenActual?.getAttribute('src')).toBe(component.qrDataUrl());
+  });
+
+  it('oculta el QR ante errores de red y no conserva la imagen anterior como válida', async () => {
+    const qr = { id: 'qr-vigente', sesionId: 'sesion-1', token: 'token-vigente',
+      emitidoEn: '2099-10-01T10:00:00', expiraEn: '2099-10-01T10:02:00', activo: true, revocadoEn: null };
+    service['generarQr'].mockReturnValue(of(qr));
+    service['obtenerQrActivo'].mockReturnValue(throwError(() => new Error('sin conexión')));
+
+    component.generarQr({ id: 'sesion-1', activa: true, requiereAsistencia: true } as never);
+    await new Promise(resolve => setTimeout(resolve, 1800));
+    await fixture.whenStable();
+    expect(service['obtenerQrActivo']).toHaveBeenCalledWith('sesion-1');
+    expect(component.qrDataUrl()).toBeNull();
+    expect(component.qrEstado()).toContain('Sin conexión');
+    expect(fixture.nativeElement.querySelector('img')).toBeNull();
+  });
+
+  it('retira de la plantilla un QR que vence mientras espera la renovación del backend', async () => {
+    const qrVencido = { id: 'qr-vencido', sesionId: 'sesion-1', token: 'token-vencido',
+      emitidoEn: new Date().toISOString(), expiraEn: new Date(Date.now() + 250).toISOString(),
+      activo: true, revocadoEn: null };
+    service['generarQr'].mockReturnValue(of(qrVencido));
+    service['obtenerQrActivo'].mockReturnValue(throwError(() => new Error('renovación pendiente')));
+
+    component.generarQr({ id: 'sesion-1', activa: true, requiereAsistencia: true } as never);
+    await new Promise(resolve => setTimeout(resolve, 1800));
+    await fixture.whenStable();
+
+    expect(Date.parse(component.qrActual()!.expiraEn)).toBeLessThanOrEqual(Date.now());
+    expect(component.qrDataUrl()).toBeNull();
+    expect(fixture.nativeElement.querySelector('img')).toBeNull();
   });
 
   it('evita doble envio mientras crea una sesion', () => {

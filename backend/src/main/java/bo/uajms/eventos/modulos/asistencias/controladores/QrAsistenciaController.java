@@ -38,7 +38,9 @@ public class QrAsistenciaController {
     })
     public ResponseEntity<QrAsistenciaResponse> obtenerActivo(
             @Parameter(description = "Identificador de la sesion") @PathVariable UUID sesionId) {
-        return ResponseEntity.ok(qrService.obtenerActivo(sesionId));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore().mustRevalidate())
+                .body(qrService.obtenerActivo(sesionId));
     }
 
     @PostMapping("/generar")

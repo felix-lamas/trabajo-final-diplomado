@@ -35,7 +35,10 @@ describe('AsistenciaService contrato canonico', () => {
 
   it('genera y consulta QR exclusivamente en la sesion indicada', () => {
     service.obtenerQrActivo('sesion').subscribe();
-    expect(http.expectOne(`${environment.apiUrl}/sesiones/sesion/qr`).request.method).toBe('GET');
+    const qr = http.expectOne(req => req.url === `${environment.apiUrl}/sesiones/sesion/qr`);
+    expect(qr.request.method).toBe('GET');
+    expect(qr.request.params.has('_')).toBe(true);
+    qr.flush({ id: 'qr', sesionId: 'sesion', token: 'token', emitidoEn: '', expiraEn: '', activo: true, revocadoEn: null });
     service.generarQr('sesion').subscribe();
     expect(http.expectOne(`${environment.apiUrl}/sesiones/sesion/qr/generar`).request.method).toBe('POST');
     service.detenerControlQr('sesion').subscribe();
