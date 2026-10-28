@@ -1,18 +1,42 @@
 @if (logoutWarning) {
   <p role="status" class="p-4 text-center">{{ logoutWarning }}</p>
 }
-<main class="auth-page">
-  <section class="vidia-auth" aria-labelledby="login-title">
-    <a class="vidia-auth__brand" routerLink="/eventos" aria-label="Vidia, ir a eventos">
-      <span class="vidia-auth__brand-mark" aria-hidden="true"><mat-icon>event</mat-icon></span>
-      <span><strong>Vidia</strong><small>donde los eventos cobran vida</small></span>
-    </a>
+<main class="auth-page vidia-login">
+  <section class="vidia-auth vidia-login__layout" aria-labelledby="login-title">
+    <aside class="vidia-login__editorial" aria-label="Vidia, eventos universitarios">
+      <a class="vidia-auth__brand vidia-login__brand" routerLink="/eventos" aria-label="Vidia, ir a eventos">
+        <img class="vidia-login__brand-logo" src="/vidia-logo.png" alt="Vidia, donde los eventos cobran vida" />
+      </a>
 
-    <mat-card class="auth-card auth-card--auth">
+      <div class="vidia-login__story">
+        <p class="vidia-login__kicker"><span aria-hidden="true"></span> PLATAFORMA UNIVERSITARIA · UAJMS</p>
+        <h2>Eventos que<br />conectan ideas<br /><em>y personas.</em></h2>
+        <p class="vidia-login__description">Organiza eventos, explora la agenda universitaria y gestiona la participación desde un mismo espacio.</p>
+      </div>
+
+      <div class="vidia-login__art" aria-hidden="true">
+        <div class="vidia-login__art-label vidia-login__art-label--top">GESTIÓN UNIVERSITARIA</div>
+        <div class="vidia-login__art-scene">
+          <div class="vidia-login__orbit vidia-login__orbit--outer"></div>
+          <div class="vidia-login__orbit vidia-login__orbit--inner"></div>
+          <div class="vidia-login__art-core">
+            <span class="vidia-login__art-glyph"></span>
+          </div>
+          <span class="vidia-login__node vidia-login__node--one"></span>
+          <span class="vidia-login__node vidia-login__node--two"></span>
+          <span class="vidia-login__node vidia-login__node--three"></span>
+        </div>
+        <div class="vidia-login__art-label vidia-login__art-label--bottom">ORGANIZA <i></i> DESCUBRE <i></i> PARTICIPA</div>
+      </div>
+
+      <p class="vidia-login__university">Universidad Autónoma Juan Misael Saracho</p>
+    </aside>
+
+    <mat-card class="auth-card auth-card--auth vidia-login__card">
       <header class="auth-card__header--auth">
         <span class="vidia-auth__eyebrow">Tu espacio universitario</span>
-        <h1 id="login-title">Iniciar sesion</h1>
-        <p>Accede para descubrir eventos y gestionar tu participacion.</p>
+        <h1 id="login-title">Qué bueno tenerte aquí.</h1>
+        <p>Ingresa a tu cuenta para continuar con la vida universitaria.</p>
       </header>
       <mat-progress-bar *ngIf="loading" mode="indeterminate" aria-label="Iniciando sesion"></mat-progress-bar>
       <div class="vidia-auth__notice" *ngIf="correoNoVerificado" role="alert">
@@ -28,17 +52,17 @@
 
       <form class="auth-form--auth" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
         <mat-form-field appearance="outline">
-          <mat-label>Correo electronico</mat-label>
+          <mat-label>Correo electrónico</mat-label>
           <input matInput type="email" formControlName="correoElectronico" autocomplete="email" inputmode="email" required />
           <mat-error *ngIf="form.get('correoElectronico')?.hasError('required')">El correo es obligatorio.</mat-error>
           <mat-error *ngIf="form.get('correoElectronico')?.hasError('email')">Ingresa un correo valido.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Contrasena</mat-label>
+          <mat-label>Contraseña</mat-label>
           <input matInput [type]="passwordVisible() ? 'text' : 'password'" formControlName="contrasena" autocomplete="current-password" required />
           <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()"
-            [attr.aria-label]="passwordVisible() ? 'Ocultar contrasena' : 'Mostrar contrasena'"
+            [attr.aria-label]="passwordVisible() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             [attr.aria-pressed]="passwordVisible()">
             <mat-icon>{{ passwordVisible() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
@@ -46,14 +70,13 @@
         </mat-form-field>
 
         <div class="auth-actions__row vidia-auth__links">
-          <a mat-button routerLink="/auth/recuperar-contrasena">Olvidaste tu contrasena?</a>
+          <a mat-button routerLink="/auth/recuperar-contrasena">¿Olvidaste tu contraseña?</a>
           <a mat-button routerLink="/auth/registro">Crear cuenta</a>
         </div>
-        <button mat-flat-button color="primary" type="submit" [disabled]="loading || reenviando || form.invalid">
+        <button class="vidia-login__submit" mat-flat-button color="primary" type="submit" [disabled]="loading || reenviando || form.invalid">
           {{ loading ? 'Ingresando...' : 'Iniciar sesion' }}
         </button>
       </form>
-      <p class="vidia-auth__institution">Universidad Autonoma Juan Misael Saracho</p>
     </mat-card>
   </section>
 </main>

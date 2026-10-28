@@ -9,6 +9,7 @@ import { apiErrorMessage } from '../../../core/utils/api-error.util';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
   standalone: false
 })
 export class LoginComponent {
